@@ -60,3 +60,10 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# PyCharm
+.idea
+
+# Vagrant temp files
+vagrant/*.log
+vagrant/.vagrant
