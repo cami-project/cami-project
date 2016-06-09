@@ -97,15 +97,15 @@ Vagrant.configure(2) do |config|
   config.vm.define 'sandbox', autostart: false do |sandbox|
     sandbox.vm.hostname = 'sandbox'
     sandbox.vm.network 'private_network', ip: '192.168.73.10'
-
-    sandbox.vm.provision "ansible_local" do |ansible|
-        ansible.provisioning_path = "/home/vagrant/cami-project/ansible"
-        ansible.playbook = "store.yml"
-    end
   end
 
   config.vm.define 'cami-store', autostart: false do |store|
     store.vm.hostname = 'cami-store'
     store.vm.network 'private_network', ip: '192.168.73.11'
+
+    store.vm.provision "ansible_local" do |ansible|
+        ansible.provisioning_path = "/home/vagrant/cami-project/ansible"
+        ansible.playbook = "store.yml"
+    end
   end
 end
