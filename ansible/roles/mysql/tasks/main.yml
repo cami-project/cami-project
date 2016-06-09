@@ -8,7 +8,14 @@
     - python-mysqldb
 
 - name: Update MySQL root password for all root accounts
-  mysql_user: name=root host={{ item }} password={{ mysql_root_pass }} state=present check_implicit_admin=yes
+  mysql_user:
+    name: root
+    host: "{{ item }}"
+    password: "{{ mysql_root_pass }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_pass }}"
+    check_implicit_admin: yes
   with_items:
     - "{{ ansible_fqdn }}"
     - 127.0.0.1
