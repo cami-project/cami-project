@@ -6,4 +6,4 @@ mysql_root_pass: cami
 mysql_cami_user: cami
 mysql_cami_pass: cami
 
-vagrant_project_dir: /home/vagrant/cami-project
+project_dir: /home/vagrant/cami-project

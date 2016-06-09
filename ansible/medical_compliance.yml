@@ -10,7 +10,7 @@
     - block:
         - name: Install requirements
           pip:
-            requirements: "{{ vagrant_project_dir}}/medical_compliance/requirements.txt"
+            requirements: "{{ project_dir}}/medical_compliance/requirements.txt"
 
         - name: Install daemon
           become: yes
@@ -21,4 +21,4 @@
       become: yes
 
     - name: Run Django server
-      shell: daemon -- python "{{ vagrant_project_dir }}/medical_compliance/manage.py" runserver "{{ ansible_eth1.ipv4.address }}:8000"
+      shell: daemon -- python "{{ project_dir }}/medical_compliance/manage.py" runserver "{{ ansible_eth1.ipv4.address }}:8000"
