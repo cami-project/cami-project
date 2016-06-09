@@ -20,6 +20,6 @@
       mysql_db:
         state: import
         name: all
-        target: ../store/cami.sql
+        target: "{{vagrant_project_dir }}/store/cami.sql"
         login_user: "{{ mysql_cami_user }}"
         login_password: "{{ mysql_cami_pass }}"
