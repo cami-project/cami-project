@@ -19,3 +19,6 @@
            - daemon
 
       become: yes
+
+    - name: Run Django server
+      shell: daemon -- python "{{ vagrant_project_dir}}/medical_compliance/manage.py" runserver "{{ ansible_eth1.ipv4.address }}:8000"
