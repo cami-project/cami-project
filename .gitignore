@@ -60,3 +60,12 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# PyCharm
+.idea
+
+# Vagrant temp files
+vagrant/.vagrant
+
+# Ansible temp files
+ansible/**/*.retry

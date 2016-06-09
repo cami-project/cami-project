@@ -1,0 +1,31 @@
+---
+- name: Install MySQL
+  apt: package={{ item }} state=installed force=yes update_cache=yes cache_valid_time=3600
+  when: ansible_os_family == 'Debian'
+  with_items:
+    - mysql-server
+    - mysql-client
+    - python-mysqldb
+
+- name: Update MySQL root password for all root accounts
+  mysql_user:
+    name: root
+    host: "{{ item }}"
+    password: "{{ mysql_root_pass }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_pass }}"
+    check_implicit_admin: yes
+  with_items:
+    - "{{ ansible_fqdn }}"
+    - 127.0.0.1
+    - ::1
+    - localhost
+
+- name: Deletes anonymous MySQL server user for localhost
+  mysql_user: user="" state="absent" login_password="{{ mysql_root_pass }}" login_user=root
+
+- name: Removes the MySQL test database
+  mysql_db: db=test state=absent login_password="{{ mysql_root_pass }}" login_user=root
+  notify:
+     - restart mysql
