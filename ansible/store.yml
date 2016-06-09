@@ -1,6 +1,7 @@
-- name: Hello World
-  hosts: 127.0.0.1
-  connection: local
-  tasks:
-  - name: Hello World
-    command: touch /home/vagrant/imhere
+---
+- name: Install MySQL
+  hosts: all
+  become: yes
+
+  roles:
+    - mysql

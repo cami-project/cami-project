@@ -1,0 +1,4 @@
+---
+# You shouldn't need to change this.
+mysql_port: 3306
+mysql_root_pass: cami
