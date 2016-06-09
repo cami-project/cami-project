@@ -115,7 +115,7 @@ Vagrant.configure(2) do |config|
 
     mc.vm.provision "ansible_local" do |ansible|
         ansible.provisioning_path = "/home/vagrant/cami-project/ansible"
-        ansible.playbook = "medical-compliance.yml"
+        ansible.playbook = "medical_compliance.yml"
     end
   end
 end
