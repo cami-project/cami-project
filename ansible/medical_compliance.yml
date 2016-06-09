@@ -1,13 +1,21 @@
 ---
 - name: Setup Medical Compliance microservice
   hosts: all
-  become: yes
 
   roles:
     - python_setuptools
     - django
 
   tasks:
-    - name: Install requirements
-      pip:
-        requirements: "{{ vagrant_project_dir}}/medical_compliance/requirements.txt"
+    - block:
+        - name: Install requirements
+          pip:
+            requirements: "{{ vagrant_project_dir}}/medical_compliance/requirements.txt"
+
+        - name: Install daemon
+          become: yes
+          apt: pkg={{ item }} state=installed update-cache=yes
+          with_items:
+           - daemon
+
+      become: yes
