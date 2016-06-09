@@ -10,4 +10,4 @@
   tasks:
     - name: Install requirements
       pip:
-        requirements: "{{ vagrant_project_dir}}/medical-compliance/requirements.txt"
+        requirements: "{{ vagrant_project_dir}}/medical_compliance/requirements.txt"
