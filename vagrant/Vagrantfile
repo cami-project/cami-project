@@ -108,4 +108,14 @@ Vagrant.configure(2) do |config|
         ansible.playbook = "store.yml"
     end
   end
+
+  config.vm.define 'cami-medical-compliance', autostart: false do |mc|
+    mc.vm.hostname = 'cami-medical-compliance'
+    mc.vm.network 'private_network', ip: '192.168.73.12'
+
+    mc.vm.provision "ansible_local" do |ansible|
+        ansible.provisioning_path = "/home/vagrant/cami-project/ansible"
+        ansible.playbook = "medical-compliance.yml"
+    end
+  end
 end

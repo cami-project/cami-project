@@ -1,0 +1,13 @@
+---
+- name: Setup Medical Compliance microservice
+  hosts: all
+  become: yes
+
+  roles:
+    - python-setuptools
+    - django
+
+  tasks:
+    - name: Install requirements
+      pip:
+        requirements: "{{ vagrant_project_dir}}/medical-compliance/requirements.txt"
