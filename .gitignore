@@ -65,5 +65,7 @@ target/
 .idea
 
 # Vagrant temp files
-vagrant/*.log
 vagrant/.vagrant
+
+# Ansible temp files
+ansible/**/*.retry
