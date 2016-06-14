@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'tastypie',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -115,6 +116,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+TASTYPIE_DEFAULT_FORMATS = ['json']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
