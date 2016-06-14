@@ -31,4 +31,9 @@
       notify:
          - restart mysql
 
+    - name: Bind on all interfaces
+      replace: dest=/etc/mysql/my.cnf regexp='bind-address\s*=\s*127\.0\.0\.1' replace='bind-address = 0.0.0.0'
+      notify:
+         - restart mysql
+
   become: yes
