@@ -13,6 +13,7 @@
         password: "{{ mysql_cami_pass }}"
         state: present
         priv: "*.*:ALL"
+        host: "%"
         login_user: root
         login_password: "{{ mysql_root_pass }}"
 
