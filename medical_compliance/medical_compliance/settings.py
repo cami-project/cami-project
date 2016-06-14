@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'tastypie',
+    'medical_compliance.api'
 ]
 
 MIDDLEWARE_CLASSES = [
