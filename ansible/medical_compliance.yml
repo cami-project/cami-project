@@ -1,0 +1,30 @@
+---
+- name: Setup Medical Compliance microservice
+  hosts: all
+
+  roles:
+    - python_setuptools
+    - django
+
+  tasks:
+    - block:
+        - name: Install requirements
+          pip:
+            requirements: "{{ project_dir}}/medical_compliance/requirements.txt"
+
+        - name: Install daemon
+          become: yes
+          apt: pkg={{ item }} state=installed update-cache=yes
+          with_items:
+           - daemon
+
+      become: yes
+
+    - name: Set local settings
+      template: src=config/medical_compliance/settings_local.py.j2 dest="{{ project_dir }}/medical_compliance/medical_compliance/settings_local.py"
+
+    - name: Run migrations
+      shell: python "{{ project_dir }}/medical_compliance/manage.py" migrate
+
+    - name: Run Django server
+      shell: daemon -- python "{{ project_dir }}/medical_compliance/manage.py" runserver "{{ ansible_eth1.ipv4.address }}:8000"

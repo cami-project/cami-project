@@ -1,0 +1,12 @@
+---
+- block:
+    - name: Install python-setuptools
+      apt: pkg={{ item }} state=installed update-cache=yes
+      with_items:
+       - python-dev
+       - python-setuptools
+
+    - name: Install pip
+      action: easy_install name=pip
+
+  become: yes

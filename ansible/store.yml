@@ -13,6 +13,7 @@
         password: "{{ mysql_cami_pass }}"
         state: present
         priv: "*.*:ALL"
+        host: "%"
         login_user: root
         login_password: "{{ mysql_root_pass }}"
 
@@ -20,6 +21,6 @@
       mysql_db:
         state: import
         name: all
-        target: ../store/cami.sql
+        target: "{{project_dir }}/store/cami.sql"
         login_user: "{{ mysql_cami_user }}"
         login_password: "{{ mysql_cami_pass }}"

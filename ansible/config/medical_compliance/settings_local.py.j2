@@ -1,0 +1,10 @@
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'cami',
+        'USER': '{{ mysql_cami_user }}',
+        'PASSWORD': '{{ mysql_cami_pass }}',
+        'HOST': '{{ store_ip }}',   # Or an IP Address that your DB is hosted on
+        'PORT': '{{ mysql_port }}',
+    }
+}

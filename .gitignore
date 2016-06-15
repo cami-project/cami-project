@@ -69,3 +69,7 @@ vagrant/.vagrant
 
 # Ansible temp files
 ansible/**/*.retry
+
+# Django files
+*.sqlite3
+settings_local.py

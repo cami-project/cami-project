@@ -1,0 +1,8 @@
+---
+- block:
+    - name: Install required packages
+      apt: pkg={{ item }} state=installed update-cache=yes
+      with_items:
+       - libmysqlclient-dev
+
+  become: yes

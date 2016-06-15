@@ -5,3 +5,7 @@ mysql_port: 3306
 mysql_root_pass: cami
 mysql_cami_user: cami
 mysql_cami_pass: cami
+
+project_dir: /home/vagrant/cami-project
+
+store_ip: 192.168.73.11
