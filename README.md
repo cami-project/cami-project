@@ -19,6 +19,7 @@ Setting up a working cluster only involves starting up the vagrant machines in a
 ```
 cd cami-project/vagrant
 vagrant up cami-store
+vagrant up cami-rabbitmq-server
 vagrant up cami-medical-compliance
 ```
 You can check that all is in order by accessing this url: `http://192.168.73.12:8000/api/v1/medication-plans/`
@@ -46,6 +47,20 @@ basic schema for the database. It also creates a user with name `cami` and passw
 has full privileges and can connect from any host.
 
 The predefined ip for the `cami-store` instance is: `192.168.73.11`.
+
+### cami-rabbitmq-server
+
+This instance hosts a Rabbit MQ server that will be used as a message broker by all **cami**
+components.
+
+The provisioning script installs the RabbitMQ instance, creates a `cami` vhost and a `cami` user
+with full permissions on that vhost.
+
+Provisioning also enables the management plugin which allows managing the server through a web api.
+The management interface can be accessed at `http://192.168.73.13:15672/` with user `guest` and
+password `guest`.
+
+The predefined ip for the `cami-rabbitmq-server` instance is: `192.168.73.13`.
 
 ### cami-medical-compliance
 
