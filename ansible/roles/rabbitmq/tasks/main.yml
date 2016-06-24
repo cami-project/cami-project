@@ -1,0 +1,29 @@
+---
+- block:
+    - name: Add RabbitMQ repo key
+      apt_key:
+        url: https://www.rabbitmq.com/rabbitmq-release-signing-key.asc
+        state: present
+
+    - name: Add RabitMQ apt repository
+      apt_repository:
+        repo: 'deb http://archive.canonical.com/ubuntu hardy partner'
+        update_cache: yes
+        state: present
+
+    - name: Install rabbitmq-server
+      apt: pkg={{ item }} state=installed update-cache=yes
+      with_items:
+       - rabbitmq-server
+
+    - name: Read rabbitmq management plugin status
+      command: rabbitmq-plugins list -E rabbitmq_management
+      register: enabled_plugin
+
+    - name: Enable rabbitmq management plugin
+      command: rabbitmq-plugins enable rabbitmq_management
+      when: enabled_plugin.stdout == ""
+      notify:
+         - restart rabbitmq-server
+
+  become: yes

@@ -8,4 +8,10 @@ mysql_cami_pass: cami
 
 project_dir: /home/vagrant/cami-project
 
+rabbitmq_cami_user: cami
+rabbitmq_cami_pass: cami
+rabbitmq_cami_vhost: /cami
+
 store_ip: 192.168.73.11
+medical_compliance_ip: 192.168.73.12
+rabbitmq_server_ip: 192.168.73.13
