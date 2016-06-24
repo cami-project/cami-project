@@ -118,4 +118,14 @@ Vagrant.configure(2) do |config|
         ansible.playbook = "medical_compliance.yml"
     end
   end
+
+  config.vm.define 'cami-rabbitmq-server', autostart: false do |rabbit|
+    rabbit.vm.hostname = 'cami-rabbitmq-server'
+    rabbit.vm.network 'private_network', ip: '192.168.73.13'
+
+    rabbit.vm.provision "ansible_local" do |ansible|
+        ansible.provisioning_path = "/home/vagrant/cami-project/ansible"
+        ansible.playbook = "rabbitmq_server.yml"
+    end
+  end
 end
