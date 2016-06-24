@@ -1,0 +1,9 @@
+---
+- block:
+    - name: Install upstart script
+      template:
+        src: init.conf.j2
+        dest: "/etc/init/{{ daemon_name }}.conf"
+        mode: 0755
+
+  become: yes
