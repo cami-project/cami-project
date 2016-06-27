@@ -1,0 +1,20 @@
+---
+- name: Setup deamon example to consume RabbitMQ messages
+  hosts: all
+
+  roles:
+    - python_setuptools
+    - { role: daemon, daemon_name: cami-daemon, daemon_exec: daemon.py, daemon_home: "{{ project_dir }}/daemon" }
+
+  tasks:
+    - block:
+        - name: Install requirements
+          pip:
+            requirements: "{{ project_dir }}/daemon/requirements.txt"
+
+        - name: Make daemon executable
+          file: path="{{ project_dir }}/daemon/daemon.py" state=touch mode="a+x"
+
+        - name: Start daemon
+          service: name=cami-daemon state=started
+      become: yes
