@@ -1,0 +1,7 @@
+{
+  "notification": {
+    "type": "weight",
+    "severity": "low",
+    "message": "There's a slight increase in your weight since the last measurement"
+  }
+}
