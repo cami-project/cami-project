@@ -1,0 +1,7 @@
+{
+  "notification": {
+    "type": "weight",
+    "severity": "medium",
+    "message": "Your weight loss plan is in danger"
+  }
+}
