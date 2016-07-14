@@ -4,5 +4,7 @@
 
 module.exports = {
   AUTH0_CLIENT_ID: '',
-  AUTH0_DOMAIN: ''
+  AUTH0_DOMAIN: '',
+  NOTIFICATIONS_POLL_INTERVAL_MILLIS: 5000,
+  NOTIFICATIONS_REST_API: 'http://127.0.0.1/notification.json'
 };
