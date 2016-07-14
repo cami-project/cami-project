@@ -3,7 +3,9 @@ import {Map, fromJS} from 'immutable';
 // Initial state
 const initialState = Map({
   isLoggedIn: false,
-  currentUser: null,
+  currentUser: fromJS({
+      name: "Jim"
+    }),
   authenticationToken: null
 });
 

@@ -8,13 +8,15 @@ import {
 
 const HomepageView = React.createClass({
   propTypes: {
-    notification: PropTypes.instanceOf(Map).isRequired
+    notification: PropTypes.instanceOf(Map).isRequired,
+    username: PropTypes.string.isRequired
   },
 
   render() {
     return (
       <View>
         <Text>
+          Hello, {this.props.username}!
           {this.props.notification.get("message")}
         </Text>
       </View>
