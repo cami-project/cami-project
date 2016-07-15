@@ -1,0 +1,3 @@
+#!/bin/sh
+
+cat notification.high.json > notification.json
