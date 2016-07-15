@@ -9,6 +9,8 @@ import {
   Dimensions
 } from 'react-native';
 
+var Color = require("color");
+
 const HomepageView = React.createClass({
   propTypes: {
     notification: PropTypes.instanceOf(Map).isRequired,
@@ -69,8 +71,6 @@ const buttonCircle = {
   height: 90
 };
 
-const username = 'Jim';
-
 let {height, width} = Dimensions.get('window');
 
 const color = {
@@ -80,7 +80,6 @@ const color = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
     backgroundColor: 'moccasin'
   },
   iconContainer: {
@@ -88,14 +87,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#eaeaea',
     zIndex: 2,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    paddingTop: 20
   },
   outerRing: {
     borderWidth: 2,
     borderRadius: 72,
     width: 140,
     height: 140,
-    borderColor: 'rgba(255,255,255,0.35)',
+    borderColor: Color('white').clearer(.75).rgbaString(),
     marginBottom: -70,
     justifyContent: 'center'
   },
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     width: 120,
     height: 120,
-    backgroundColor: 'white',
+    backgroundColor: Color('white').clearer(.25).rgbaString(),
     alignSelf: 'center',
     justifyContent: 'center'
   },
@@ -139,8 +139,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     shadowRadius: 40,
     shadowOffset: {width: 0, height: 0},
-    shadowOpacity: 0.35,
-    shadowColor: color.developing
+    shadowOpacity: 0.4,
+    shadowColor: Color(color.developing).darken(.6).hexString()
   },
   buttonText: {
     backgroundColor: 'transparent',
