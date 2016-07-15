@@ -57,7 +57,7 @@ PODS:
     - SimpleKeychain (~> 0.3)
 
 DEPENDENCIES:
-  - Lock (~> 1.24)
+  - Lock (~> 1.26)
   - Lock/Email
   - Lock/SMS
   - Lock/TouchID
@@ -70,6 +70,6 @@ SPEC CHECKSUMS:
   SimpleKeychain: b50cef3b87939d480ea1143425c00f5b4b70fe21
   TouchIDAuth: 0cf861f58a2cacfc1c12cb02de4850729d943c81
 
-PODFILE CHECKSUM: a65c2e91aed2fbdeeeceda1eabdd101229bebed4
+PODFILE CHECKSUM: 9ee3097722cbf406843880bdef2de17c91c42137
 
 COCOAPODS: 1.0.1
