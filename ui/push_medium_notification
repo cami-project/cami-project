@@ -1,0 +1,3 @@
+#!/bin/sh
+
+cat notification.medium.json > notification.json
