@@ -3,6 +3,8 @@
 import React from 'react';
 import CounterViewContainer from './counter/CounterViewContainer';
 import ColorViewContainer from './colors/ColorViewContainer';
+import HomepageViewContainer from './homepage/HomepageViewContainer';
+import HomepageViewContainerCaregiver from './homepage-caregiver/HomepageViewContainer';
 
 /**
  * AppRouter is responsible for mapping a navigator scene to a view
@@ -21,6 +23,14 @@ export default function AppRouter(props) {
         index={index}
       />
     );
+  }
+
+  if (key === 'Homepage') {
+    return <HomepageViewContainer />;
+  }
+  
+  if (key === 'HomepageCaregiver') {
+    return <HomepageViewContainerCaregiver />;
   }
 
   throw new Error('Unknown navigation key: ' + key);

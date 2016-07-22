@@ -5,6 +5,7 @@ import AuthStateReducer from '../modules/auth/AuthState';
 import CounterStateReducer from '../modules/counter/CounterState';
 import SessionStateReducer, {RESET_STATE} from '../modules/session/SessionState';
 import HomepageStateReducer from '../modules/homepage/HomepageState';
+import HomepageStateReducerCaregiver from '../modules/homepage-caregiver/HomepageState';
 
 const reducers = {
   // Authentication/login state
@@ -19,7 +20,9 @@ const reducers = {
 
   session: SessionStateReducer,
 
-  homepage: HomepageStateReducer
+  homepage: HomepageStateReducer,
+
+  homepageCaregiver: HomepageStateReducerCaregiver
 };
 
 // initial state, accessor and mutator for supporting root-level
