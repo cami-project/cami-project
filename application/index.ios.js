@@ -11,11 +11,11 @@ const Cami = React.createClass({
 
   render() {
     // Start polling for notifications.
-    store.dispatch(HomepageStateActions.requestNotification());
+    // store.dispatch(HomepageStateActions.requestNotification());
 
     return (
       <Provider store={store}>
-        <HomepageViewContainer />
+        <AppViewContainer />
       </Provider>
     );
   }
