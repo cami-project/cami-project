@@ -33,11 +33,11 @@ export function navigationCompleted() {
 }
 
 const initialState = fromJS(
-  createNavigationState('MainNavigation', 'App', [
-    createNavigationState('HomepageCaregiver', 'Homepage2', [{key: 'HomepageCaregiver', title: 'Homepage2'}]),
-    createNavigationState('HomeTab', 'Home', [{key: 'Counter', title: 'Counter'}]),
-    createNavigationState('ProfileTab', 'Profile', [{key: 'Color', title: 'Color'}]),
-    createNavigationState('HomepageTab', 'Homepage', [{key: 'Homepage', title: 'Homepage'}]),
+  createNavigationState('MainNavigation', 'App', '', [
+    createNavigationState('HomepageCaregiver', 'Home', require('../../../images/home-menu.png'), [{key: 'HomepageCaregiver', title: 'Home'}]),
+    createNavigationState('HomeTab', 'Status', require('../../../images/status-menu.png'), [{key: 'Counter', title: 'Counter'}]),
+    createNavigationState('ProfileTab', 'Journal', require('../../../images/journal-menu.png'), [{key: 'Color', title: 'Color'}]),
+    createNavigationState('HomepageTab', 'Settings', require('../../../images/settings-menu.png'), [{key: 'Homepage', title: 'Homepage'}]),
   ]));
 
 export default function NavigationReducer(state = initialState, action) {
@@ -71,10 +71,11 @@ export default function NavigationReducer(state = initialState, action) {
 
 // Helper for creating a state object compatible with the
 // RN NavigationExperimental navigator
-function createNavigationState(key, title, routes) {
+function createNavigationState(key, title, image, routes) {
   return {
     key,
     title,
+    image,
     index: 0,
     routes
   };

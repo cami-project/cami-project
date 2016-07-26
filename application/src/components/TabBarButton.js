@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {
   Text,
+  Image,
   TouchableOpacity,
   StyleSheet
 } from 'react-native';
@@ -10,7 +11,8 @@ export default React.createClass({
   propTypes: {
     text: PropTypes.string.isRequired,
     action: PropTypes.func.isRequired,
-    isSelected: PropTypes.bool.isRequired
+    isSelected: PropTypes.bool.isRequired,
+    image: PropTypes.number.isRequired
   },
   render() {
     return (
@@ -18,6 +20,7 @@ export default React.createClass({
         onPress={this.props.action}
         style={[styles.button, this.props.isSelected && styles.selected]}
         >
+        <Image source={this.props.image}/>
         <Text>{this.props.text}</Text>
       </TouchableOpacity>
     );
