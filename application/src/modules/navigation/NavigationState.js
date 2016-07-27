@@ -32,12 +32,14 @@ export function navigationCompleted() {
   return {type: NAVIGATION_COMPLETED};
 }
 
+import {images} from 'Cami/src/images';
+
 const initialState = fromJS(
-  createNavigationState('MainNavigation', 'App', '', [
-    createNavigationState('HomepageCaregiver', 'Home', require('../../../images/home-menu.png'), [{key: 'HomepageCaregiver', title: 'Home'}]),
-    createNavigationState('HomeTab', 'Status', require('../../../images/status-menu.png'), [{key: 'Counter', title: 'Counter'}]),
-    createNavigationState('ProfileTab', 'Journal', require('../../../images/journal-menu.png'), [{key: 'Color', title: 'Color'}]),
-    createNavigationState('HomepageTab', 'Settings', require('../../../images/settings-menu.png'), [{key: 'Homepage', title: 'Homepage'}]),
+  createNavigationState('MainNavigation', 'App', null, [
+    createNavigationState('HomepageCaregiver', 'Home', images.menu.home, [{key: 'HomepageCaregiver', title: 'Home'}]),
+    createNavigationState('HomeTab', 'Status', images.menu.status, [{key: 'Counter', title: 'Counter'}]),
+    createNavigationState('Journal', 'Journal', images.menu.journal, [{key: 'Journal', title: 'Journal'}]),
+    createNavigationState('HomepageTab', 'Settings', images.menu.settings, [{key: 'Homepage', title: 'Homepage'}]),
   ]));
 
 export default function NavigationReducer(state = initialState, action) {
