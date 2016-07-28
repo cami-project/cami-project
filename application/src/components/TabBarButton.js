@@ -5,6 +5,7 @@ import {
   StyleSheet
 } from 'react-native';
 
+import Icon from 'react-native-vector-icons/Ionicons';
 
 var Color = require('color');
 
@@ -13,7 +14,8 @@ export default React.createClass({
   propTypes: {
     text: PropTypes.string.isRequired,
     action: PropTypes.func.isRequired,
-    isSelected: PropTypes.bool.isRequired
+    isSelected: PropTypes.bool.isRequired,
+    icon: PropTypes.string.isRequired
   },
   render() {
     return (
@@ -21,6 +23,7 @@ export default React.createClass({
         onPress={this.props.action}
         style={styles.button}
       >
+        <Icon name={this.props.icon} size={22} color={this.props.isSelected ? color.active : color.inactive}/>
         <Text style={[styles.buttonText, this.props.isSelected && styles.selected]}>{this.props.text}</Text>
       </TouchableOpacity>
     );
