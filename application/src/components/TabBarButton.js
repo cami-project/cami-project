@@ -5,6 +5,9 @@ import {
   StyleSheet
 } from 'react-native';
 
+
+var Color = require('color');
+
 export default React.createClass({
   displayName: 'TabBarButton',
   propTypes: {
@@ -16,13 +19,19 @@ export default React.createClass({
     return (
       <TouchableOpacity
         onPress={this.props.action}
-        style={[styles.button, this.props.isSelected && styles.selected]}
-        >
-        <Text>{this.props.text}</Text>
+        style={styles.button}
+      >
+        <Text style={[styles.buttonText, this.props.isSelected && styles.selected]}>{this.props.text}</Text>
       </TouchableOpacity>
     );
   }
 });
+
+const color = {
+  developing: '#a7b50a',
+  active: '#00A4EE',
+  inactive: Color('black').clearer(.25).rgbaString()
+}
 
 const styles = StyleSheet.create({
   button: {
@@ -30,7 +39,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  buttonText: {
+    fontSize: 12,
+    color: color.inactive,
+  },
   selected: {
-    backgroundColor: 'yellow'
+    color: color.active
   }
 });
