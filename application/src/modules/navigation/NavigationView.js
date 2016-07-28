@@ -7,7 +7,7 @@ import AppRouter from '../AppRouter';
 import NavigationTabView from './NavigationTabView';
 import TabBar from '../../components/TabBar';
 
-const TAB_BAR_HEIGHT = 90;
+const TAB_BAR_HEIGHT = 50;
 
 const NavigationView = React.createClass({
   propTypes: {
