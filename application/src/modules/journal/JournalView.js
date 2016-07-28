@@ -10,6 +10,7 @@ import {
   Component
 } from 'react-native';
 import Color from 'color';
+import moment from 'moment';
 
 import JournalEntry from './components/JournalEntry';
 
@@ -20,8 +21,22 @@ const JournalView = React.createClass({
   },
 
   render() {
+    const today = new Date(this.props.events.get(0).get('timestamp') * 1000);
+
     return (
       <View style={styles.container}>
+        <View style={styles.iconContainer}>
+          <Text style={[styles.mainText, {fontWeight: 'bold'}]}>
+            Journal
+          </Text>
+          <View style={styles.outerRing}>
+            <Image style={styles.iconRing} source={require('../../../images/old-man.png')}/>
+          </View>
+          <Text style={[styles.mainText, {textAlign: 'right', zIndex: 1}]}>
+            Today {moment(today).format('D MMM')}
+          </Text>
+        </View>
+
         <View style={styles.mainContainer}>
           {this.props.events.map((event, index) =>
             <JournalEntry
@@ -50,13 +65,13 @@ const styles = StyleSheet.create({
     zIndex: 2,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 20
+    // paddingTop: 20
   },
   outerRing: {
     borderWidth: 2,
     borderRadius: 72,
-    width: 140,
-    height: 140,
+    width: 100,
+    height: 100,
     borderColor: Color('white').clearer(.75).rgbaString(),
     marginBottom: -70,
     justifyContent: 'center'
@@ -64,8 +79,8 @@ const styles = StyleSheet.create({
   iconRing: {
     borderWidth: 0,
     borderRadius: 60,
-    width: 120,
-    height: 120,
+    width: 80,
+    height: 80,
     backgroundColor: Color('white').clearer(.25).rgbaString(),
     alignSelf: 'center',
     justifyContent: 'center'
