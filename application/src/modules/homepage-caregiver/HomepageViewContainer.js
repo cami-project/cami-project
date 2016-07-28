@@ -6,5 +6,6 @@ export default connect(
   state => ({
     username: state.getIn(['auth', 'currentUser', 'name']),
     status: state.getIn(['homepageCaregiver']),
+    events: state.getIn(['journal', 'events']),
   })
 )(HomepageView);

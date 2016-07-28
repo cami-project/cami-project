@@ -30,7 +30,7 @@ const JournalView = React.createClass({
     const todayDateText = moment(new Date(this.props.events.get(0).get('timestamp') * 1000)).format(DATE_FORMAT);
     const firstEventDateText = moment(new Date(this.props.events.get(0).get('timestamp') * 1000)).format(DATE_FORMAT);
     const headerDateText = todayDateText == firstEventDateText ? 'Today ' + todayDateText : firstEventDateText;
-    
+
     const events = [];
     let dayKey = firstEventDateText;
     this.props.events.forEach((event, index) => {
