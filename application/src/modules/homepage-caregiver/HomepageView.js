@@ -1,9 +1,10 @@
-import {Map} from 'immutable'
+import {Map, List} from 'immutable'
 import React, {PropTypes} from 'react';
 import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
   Image,
   TouchableOpacity,
   Dimensions,
@@ -12,11 +13,13 @@ import {
 import Color from 'color';
 
 import StatusChart from './components/StatusChart';
+import JournalEntry from './components/JournalEntry';
 
 const HomepageView = React.createClass({
   propTypes: {
-    status: PropTypes.object.isRequired,
-    username: PropTypes.string.isRequired
+    username: PropTypes.string.isRequired,
+    status: PropTypes.instanceOf(Map).isRequired,
+    events: PropTypes.instanceOf(List).isRequired
   },
 
   render() {
@@ -49,6 +52,26 @@ const HomepageView = React.createClass({
               image={require('../../../images/weight-warning.png')}
               unit="kg"/>
           </View>
+
+          <View style={{flex: 1}}>
+            <Text style={[styles.mainText, {fontWeight: 'bold', textAlign: 'center'}]}>
+              Latest Journal Entries
+            </Text>
+
+            <ScrollView style={{flex: 1}}>
+              {this.props.events.map((event, index) =>
+                <JournalEntry
+                  key={index}
+                  type={event.get('type')}
+                  status={event.get('status')}
+                  timestamp={event.get('timestamp')}
+                  title={event.get('title')}
+                />
+              )}
+            </ScrollView>
+
+          </View>
+
         </View>
       </View>
     );
