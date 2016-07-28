@@ -59,6 +59,9 @@ const HomepageView = React.createClass({
             </Text>
 
             <ScrollView style={{flex: 1}}>
+              {/* TODO */}
+              {/* Limit somehow the latest entries count */}
+              {/* Maybe show only for today, or only last 5 */}
               {this.props.events.map((event, index) =>
                 <JournalEntry
                   key={index}
