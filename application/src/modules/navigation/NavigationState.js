@@ -33,11 +33,11 @@ export function navigationCompleted() {
 }
 
 const initialState = fromJS(
-  createNavigationState('MainNavigation', 'App', [
-    createNavigationState('HomepageCaregiver', 'Homepage2', [{key: 'HomepageCaregiver', title: 'Homepage2'}]),
-    createNavigationState('HomeTab', 'Home', [{key: 'Counter', title: 'Counter'}]),
-    createNavigationState('ProfileTab', 'Profile', [{key: 'Color', title: 'Color'}]),
-    createNavigationState('HomepageTab', 'Homepage', [{key: 'Homepage', title: 'Homepage'}]),
+  createNavigationState('MainNavigation', 'App', '', [
+    createNavigationState('HomepageCaregiver', 'Home', 'ios-home-outline', [{key: 'HomepageCaregiver', title: 'Home'}]),
+    createNavigationState('HomeTab', 'Counter', 'ios-stopwatch-outline', [{key: 'Counter', title: 'Counter'}]),
+    createNavigationState('ProfileTab', 'Color', 'ios-color-palette', [{key: 'Color', title: 'Color'}]),
+    createNavigationState('HomepageTab', 'Elder', 'ios-person', [{key: 'Homepage', title: 'Elder'}]),
   ]));
 
 export default function NavigationReducer(state = initialState, action) {
@@ -71,10 +71,11 @@ export default function NavigationReducer(state = initialState, action) {
 
 // Helper for creating a state object compatible with the
 // RN NavigationExperimental navigator
-function createNavigationState(key, title, routes) {
+function createNavigationState(key, title, icon, routes) {
   return {
     key,
     title,
+    icon,
     index: 0,
     routes
   };
