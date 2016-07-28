@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
   Image,
   TouchableOpacity,
   Dimensions,
@@ -14,6 +15,9 @@ import moment from 'moment';
 
 import JournalEntry from './components/JournalEntry';
 
+const DATE_FORMAT = 'D MMM';
+const WEEK_DATE_FORMAT = 'ddd D MMM';
+
 const JournalView = React.createClass({
   propTypes: {
     events: PropTypes.instanceOf(List).isRequired,
@@ -21,7 +25,32 @@ const JournalView = React.createClass({
   },
 
   render() {
-    const today = new Date(this.props.events.get(0).get('timestamp') * 1000);
+    // TODO switch places the following 2 lines
+    // const todayDateText = moment().format(DATE_FORMAT);
+    const todayDateText = moment(new Date(this.props.events.get(0).get('timestamp') * 1000)).format(DATE_FORMAT);
+    const firstEventDateText = moment(new Date(this.props.events.get(0).get('timestamp') * 1000)).format(DATE_FORMAT);
+    const headerDateText = todayDateText == firstEventDateText ? 'Today ' + todayDateText : firstEventDateText;
+    
+    const events = [];
+    let dayKey = firstEventDateText;
+    this.props.events.forEach((event, index) => {
+      const day = moment(new Date(event.get('timestamp') * 1000)).format(DATE_FORMAT);
+      if (day != dayKey) {
+        dayKey = day;
+        const weekDayText = moment(new Date(event.get('timestamp') * 1000)).format(WEEK_DATE_FORMAT);
+        events.push(<Text key={'text' + index} style={{textAlign: 'right'}}>{weekDayText}</Text>);
+      }
+      events.push(
+        <JournalEntry
+          key={'entry' + index}
+          type={event.get('type')}
+          status={event.get('status')}
+          timestamp={event.get('timestamp')}
+          title={event.get('title')}
+          message={event.get('message')}
+        />
+      );
+    });
 
     return (
       <View style={styles.container}>
@@ -33,22 +62,13 @@ const JournalView = React.createClass({
             <Image style={styles.iconRing} source={require('../../../images/old-man.png')}/>
           </View>
           <Text style={[styles.mainText, {textAlign: 'right', zIndex: 1}]}>
-            Today {moment(today).format('D MMM')}
+            {headerDateText}
           </Text>
         </View>
 
-        <View style={styles.mainContainer}>
-          {this.props.events.map((event, index) =>
-            <JournalEntry
-              key={index}
-              type={event.get('type')}
-              status={event.get('status')}
-              timestamp={event.get('timestamp')}
-              title={event.get('title')}
-              message={event.get('message')}
-            />
-          )}
-        </View>
+        <ScrollView>
+          {events}
+        </ScrollView>
       </View>
     );
   }
