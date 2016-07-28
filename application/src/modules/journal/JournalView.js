@@ -1,4 +1,4 @@
-import {Map} from 'immutable'
+import {List} from 'immutable'
 import React, {PropTypes} from 'react';
 import {
   StyleSheet,
@@ -11,44 +11,28 @@ import {
 } from 'react-native';
 import Color from 'color';
 
-import StatusChart from './components/StatusChart';
+import JournalEntry from './components/JournalEntry';
 
-const HomepageView = React.createClass({
+const JournalView = React.createClass({
   propTypes: {
-    status: PropTypes.object.isRequired,
+    events: PropTypes.instanceOf(List).isRequired,
     username: PropTypes.string.isRequired
   },
 
   render() {
-    const heartRateData = this.props.status.get('heart').get('rate');
-    const weightData = this.props.status.get('weigth').get('amount');
-
     return (
       <View style={styles.container}>
-
-        <View style={styles.iconContainer}>
-          <View style={styles.outerRing}>
-            <Image style={styles.iconRing} source={require('../../../images/old-man.png')}/>
-          </View>
-          <Text style={[styles.mainText, {fontWeight: 'bold'}]}>
-            {this.props.username}'s doing fine
-          </Text>
-        </View>
-
         <View style={styles.mainContainer}>
-          <View style={{flexDirection: 'row'}}>
-            <StatusChart
-              data={heartRateData}
-              text="Heart rate"
-              image={require('../../../images/heart-ok.png')}
-              unit="bpm"/>
-
-            <StatusChart
-              data={weightData}
-              text="Weight"
-              image={require('../../../images/weight-warning.png')}
-              unit="kg"/>
-          </View>
+          {this.props.events.map((event, index) =>
+            <JournalEntry
+              key={index}
+              type={event.get('type')}
+              status={event.get('status')}
+              timestamp={event.get('timestamp')}
+              title={event.get('title')}
+              message={event.get('message')}
+            />
+          )}
         </View>
       </View>
     );
@@ -99,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomepageView;
+export default JournalView;

@@ -20,6 +20,7 @@ const TabBar = React.createClass({
       <TabBarButton
         key={'tab-bar-button-' + tab.title}
         text={tab.title}
+        image={tab.image}
         action={() => this.props.switchTab(index)}
         isSelected={index === this.props.currentTabIndex}
         icon={tab.icon}
