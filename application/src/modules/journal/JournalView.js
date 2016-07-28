@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
   Image,
   TouchableOpacity,
   Dimensions,
@@ -15,6 +16,7 @@ import moment from 'moment';
 import JournalEntry from './components/JournalEntry';
 
 const DATE_FORMAT = 'D MMM';
+const WEEK_DATE_FORMAT = 'ddd D MMM';
 
 const JournalView = React.createClass({
   propTypes: {
@@ -33,10 +35,10 @@ const JournalView = React.createClass({
     let dayKey = firstEventDateText;
     this.props.events.forEach((event, index) => {
       const day = moment(new Date(event.get('timestamp') * 1000)).format(DATE_FORMAT);
-      console.log('day:', day);
       if (day != dayKey) {
-        events.push(<Text key={'text' + index}>{day}</Text>);
         dayKey = day;
+        const weekDayText = moment(new Date(event.get('timestamp') * 1000)).format(WEEK_DATE_FORMAT);
+        events.push(<Text key={'text' + index} style={{textAlign: 'right'}}>{weekDayText}</Text>);
       }
       events.push(
         <JournalEntry
@@ -64,7 +66,9 @@ const JournalView = React.createClass({
           </Text>
         </View>
 
-        {events}
+        <ScrollView>
+          {events}
+        </ScrollView>
       </View>
     );
   }
