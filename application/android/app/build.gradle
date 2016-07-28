@@ -132,6 +132,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-vector-icons')
     compile project(':react-native-blur')
     compile project(':react-native-lock')
     compile fileTree(dir: "libs", include: ["*.jar"])

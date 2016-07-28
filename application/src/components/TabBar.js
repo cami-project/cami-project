@@ -23,6 +23,7 @@ const TabBar = React.createClass({
         image={tab.image}
         action={() => this.props.switchTab(index)}
         isSelected={index === this.props.currentTabIndex}
+        icon={tab.icon}
       />
     ));
 

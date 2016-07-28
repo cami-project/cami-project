@@ -74,7 +74,8 @@ const buttonCircle = {
 let {height, width} = Dimensions.get('window');
 
 const color = {
-  developing: '#a7b50a'
+  developing: '#a7b50a',
+  active: '#00A4EE'
 }
 
 const styles = StyleSheet.create({

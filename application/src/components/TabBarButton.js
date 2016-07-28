@@ -1,10 +1,13 @@
 import React, {PropTypes} from 'react';
 import {
   Text,
-  Image,
   TouchableOpacity,
   StyleSheet
 } from 'react-native';
+
+import Icon from 'react-native-vector-icons/Ionicons';
+
+var Color = require('color');
 
 export default React.createClass({
   displayName: 'TabBarButton',
@@ -12,20 +15,26 @@ export default React.createClass({
     text: PropTypes.string.isRequired,
     action: PropTypes.func.isRequired,
     isSelected: PropTypes.bool.isRequired,
-    image: PropTypes.number.isRequired
+    icon: PropTypes.string.isRequired
   },
   render() {
     return (
       <TouchableOpacity
         onPress={this.props.action}
-        style={[styles.button, this.props.isSelected && styles.selected]}
-        >
-        <Image source={this.props.image}/>
-        <Text>{this.props.text}</Text>
+        style={styles.button}
+      >
+        <Icon name={this.props.icon} size={22} color={this.props.isSelected ? color.active : color.inactive}/>
+        <Text style={[styles.buttonText, this.props.isSelected && styles.selected]}>{this.props.text}</Text>
       </TouchableOpacity>
     );
   }
 });
+
+const color = {
+  developing: '#a7b50a',
+  active: '#00A4EE',
+  inactive: Color('black').clearer(.25).rgbaString()
+}
 
 const styles = StyleSheet.create({
   button: {
@@ -33,7 +42,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  buttonText: {
+    fontSize: 12,
+    color: color.inactive,
+  },
   selected: {
-    backgroundColor: 'yellow'
+    color: color.active
   }
 });

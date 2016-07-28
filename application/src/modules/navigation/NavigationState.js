@@ -32,14 +32,12 @@ export function navigationCompleted() {
   return {type: NAVIGATION_COMPLETED};
 }
 
-import {images} from 'Cami/src/images';
-
 const initialState = fromJS(
-  createNavigationState('MainNavigation', 'App', null, [
-    createNavigationState('HomepageCaregiver', 'Home', images.menu.home, [{key: 'HomepageCaregiver', title: 'Home'}]),
-    createNavigationState('HomeTab', 'Status', images.menu.status, [{key: 'Counter', title: 'Counter'}]),
-    createNavigationState('Journal', 'Journal', images.menu.journal, [{key: 'Journal', title: 'Journal'}]),
-    createNavigationState('HomepageTab', 'Settings', images.menu.settings, [{key: 'Homepage', title: 'Homepage'}]),
+  createNavigationState('MainNavigation', 'App', '', [
+    createNavigationState('HomepageCaregiver', 'Home', 'ios-home', [{key: 'HomepageCaregiver', title: 'Home'}]),
+    createNavigationState('HomeTab', 'Status', 'ios-pulse', [{key: 'Counter', title: 'Counter'}]),
+    createNavigationState('Journal', 'Journal', 'ios-paper', [{key: 'Journal', title: 'Journal'}]),
+    createNavigationState('HomepageTab', 'Settings', 'ios-cog', [{key: 'Homepage', title: 'Homepage'}]),
   ]));
 
 export default function NavigationReducer(state = initialState, action) {
@@ -73,11 +71,11 @@ export default function NavigationReducer(state = initialState, action) {
 
 // Helper for creating a state object compatible with the
 // RN NavigationExperimental navigator
-function createNavigationState(key, title, image, routes) {
+function createNavigationState(key, title, icon, routes) {
   return {
     key,
     title,
-    image,
+    icon,
     index: 0,
     routes
   };
