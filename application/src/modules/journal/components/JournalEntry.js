@@ -7,6 +7,8 @@ import {
   Image
 } from 'react-native';
 
+import moment from 'moment';
+
 import {images} from 'Cami/src/images';
 
 const chartStyles = StyleSheet.create({
@@ -41,14 +43,13 @@ const JournalEntry = React.createClass({
   propTypes: {
     type: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
-    timestamp: PropTypes.string.isRequired,
+    timestamp: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     message: PropTypes.string.isRequired
   },
 
   render() {
-    // const time = new Date(this.props.timestamp * 1000);
-    // console.log('time:', time);
+    const time = moment(new Date(this.props.timestamp * 1000)).format('HH mm');
 
     return (
       <View style={{backgroundColor: 'white', flexDirection: 'row'}}>
@@ -57,7 +58,7 @@ const JournalEntry = React.createClass({
             <Image source={images[this.props.type][this.props.status]}/>
           </View>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Text>{this.props.timestamp}</Text>
+            <Text>{time}</Text>
           </View>
         </View>
         <View style={{flex: 3, justifyContent: 'center', alignItems: 'center'}}>
