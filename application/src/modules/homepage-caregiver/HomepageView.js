@@ -62,11 +62,11 @@ const HomepageView = React.createClass({
           </View>
 
           <View style={{flex: 1}}>
-            <Text style={[styles.mainText, {fontWeight: 'bold'}]}>
+            <Text style={[variables.h2, {marginTop: 20, color: variables.colors.gray.neutral}]}>
               Latest Journal Entries
             </Text>
 
-            <ScrollView style={{flex: 1}}>
+            <ScrollView style={{flex: 1, padding: 10}}>
               {/* TODO */}
               {/* Limit somehow the latest entries count */}
               {/* Maybe show only for today, or only last 5 */}
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 3,
-    backgroundColor: '#eeeeee',
+    backgroundColor: variables.colors.background,
     zIndex: 1
   },
   mainText: {

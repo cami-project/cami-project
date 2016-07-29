@@ -30,6 +30,12 @@ var styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  h2: {
+    fontSize: 14,
+    fontWeight: 'normal',
+    alignSelf: 'center',
+    marginBottom: 10
+  }
 })
 
 module.exports = styles;

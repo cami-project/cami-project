@@ -19,13 +19,14 @@ const chartStyles = StyleSheet.create({
     borderStyle: 'solid'
   },
   chartContainer: {
-    paddingTop: 10
+    paddingTop: 15
   },
   chart: {
     height: 25,
   },
   iconContainer: {
-    width: 50,
+    width: 40,
+    justifyContent: 'flex-start',
     alignSelf: 'flex-start',
     alignItems: 'flex-start',
     height: 40
