@@ -15,8 +15,7 @@ const JournalEntry = React.createClass({
     type: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
     timestamp: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-    message: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired
   },
 
   render() {
@@ -24,17 +23,14 @@ const JournalEntry = React.createClass({
 
     return (
       <View style={{backgroundColor: 'white', flexDirection: 'row'}}>
-        <View style={{flex: 1}}>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Image source={images[this.props.type][this.props.status]}/>
-          </View>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Text>{time}</Text>
-          </View>
+        <View>
+          <Image source={images[this.props.type][this.props.status]}/>
         </View>
-        <View style={{flex: 3, justifyContent: 'center', alignItems: 'center'}}>
+        <View>
+          <Text>{time}</Text>
+        </View>
+        <View style={{flex: 1}}>
           <Text>{this.props.title}</Text>
-          <Text>{this.props.message}</Text>
         </View>
       </View>
     );

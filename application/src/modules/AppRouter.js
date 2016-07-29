@@ -6,6 +6,7 @@ import ColorViewContainer from './colors/ColorViewContainer';
 import HomepageViewContainer from './homepage/HomepageViewContainer';
 import HomepageViewContainerCaregiver from './homepage-caregiver/HomepageViewContainer';
 import JournalViewContainer from './journal/JournalViewContainer';
+import StatusViewContainer from './status/StatusViewContainer';
 
 /**
  * AppRouter is responsible for mapping a navigator scene to a view
@@ -15,8 +16,8 @@ export default function AppRouter(props) {
   switch (key) {
     case 'HomepageCaregiver':
       return <HomepageViewContainerCaregiver />;
-    case 'Counter':
-      return <CounterViewContainer />;
+    case 'Status':
+      return <StatusViewContainer />;
     case 'Journal':
       return <JournalViewContainer />;
     case 'Homepage':
