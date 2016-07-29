@@ -8,37 +8,48 @@ import {
 import Chart from 'react-native-chart';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const color = {
-  developing: '#a7b50a',
-  active: '#00A4EE',
-  good: '#658d51'
-}
+const variables = require('../../variables/CaregiverGlobalVariables');
 
 const chartStyles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    padding: 10,
+    borderBottomWidth: 1,
+    borderRightWidth: 1,
+    borderColor: variables.colors.grayLight,
+    borderStyle: 'solid'
   },
   chartContainer: {
-    // flex: 1,
-    // backgroundColor: 'white',
+    paddingTop: 10
   },
   chart: {
-    height: 50,
+    height: 25,
+  },
+  iconContainer: {
+    width: 50,
+    alignSelf: 'flex-start',
+    alignItems: 'flex-start',
+    height: 40
+  },
+  infoContainer: {
+    paddingTop: 2,
+    paddingLeft: 10
   },
   value: {
-    fontSize: 26,
-    color: 'black',
-    lineHeight: 1.3*26
+    fontSize: 24,
+    color: variables.colors.grayDark,
+    lineHeight: 24
   },
   unit: {
-    fontSize: 16,
-    color: 'black',
-    lineHeight: 1.3*26
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: variables.colors.gray,
+    lineHeight: 24
   },
   description: {
-    fontSize: 18,
-    color: 'black',
-    lineHeight: 1.3*26
+    fontSize: 12,
+    color: variables.colors.grayDark,
+    lineHeight: 12
   }
 });
 
@@ -61,7 +72,7 @@ const StatusChart = React.createClass({
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <Icon name={this.props.icon} size={40} color={color.good}/>
           </View>
-          <View>
+          <View style={chartStyles.infoContainer}>
             <Text style={chartStyles.value}>
               {currentValue} <Text style={chartStyles.unit}>{this.props.unit}</Text>
             </Text>
@@ -75,6 +86,8 @@ const StatusChart = React.createClass({
             type="line"
             showGrid={false}
             showAxis={false}
+            color="#999999"
+            lineWidth={2}
           />
         </View>
       </View>
