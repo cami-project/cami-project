@@ -45,14 +45,18 @@ const HomepageView = React.createClass({
             <StatusChart
               data={heartRateData}
               text="Heart rate"
-              icon="ios-heart-outline"
-              unit="bpm"/>
+              icon="heartbeat"
+              unit="bpm"
+              status="ok"
+            />
 
             <StatusChart
               data={weightData}
               text="Weight"
-              icon="ios-speedometer-outline"
-              unit="kg"/>
+              icon="dashboard"
+              unit="kg"
+              status="warning"
+            />
           </View>
 
           <View style={{flex: 1}}>

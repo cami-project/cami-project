@@ -6,7 +6,7 @@ import {
   View
 } from 'react-native';
 import Chart from 'react-native-chart';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const variables = require('../../variables/CaregiverGlobalVariables');
 
@@ -58,7 +58,8 @@ const StatusChart = React.createClass({
     icon: PropTypes.number.isRequired,
     data: PropTypes.instanceOf(List).isRequired,
     unit: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired
+    text: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired
   },
 
   render() {
@@ -69,8 +70,8 @@ const StatusChart = React.createClass({
     return (
       <View style={chartStyles.container}>
         <View style={{flexDirection: 'row'}}>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Icon name={this.props.icon} size={40} color={color.good}/>
+          <View style={[chartStyles.iconContainer, {justifyContent: 'center'}]}>
+            <Icon name={this.props.icon} size={40} color={variables.colors[this.props.status]}/>
           </View>
           <View style={chartStyles.infoContainer}>
             <Text style={chartStyles.value}>
