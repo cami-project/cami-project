@@ -29,13 +29,15 @@ const HomepageView = React.createClass({
     return (
       <View style={styles.container}>
 
-        <View style={styles.iconContainer}>
-          <View style={styles.outerRing}>
-            <Image style={styles.iconRing} source={require('../../../images/old-man.png')}/>
+        <View style={styles.headerContainer}>
+          <Image style={styles.headerBackgroundImage} source={require('../../../images/old-man.jpg')}/>
+          <View style={styles.headerContainerInner}>
+            <Image style={styles.avatar} source={require('../../../images/old-man.jpg')}/>
+            <View style={styles.headerTextContainer}>
+              <Text style={[styles.headerText, {fontWeight: 'bold'}]}>{this.props.username + '\'s'}</Text>
+              <Text style={[styles.headerText, {fontSize: 18}]}>doing fine</Text>
+            </View>
           </View>
-          <Text style={[styles.mainText, {fontWeight: 'bold'}]}>
-            {this.props.username}'s doing fine
-          </Text>
         </View>
 
         <View style={styles.mainContainer}>
@@ -54,7 +56,7 @@ const HomepageView = React.createClass({
           </View>
 
           <View style={{flex: 1}}>
-            <Text style={[styles.mainText, {fontWeight: 'bold', textAlign: 'center'}]}>
+            <Text style={[styles.mainText, {fontWeight: 'bold'}]}>
               Latest Journal Entries
             </Text>
 
@@ -81,36 +83,67 @@ const HomepageView = React.createClass({
   }
 });
 
+let {height, width} = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'moccasin'
   },
-  iconContainer: {
+  headerContainer: {
     flex: 1,
-    backgroundColor: '#658d51',
     zIndex: 2,
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative'
+  },
+  headerContainerInner: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: Color('#658d51').clearer(.1).rgbaString(),
+    width: width,
     paddingTop: 20
   },
-  outerRing: {
-    borderWidth: 2,
-    borderRadius: 72,
-    width: 140,
-    height: 140,
-    borderColor: Color('white').clearer(.75).rgbaString(),
-    marginBottom: -70,
-    justifyContent: 'center'
+  headerBackgroundImage: {
+    flex: 1,
+    width: width + 100,
+    height: height/3 - 50 - 20,
+    position: 'absolute',
+    resizeMode: 'cover',
+    top: 0,
+    left: -50,
+    bottom: 0,
+    right: -50,
+    alignSelf: 'center'
   },
-  iconRing: {
+  headerTextContainer: {
+    flex: 1,
+    paddingLeft: 20,
+    paddingBottom: 20,
+    paddingRight: 20,
+    width: width*.5,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    alignSelf: 'flex-start',
+    color: 'white'
+  },
+  headerText: {
+    fontSize: 20,
+    color: 'white',
+  },
+  avatar: {
+    paddingTop: 20,
     borderWidth: 0,
-    borderRadius: 60,
-    width: 120,
-    height: 120,
+    borderRadius: 40,
+    width: 80,
+    height: 80,
     backgroundColor: Color('white').clearer(.25).rgbaString(),
     alignSelf: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderWidth: 5,
+    borderColor: 'white',
+    marginBottom: -15,
+    marginTop: 10
   },
   mainContainer: {
     flex: 3,
