@@ -121,31 +121,30 @@ const styles = StyleSheet.create({
   },
   headerTextContainer: {
     flex: 1,
-    paddingLeft: 20,
-    paddingBottom: 20,
-    paddingRight: 20,
     width: variables.dimensions.width*.5,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    alignSelf: 'flex-start'
+    position: 'absolute',
+    bottom: 10,
+    left: 10
   },
   headerText: {
     fontSize: 20,
     color: 'white',
   },
   avatar: {
-    paddingTop: 20,
+    top: 20,
     borderWidth: 0,
     borderRadius: 40,
     width: 80,
     height: 80,
     backgroundColor: Color('white').clearer(.25).rgbaString(),
-    alignSelf: 'center',
-    justifyContent: 'center',
     borderWidth: 5,
     borderColor: 'white',
     marginBottom: -15,
-    marginTop: 10
+    marginTop: 10,
+    position: 'absolute',
+    marginLeft: variables.dimensions.width/2 - 40
   },
   mainContainer: {
     flex: 3,
