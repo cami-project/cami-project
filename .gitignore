@@ -75,3 +75,5 @@ ansible/**/*.retry
 # Django files
 *.sqlite3
 settings_local.py
+
+application/images/Thumbs.db
