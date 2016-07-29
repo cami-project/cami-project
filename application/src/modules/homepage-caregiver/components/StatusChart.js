@@ -54,7 +54,7 @@ const chartStyles = StyleSheet.create({
 
 const StatusChart = React.createClass({
   propTypes: {
-    icon: PropTypes.number.isRequired,
+    icon: PropTypes.string.isRequired,
     data: PropTypes.instanceOf(List).isRequired,
     unit: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
