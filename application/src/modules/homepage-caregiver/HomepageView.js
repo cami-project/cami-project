@@ -45,13 +45,13 @@ const HomepageView = React.createClass({
             <StatusChart
               data={heartRateData}
               text="Heart rate"
-              image={require('../../../images/heart-ok.png')}
+              icon="ios-heart-outline"
               unit="bpm"/>
 
             <StatusChart
               data={weightData}
               text="Weight"
-              image={require('../../../images/weight-warning.png')}
+              icon="ios-speedometer-outline"
               unit="kg"/>
           </View>
 

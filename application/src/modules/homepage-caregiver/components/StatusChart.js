@@ -3,10 +3,16 @@ import React, {PropTypes} from 'react';
 import {
   StyleSheet,
   Text,
-  View,
-  Image
+  View
 } from 'react-native';
 import Chart from 'react-native-chart';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+const color = {
+  developing: '#a7b50a',
+  active: '#00A4EE',
+  good: '#658d51'
+}
 
 const chartStyles = StyleSheet.create({
   container: {
@@ -38,7 +44,7 @@ const chartStyles = StyleSheet.create({
 
 const StatusChart = React.createClass({
   propTypes: {
-    image: PropTypes.number.isRequired,
+    icon: PropTypes.number.isRequired,
     data: PropTypes.instanceOf(List).isRequired,
     unit: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired
@@ -53,7 +59,7 @@ const StatusChart = React.createClass({
       <View style={chartStyles.container}>
         <View style={{flexDirection: 'row'}}>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Image source={this.props.image}/>
+            <Icon name={this.props.icon} size={40} color={color.good}/>
           </View>
           <View>
             <Text style={chartStyles.value}>
