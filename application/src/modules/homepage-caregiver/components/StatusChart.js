@@ -15,7 +15,7 @@ const chartStyles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderRightWidth: 1,
-    borderColor: variables.colors.grayLight,
+    borderColor: variables.colors.gray.light,
     borderStyle: 'solid'
   },
   chartContainer: {
@@ -36,18 +36,18 @@ const chartStyles = StyleSheet.create({
   },
   value: {
     fontSize: 24,
-    color: variables.colors.grayDark,
+    color: variables.colors.gray.darker,
     lineHeight: 24
   },
   unit: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: variables.colors.gray,
+    color: variables.colors.gray.neutral,
     lineHeight: 24
   },
   description: {
     fontSize: 12,
-    color: variables.colors.grayDark,
+    color: variables.colors.gray.darker,
     lineHeight: 12
   }
 });
@@ -70,7 +70,7 @@ const StatusChart = React.createClass({
       <View style={chartStyles.container}>
         <View style={{flexDirection: 'row'}}>
           <View style={[chartStyles.iconContainer, {justifyContent: 'center'}]}>
-            <Icon name={this.props.icon} size={40} color={variables.colors[this.props.status]}/>
+            <Icon name={this.props.icon} size={34} color={variables.colors.status[this.props.status]}/>
           </View>
           <View style={chartStyles.infoContainer}>
             <Text style={chartStyles.value}>

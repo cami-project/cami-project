@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   headerContainerInner: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: Color(variables.colors.ok).clearer(.1).rgbaString(),
+    backgroundColor: Color(variables.colors.status.ok).clearer(.1).rgbaString(),
     width: variables.dimensions.width,
     paddingTop: 20
   },
