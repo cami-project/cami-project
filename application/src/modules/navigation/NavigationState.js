@@ -35,7 +35,7 @@ export function navigationCompleted() {
 const initialState = fromJS(
   createNavigationState('MainNavigation', 'App', '', [
     createNavigationState('HomepageCaregiver', 'Home', 'ios-home', [{key: 'HomepageCaregiver', title: 'Home'}]),
-    createNavigationState('HomeTab', 'Status', 'ios-pulse', [{key: 'Counter', title: 'Counter'}]),
+    createNavigationState('Status', 'Status', 'ios-pulse', [{key: 'Status', title: 'Status'}]),
     createNavigationState('Journal', 'Journal', 'ios-paper', [{key: 'Journal', title: 'Journal'}]),
     createNavigationState('HomepageTab', 'Settings', 'ios-cog', [{key: 'Homepage', title: 'Homepage'}]),
   ]));
