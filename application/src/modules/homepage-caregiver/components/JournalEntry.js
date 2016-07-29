@@ -19,21 +19,45 @@ const JournalEntry = React.createClass({
   },
 
   render() {
-    const time = moment(new Date(this.props.timestamp * 1000)).format('HH mm');
+    const time = moment(new Date(this.props.timestamp * 1000)).format('HH:mm');
 
     return (
-      <View style={{backgroundColor: 'white', flexDirection: 'row'}}>
-        <View>
+      <View style={styles.journalEntry}>
+        <View style={styles.icon}>
           <Icon name={icons[this.props.type]} size={20} color={variables.colors.status[this.props.status]}/>
         </View>
         <View>
-          <Text>{time}</Text>
+          <Text style={styles.time}>{time}</Text>
         </View>
         <View style={{flex: 1}}>
-          <Text>{this.props.title}</Text>
+          <Text style={styles.text}>{this.props.title}</Text>
         </View>
       </View>
     );
+  }
+});
+
+const styles = StyleSheet.create({
+  journalEntry: {
+    backgroundColor: 'white',
+    padding: 10,
+    marginBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+  icon: {
+    paddingRight: 10
+  },
+  time: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    paddingRight: 10,
+    color: variables.colors.gray.neutral
+  },
+  text: {
+    color: variables.colors.gray.darker,
+    fontSize: 12
   }
 });
 
