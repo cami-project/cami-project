@@ -124,8 +124,7 @@ const styles = StyleSheet.create({
     width: width*.5,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    alignSelf: 'flex-start',
-    color: 'white'
+    alignSelf: 'flex-start'
   },
   headerText: {
     fontSize: 20,
