@@ -14,6 +14,7 @@ import Color from 'color';
 
 import StatusChart from './components/StatusChart';
 import JournalEntry from './components/JournalEntry';
+import icons from 'Cami/src/icons-fa';
 import variables from '../variables/CaregiverGlobalVariables';
 
 const HomepageView = React.createClass({
@@ -46,7 +47,7 @@ const HomepageView = React.createClass({
             <StatusChart
               data={heartRateData}
               text="Heart rate"
-              icon="heartbeat"
+              icon={icons.heart}
               unit="bpm"
               status="ok"
             />
@@ -54,18 +55,18 @@ const HomepageView = React.createClass({
             <StatusChart
               data={weightData}
               text="Weight"
-              icon="dashboard"
+              icon={icons.weight}
               unit="kg"
               status="warning"
             />
           </View>
 
           <View style={{flex: 1}}>
-            <Text style={[styles.mainText, {fontWeight: 'bold'}]}>
+            <Text style={[variables.h2, {marginTop: 20, color: variables.colors.gray.neutral}]}>
               Latest Journal Entries
             </Text>
 
-            <ScrollView style={{flex: 1}}>
+            <ScrollView style={{flex: 1, padding: 10}}>
               {/* TODO */}
               {/* Limit somehow the latest entries count */}
               {/* Maybe show only for today, or only last 5 */}
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
   headerContainerInner: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: Color(variables.colors.ok).clearer(.1).rgbaString(),
+    backgroundColor: Color(variables.colors.status.ok).clearer(.1).rgbaString(),
     width: variables.dimensions.width,
     paddingTop: 20
   },
@@ -121,35 +122,34 @@ const styles = StyleSheet.create({
   },
   headerTextContainer: {
     flex: 1,
-    paddingLeft: 20,
-    paddingBottom: 20,
-    paddingRight: 20,
     width: variables.dimensions.width*.5,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    alignSelf: 'flex-start'
+    position: 'absolute',
+    bottom: 10,
+    left: 10
   },
   headerText: {
     fontSize: 20,
     color: 'white',
   },
   avatar: {
-    paddingTop: 20,
+    top: 20,
     borderWidth: 0,
     borderRadius: 40,
     width: 80,
     height: 80,
     backgroundColor: Color('white').clearer(.25).rgbaString(),
-    alignSelf: 'center',
-    justifyContent: 'center',
     borderWidth: 5,
     borderColor: 'white',
     marginBottom: -15,
-    marginTop: 10
+    marginTop: 10,
+    position: 'absolute',
+    marginLeft: variables.dimensions.width/2 - 40
   },
   mainContainer: {
     flex: 3,
-    backgroundColor: '#eeeeee',
+    backgroundColor: variables.colors.background,
     zIndex: 1
   },
   mainText: {

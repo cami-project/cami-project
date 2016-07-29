@@ -3,13 +3,20 @@ const React = require('react-native');
 const {StyleSheet, Dimensions} = React;
 
 const colors = {
-  warning: '#D2B52E',
-  ok: '#658d51',
   active: '#00A4EE',
   background: '#eeeeee',
-  grayDark: '#484748',
-  grayLight: '#dbdbdb',
-  gray: '#858585'
+  status: {
+    warning: '#D2B52E',
+    ok: '#658d51',
+    wakeup: '#658d51'
+  },
+  gray: {
+    darker: '#484748',
+    dark: '#5a5a5a',
+    neutral: '#858585',
+    light: '#dbdbdb',
+    lighter: '#eaeaea'
+  }
 };
 
 let {height, width} = Dimensions.get('window');
@@ -23,6 +30,12 @@ var styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  h2: {
+    fontSize: 14,
+    fontWeight: 'normal',
+    alignSelf: 'center',
+    marginBottom: 10
+  }
 })
 
 module.exports = styles;
