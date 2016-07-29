@@ -7,8 +7,7 @@ import {
 } from 'react-native';
 import Chart from 'react-native-chart';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-const variables = require('../../variables/CaregiverGlobalVariables');
+import variables from '../../variables/CaregiverGlobalVariables';
 
 const chartStyles = StyleSheet.create({
   container: {

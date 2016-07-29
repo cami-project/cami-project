@@ -14,6 +14,7 @@ import Color from 'color';
 
 import StatusChart from './components/StatusChart';
 import JournalEntry from './components/JournalEntry';
+import variables from '../variables/CaregiverGlobalVariables';
 
 const HomepageView = React.createClass({
   propTypes: {
@@ -87,12 +88,10 @@ const HomepageView = React.createClass({
   }
 });
 
-let {height, width} = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'moccasin'
+    backgroundColor: variables.colors.background
   },
   headerContainer: {
     flex: 1,
@@ -104,14 +103,14 @@ const styles = StyleSheet.create({
   headerContainerInner: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: Color('#658d51').clearer(.1).rgbaString(),
-    width: width,
+    backgroundColor: Color(variables.colors.ok).clearer(.1).rgbaString(),
+    width: variables.dimensions.width,
     paddingTop: 20
   },
   headerBackgroundImage: {
     flex: 1,
-    width: width + 100,
-    height: height/3 - 50 - 20,
+    width: variables.dimensions.width + 100,
+    height: variables.dimensions.height/3 - 50 - 20,
     position: 'absolute',
     resizeMode: 'cover',
     top: 0,
@@ -125,7 +124,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingBottom: 20,
     paddingRight: 20,
-    width: width*.5,
+    width: variables.dimensions.width*.5,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     alignSelf: 'flex-start'
@@ -150,8 +149,7 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 3,
-    backgroundColor: '#dbdbdb',
-    // alignItems: 'center',
+    backgroundColor: '#eeeeee',
     zIndex: 1
   },
   mainText: {
