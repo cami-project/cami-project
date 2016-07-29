@@ -5,10 +5,10 @@ import {
   View,
   Image
 } from 'react-native';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
-
-import {images} from 'Cami/src/images';
+import icons from 'Cami/src/icons-fa';
+import variables from '../../variables/CaregiverGlobalVariables';
 
 const JournalEntry = React.createClass({
   propTypes: {
@@ -24,7 +24,7 @@ const JournalEntry = React.createClass({
     return (
       <View style={{backgroundColor: 'white', flexDirection: 'row'}}>
         <View>
-          <Image source={images[this.props.type][this.props.status]}/>
+          <Icon name={icons[this.props.type]} size={20} color={variables.colors.status[this.props.status]}/>
         </View>
         <View>
           <Text>{time}</Text>

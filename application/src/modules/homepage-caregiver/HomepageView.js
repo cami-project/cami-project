@@ -14,6 +14,7 @@ import Color from 'color';
 
 import StatusChart from './components/StatusChart';
 import JournalEntry from './components/JournalEntry';
+import icons from 'Cami/src/icons-fa';
 import variables from '../variables/CaregiverGlobalVariables';
 
 const HomepageView = React.createClass({
@@ -46,7 +47,7 @@ const HomepageView = React.createClass({
             <StatusChart
               data={heartRateData}
               text="Heart rate"
-              icon="heartbeat"
+              icon={icons.heart}
               unit="bpm"
               status="ok"
             />
@@ -54,7 +55,7 @@ const HomepageView = React.createClass({
             <StatusChart
               data={weightData}
               text="Weight"
-              icon="dashboard"
+              icon={icons.weight}
               unit="kg"
               status="warning"
             />
