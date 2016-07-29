@@ -4,10 +4,10 @@ import {fromJS} from 'immutable';
 
 // import * as env from '../../../env';
 
-// var json = require('../../../api-examples/journal/eldery-journal.json');
+var json = require('../../../api-examples/status/status.json');
 
 // Initial state
-const initialState = fromJS({}/* json */);
+const initialState = fromJS(json);
 
 // Actions
 // const DUMMY_ACTION = 'HomepageState/DUMMY_ACTION';

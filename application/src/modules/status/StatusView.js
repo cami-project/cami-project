@@ -1,4 +1,4 @@
-import {List} from 'immutable';
+import {Map} from 'immutable';
 import React, {PropTypes} from 'react';
 import {
   StyleSheet,
@@ -16,10 +16,13 @@ const WEEK_DATE_FORMAT = 'ddd D MMM';
 
 const StatusView = React.createClass({
   propTypes: {
-    username: PropTypes.string.isRequired
+    username: PropTypes.string.isRequired,
+    status: PropTypes.instanceOf(Map).isRequired
   },
 
   render() {
+    console.log('status:', this.props.status);
+
     return (
       <View style={styles.container}>
         <View style={styles.iconContainer}>
