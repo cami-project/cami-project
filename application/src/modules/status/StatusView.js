@@ -9,10 +9,7 @@ import {
 import Color from 'color';
 import moment from 'moment';
 
-// import StatusEntry from './components/StatusEntry';
-
-const DATE_FORMAT = 'D MMM';
-const WEEK_DATE_FORMAT = 'ddd D MMM';
+import StatusEntry from './components/StatusEntry';
 
 const StatusView = React.createClass({
   propTypes: {
@@ -32,6 +29,11 @@ const StatusView = React.createClass({
         </View>
 
         <ScrollView>
+          <StatusEntry
+            type="heart"
+            status={this.props.status.get('heart').get('status')}
+            data={this.props.status.get('heart').get('data')}
+          />
         </ScrollView>
       </View>
     );

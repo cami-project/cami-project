@@ -1,3 +1,4 @@
+import {List} from 'immutable'
 import React, {PropTypes} from 'react';
 import {
   StyleSheet,
@@ -5,40 +6,91 @@ import {
   View,
   Image
 } from 'react-native';
-
+import Chart from 'react-native-chart';
 import moment from 'moment';
 
 import {images} from 'Cami/src/images';
 
-const JournalEntry = React.createClass({
+const chartStyles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  chartContainer: {
+    // flex: 1,
+    backgroundColor: 'white',
+    padding: 10
+  },
+  chart: {
+    height: 100,
+    paddingBottom: 10
+  },
+  value: {
+    fontSize: 26,
+    color: 'black',
+    lineHeight: 1.3*26,
+    textAlign: 'right'
+  },
+  unit: {
+    fontSize: 16,
+    color: 'black',
+    lineHeight: 1.3*26
+  },
+  description: {
+    fontSize: 18,
+    color: 'black',
+    lineHeight: 1.3*26
+  }
+});
+
+const StatusEntry = React.createClass({
   propTypes: {
     type: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
-    timestamp: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-    message: PropTypes.string.isRequired
+    data: PropTypes.instanceOf(List).isRequired,
+  },
+
+  formatTimestamp(timestamp) {
+    return moment(new Date(timestamp * 1000)).format('HH');
   },
 
   render() {
-    const time = moment(new Date(this.props.timestamp * 1000)).format('HH mm');
+    const arrayData = [];
+    this.props.data.forEach(item =>
+      arrayData.push([item.get('timestamp'), item.get('value')])
+    );
+    const lastValue = this.props.data.get(this.props.data.size - 1).get('value');
 
     return (
-      <View style={{backgroundColor: 'white', flexDirection: 'row'}}>
-        <View style={{flex: 1}}>
+      <View style={chartStyles.container}>
+        <View style={{flexDirection: 'row'}}>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <Image source={images[this.props.type][this.props.status]}/>
           </View>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Text>{time}</Text>
+          <View>
+            <Text>Heart rate</Text>
+          </View>
+          <View style={{flex: 1}}>
+            <Text style={chartStyles.value}>
+              {lastValue} <Text style={chartStyles.unit}>bpm</Text>
+            </Text>
           </View>
         </View>
-        <View style={{flex: 3, justifyContent: 'center', alignItems: 'center'}}>
-          <Text>{this.props.title}</Text>
-          <Text>{this.props.message}</Text>
+        <View>
+          <View style={chartStyles.chartContainer}>
+            <Chart
+              style={chartStyles.chart}
+              data={arrayData}
+              type="line"
+              showGrid={false}
+              showAxis={true}
+              showDataPoint={true}
+              xAxisTransform={this.formatTimestamp}
+            />
+          </View>
         </View>
       </View>
     );
   }
 });
 
-export default JournalEntry;
+export default StatusEntry;
