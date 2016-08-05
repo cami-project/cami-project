@@ -106,7 +106,10 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
     marginTop: 60,
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    paddingLeft: 10,
+    paddingRight: 10,
+    zIndex: 5
   },
   timeline: {
     width: 4,
