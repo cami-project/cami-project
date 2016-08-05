@@ -23,24 +23,43 @@ const HomepageView = React.createClass({
   render() {
     return (
       <View style={styles.container}>
-
+        <Image
+          style={[styles.background, {zIndex: 1, resizeMode: 'cover'}]}
+          source={require('../../../images/elder-bg-default.jpg')}
+        />
+        <View
+          style={[
+            styles.background,
+            {
+              zIndex: 2,
+              backgroundColor: Color(variables.colors.status[this.props.notification.get('severity')]).clearer(.25).rgbaString()
+            }
+          ]}
+        />
+        <Image
+          style={[styles.background, {zIndex: 3, resizeMode: 'contain'}]}
+          source={require('../../../images/elder-mainContent-bg.png')}
+        />
         <View style={styles.iconContainer}>
           <View style={styles.outerRing}>
             <View style={styles.iconRing}>
               <Icon
                 name={icons[this.props.notification.get('type')]}
-                size={50}
+                size={60}
                 color={variables.colors.status[this.props.notification.get('severity')]}
                 style={{
                   alignSelf: 'center',
-                  marginTop: -5
+                  marginTop: -10
                 }}
               />
             </View>
           </View>
         </View>
 
-        <View style={styles.mainContainer}>
+        <View style={[
+            styles.mainContainer,
+          ]}
+        >
           <View style={styles.textContainer}>
             <Text style={[styles.text, {fontWeight: 'bold'}]}>
               Hey {this.props.username}
@@ -95,29 +114,38 @@ const buttonCircle = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative'
+  },
+  background: {
+    position: 'absolute',
+    flex: 1,
+    width: variables.dimensions.width,
+    height: variables.dimensions.height,
+    top: 0,
+    left: 0,
+    alignSelf: 'center',
   },
   iconContainer: {
     flex: 1,
-    zIndex: 2,
+    zIndex: 5,
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 20
   },
   outerRing: {
     borderWidth: 2,
-    borderRadius: 72,
-    width: 140,
-    height: 140,
+    borderRadius: 90,
+    width: 180,
+    height: 180,
     borderColor: Color('white').clearer(.75).rgbaString(),
-    marginBottom: -70,
+    marginBottom: -75,
     justifyContent: 'center'
   },
   iconRing: {
     borderWidth: 0,
-    borderRadius: 60,
-    width: 120,
-    height: 120,
-    backgroundColor: Color('white').clearer(.25).rgbaString(),
+    borderRadius: 75,
+    width: 150,
+    height: 150,
     backgroundColor: Color('white').clearer(.05).rgbaString(),
     alignSelf: 'center',
     justifyContent: 'center'
@@ -125,7 +153,9 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 3,
     alignItems: 'center',
-    zIndex: 1
+    zIndex: 4,
+    backgroundColor: 'transparent',
+    marginTop: 50
   },
   textContainer: {
     paddingTop: 40,
