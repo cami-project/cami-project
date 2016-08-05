@@ -1,0 +1,14 @@
+FROM mysql:5.6
+
+# Add the store schema to the container to be run when the first container is
+# run. This requires that the build context is the project root folder. Run
+# build like:
+# `docker build -f docker/cami-store/Dockerfile .`
+ADD store/cami.sql /docker-entrypoint-initdb.d/
+
+# Hardcode passwors until we learn a better way to do this.
+ENV MYSQL_ALLOW_EMPTY_PASSWORD=yes
+ENV MYSQL_ROOT_PASSWORD=""
+ENV MYSQL_DATABASE=cami
+ENV MYSQL_USER=cami
+ENV MYSQL_PASSWORD=cami
