@@ -65,7 +65,7 @@ Vagrant.configure(2) do |config|
 
   end
 
-  config.vm.synced_folder "../", "/home/vagrant/cami-project"
+  config.vm.synced_folder "../", "/cami-project"
 
   # View the documentation for the provider you are using for more
   # information on available options.
@@ -104,7 +104,7 @@ Vagrant.configure(2) do |config|
     store.vm.network 'private_network', ip: '192.168.73.11'
 
     store.vm.provision "ansible_local" do |ansible|
-        ansible.provisioning_path = "/home/vagrant/cami-project/ansible"
+        ansible.provisioning_path = "/cami-project/ansible"
         ansible.playbook = "store.yml"
     end
   end
@@ -114,7 +114,7 @@ Vagrant.configure(2) do |config|
     mc.vm.network 'private_network', ip: '192.168.73.12'
 
     mc.vm.provision "ansible_local" do |ansible|
-        ansible.provisioning_path = "/home/vagrant/cami-project/ansible"
+        ansible.provisioning_path = "/cami-project/ansible"
         ansible.playbook = "medical_compliance.yml"
     end
   end
@@ -124,7 +124,7 @@ Vagrant.configure(2) do |config|
     rabbit.vm.network 'private_network', ip: '192.168.73.13'
 
     rabbit.vm.provision "ansible_local" do |ansible|
-        ansible.provisioning_path = "/home/vagrant/cami-project/ansible"
+        ansible.provisioning_path = "/cami-project/ansible"
         ansible.playbook = "rabbitmq_server.yml"
     end
   end
