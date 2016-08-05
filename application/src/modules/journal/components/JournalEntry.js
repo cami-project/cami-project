@@ -15,21 +15,35 @@ import {images} from 'Cami/src/images';
 const styles = StyleSheet.create({
   journalEntry: {
     backgroundColor: 'white',
-    padding: 10,
-    marginBottom: 10,
+    marginBottom: 20,
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center',
-    borderTopWidth: 2
+    alignItems: 'center'
   },
   iconContainer: {
+    width: 80,
+    paddingTop: 20,
+    paddingLeft: 20,
     paddingRight: 20,
-    paddingLeft: 10,
-    paddingTop: 10,
-    paddingBottom: 10
+    paddingBottom: 20,
+    flexDirection: 'column',
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+    zIndex: 7
   },
   icon: {
     alignItems: 'center'
+  },
+  statusIcon: {
+    position: 'absolute',
+    width: 16,
+    height: 16,
+    top: -8,
+    left: 73,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 8,
+    borderRadius: 8
   },
   time: {
     fontSize: 12,
@@ -37,15 +51,29 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     color: variables.colors.gray.neutral
   },
+  textContainer: {
+    flex: 1,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    paddingTop: 20,
+    paddingBottom: 20,
+    marginRight: 20,
+    marginLeft: 20
+  },
   text: {
-    color: variables.colors.gray.darker,
-    fontSize: 12
+    flex: 1,
+    fontSize: 12,
+  },
+  statusMessage: {
+    color: variables.colors.gray.dark
   },
   actionMessage: {
     paddingTop: 10,
     marginTop: 10,
-    borderTopWidth: 10,
-    borderTopColor: variables.colors.gray.dark
+    borderTopWidth: 1,
+    borderStyle: 'solid',
+    borderTopColor: variables.colors.gray.light
   },
 });
 
@@ -62,7 +90,7 @@ const JournalEntry = React.createClass({
     const time = moment(new Date(this.props.timestamp * 1000)).format('HH:mm');
 
     return (
-      <View style={[styles.journalEntry, {borderColor: variables.colors.status[this.props.status]}]}>
+      <View style={styles.journalEntry}>
         <View style={styles.iconContainer}>
           <View style={styles.icon}>
             <Icon name={icons[this.props.type]} size={30} color={variables.colors.status[this.props.status]}/>
@@ -70,10 +98,23 @@ const JournalEntry = React.createClass({
           <View>
             <Text style={styles.time}>{time}</Text>
           </View>
+          <View style={[styles.statusIcon, {backgroundColor: variables.colors.status[this.props.status]}]}>
+            <Icon name={icons[this.props.status]} size={12} color={'white'}/>
+          </View>
         </View>
-        <View style={{flex: 1}}>
-          <Text style={[styles.text, styles.statusMessage]}>{this.props.title}</Text>
-          <Text style={[styles.text, styles.actionMessage]}>{this.props.message}</Text>
+        <View style={{flex: 7, borderLeftWidth: 2, borderColor: variables.colors.status[this.props.status]}}>
+          <View style={[styles.textContainer]}>
+            <View style={{flexWrap: 'wrap'}}>
+              <Text style={[styles.text, {color: variables.colors.gray.darker}]}>{this.props.title}</Text>
+            </View>
+            {
+              this.props.message
+                ? <View style={[styles.actionMessage, {flexWrap: 'wrap'}]}>
+                    <Text style={[styles.text, {color: variables.colors.gray.dark}]}>{this.props.message}</Text>
+                  </View>
+                : false
+            }
+          </View>
         </View>
       </View>
     );

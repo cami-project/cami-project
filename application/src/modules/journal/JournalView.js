@@ -39,7 +39,12 @@ const JournalView = React.createClass({
       if (day != dayKey) {
         dayKey = day;
         const weekDayText = moment(new Date(event.get('timestamp') * 1000)).format(WEEK_DATE_FORMAT);
-        events.push(<Text key={'text' + index} style={{textAlign: 'right'}}>{weekDayText}</Text>);
+        events.push(
+          <View key={'text' + index} style={[styles.dateContainer, {flex: 1}]}>
+            <View style={styles.dateRuler}><View style={styles.dateBullet}/></View>
+            <Text style={[styles.date]}>{weekDayText}</Text>
+          </View>
+        );
       }
       events.push(
         <JournalEntry
@@ -56,8 +61,8 @@ const JournalView = React.createClass({
     return (
       <View style={variables.container}>
         <View style={styles.headerContainer}>
-          <Image style={styles.avatar} source={require('../../../images/old-man.png')}/>
-          <Text style={styles.date}>
+          <Image style={styles.avatar} source={require('../../../images/old-man.jpg')}/>
+          <Text style={styles.headerDate}>
             {headerDateText}
           </Text>
         </View>
@@ -77,46 +82,75 @@ const styles = StyleSheet.create({
     backgroundColor: variables.colors.gray.lightest,
     borderBottomWidth: 1,
     borderColor: variables.colors.gray.light,
-    height: 70,
-    zIndex: 4,
+    height: 60,
+    zIndex: 6,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
   },
   avatar: {
-    borderWidth: 0,
-    borderRadius: 40,
-    width: 80,
-    height: 80,
-    backgroundColor: Color('white').clearer(.25).rgbaString(),
-    borderWidth: 5,
-    borderColor: 'white',
+    backgroundColor: 'transparent',
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    borderWidth: 4,
+    borderColor: variables.colors.gray.light,
     position: 'absolute',
-    bottom: -40,
-    marginLeft: variables.dimensions.width/2 - 40,
-    zIndex: 5
+    bottom: -30,
+    marginLeft: 60,
+    zIndex: 6
   },
-  date: {
+  dateContainer: {
+    position: 'relative'
+  },
+  headerDate: {
     position: 'absolute',
     right: 10,
     bottom: 10,
     fontSize: 12
   },
+  dateRuler: {
+    width: variables.dimensions.width-20,
+    position: 'absolute',
+    height: 2,
+    backgroundColor: variables.colors.gray.light,
+    top: 6,
+    left: -10
+  },
+  dateBullet: {
+    position: 'absolute',
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: variables.colors.gray.light,
+    top: -2,
+    left: 88
+  },
+  date: {
+    fontSize: 12,
+    backgroundColor: variables.colors.background,
+    color: variables.colors.gray.neutral,
+    position: 'relative',
+    marginBottom: 20,
+    width: 70,
+    alignSelf: 'flex-end',
+    textAlign: 'right'
+  },
   journalContainer: {
     flex: 1,
     position: 'relative',
-    marginTop: 60,
+    paddingTop: 50,
     backgroundColor: 'transparent',
     paddingLeft: 10,
     paddingRight: 10,
     zIndex: 5
   },
   timeline: {
-    width: 4,
+    width: 2,
     height: variables.dimensions.height,
-    backgroundColor: 'white',
+    backgroundColor: variables.colors.gray.light,
     position: 'absolute',
-    left: variables.dimensions.width/2 - 2,
+    left: 90,
     zIndex: 2
   },
 });
