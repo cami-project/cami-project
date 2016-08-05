@@ -1,0 +1,15 @@
+---
+# Contains commands that are needed to setup the DB and run the daemon. These
+# are contained in a separate playbook from the system provisioning since we are
+# reusing the system provisioning with Docker. Migration and running the daemon
+# are done separately in Docker.
+
+- name: Run Medical Compliance microservice
+  hosts: all
+
+  tasks:
+    - name: Run migrations
+      shell: python "{{ project_dir }}/medical_compliance/manage.py" migrate
+
+    - name: Run Django server
+      shell: daemon -- python "{{ project_dir }}/medical_compliance/manage.py" runserver "{{ ansible_eth1.ipv4.address }}:8000"
