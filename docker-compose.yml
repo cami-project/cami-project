@@ -1,0 +1,19 @@
+version: '2'
+services:
+  cami-store:
+    build:
+      context: .
+      dockerfile: docker/cami-store/Dockerfile
+  cami-rabbitmq:
+    build:
+      context: .
+      dockerfile: docker/cami-rabbitmq/Dockerfile
+  cami-medical-compliance:
+    build:
+      context: .
+      dockerfile: docker/cami-medical-compliance/Dockerfile
+    links:
+      - cami-store
+    ports:
+      - "8000:8000"
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-entrypoint.sh
