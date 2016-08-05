@@ -26,7 +26,7 @@ const HomepageView = React.createClass({
 
   render() {
     const heartRateData = this.props.status.get('heart').get('rate');
-    const weightData = this.props.status.get('weigth').get('amount');
+    const weightData = this.props.status.get('weight').get('amount');
 
     return (
       <View style={styles.container}>
