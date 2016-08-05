@@ -10,6 +10,8 @@ const colors = {
     medium: '#a7b50a',
     high: '#458bcc'
   },
+  text: '#158A12',
+  panic: '#C95F5F',
   gray: {
     darker: '#484748',
     dark: '#5a5a5a',

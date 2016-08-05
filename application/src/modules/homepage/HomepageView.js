@@ -51,13 +51,29 @@ const HomepageView = React.createClass({
           </View>
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={[styles.button, styles.buttonPanic]}>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                styles.buttonPanic,
+                {
+                  shadowColor: Color(variables.colors.status[this.props.notification.get('severity')]).darken(.7).hexString()
+                }
+              ]}
+            >
               <Text style={[styles.buttonText, {color: 'white'}]}>
                 Help
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.button, styles.buttonConfirm]}>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                styles.buttonConfirm,
+                {
+                  shadowColor: Color(variables.colors.status[this.props.notification.get('severity')]).darken(.7).hexString()
+                }
+              ]}
+            >
               <Text style={[styles.buttonText, {color: 'green'}]}>
                 OK
               </Text>
@@ -76,19 +92,12 @@ const buttonCircle = {
   height: 90
 };
 
-const color = {
-  developing: '#a7b50a',
-  active: '#00A4EE'
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'moccasin'
   },
   iconContainer: {
     flex: 1,
-    backgroundColor: '#eaeaea',
     zIndex: 2,
     alignItems: 'center',
     justifyContent: 'center',
@@ -109,12 +118,12 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     backgroundColor: Color('white').clearer(.25).rgbaString(),
+    backgroundColor: Color('white').clearer(.05).rgbaString(),
     alignSelf: 'center',
     justifyContent: 'center'
   },
   mainContainer: {
     flex: 3,
-    backgroundColor: '#dbdbdb',
     alignItems: 'center',
     zIndex: 1
   },
@@ -125,7 +134,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 26,
-    color: '#158A12',
+    color: variables.colors.text,
     lineHeight: 1.3*26
   },
   buttonContainer: {
@@ -144,7 +153,6 @@ const styles = StyleSheet.create({
     shadowRadius: 40,
     shadowOffset: {width: 0, height: 0},
     shadowOpacity: 0.4,
-    shadowColor: Color(color.developing).darken(.6).hexString()
   },
   buttonText: {
     backgroundColor: 'transparent',
@@ -157,7 +165,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   buttonPanic: {
-    backgroundColor: '#C95F5F'
+    backgroundColor: variables.colors.panic
   }
 });
 
