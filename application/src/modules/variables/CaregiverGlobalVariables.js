@@ -15,7 +15,8 @@ const colors = {
     dark: '#5a5a5a',
     neutral: '#858585',
     light: '#dbdbdb',
-    lighter: '#eaeaea'
+    lighter: '#eaeaea',
+    lightest: '#fafafa'
   }
 };
 
@@ -29,6 +30,8 @@ const dimensions = {
 var styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.background,
+    position: 'relative'
   },
   h2: {
     fontSize: 14,

@@ -14,6 +14,7 @@ import Color from 'color';
 import moment from 'moment';
 
 import JournalEntry from './components/JournalEntry';
+import variables from '../variables/CaregiverGlobalVariables';
 
 const DATE_FORMAT = 'D MMM';
 const WEEK_DATE_FORMAT = 'ddd D MMM';
@@ -53,20 +54,17 @@ const JournalView = React.createClass({
     });
 
     return (
-      <View style={styles.container}>
-        <View style={styles.iconContainer}>
-          <Text style={[styles.mainText, {fontWeight: 'bold'}]}>
-            Journal
-          </Text>
-          <View style={styles.outerRing}>
-            <Image style={styles.iconRing} source={require('../../../images/old-man.png')}/>
-          </View>
-          <Text style={[styles.mainText, {textAlign: 'right', zIndex: 1}]}>
+      <View style={variables.container}>
+        <View style={styles.headerContainer}>
+          <Image style={styles.avatar} source={require('../../../images/old-man.png')}/>
+          <Text style={styles.date}>
             {headerDateText}
           </Text>
         </View>
 
-        <ScrollView>
+        <View style={styles.timeline}></View>
+
+        <ScrollView style={styles.journalContainer}>
           {events}
         </ScrollView>
       </View>
@@ -75,46 +73,48 @@ const JournalView = React.createClass({
 });
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'moccasin'
-  },
-  iconContainer: {
-    flex: 1,
-    backgroundColor: '#658d51',
-    zIndex: 2,
+  headerContainer: {
+    backgroundColor: variables.colors.gray.lightest,
+    borderBottomWidth: 1,
+    borderColor: variables.colors.gray.light,
+    height: 70,
+    zIndex: 4,
     alignItems: 'center',
     justifyContent: 'center',
-    // paddingTop: 20
+    position: 'relative',
   },
-  outerRing: {
-    borderWidth: 2,
-    borderRadius: 72,
-    width: 100,
-    height: 100,
-    borderColor: Color('white').clearer(.75).rgbaString(),
-    marginBottom: -70,
-    justifyContent: 'center'
-  },
-  iconRing: {
+  avatar: {
     borderWidth: 0,
-    borderRadius: 60,
+    borderRadius: 40,
     width: 80,
     height: 80,
     backgroundColor: Color('white').clearer(.25).rgbaString(),
-    alignSelf: 'center',
-    justifyContent: 'center'
+    borderWidth: 5,
+    borderColor: 'white',
+    position: 'absolute',
+    bottom: -40,
+    marginLeft: variables.dimensions.width/2 - 40,
+    zIndex: 5
   },
-  mainContainer: {
-    flex: 3,
-    backgroundColor: '#dbdbdb',
-    // alignItems: 'center',
-    zIndex: 1
+  date: {
+    position: 'absolute',
+    right: 10,
+    bottom: 10,
+    fontSize: 12
   },
-  mainText: {
-    fontSize: 26,
-    color: 'white',
-    lineHeight: 1.3*26
+  journalContainer: {
+    flex: 1,
+    position: 'relative',
+    marginTop: 60,
+    backgroundColor: 'transparent'
+  },
+  timeline: {
+    width: 4,
+    height: variables.dimensions.height,
+    backgroundColor: 'white',
+    position: 'absolute',
+    left: variables.dimensions.width/2 - 2,
+    zIndex: 2
   },
 });
 
