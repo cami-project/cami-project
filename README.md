@@ -1,7 +1,36 @@
 # cami-project
 http://www.camiproject.eu/
 
-# Cluster setup
+# Setup using Docker
+
+## Components
+
+### cami-rabbitmq
+First build the image(wihth credentials builtin).
+```
+docker build -t cami/rabbitmq:1.0 -f docker/cami-rabbitmq/Dockerfile .
+```
+
+Run a container. We need to specify the hostname since it si usde by rabbitmq
+nodes to identify themselves.
+```
+docker run -d --hostname cami-rabbitmq --name cami-rabbitmq -P cami/rabbitmq:1.0
+```
+
+Get the port on which we can acces the rabbitmq management interface. In this
+ case the default port was is
+```
+vagrant@docker:~/cami-project$ docker ps -l
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                                                                                                                     NAMES
+47101a9ced98        cami/rabbitmq:1.0   "docker-entrypoint.sh"   4 seconds ago       Up 2 seconds        0.0.0.0:32775->4369/tcp, 0.0.0.0:32774->5671/tcp, 0.0.0.0:32773->5672/tcp, 0.0.0.0:32772->15671/tcp, 0.0.0.0:32771->15672/tcp, 0.0.0.0:32770->25672/tcp   cami-rabbitmq
+```
+
+Access the management interface.
+```
+http://127.0.0.1:32771
+```
+
+# Setup using Vagrant
 
 The project has Ansible receipts for setting up instances for all `cami` components inside
 VirtualBox machines. Vagrant is used to manage the virtual machines.
