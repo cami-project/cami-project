@@ -1,6 +1,5 @@
+# Use a base image that has ansible set up.
 FROM williamyeh/ansible:ubuntu16.04
-
-# or, for example, FROM ansible/ubuntu14.04-ansible:stable
 
 # Add playbooks to the Docker image. This requires that the build context is the
 # project root folder. Run build like:
