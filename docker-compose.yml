@@ -16,4 +16,6 @@ services:
       - cami-store
     ports:
       - "8000:8000"
+    volumes:
+      - .:/cami-project
     entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-entrypoint.sh
