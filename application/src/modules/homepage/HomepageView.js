@@ -5,9 +5,10 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity,
-  Dimensions
+  TouchableOpacity
 } from 'react-native';
+
+import variables from 'Cami/src/modules/variables/ElderGlobalVariables';
 
 var Color = require("color");
 
@@ -71,8 +72,6 @@ const buttonCircle = {
   height: 90
 };
 
-let {height, width} = Dimensions.get('window');
-
 const color = {
   developing: '#a7b50a',
   active: '#00A4EE'
@@ -117,7 +116,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     paddingTop: 40,
-    width: width*.8,
+    width: variables.dimensions.width*.8,
     justifyContent: 'center'
   },
   text: {
@@ -129,10 +128,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: width*.8,
+    width: variables.dimensions.width*.8,
     position: 'absolute',
-    bottom: width*.1,
-    left: width*.1
+    bottom: variables.dimensions.width*.1,
+    left: variables.dimensions.width*.1
   },
   button: {
     ...buttonCircle,
