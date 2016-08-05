@@ -5,6 +5,14 @@ http://www.camiproject.eu/
 
 ## Components
 
+### cami-store
+The MySQL image available on DockerHub uses MySQL's recommended configs for production which causes mysqld to eat up ~500MB when the container is started. Make sure that the system running the container has more than 1GB of RAM available.
+
+Run the store container:
+```
+docker run -d --name cami-store -P cami/store:1.0
+```
+
 ### cami-rabbitmq
 First build the image(wihth credentials builtin).
 ```
@@ -29,6 +37,18 @@ Access the management interface.
 ```
 http://127.0.0.1:32771
 ```
+
+### cami-medical-compliance
+Build the image with docker:
+```
+docker build -t cami/medical-compliance:1.0 -f docker/cami-medical-compliance/Dockerfile .
+```
+
+To run the container you first need to have a running `cami-store` container for the mysql dependency:
+`docker run -d --name cami-store -P cami/store:1.0`
+
+Then run the `cami-medical-compliance` container linking it to the `cami-store` container.
+``
 
 # Setup using Vagrant
 
