@@ -8,6 +8,8 @@ import {
   TouchableOpacity
 } from 'react-native';
 
+import Icon from 'react-native-vector-icons/FontAwesome';
+import icons from 'Cami/src/icons-fa';
 import variables from 'Cami/src/modules/variables/ElderGlobalVariables';
 
 var Color = require("color");
@@ -25,13 +27,15 @@ const HomepageView = React.createClass({
         <View style={styles.iconContainer}>
           <View style={styles.outerRing}>
             <View style={styles.iconRing}>
-              <Text
+              <Icon
+                name={icons[this.props.notification.get('type')]}
+                size={50}
+                color={variables.colors.status[this.props.notification.get('severity')]}
                 style={{
-                  backgroundColor: 'transparent',
                   alignSelf: 'center',
-                  color: '#5a5a5a'
+                  marginTop: -5
                 }}
-              >ICON</Text>
+              />
             </View>
           </View>
         </View>
