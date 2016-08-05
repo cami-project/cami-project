@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     backgroundColor: variables.colors.gray.lightest,
     borderBottomWidth: 1,
     borderColor: variables.colors.gray.light,
-    height: 70,
+    height: 60,
     zIndex: 6,
     alignItems: 'center',
     justifyContent: 'center',
@@ -119,12 +119,12 @@ const styles = StyleSheet.create({
   },
   dateBullet: {
     position: 'absolute',
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
     backgroundColor: variables.colors.gray.light,
-    top: -3,
-    left: 87
+    top: -2,
+    left: 88
   },
   date: {
     fontSize: 12,

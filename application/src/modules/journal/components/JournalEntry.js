@@ -28,10 +28,22 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     flexDirection: 'column',
     alignSelf: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    zIndex: 7
   },
   icon: {
     alignItems: 'center'
+  },
+  statusIcon: {
+    position: 'absolute',
+    width: 16,
+    height: 16,
+    top: -8,
+    left: 73,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 8,
+    borderRadius: 8
   },
   time: {
     fontSize: 12,
@@ -85,6 +97,9 @@ const JournalEntry = React.createClass({
           </View>
           <View>
             <Text style={styles.time}>{time}</Text>
+          </View>
+          <View style={[styles.statusIcon, {backgroundColor: variables.colors.status[this.props.status]}]}>
+            <Icon name={icons[this.props.status]} size={12} color={'white'}/>
           </View>
         </View>
         <View style={{flex: 7, borderLeftWidth: 2, borderColor: variables.colors.status[this.props.status]}}>
