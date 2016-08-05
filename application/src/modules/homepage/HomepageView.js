@@ -5,9 +5,12 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity,
-  Dimensions
+  TouchableOpacity
 } from 'react-native';
+
+import Icon from 'react-native-vector-icons/FontAwesome';
+import icons from 'Cami/src/icons-fa';
+import variables from 'Cami/src/modules/variables/ElderGlobalVariables';
 
 var Color = require("color");
 
@@ -20,22 +23,43 @@ const HomepageView = React.createClass({
   render() {
     return (
       <View style={styles.container}>
-
+        <Image
+          style={[styles.background, {zIndex: 1, resizeMode: 'cover'}]}
+          source={require('../../../images/elder-bg-default.jpg')}
+        />
+        <View
+          style={[
+            styles.background,
+            {
+              zIndex: 2,
+              backgroundColor: Color(variables.colors.status[this.props.notification.get('severity')]).clearer(.25).rgbaString()
+            }
+          ]}
+        />
+        <Image
+          style={[styles.background, {zIndex: 3, resizeMode: 'contain'}]}
+          source={require('../../../images/elder-mainContent-bg.png')}
+        />
         <View style={styles.iconContainer}>
           <View style={styles.outerRing}>
             <View style={styles.iconRing}>
-              <Text
+              <Icon
+                name={icons[this.props.notification.get('type')]}
+                size={60}
+                color={variables.colors.status[this.props.notification.get('severity')]}
                 style={{
-                  backgroundColor: 'transparent',
                   alignSelf: 'center',
-                  color: '#5a5a5a'
+                  marginTop: -10
                 }}
-              >ICON</Text>
+              />
             </View>
           </View>
         </View>
 
-        <View style={styles.mainContainer}>
+        <View style={[
+            styles.mainContainer,
+          ]}
+        >
           <View style={styles.textContainer}>
             <Text style={[styles.text, {fontWeight: 'bold'}]}>
               Hey {this.props.username}
@@ -46,13 +70,29 @@ const HomepageView = React.createClass({
           </View>
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={[styles.button, styles.buttonPanic]}>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                styles.buttonPanic,
+                {
+                  shadowColor: Color(variables.colors.status[this.props.notification.get('severity')]).darken(.7).hexString()
+                }
+              ]}
+            >
               <Text style={[styles.buttonText, {color: 'white'}]}>
                 Help
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.button, styles.buttonConfirm]}>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                styles.buttonConfirm,
+                {
+                  shadowColor: Color(variables.colors.status[this.props.notification.get('severity')]).darken(.7).hexString()
+                }
+              ]}
+            >
               <Text style={[styles.buttonText, {color: 'green'}]}>
                 OK
               </Text>
@@ -71,68 +111,70 @@ const buttonCircle = {
   height: 90
 };
 
-let {height, width} = Dimensions.get('window');
-
-const color = {
-  developing: '#a7b50a',
-  active: '#00A4EE'
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'moccasin'
+    position: 'relative'
+  },
+  background: {
+    position: 'absolute',
+    flex: 1,
+    width: variables.dimensions.width,
+    height: variables.dimensions.height,
+    top: 0,
+    left: 0,
+    alignSelf: 'center',
   },
   iconContainer: {
     flex: 1,
-    backgroundColor: '#eaeaea',
-    zIndex: 2,
+    zIndex: 5,
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 20
   },
   outerRing: {
     borderWidth: 2,
-    borderRadius: 72,
-    width: 140,
-    height: 140,
+    borderRadius: 90,
+    width: 180,
+    height: 180,
     borderColor: Color('white').clearer(.75).rgbaString(),
-    marginBottom: -70,
+    marginBottom: -75,
     justifyContent: 'center'
   },
   iconRing: {
     borderWidth: 0,
-    borderRadius: 60,
-    width: 120,
-    height: 120,
-    backgroundColor: Color('white').clearer(.25).rgbaString(),
+    borderRadius: 75,
+    width: 150,
+    height: 150,
+    backgroundColor: Color('white').clearer(.05).rgbaString(),
     alignSelf: 'center',
     justifyContent: 'center'
   },
   mainContainer: {
     flex: 3,
-    backgroundColor: '#dbdbdb',
     alignItems: 'center',
-    zIndex: 1
+    zIndex: 4,
+    backgroundColor: 'transparent',
+    marginTop: 50
   },
   textContainer: {
     paddingTop: 40,
-    width: width*.8,
+    width: variables.dimensions.width*.8,
     justifyContent: 'center'
   },
   text: {
     fontSize: 26,
-    color: '#158A12',
+    color: variables.colors.text,
     lineHeight: 1.3*26
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: width*.8,
+    width: variables.dimensions.width*.8,
     position: 'absolute',
-    bottom: width*.1,
-    left: width*.1
+    bottom: variables.dimensions.width*.1,
+    left: variables.dimensions.width*.1
   },
   button: {
     ...buttonCircle,
@@ -141,7 +183,6 @@ const styles = StyleSheet.create({
     shadowRadius: 40,
     shadowOffset: {width: 0, height: 0},
     shadowOpacity: 0.4,
-    shadowColor: Color(color.developing).darken(.6).hexString()
   },
   buttonText: {
     backgroundColor: 'transparent',
@@ -154,7 +195,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   buttonPanic: {
-    backgroundColor: '#C95F5F'
+    backgroundColor: variables.colors.panic
   }
 });
 
