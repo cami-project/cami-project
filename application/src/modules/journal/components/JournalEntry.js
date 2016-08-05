@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   iconContainer: {
-    flex: 1,
+    width: 80,
     paddingTop: 20,
     paddingLeft: 20,
     paddingRight: 20,

@@ -56,7 +56,7 @@ const JournalView = React.createClass({
     return (
       <View style={variables.container}>
         <View style={styles.headerContainer}>
-          <Image style={styles.avatar} source={require('../../../images/old-man.png')}/>
+          <Image style={styles.avatar} source={require('../../../images/old-man.jpg')}/>
           <Text style={styles.date}>
             {headerDateText}
           </Text>
@@ -78,23 +78,22 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: variables.colors.gray.light,
     height: 70,
-    zIndex: 4,
+    zIndex: 6,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
   },
   avatar: {
-    borderWidth: 0,
-    borderRadius: 40,
-    width: 80,
-    height: 80,
-    backgroundColor: Color('white').clearer(.25).rgbaString(),
-    borderWidth: 5,
-    borderColor: 'white',
+    backgroundColor: 'transparent',
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    borderWidth: 4,
+    borderColor: variables.colors.gray.light,
     position: 'absolute',
-    bottom: -40,
-    marginLeft: variables.dimensions.width/2 - 40,
-    zIndex: 5
+    bottom: -30,
+    marginLeft: 60,
+    zIndex: 6
   },
   date: {
     position: 'absolute',
@@ -105,18 +104,18 @@ const styles = StyleSheet.create({
   journalContainer: {
     flex: 1,
     position: 'relative',
-    marginTop: 60,
+    paddingTop: 50,
     backgroundColor: 'transparent',
     paddingLeft: 10,
     paddingRight: 10,
     zIndex: 5
   },
   timeline: {
-    width: 4,
+    width: 2,
     height: variables.dimensions.height,
-    backgroundColor: 'white',
+    backgroundColor: variables.colors.gray.light,
     position: 'absolute',
-    left: variables.dimensions.width/2 - 2,
+    left: 90,
     zIndex: 2
   },
 });
