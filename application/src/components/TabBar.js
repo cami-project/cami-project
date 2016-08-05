@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View
 } from 'react-native';
+import variables from 'Cami/src/modules/variables/CaregiverGlobalVariables';
 
 const TabBar = React.createClass({
   displayName: 'TabBar',
@@ -41,7 +42,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#eee',
+    borderTopWidth: 1,
+    borderColor: variables.colors.gray.light,
+    backgroundColor: variables.colors.gray.lightest,
     flexDirection: 'row',
     justifyContent: 'space-around'
   },
