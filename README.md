@@ -3,6 +3,29 @@ http://www.camiproject.eu/
 
 # Setup using Docker
 
+The project now has a Docker containers configured for the microservices. This is still WIP but a functional dev env can be started using Docker.
+
+You will need `docker-compose` to get the env running. Follow the [installation guide](https://docs.docker.com/compose/install/).
+
+Once you have `docker-compose` installed just run this from the project root:
+```
+docker-compose up
+```
+This will start all cami microservices and output their standard output. It may take a while for all the containers to come online especially on the first run when the mysql database is initialised on cami-store. To check that all is working try this in your browser: `http://127.0.0.1:8000/api/v1/medication-plans/`. Replace `127.0.0.1` with your VM's ip if you're running Docker in a VM.
+
+You can also run the containers as daemons:
+```
+docker-compose up -d
+```
+Ouptut can be obtained with:
+```
+docker-compose logs
+```
+
+Use `docker-compose stop` to stop the containers or Ctrl+C to stop then when not running as daemon.
+
+The docker-compose recipe is not set up to allow easy development. For that, the project folder on the host is mounted in the cami-medical-compliance container so all changes you make on the host will be reflected in the web app running there.
+
 ## Components
 
 ### cami-store
