@@ -39,7 +39,12 @@ const JournalView = React.createClass({
       if (day != dayKey) {
         dayKey = day;
         const weekDayText = moment(new Date(event.get('timestamp') * 1000)).format(WEEK_DATE_FORMAT);
-        events.push(<Text key={'text' + index} style={{textAlign: 'right'}}>{weekDayText}</Text>);
+        events.push(
+          <View key={'text' + index} style={[styles.dateContainer, {flex: 1}]}>
+            <View style={styles.dateRuler}><View style={styles.dateBullet}/></View>
+            <Text style={[styles.date]}>{weekDayText}</Text>
+          </View>
+        );
       }
       events.push(
         <JournalEntry
@@ -57,7 +62,7 @@ const JournalView = React.createClass({
       <View style={variables.container}>
         <View style={styles.headerContainer}>
           <Image style={styles.avatar} source={require('../../../images/old-man.jpg')}/>
-          <Text style={styles.date}>
+          <Text style={styles.headerDate}>
             {headerDateText}
           </Text>
         </View>
@@ -95,11 +100,41 @@ const styles = StyleSheet.create({
     marginLeft: 60,
     zIndex: 6
   },
-  date: {
+  dateContainer: {
+    position: 'relative'
+  },
+  headerDate: {
     position: 'absolute',
     right: 10,
     bottom: 10,
     fontSize: 12
+  },
+  dateRuler: {
+    width: variables.dimensions.width-20,
+    position: 'absolute',
+    height: 2,
+    backgroundColor: variables.colors.gray.light,
+    top: 6,
+    left: -10
+  },
+  dateBullet: {
+    position: 'absolute',
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: variables.colors.gray.light,
+    top: -3,
+    left: 87
+  },
+  date: {
+    fontSize: 12,
+    backgroundColor: variables.colors.background,
+    color: variables.colors.gray.neutral,
+    position: 'relative',
+    marginBottom: 20,
+    width: 70,
+    alignSelf: 'flex-end',
+    textAlign: 'right'
   },
   journalContainer: {
     flex: 1,
