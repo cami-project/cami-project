@@ -10,8 +10,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import icons from 'Cami/src/icons-fa';
 import variables from '../../variables/CaregiverGlobalVariables';
 
-import {images} from 'Cami/src/images';
-
 const styles = StyleSheet.create({
   journalEntry: {
     backgroundColor: 'white',
