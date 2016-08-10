@@ -1,11 +1,13 @@
 # Uncomment this line to define a global platform for your project
-# platform :ios, '9.0'
+platform :ios, '8.0'
 
 target 'Cami' do
-  # Uncomment this line if you're using Swift or would like to use dynamic frameworks
-  # use_frameworks!
+  # Comment this line if you're not using Swift and don't want to use dynamic frameworks
+  use_frameworks!
 
   # Pods for Cami
+  pod 'SwiftyJSON', '2.3.1'
+  pod 'Charts', '2.2.3'
 
   target 'CamiTests' do
     inherit! :search_paths

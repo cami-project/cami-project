@@ -40,6 +40,7 @@
     "react-native": "^0.29.0",
     "react-native-blur": "^1.0.0",
     "react-native-chart": "^1.0.7-beta",
+    "react-native-ios-charts": "^0.2.6",
     "react-native-lock": "futurice/react-native-lock#feature/customizedTheme",
     "react-native-vector-icons": "^2.0.3",
     "react-redux": "^4.4.5",

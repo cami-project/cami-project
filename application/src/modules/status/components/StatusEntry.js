@@ -7,6 +7,7 @@ import {
   Image
 } from 'react-native';
 import Chart from 'react-native-chart';
+import {LineChart} from 'react-native-ios-charts';
 import moment from 'moment';
 
 import {images} from 'Cami/src/images';
@@ -16,12 +17,13 @@ const chartStyles = StyleSheet.create({
     flex: 1
   },
   chartContainer: {
-    // flex: 1,
+    flex: 1,
     backgroundColor: 'white',
     padding: 10
   },
   chart: {
-    height: 100,
+    flex: 1,
+    height: 150,
     paddingBottom: 10
   },
   value: {
@@ -42,6 +44,37 @@ const chartStyles = StyleSheet.create({
   }
 });
 
+const config = {
+  dataSets: [{
+    values: [-1, 1, -1, 1, -1, 1],
+    drawValues: false,
+    colors: ['rgb(199, 255, 140)'],
+    drawCubic: false,
+    drawCircles: false,
+    lineWidth: 2
+  }],
+  backgroundColor: 'red',
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  // minOffset: 20,
+  scaleYEnabled: false,
+  legend: {
+    enabled: false,
+    position: 'leftOfChart',
+  },
+  xAxis: {
+    axisLineWidth: 0,
+    drawLabels: true,
+    position: 'bottom',
+    drawGridLines: false
+  },
+  leftAxis: {
+    enabled: false,
+  },
+  rightAxis: {
+    enabled: false
+  }
+};
+
 const StatusEntry = React.createClass({
   propTypes: {
     type: PropTypes.string.isRequired,
@@ -54,11 +87,15 @@ const StatusEntry = React.createClass({
   },
 
   render() {
-    const arrayData = [];
-    this.props.data.forEach(item =>
-      arrayData.push([item.get('timestamp'), item.get('value')])
-    );
+    const xValues = [];
+    const yValues = [];
+    this.props.data.forEach(item => {
+      xValues.push(this.formatTimestamp(item.get('timestamp')));
+      yValues.push(item.get('value'));
+    });
     const lastValue = this.props.data.get(this.props.data.size - 1).get('value');
+    const chartConfig = {...config, labels: xValues}
+    chartConfig.dataSets[0].values = yValues;
 
     return (
       <View style={chartStyles.container}>
@@ -75,18 +112,8 @@ const StatusEntry = React.createClass({
             </Text>
           </View>
         </View>
-        <View>
-          <View style={chartStyles.chartContainer}>
-            <Chart
-              style={chartStyles.chart}
-              data={arrayData}
-              type="line"
-              showGrid={false}
-              showAxis={true}
-              showDataPoint={true}
-              xAxisTransform={this.formatTimestamp}
-            />
-          </View>
+        <View style={chartStyles.chartContainer}>
+          <LineChart config={chartConfig} style={chartStyles.chart}/>
         </View>
       </View>
     );
