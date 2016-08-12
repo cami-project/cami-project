@@ -1,0 +1,8 @@
+{
+  "heart": "heartbeat",
+  "weight": "dashboard",
+  "sleep": "bed",
+  "warning": "exclamation",
+  "ok": "check",
+  "wakeup": "check"
+}

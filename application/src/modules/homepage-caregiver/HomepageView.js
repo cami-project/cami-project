@@ -14,6 +14,8 @@ import Color from 'color';
 
 import StatusChart from './components/StatusChart';
 import JournalEntry from './components/JournalEntry';
+import icons from 'Cami/src/icons-fa';
+import variables from '../variables/CaregiverGlobalVariables';
 
 const HomepageView = React.createClass({
   propTypes: {
@@ -24,18 +26,20 @@ const HomepageView = React.createClass({
 
   render() {
     const heartRateData = this.props.status.get('heart').get('rate');
-    const weightData = this.props.status.get('weigth').get('amount');
+    const weightData = this.props.status.get('weight').get('amount');
 
     return (
       <View style={styles.container}>
 
-        <View style={styles.iconContainer}>
-          <View style={styles.outerRing}>
-            <Image style={styles.iconRing} source={require('../../../images/old-man.png')}/>
+        <View style={styles.headerContainer}>
+          <Image style={styles.headerBackgroundImage} source={require('../../../images/old-man.jpg')}/>
+          <View style={styles.headerContainerInner}>
+            <Image style={styles.avatar} source={require('../../../images/old-man.jpg')}/>
+            <View style={styles.headerTextContainer}>
+              <Text style={[styles.headerText, {fontWeight: 'bold'}]}>{this.props.username + '\'s'}</Text>
+              <Text style={[styles.headerText, {fontSize: 18}]}>doing fine</Text>
+            </View>
           </View>
-          <Text style={[styles.mainText, {fontWeight: 'bold'}]}>
-            {this.props.username}'s doing fine
-          </Text>
         </View>
 
         <View style={styles.mainContainer}>
@@ -43,22 +47,26 @@ const HomepageView = React.createClass({
             <StatusChart
               data={heartRateData}
               text="Heart rate"
-              image={require('../../../images/heart-ok.png')}
-              unit="bpm"/>
+              icon={icons.heart}
+              unit="bpm"
+              status="ok"
+            />
 
             <StatusChart
               data={weightData}
               text="Weight"
-              image={require('../../../images/weight-warning.png')}
-              unit="kg"/>
+              icon={icons.weight}
+              unit="kg"
+              status="warning"
+            />
           </View>
 
           <View style={{flex: 1}}>
-            <Text style={[styles.mainText, {fontWeight: 'bold', textAlign: 'center'}]}>
+            <Text style={[variables.h2, {marginTop: 20, color: variables.colors.gray.neutral}]}>
               Latest Journal Entries
             </Text>
 
-            <ScrollView style={{flex: 1}}>
+            <ScrollView style={{flex: 1, padding: 10}}>
               {/* TODO */}
               {/* Limit somehow the latest entries count */}
               {/* Maybe show only for today, or only last 5 */}
@@ -84,38 +92,64 @@ const HomepageView = React.createClass({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'moccasin'
+    backgroundColor: variables.colors.background
   },
-  iconContainer: {
+  headerContainer: {
     flex: 1,
-    backgroundColor: '#658d51',
     zIndex: 2,
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative'
+  },
+  headerContainerInner: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: Color(variables.colors.status.ok).clearer(.1).rgbaString(),
+    width: variables.dimensions.width,
     paddingTop: 20
   },
-  outerRing: {
-    borderWidth: 2,
-    borderRadius: 72,
-    width: 140,
-    height: 140,
-    borderColor: Color('white').clearer(.75).rgbaString(),
-    marginBottom: -70,
-    justifyContent: 'center'
+  headerBackgroundImage: {
+    flex: 1,
+    width: variables.dimensions.width + 100,
+    height: variables.dimensions.height/3 - 50 - 20,
+    position: 'absolute',
+    resizeMode: 'cover',
+    top: 0,
+    left: -50,
+    bottom: 0,
+    right: -50,
+    alignSelf: 'center'
   },
-  iconRing: {
+  headerTextContainer: {
+    flex: 1,
+    width: variables.dimensions.width*.5,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    position: 'absolute',
+    bottom: 10,
+    left: 10
+  },
+  headerText: {
+    fontSize: 20,
+    color: 'white',
+  },
+  avatar: {
+    top: 20,
     borderWidth: 0,
-    borderRadius: 60,
-    width: 120,
-    height: 120,
+    borderRadius: 40,
+    width: 80,
+    height: 80,
     backgroundColor: Color('white').clearer(.25).rgbaString(),
-    alignSelf: 'center',
-    justifyContent: 'center'
+    borderWidth: 5,
+    borderColor: 'white',
+    marginBottom: -15,
+    marginTop: 10,
+    position: 'absolute',
+    marginLeft: variables.dimensions.width/2 - 40
   },
   mainContainer: {
     flex: 3,
-    backgroundColor: '#dbdbdb',
-    // alignItems: 'center',
+    backgroundColor: variables.colors.background,
     zIndex: 1
   },
   mainText: {

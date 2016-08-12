@@ -14,6 +14,7 @@ import Color from 'color';
 import moment from 'moment';
 
 import JournalEntry from './components/JournalEntry';
+import variables from '../variables/CaregiverGlobalVariables';
 
 const DATE_FORMAT = 'D MMM';
 const WEEK_DATE_FORMAT = 'ddd D MMM';
@@ -38,7 +39,12 @@ const JournalView = React.createClass({
       if (day != dayKey) {
         dayKey = day;
         const weekDayText = moment(new Date(event.get('timestamp') * 1000)).format(WEEK_DATE_FORMAT);
-        events.push(<Text key={'text' + index} style={{textAlign: 'right'}}>{weekDayText}</Text>);
+        events.push(
+          <View key={'text' + index} style={[styles.dateContainer, {flex: 1}]}>
+            <View style={styles.dateRuler}><View style={styles.dateBullet}/></View>
+            <Text style={[styles.date]}>{weekDayText}</Text>
+          </View>
+        );
       }
       events.push(
         <JournalEntry
@@ -53,20 +59,17 @@ const JournalView = React.createClass({
     });
 
     return (
-      <View style={styles.container}>
-        <View style={styles.iconContainer}>
-          <Text style={[styles.mainText, {fontWeight: 'bold'}]}>
-            Journal
-          </Text>
-          <View style={styles.outerRing}>
-            <Image style={styles.iconRing} source={require('../../../images/old-man.png')}/>
-          </View>
-          <Text style={[styles.mainText, {textAlign: 'right', zIndex: 1}]}>
+      <View style={variables.container}>
+        <View style={styles.headerContainer}>
+          <Image style={styles.avatar} source={require('../../../images/old-man.jpg')}/>
+          <Text style={styles.headerDate}>
             {headerDateText}
           </Text>
         </View>
 
-        <ScrollView>
+        <View style={styles.timeline}></View>
+
+        <ScrollView style={styles.journalContainer}>
           {events}
         </ScrollView>
       </View>
@@ -75,46 +78,80 @@ const JournalView = React.createClass({
 });
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'moccasin'
-  },
-  iconContainer: {
-    flex: 1,
-    backgroundColor: '#658d51',
-    zIndex: 2,
+  headerContainer: {
+    backgroundColor: variables.colors.gray.lightest,
+    borderBottomWidth: 1,
+    borderColor: variables.colors.gray.light,
+    height: 60,
+    zIndex: 6,
     alignItems: 'center',
     justifyContent: 'center',
-    // paddingTop: 20
+    position: 'relative',
   },
-  outerRing: {
-    borderWidth: 2,
-    borderRadius: 72,
-    width: 100,
-    height: 100,
-    borderColor: Color('white').clearer(.75).rgbaString(),
-    marginBottom: -70,
-    justifyContent: 'center'
+  avatar: {
+    backgroundColor: 'transparent',
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    borderWidth: 4,
+    borderColor: variables.colors.gray.light,
+    position: 'absolute',
+    bottom: -30,
+    marginLeft: 60,
+    zIndex: 6
   },
-  iconRing: {
-    borderWidth: 0,
-    borderRadius: 60,
-    width: 80,
-    height: 80,
-    backgroundColor: Color('white').clearer(.25).rgbaString(),
-    alignSelf: 'center',
-    justifyContent: 'center'
+  dateContainer: {
+    position: 'relative'
   },
-  mainContainer: {
-    flex: 3,
-    backgroundColor: '#dbdbdb',
-    // alignItems: 'center',
-    zIndex: 1
+  headerDate: {
+    position: 'absolute',
+    right: 10,
+    bottom: 10,
+    fontSize: 12
   },
-  mainText: {
-    fontSize: 26,
-    color: 'white',
-    lineHeight: 1.3*26
+  dateRuler: {
+    width: variables.dimensions.width-20,
+    position: 'absolute',
+    height: 2,
+    backgroundColor: variables.colors.gray.light,
+    top: 6,
+    left: -10
+  },
+  dateBullet: {
+    position: 'absolute',
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: variables.colors.gray.light,
+    top: -2,
+    left: 88
+  },
+  date: {
+    fontSize: 12,
+    backgroundColor: variables.colors.background,
+    color: variables.colors.gray.neutral,
+    position: 'relative',
+    marginBottom: 20,
+    width: 70,
+    alignSelf: 'flex-end',
+    textAlign: 'right'
+  },
+  journalContainer: {
+    flex: 1,
+    position: 'relative',
+    paddingTop: 50,
+    backgroundColor: 'transparent',
+    paddingLeft: 10,
+    paddingRight: 10,
+    zIndex: 5
+  },
+  timeline: {
+    width: 2,
+    height: variables.dimensions.height,
+    backgroundColor: variables.colors.gray.light,
+    position: 'absolute',
+    left: 90,
+    zIndex: 2
   },
 });
 

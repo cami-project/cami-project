@@ -17,7 +17,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-/lib/
+lib/
 lib64/
 parts/
 sdist/
@@ -60,9 +60,6 @@ docs/_build/
 # PyBuilder
 target/
 
-#Ipython Notebook
-.ipynb_checkpoints
-
 # PyCharm
 .idea
 
@@ -76,4 +73,5 @@ ansible/**/*.retry
 *.sqlite3
 settings_local.py
 
-application/images/Thumbs.db
+# Don't copy the client application
+application
