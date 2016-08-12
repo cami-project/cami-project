@@ -23,7 +23,7 @@ const chartStyles = StyleSheet.create({
   },
   chart: {
     flex: 1,
-    height: 150,
+    height: 80,
     paddingBottom: 10
   },
   value: {
@@ -46,20 +46,18 @@ const chartStyles = StyleSheet.create({
 
 const config = {
   dataSets: [{
-    values: [-1, 1, -1, 1, -1, 1],
     drawValues: false,
     colors: ['rgb(199, 255, 140)'],
     drawCubic: false,
-    drawCircles: false,
+    drawCircles: true,
     lineWidth: 2
   }],
-  backgroundColor: 'red',
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  backgroundColor: 'blue',
   // minOffset: 20,
   scaleYEnabled: false,
   legend: {
     enabled: false,
-    position: 'leftOfChart',
+    position: 'pieChartCenter',
   },
   xAxis: {
     axisLineWidth: 0,
@@ -77,43 +75,78 @@ const config = {
 
 const StatusEntry = React.createClass({
   propTypes: {
+    title: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
     data: PropTypes.instanceOf(List).isRequired,
+    threshold: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    units: PropTypes.string,
+    timeUnits: PropTypes.string.isRequired,
+    formatValue: PropTypes.func,
+    timestampFormat: PropTypes.string.isRequired
+  },
+
+  getDefaultProps() {
+    return {
+      timestampFormat: 'HH'
+    };
   },
 
   formatTimestamp(timestamp) {
-    return moment(new Date(timestamp * 1000)).format('HH');
+    return moment(new Date(timestamp * 1000)).format(this.props.timestampFormat);
+  },
+
+  formatStatus(status) {
+    return {
+      'ok': 'green',
+      'warning': 'yellow',
+      'alert': 'red'
+    }[status];
+  },
+
+  formatValue(status, value, threshold) {
+    return {
+      'ok': 0,
+      'warning': value > threshold ? 1 : -1,
+      'alert': value > threshold ? 1 : -1
+    }[status];
   },
 
   render() {
-    const xValues = [];
-    const yValues = [];
+    const formatValue = this.props.formatValue ? this.props.formatValue : this.formatValue;
+    const chartConfig = {...config, labels: []};
+    const dataSet = chartConfig.dataSets[0];
+    dataSet.values = [];
+    dataSet.circleColors = [];
     this.props.data.forEach(item => {
-      xValues.push(this.formatTimestamp(item.get('timestamp')));
-      yValues.push(item.get('value'));
+      chartConfig.labels.push(this.formatTimestamp(item.get('timestamp')));
+      dataSet.values.push(formatValue(item.get('status'), item.get('value'), this.props.threshold));
+      dataSet.circleColors.push(this.formatStatus(item.get('status')));
     });
     const lastValue = this.props.data.get(this.props.data.size - 1).get('value');
-    const chartConfig = {...config, labels: xValues}
-    chartConfig.dataSets[0].values = yValues;
+    const lastStatus = this.props.data.get(this.props.data.size - 1).get('status');
 
     return (
       <View style={chartStyles.container}>
         <View style={{flexDirection: 'row'}}>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Image source={images[this.props.type][this.props.status]}/>
+            <Image source={images[this.props.type][lastStatus]}/>
           </View>
           <View>
-            <Text>Heart rate</Text>
+            <Text>{this.props.title}</Text>
           </View>
           <View style={{flex: 1}}>
             <Text style={chartStyles.value}>
-              {lastValue} <Text style={chartStyles.unit}>bpm</Text>
+              {lastValue} <Text style={chartStyles.unit}>{this.props.units}</Text>
             </Text>
           </View>
         </View>
-        <View style={chartStyles.chartContainer}>
-          <LineChart config={chartConfig} style={chartStyles.chart}/>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{justifyContent: 'flex-end', alignItems: 'flex-end'}}>
+            <Text>{this.props.timeUnits}</Text>
+          </View>
+          <View style={chartStyles.chartContainer}>
+            <LineChart config={chartConfig} style={chartStyles.chart}/>
+          </View>
         </View>
       </View>
     );

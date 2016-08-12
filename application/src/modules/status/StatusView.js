@@ -6,10 +6,12 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import Color from 'color';
-import moment from 'moment';
 
-import StatusEntry from './components/StatusEntry';
+import HeartRateEntry from './components/HeartRateEntry';
+import WeightEntry from './components/WeightEntry';
+import StepsEntry from './components/StepsEntry';
+import SleepEntry from './components/SleepEntry';
+import BloodPressureEntry from './components/BloodPressureEntry';
 
 const StatusView = React.createClass({
   propTypes: {
@@ -17,8 +19,23 @@ const StatusView = React.createClass({
     status: PropTypes.instanceOf(Map).isRequired
   },
 
+  getEntryByType(type) {
+    switch(type) {
+      case 'heart': return HeartRateEntry;
+      case 'weight': return WeightEntry;
+      case 'steps': return StepsEntry;
+      case 'sleep': return SleepEntry;
+      case 'blood': return BloodPressureEntry;
+    }
+  },
+
   render() {
-    console.log('status:', this.props.status);
+    const entries = [];
+    this.props.status.forEach((status, index) => {
+      const EntryType = this.getEntryByType(index);
+      if (EntryType)
+        entries.push(<EntryType key={index} statusItem={status}/>);
+    });
 
     return (
       <View style={styles.container}>
@@ -29,11 +46,7 @@ const StatusView = React.createClass({
         </View>
 
         <ScrollView>
-          <StatusEntry
-            type="heart"
-            status={this.props.status.get('heart').get('status')}
-            data={this.props.status.get('heart').get('data')}
-          />
+          {entries}
         </ScrollView>
       </View>
     );

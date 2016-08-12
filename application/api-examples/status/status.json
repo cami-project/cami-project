@@ -1,6 +1,7 @@
 {
   "heart": {
     "status": "alert",
+    "threshold": 50,
     "data": [{
       "timestamp": 1469768400,
       "value": 48,
@@ -35,8 +36,9 @@
       "status": "alert"
     }]
   },
-  "weigth": {
+  "weight": {
     "status": "warning",
+    "threshold": 72,
     "data": [{
       "timestamp": 1468479600,
       "value": 72,
@@ -73,6 +75,7 @@
   },
   "steps": {
     "status": "ok",
+    "threshold": 235,
     "data": [{
       "timestamp": 1468479600,
       "value": 230,
@@ -109,6 +112,7 @@
   },
   "blood": {
     "status": "ok",
+    "threshold": "110/65",
     "data": [{
       "timestamp": 1469768400,
       "value": "120/70",
@@ -145,6 +149,7 @@
   },
   "sleep": {
     "status": "ok",
+    "threshold": 9,
     "data": [{
       "timestamp": 1468479600,
       "value": 9,

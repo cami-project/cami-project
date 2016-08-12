@@ -17,7 +17,8 @@ export const images = {
     warning: require('../images/weight-warning.png')
   },
   sleep: {
-    wakeup: require('../images/sleep-wakeup.png')
+    wakeup: require('../images/sleep-wakeup.png'),
+    ok: require('../images/sleep-ok.png')
   },
   menu: {
     home: require('../images/home-menu.png'),
