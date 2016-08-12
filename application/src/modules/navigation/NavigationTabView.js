@@ -4,6 +4,13 @@ import {
   NavigationExperimental as Navigation
 } from 'react-native';
 
+var Sound = require('react-native-sound');
+var tapButtonSound = new Sound('sounds/just-like-that.mp3', Sound.MAIN_BUNDLE, (error) => {
+  if (error) {
+    console.log('failed to load the sound', error);
+  }
+});
+
 const NavigationTabView = React.createClass({
   propTypes: {
     router: PropTypes.func.isRequired,
@@ -28,6 +35,9 @@ const NavigationTabView = React.createClass({
   },
 
   renderScene(props) {
+    // play sound on start to load of new scene
+    tapButtonSound.setVolume(1.0).play();
+
     return (
       <Navigation.Card
         {...props}
