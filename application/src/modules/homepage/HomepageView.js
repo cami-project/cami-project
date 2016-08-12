@@ -15,11 +15,9 @@ import variables from 'Cami/src/modules/variables/ElderGlobalVariables';
 var Color = require("color");
 
 var Sound = require('react-native-sound');
-var tapButtonSound = new Sound('sounds/just-like-that.mp3', Sound.MAIN_BUNDLE, (error) => {
+var tapButtonSound = new Sound('sounds/knuckle.mp3', Sound.MAIN_BUNDLE, (error) => {
   if (error) {
     console.log('failed to load the sound', error);
-  } else {
-    console.log('duration in seconds: ' + tapButtonSound.getDuration() + 'number of channels: ' + tapButtonSound.getNumberOfChannels());
   }
 });
 
