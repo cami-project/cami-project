@@ -1,4 +1,4 @@
-import {List} from 'immutable';
+import {Map} from 'immutable';
 import React, {PropTypes} from 'react';
 import {
   StyleSheet,
@@ -6,20 +6,37 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import Color from 'color';
-import moment from 'moment';
 
-// import StatusEntry from './components/StatusEntry';
-
-const DATE_FORMAT = 'D MMM';
-const WEEK_DATE_FORMAT = 'ddd D MMM';
+import HeartRateEntry from './components/HeartRateEntry';
+import WeightEntry from './components/WeightEntry';
+import StepsEntry from './components/StepsEntry';
+import SleepEntry from './components/SleepEntry';
+import BloodPressureEntry from './components/BloodPressureEntry';
 
 const StatusView = React.createClass({
   propTypes: {
-    username: PropTypes.string.isRequired
+    username: PropTypes.string.isRequired,
+    status: PropTypes.instanceOf(Map).isRequired
+  },
+
+  getEntryByType(type) {
+    switch(type) {
+      case 'heart': return HeartRateEntry;
+      case 'weight': return WeightEntry;
+      case 'steps': return StepsEntry;
+      case 'sleep': return SleepEntry;
+      case 'blood': return BloodPressureEntry;
+    }
   },
 
   render() {
+    const entries = [];
+    this.props.status.forEach((status, index) => {
+      const EntryType = this.getEntryByType(index);
+      if (EntryType)
+        entries.push(<EntryType key={index} statusItem={status}/>);
+    });
+
     return (
       <View style={styles.container}>
         <View style={styles.iconContainer}>
@@ -29,6 +46,7 @@ const StatusView = React.createClass({
         </View>
 
         <ScrollView>
+          {entries}
         </ScrollView>
       </View>
     );
