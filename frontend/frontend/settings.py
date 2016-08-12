@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'tastypie',
     'api'
 ]
 
@@ -119,13 +121,16 @@ USE_L10N = True
 
 USE_TZ = True
 
+TASTYPIE_DEFAULT_FORMATS = ['json']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
 
-# Use local settings file for environment specific configuration
+CORS_ORIGIN_ALLOW_ALL = True
+X_FRAME_OPTIONS='ALLOW-FROM *'
+
 try:
     from settings_local import *
 except:
