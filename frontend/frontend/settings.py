@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'frontend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-
+# Options from here: https://blog.ionelmc.ro/2014/12/28/terrible-choices-mysql/
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -85,9 +85,15 @@ DATABASES = {
         'PASSWORD': 'cami',
         'HOST': 'cami-store',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
+        'OPTIONS': {
+            'sql_mode': 'TRADITIONAL',
+            'charset': 'utf8',
+            'init_command': 'SET '
+                'storage_engine=INNODB,'
+                'character_set_connection=utf8'
+        }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
