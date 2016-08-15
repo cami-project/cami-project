@@ -14,6 +14,13 @@ import variables from 'Cami/src/modules/variables/ElderGlobalVariables';
 
 var Color = require("color");
 
+var Sound = require('react-native-sound');
+var tapButtonSound = new Sound('sounds/knuckle.mp3', Sound.MAIN_BUNDLE, (error) => {
+  if (error) {
+    console.log('failed to load the sound', error);
+  }
+});
+
 const HomepageView = React.createClass({
   propTypes: {
     notification: PropTypes.instanceOf(Map).isRequired,
@@ -78,6 +85,7 @@ const HomepageView = React.createClass({
                   shadowColor: Color(variables.colors.status[this.props.notification.get('severity')]).darken(.7).hexString()
                 }
               ]}
+              onPress={() => tapButtonSound.setVolume(1.0).play()}
             >
               <Text style={[styles.buttonText, {color: 'white'}]}>
                 Help
@@ -92,6 +100,7 @@ const HomepageView = React.createClass({
                   shadowColor: Color(variables.colors.status[this.props.notification.get('severity')]).darken(.7).hexString()
                 }
               ]}
+              onPress={() => tapButtonSound.setVolume(1.0).play()}
             >
               <Text style={[styles.buttonText, {color: 'green'}]}>
                 OK

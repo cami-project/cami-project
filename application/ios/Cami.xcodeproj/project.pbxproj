@@ -60,6 +60,8 @@
 		84824BED1D53759400A9A3D1 /* RNScatterChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 84824BCD1D53759300A9A3D1 /* RNScatterChart.m */; };
 		84824BEE1D53759400A9A3D1 /* RNScatterChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84824BCE1D53759300A9A3D1 /* RNScatterChart.swift */; };
 		84824BEF1D53759400A9A3D1 /* RNScatterChartManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84824BCF1D53759300A9A3D1 /* RNScatterChartManager.swift */; };
+		8494ED291D61EC3E008B8E7E /* libRNSound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8494ED271D61EC1D008B8E7E /* libRNSound.a */; };
+		8494ED4E1D61EEF9008B8E7E /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 8494ED4D1D61EEF9008B8E7E /* sounds */; };
 		849C31C01D41445F0097CB36 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 849C31BF1D41443D0097CB36 /* libART.a */; };
 		AE7C539A0DC94CF18B2D4C70 /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D5BB39EEE0F4E53878141DC /* libRNBlur.a */; };
 		AE891D22B73E40B1AB815BF5 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1BE5FA6199C64797A7246756 /* Octicons.ttf */; };
@@ -155,6 +157,13 @@
 			remoteGlobalIDString = 5F0499EE1CAE9F4A006F6C05;
 			remoteInfo = A0RNLock;
 		};
+		8494ED261D61EC1D008B8E7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8494ED151D61EC1C008B8E7E /* RNSound.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 19825A1E1BD4A89800EE0337;
+			remoteInfo = RNSound;
+		};
 		849C31B81D4144060097CB36 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BE9FAEE2CCA649F598F46139 /* RNBlur.xcodeproj */;
@@ -248,6 +257,8 @@
 		84824BCD1D53759300A9A3D1 /* RNScatterChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNScatterChart.m; path = "../node_modules/react-native-ios-charts/RNiOSCharts/RNScatterChart.m"; sourceTree = "<group>"; };
 		84824BCE1D53759300A9A3D1 /* RNScatterChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RNScatterChart.swift; path = "../node_modules/react-native-ios-charts/RNiOSCharts/RNScatterChart.swift"; sourceTree = "<group>"; };
 		84824BCF1D53759300A9A3D1 /* RNScatterChartManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RNScatterChartManager.swift; path = "../node_modules/react-native-ios-charts/RNiOSCharts/RNScatterChartManager.swift"; sourceTree = "<group>"; };
+		8494ED151D61EC1C008B8E7E /* RNSound.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSound.xcodeproj; path = "../node_modules/react-native-sound/RNSound.xcodeproj"; sourceTree = "<group>"; };
+		8494ED4D1D61EEF9008B8E7E /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sounds; path = ../sounds; sourceTree = "<group>"; };
 		849C31BA1D41443C0097CB36 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		8B973CDA360C4BF1B6E4D026 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		938FD9977D1735DEB15300EE /* Pods-Cami.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cami.release.xcconfig"; path = "Pods/Target Support Files/Pods-Cami/Pods-Cami.release.xcconfig"; sourceTree = "<group>"; };
@@ -279,6 +290,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8494ED291D61EC3E008B8E7E /* libRNSound.a in Frameworks */,
 				849C31C01D41445F0097CB36 /* libART.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
@@ -449,6 +461,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				8494ED151D61EC1C008B8E7E /* RNSound.xcodeproj */,
 				849C31BA1D41443C0097CB36 /* ART.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -478,6 +491,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				8494ED4D1D61EEF9008B8E7E /* sounds */,
 				13B07FAE1A68108700A75B9A /* Cami */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* CamiTests */,
@@ -503,6 +517,14 @@
 			isa = PBXGroup;
 			children = (
 				8459CE221D5B2B910015D24C /* libA0RNLock.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8494ED161D61EC1C008B8E7E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8494ED271D61EC1D008B8E7E /* libRNSound.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -695,6 +717,10 @@
 					ProjectRef = BE9FAEE2CCA649F598F46139 /* RNBlur.xcodeproj */;
 				},
 				{
+					ProductGroup = 8494ED161D61EC1C008B8E7E /* Products */;
+					ProjectRef = 8494ED151D61EC1C008B8E7E /* RNSound.xcodeproj */;
+				},
+				{
 					ProductGroup = A21295791D421FCE00F579A7 /* Products */;
 					ProjectRef = 1CC4DFA7AB3E43588029ECDC /* RNVectorIcons.xcodeproj */;
 				},
@@ -785,6 +811,13 @@
 			remoteRef = 8459CE211D5B2B910015D24C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		8494ED271D61EC1D008B8E7E /* libRNSound.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNSound.a;
+			remoteRef = 8494ED261D61EC1D008B8E7E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		849C31B91D4144060097CB36 /* libRNBlur.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -825,6 +858,7 @@
 				0FF2EC1E70F64A278DA8B6B6 /* Entypo.ttf in Resources */,
 				5DFEF4A38E0B4D69986C7D1A /* EvilIcons.ttf in Resources */,
 				EF5C67FF2FEA4B9B98DC4F2A /* FontAwesome.ttf in Resources */,
+				8494ED4E1D61EEF9008B8E7E /* sounds in Resources */,
 				1AB1EE910D984DBDA9D7D365 /* Foundation.ttf in Resources */,
 				32520E06088C4B4BA11D69D3 /* Ionicons.ttf in Resources */,
 				1AFAD049DAD3490DACCED403 /* MaterialIcons.ttf in Resources */,
