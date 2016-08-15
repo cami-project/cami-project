@@ -14,8 +14,10 @@ import Color from 'color';
 
 import StatusChart from './components/StatusChart';
 import JournalEntry from './components/JournalEntry';
+import ActionabilityWidget from './components/ActionabilityWidget';
 import icons from 'Cami/src/icons-fa';
 import variables from '../variables/CaregiverGlobalVariables';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const HomepageView = React.createClass({
   propTypes: {
@@ -43,6 +45,8 @@ const HomepageView = React.createClass({
         </View>
 
         <View style={styles.mainContainer}>
+          <ActionabilityWidget style={{height: 180}}/>
+
           <View style={{flexDirection: 'row'}}>
             <StatusChart
               data={heartRateData}

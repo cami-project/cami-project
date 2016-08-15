@@ -4,5 +4,8 @@
   "sleep": "bed",
   "warning": "exclamation",
   "ok": "check",
-  "wakeup": "check"
+  "wakeup": "check",
+  "plus": "plus",
+  "phone": "phone",
+  "cancel": "times"
 }
