@@ -13,6 +13,8 @@ docker-compose up
 ```
 This will start all cami microservices and output their standard output. It may take a while for all the containers to come online especially on the first run when the mysql database is initialised on cami-store. To check that all is working try this in your browser: `http://127.0.0.1:8000/api/v1/medication-plans/`. Replace `127.0.0.1` with your VM's ip if you're running Docker in a VM.
 
+Check out frontend notification API at `http://127.0.0.1:8001/api/v1/notifications/?limit=2`.
+
 You can also run the containers as daemons:
 ```
 docker-compose up -d
@@ -24,7 +26,7 @@ docker-compose logs
 
 Use `docker-compose stop` to stop the containers or Ctrl+C to stop then when not running as daemon.
 
-The docker-compose recipe is not set up to allow easy development. For that, the project folder on the host is mounted in the cami-medical-compliance container so all changes you make on the host will be reflected in the web app running there.
+The docker-compose recipe is set up so that you can use the containers for development. All containers have the host project folder synced to the `/cami-project` folder from which the microservices are run. **Any change you do on the host will be reflected in the running apps.**
 
 ## Components
 
@@ -73,7 +75,7 @@ To run the container you first need to have a running `cami-store` container for
 Then run the `cami-medical-compliance` container linking it to the `cami-store` container.
 ``
 
-# Setup using Vagrant
+# Setup using Vagrant(this is broken right now and might not get revived!)
 
 The project has Ansible receipts for setting up instances for all `cami` components inside
 VirtualBox machines. Vagrant is used to manage the virtual machines.
