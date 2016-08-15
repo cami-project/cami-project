@@ -11,6 +11,7 @@ WORKDIR /cami-project
 RUN ansible-playbook ansible/frontend.yml -c local
 
 COPY docker/cami-frontend/docker-entrypoint.sh /usr/local/bin/
+COPY docker/cami-frontend/docker-migration-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 EXPOSE 8000
