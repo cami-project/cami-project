@@ -1,0 +1,31 @@
+---
+- name: Provision frontend microservice
+  hosts: all
+
+  roles:
+    - python_setuptools
+    - django
+
+  tasks:
+    - block:
+        - name: Install build tools
+          apt: pkg={{ item }} state=installed update-cache=yes
+          with_items:
+           - build-essential
+           - autoconf
+           - pkg-config
+           - python-dev
+
+        - name: Install requirements
+          pip:
+            requirements: "{{ project_dir }}/frontend/requirements.txt"
+
+        - name: Install daemon
+          apt: pkg={{ item }} state=installed update-cache=yes
+          with_items:
+           - daemon
+
+      become: yes
+
+    - name: Set local settings
+      template: src=config/frontend/settings_local.py.j2 dest="{{ project_dir }}/frontend/frontend/settings_local.py"
