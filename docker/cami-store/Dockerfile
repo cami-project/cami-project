@@ -4,7 +4,7 @@ FROM mysql:5.6
 # run. This requires that the build context is the project root folder. Run
 # build like:
 # `docker build -f docker/cami-store/Dockerfile .`
-ADD store/cami.sql /docker-entrypoint-initdb.d/
+ADD store/* /docker-entrypoint-initdb.d/
 
 # Hardcode passwors until we learn a better way to do this.
 ENV MYSQL_ALLOW_EMPTY_PASSWORD=yes
