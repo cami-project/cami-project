@@ -1,0 +1,17 @@
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'frontend',
+        'USER': '{{ mysql_cami_user }}',
+        'PASSWORD': '{{ mysql_cami_pass }}',
+        'HOST': '{{ store_ip }}',   # Or an IP Address that your DB is hosted on
+        'PORT': '{{ mysql_port }}',
+        'OPTIONS': {
+            'sql_mode': 'TRADITIONAL',
+            'charset': 'utf8',
+            'init_command': 'SET '
+                'storage_engine=INNODB,'
+                'character_set_connection=utf8'
+        }
+    }
+}

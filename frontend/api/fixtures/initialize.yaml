@@ -1,0 +1,16 @@
+- model: api.notification
+  pk: 1
+  fields: {type: blood_pressure, severity: high, message: You are close to a stroke!,
+    created: ! '2016-08-12T18:17:29+00:00'}
+- model: api.notification
+  pk: 2
+  fields: {type: blood_pressure, severity: medium, message: You should be fine soon!,
+    created: ! '2016-08-12T18:18:33+00:00'}
+- model: api.notification
+  pk: 3
+  fields: {type: weight, severity: low, message: You are alright!,
+    created: ! '2016-08-12T18:18:57+00:00'}
+- model: api.notification
+  pk: 4
+  fields: {type: weight, severity: medium, message: Your weight loss plan is in danger!,
+    created: ! '2016-08-14T13:13:10+00:00'}
