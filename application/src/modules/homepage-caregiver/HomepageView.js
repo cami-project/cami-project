@@ -19,11 +19,28 @@ import icons from 'Cami/src/icons-fa';
 import variables from '../variables/CaregiverGlobalVariables';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import * as HomepageState from './HomepageState';
+
 const HomepageView = React.createClass({
   propTypes: {
     username: PropTypes.string.isRequired,
     status: PropTypes.instanceOf(Map).isRequired,
-    events: PropTypes.instanceOf(List).isRequired
+    events: PropTypes.instanceOf(List).isRequired,
+    actionability: PropTypes.instanceOf(Map).isRequired,
+    dispatch: PropTypes.func.isRequired
+  },
+
+  componentDidMount() {
+    setTimeout(() =>
+      this.props.dispatch(HomepageState.showActionability(
+        'Jim',
+        icons.heart,
+        1469793600,
+        'Jim\'s heart rate has increased drastically!',
+        'He has been reminded 3 times to take his Accupril, but did not respond.'
+      )),
+      3000
+    );
   },
 
   render() {
@@ -45,14 +62,16 @@ const HomepageView = React.createClass({
         </View>
 
         <View style={styles.mainContainer}>
-          <ActionabilityWidget
-            style={{height: 180}}
-            icon={icons.heart}
-            timestamp={1469793600}
-            message="Jim's heart rate has increased drastically!"
-            description="He has been reminded 3 times to take his Accupril, but did not respond."
-            name="Jim"
-          />
+        {
+          this.props.actionability.get('visible')
+          ?
+            <ActionabilityWidget
+              style={{height: 180}}
+              {...this.props.actionability.get('params')}
+            />
+          :
+          null
+        }
 
           <View style={{flexDirection: 'row'}}>
             <StatusChart

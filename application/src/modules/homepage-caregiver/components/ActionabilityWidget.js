@@ -14,11 +14,11 @@ import variables from '../../variables/CaregiverGlobalVariables';
 
 const ActionabilityWidget = React.createClass({
   propTypes: {
+    name: PropTypes.string.isRequired,
     icon: PropTypes.string.isRequired,
     timestamp: PropTypes.number.isRequired,
     message: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired
+    description: PropTypes.string.isRequired
   },
 
   getInitialState() {
