@@ -8,7 +8,7 @@ COPY . /cami-project
 WORKDIR /cami-project
 
 # Run Ansible to configure the Docker image
-RUN ansible-playbook ansible/medical_compliance_provision.yml -c local
+RUN ansible-playbook ansible/medical_compliance.yml -c local
 
 COPY docker/cami-medical-compliance/docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
