@@ -4,8 +4,8 @@ import {
   NavigationExperimental as Navigation
 } from 'react-native';
 
-var Sound = require('react-native-sound');
-var tapButtonSound = new Sound('sounds/just-like-that.mp3', Sound.MAIN_BUNDLE, (error) => {
+import Sound from 'react-native-sound';
+const tapButtonSound = new Sound('sounds/just-like-that.mp3', Sound.MAIN_BUNDLE, (error) => {
   if (error) {
     console.log('failed to load the sound', error);
   }
