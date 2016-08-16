@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: docker/cami-store/Dockerfile
+    ports:
+      - "3307:3306"
   cami-rabbitmq:
     build:
       context: .
