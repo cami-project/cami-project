@@ -1,0 +1,33 @@
+---
+# Use this if you preffer a VM instead of Docker for development. Usecases
+# include easier ssh to the VM and using the VM as a remote interpreter in
+# PyCharm.
+
+# Creates an env with Django available where requirements for specific services
+# can be further installed.
+- name: Provision dev with Django and requirements
+  hosts: all
+
+  roles:
+    - python_setuptools
+    - django
+
+  tasks:
+    - block:
+        - name: Install build tools
+          apt: pkg={{ item }} state=installed update-cache=yes
+          with_items:
+           - build-essential
+           - autoconf
+           - pkg-config
+           - python-dev
+
+        # Install requirements for frontend
+        - name: Install requirements
+          pip:
+            requirements: "{{ project_dir }}/frontend/requirements.txt"
+
+      become: yes
+
+    - name: Set local settings
+      template: src=config/frontend/settings_local.py.j2 dest="{{ project_dir }}/frontend/frontend/settings_local.py"

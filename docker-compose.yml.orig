@@ -5,7 +5,10 @@ services:
       context: .
       dockerfile: docker/cami-store/Dockerfile
     ports:
+<<<<<<< Updated upstream
+=======
       # Make the store MySQL available on the host so VMs can access it
+>>>>>>> Stashed changes
       - "3307:3306"
   cami-rabbitmq:
     build:
