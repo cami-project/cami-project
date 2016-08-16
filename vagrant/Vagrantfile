@@ -94,38 +94,13 @@ Vagrant.configure(2) do |config|
     s.args = ['/usr/bin/ansible-galaxy', "if sys.argv == ['/usr/bin/ansible-galaxy', '--help']: sys.argv.insert(1, 'info')"]
   end
 
-  config.vm.define 'sandbox', autostart: false do |sandbox|
-    sandbox.vm.hostname = 'sandbox'
-    sandbox.vm.network 'private_network', ip: '192.168.73.10'
-  end
+  config.vm.define 'cami-dev', autostart: false do |dev|
+    dev.vm.hostname = 'cami-dev'
+    dev.vm.network 'private_network', ip: '192.168.73.10'
 
-  config.vm.define 'cami-store', autostart: false do |store|
-    store.vm.hostname = 'cami-store'
-    store.vm.network 'private_network', ip: '192.168.73.11'
-
-    store.vm.provision "ansible_local" do |ansible|
+    dev.vm.provision "ansible_local" do |ansible|
         ansible.provisioning_path = "/cami-project/ansible"
-        ansible.playbook = "store.yml"
-    end
-  end
-
-  config.vm.define 'cami-medical-compliance', autostart: false do |mc|
-    mc.vm.hostname = 'cami-medical-compliance'
-    mc.vm.network 'private_network', ip: '192.168.73.12'
-
-    mc.vm.provision "ansible_local" do |ansible|
-        ansible.provisioning_path = "/cami-project/ansible"
-        ansible.playbook = "medical_compliance.yml"
-    end
-  end
-
-  config.vm.define 'cami-rabbitmq-server', autostart: false do |rabbit|
-    rabbit.vm.hostname = 'cami-rabbitmq-server'
-    rabbit.vm.network 'private_network', ip: '192.168.73.13'
-
-    rabbit.vm.provision "ansible_local" do |ansible|
-        ansible.provisioning_path = "/cami-project/ansible"
-        ansible.playbook = "rabbitmq_server.yml"
+        ansible.playbook = "dev.yml"
     end
   end
 end
