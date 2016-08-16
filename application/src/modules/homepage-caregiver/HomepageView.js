@@ -67,6 +67,7 @@ const HomepageView = React.createClass({
           ?
             <ActionabilityWidget
               style={{height: 180}}
+              dispatch={this.props.dispatch}
               {...this.props.actionability.get('params')}
             />
           :

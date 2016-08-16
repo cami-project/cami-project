@@ -11,6 +11,15 @@ import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import icons from 'Cami/src/icons-fa';
 import variables from '../../variables/CaregiverGlobalVariables';
+import Sound from 'react-native-sound';
+
+import * as HomepageState from '../HomepageState';
+
+const dummySound = new Sound('sounds/just-like-that.mp3', Sound.MAIN_BUNDLE, (error) => {
+  if (error) {
+    console.log('failed to load the sound', error);
+  }
+});
 
 const ActionabilityWidget = React.createClass({
   propTypes: {
@@ -18,7 +27,8 @@ const ActionabilityWidget = React.createClass({
     icon: PropTypes.string.isRequired,
     timestamp: PropTypes.number.isRequired,
     message: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired
+    description: PropTypes.string.isRequired,
+    dispatch: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -48,6 +58,19 @@ const ActionabilityWidget = React.createClass({
     this.runBackgroundColorAnimation();
   },
 
+  call911() {
+    dummySound.setVolume(1.0).play();
+  },
+
+  callElderly() {
+    dummySound.setVolume(1.0).play();
+  },
+
+  cancel() {
+    dummySound.setVolume(1.0).play();
+    this.props.dispatch(HomepageState.hideActionability());
+  },
+
   render() {
     const backgroundColor = this.state.backgroundColor.interpolate({
         inputRange: [0, 10],
@@ -68,15 +91,24 @@ const ActionabilityWidget = React.createClass({
           </View>
         </View>
         <View style={{flexDirection: 'row', flex: 1}}>
-          <TouchableOpacity style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: variables.colors.status.alert}}>
+          <TouchableOpacity
+            style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: variables.colors.status.alert}}
+            onPress={this.call911}
+          >
             <Icon name={icons.plus} size={16} color="white"/>
             <Text style={[{fontSize: 14, color: "white", fontWeight: 'bold'}]}>Call 911</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flex: 2, alignItems: 'center', justifyContent: 'center', backgroundColor: variables.colors.status.ok}}>
+          <TouchableOpacity
+            style={{flex: 2, alignItems: 'center', justifyContent: 'center', backgroundColor: variables.colors.status.ok}}
+            onPress={this.callElderly}
+          >
             <Icon name={icons.phone} size={16} color="white"/>
             <Text style={[{fontSize: 14, color: "white", fontWeight: 'bold'}]}>Call {this.props.name}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: variables.colors.gray.neutral}}>
+          <TouchableOpacity
+            style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: variables.colors.gray.neutral}}
+            onPress={this.cancel}
+          >
             <Icon name={icons.cancel} size={16} color="white"/>
             <Text style={[{fontSize: 14, color: "white", fontWeight: 'bold'}]}>Cancel</Text>
           </TouchableOpacity>
