@@ -45,7 +45,14 @@ const HomepageView = React.createClass({
         </View>
 
         <View style={styles.mainContainer}>
-          <ActionabilityWidget style={{height: 180}}/>
+          <ActionabilityWidget
+            style={{height: 180}}
+            icon={icons.heart}
+            timestamp={1469793600}
+            message="Jim's heart rate has increased drastically!"
+            description="He has been reminded 3 times to take his Accupril, but did not respond."
+            name="Jim"
+          />
 
           <View style={{flexDirection: 'row'}}>
             <StatusChart
