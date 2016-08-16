@@ -42,7 +42,7 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
   switch (action.type) {
     case SHOW_ACTIONABILITY:
       return state.setIn(['actionability', 'visible'], true)
-        .setIn(['actionability', 'params'], action.payload);
+                  .setIn(['actionability', 'params'], action.payload);
     case HIDE_ACTIONABILITY:
       return state.setIn(['actionability', 'visible'], false);
     default:

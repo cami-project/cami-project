@@ -9,7 +9,7 @@ const colors = {
     warning: '#D2B52E',
     ok: '#658d51',
     wakeup: '#658d51',
-		alert: '#FF0000'
+    alert: '#FF0000'
   },
   gray: {
     darker: '#484748',
