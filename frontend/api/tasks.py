@@ -8,11 +8,23 @@ need to have the same module structure in the worker and the client.
 """
 
 import celery
+
 from celery.utils.log import get_task_logger
+
+from models import Notification
+
 
 logger = get_task_logger(__name__)
 
 
 @celery.task(name='frontend.send_notification')
 def send_notification(message, type, severity):
-    logger.info("Received notification %s %s %s", message, type, severity)
+    n = Notification(message=message, type=type, severity=severity)
+    n.save()
+
+    logger.debug(
+        "Received and saved notification: %s %s %s",
+        message,
+        type,
+        severity
+    )
