@@ -138,6 +138,9 @@ STATIC_URL = '/static/'
 CORS_ORIGIN_ALLOW_ALL = True
 X_FRAME_OPTIONS='ALLOW-FROM *'
 
+# Celery settings
+BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
+
 try:
     from settings_local import *
 except:
