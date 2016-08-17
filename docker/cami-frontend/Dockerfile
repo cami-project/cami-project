@@ -12,6 +12,7 @@ RUN ansible-playbook ansible/frontend.yml -c local
 
 COPY docker/cami-frontend/docker-entrypoint.sh /usr/local/bin/
 COPY docker/cami-frontend/docker-migration-entrypoint.sh /usr/local/bin/
+COPY docker/cami-frontend/docker-message-worker-entrypoint.sh /usr/local/bin/
 
 RUN adduser --disabled-password --gecos '' frontend
 RUN chown frontend /cami-project
