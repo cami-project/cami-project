@@ -66,6 +66,7 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
     case NOTIFICATION_RESPONSE:
       // We got a notification update so let's update the state and then restart the timer.
       return loop(
+        // TODO(@iprunache) stop triggering a render for every poll when the payload does not change; happens with immutable too.
         state.set('notification', fromJS(action.payload)),
         Effects.promise(triggerFetchNotification)
       );
