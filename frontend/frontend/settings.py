@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
+from kombu import Exchange, Queue
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -140,6 +142,11 @@ X_FRAME_OPTIONS='ALLOW-FROM *'
 
 # Celery settings
 BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
+
+CELERY_DEFAULT_QUEUE = 'frontend'
+CELERY_QUEUES = (
+    Queue('frontend', Exchange('frontend'), routing_key='frontend'),
+)
 
 try:
     from settings_local import *
