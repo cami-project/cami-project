@@ -35,6 +35,10 @@ const NavigationTabView = React.createClass({
   },
 
   renderScene(props) {
+    // TODO(@iprunache) find a better place to trigger sounds on navigation
+    // since renderScene is called every time a view is rendered and for the
+    // elder homepage this happens when notifications change.
+
     // play sound on start to load of new scene
     tapButtonSound.setVolume(1.0).play();
 
