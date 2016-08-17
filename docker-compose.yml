@@ -46,6 +46,7 @@ services:
       dockerfile: docker/cami-frontend/Dockerfile
     links:
       - cami-store
+      - cami-rabbitmq
     ports:
       - "8001:8001"
     volumes:
