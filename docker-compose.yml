@@ -11,6 +11,10 @@ services:
     build:
       context: .
       dockerfile: docker/cami-rabbitmq/Dockerfile
+    ports:
+      # Make the RabbitMQ server available on the host so VMs can access it
+      - "5673:5672"
+      - "15673:15672"
   cami-medical-compliance:
     build:
       context: .
