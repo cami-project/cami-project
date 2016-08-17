@@ -24,10 +24,21 @@ export async function requestNotification() {
 }
 
 async function fetchNotification() {
+  var apiUrl = env.NOTIFICATIONS_REST_API;
+
   // Use random parameter to defeat cache.
-  return fetch(env.NOTIFICATIONS_REST_API + '?r=' + Math.floor(Math.random() * 10000))
+  apiUrl += apiUrl.indexOf('?') > -1 ? '&' : '?';
+  apiUrl += 'r=' + Math.floor(Math.random() * 10000);
+
+  return fetch(apiUrl)
     .then((response) => {
-      return response.json()
+      return response.json().then(function(json) {
+        console.log(json);
+        if (json.objects.length == 0) {
+          return initialState.getIn(['notification']);
+        }
+        return json.objects[0];
+      });
     })
     .catch((error) => {
       return initialState.getIn(['notification']);
