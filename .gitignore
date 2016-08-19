@@ -6,8 +6,6 @@ __pycache__/
 # C extensions
 *.so
 
-.DS_Store
-
 # Distribution / packaging
 .Python
 env/
@@ -51,9 +49,6 @@ coverage.xml
 *.mo
 *.pot
 
-# Django stuff:
-*.log
-
 # Sphinx documentation
 docs/_build/
 
@@ -75,7 +70,11 @@ ansible/**/*.retry
 # Django files
 *.sqlite3
 settings_local.py
+*.log
 
+# OS cache files
 application/images/Thumbs.db
+.DS_Store
+
 # git
 *.orig
