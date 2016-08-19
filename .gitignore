@@ -77,3 +77,5 @@ ansible/**/*.retry
 settings_local.py
 
 application/images/Thumbs.db
+# git
+*.orig
