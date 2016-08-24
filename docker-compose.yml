@@ -11,6 +11,10 @@ services:
     build:
       context: .
       dockerfile: docker/cami-rabbitmq/Dockerfile
+    ports:
+      # Make the RabbitMQ server available on the host so VMs can access it
+      - "5673:5672"
+      - "15673:15672"
   cami-medical-compliance:
     build:
       context: .
@@ -42,9 +46,22 @@ services:
       dockerfile: docker/cami-frontend/Dockerfile
     links:
       - cami-store
+      - cami-rabbitmq
     ports:
       - "8001:8001"
     volumes:
       - .:/cami-project
     entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-entrypoint.sh
 
+  # Runs the Celery worker for consuming messages received by the frontend
+  cami-frontend-message-worker:
+    build:
+      context: .
+      dockerfile: docker/cami-frontend/Dockerfile
+    links:
+      # Needs the store to interact with the DB
+      - cami-store
+      - cami-rabbitmq
+    volumes:
+      - .:/cami-project
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh

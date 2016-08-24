@@ -8,9 +8,12 @@ mysql_cami_pass: cami
 
 project_dir: /cami-project
 
-rabbitmq_cami_user: cami
-rabbitmq_cami_pass: cami
-rabbitmq_cami_vhost: /cami
+# RabbitMQ variables
+rabbitmq_host: cami-rabbitmq
+rabbitmq_port: 5672
+rabbitmq_user: cami
+rabbitmq_password: cami
+rabbitmq_vhost: cami
 
 store_ip: cami-store
 medical_compliance_ip: 192.168.73.12

@@ -6,3 +6,10 @@ store_ip: 192.168.73.1
 
 # Use the IP forwarded by Docker
 mysql_port: 3307
+
+# RabbitMQ variables
+rabbitmq_host: 192.168.73.1
+rabbitmq_port: 5673
+rabbitmq_user: cami
+rabbitmq_password: cami
+rabbitmq_vhost: cami

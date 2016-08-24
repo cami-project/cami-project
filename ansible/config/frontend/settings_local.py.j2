@@ -15,3 +15,5 @@ DATABASES = {
         }
     }
 }
+
+BROKER_URL = 'amqp://{{ rabbitmq_user }}:{{ rabbitmq_password }}@{{ rabbitmq_host }}:{{ rabbitmq_port }}/{{ rabbitmq_vhost }}'
