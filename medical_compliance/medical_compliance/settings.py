@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
+from kombu import Exchange, Queue
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -130,6 +132,25 @@ STATIC_URL = '/static/'
 
 CORS_ORIGIN_ALLOW_ALL = True
 X_FRAME_OPTIONS='ALLOW-FROM *'
+
+
+# WITHINGS API credentials
+WITHINGS_USER_ID = 11115034
+WITHINGS_CONSUMER_KEY = "5b1f8cbeb36cffe108fd8fdd666c51cb5d6eee9f2e2940983958b836451"
+WITHINGS_CONSUMER_SECRET = "2e75dfb7f1088f398b4cfc5ebed6d5909c48918ee637417e3b0de001b3b"
+
+WITHINGS_OAUTH_V1_TOKEN = "59dd58ccbd19bfbd8b3522ce50d31c4cb6e530742d22234f4cb4bee11673084"
+WITHINGS_OAUTH_V1_TOKEN_SECRET = "cf31bc8e405d96b975b8014d93c722830bd55f44b437f27c7e6d5964b3"
+
+
+# Celery settings
+BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
+
+CELERY_DEFAULT_QUEUE = 'withings_measurements'
+CELERY_QUEUES = (
+    Queue('withings_measurements', Exchange('withings_measurements'), routing_key='withings_measurements'),
+)
+
 
 try:
     from settings_local import *
