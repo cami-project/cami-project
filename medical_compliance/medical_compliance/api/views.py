@@ -14,10 +14,9 @@ def subscribe_notifications(request):
                                       consumer_secret=settings.WITHINGS_CONSUMER_SECRET,
                                       user_id=settings.WITHINGS_USER_ID)
     client = WithingsApi(credentials)
-    CALLBACK_URL = MeasurementNotificationResource().get_resource_uri()
-    print CALLBACK_URL
+    FULL_CALLBACK_URL = request.build_absolute_url(MeasurementNotificationResource().get_resource_uri())
 
-    response_data = client.subscribe(CALLBACK_URL, "Subscribe for weight measurement notifications.", appli=1)
+    response_data = client.subscribe(FULL_CALLBACK_URL, "Subscribe for weight measurement notifications.", appli=1)
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def unsubscribe_notifications(request):
@@ -28,10 +27,9 @@ def unsubscribe_notifications(request):
                                       user_id=settings.WITHINGS_USER_ID)
     client = WithingsApi(credentials)
 
-    CALLBACK_URL = MeasurementNotificationResource().get_resource_uri()
-    print CALLBACK_URL
+    FULL_CALLBACK_URL = request.build_absolute_url(MeasurementNotificationResource().get_resource_uri())
 
-    response_data = client.unsubscribe(CALLBACK_URL, appli=1)
+    response_data = client.unsubscribe(FULL_CALLBACK_URL, appli=1)
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def notify_measurements(request):
