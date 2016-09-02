@@ -8,7 +8,7 @@ from withings import WithingsApi, WithingsCredentials
 from .resources import MeasurementNotificationResource
 import json, logging, pprint
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("medical_compliance.measurement_callback")
 
 FULL_CALLBACK_URL = 'http://46.101.163.224:8000/notify_measurements/'
 
@@ -40,5 +40,5 @@ def unsubscribe_notifications(request):
 
 @csrf_exempt
 def notify_measurements(request):
-    logger.debug(pprint.pformat(request))
+    logger.debug(pprint.pformat(request.POST))
     return HttpResponse(status=200)

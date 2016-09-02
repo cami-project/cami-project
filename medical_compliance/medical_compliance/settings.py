@@ -168,6 +168,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'medical_compliance.measurement_callback': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     },
 }
 
