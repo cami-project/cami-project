@@ -3,6 +3,7 @@ from django.shortcuts import render
 
 from django.http import HttpResponse
 from django.conf import settings #noqa
+from django.views.decorators.csrf import csrf_exempt
 from withings import WithingsApi, WithingsCredentials
 from .resources import MeasurementNotificationResource
 import json, logging, pprint
@@ -37,6 +38,7 @@ def unsubscribe_notifications(request):
     response_data = client.unsubscribe(FULL_CALLBACK_URL, appli=1)
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+@csrf_exempt
 def notify_measurements(request):
     logger.debug(pprint.pformat(request))
     return HttpResponse(status=200)
