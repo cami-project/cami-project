@@ -85,7 +85,8 @@ DATABASES = {
         'NAME': 'cami',
         'USER': 'cami',
         'PASSWORD': 'cami',
-        'HOST': 'cami-store',   # Or an IP Address that your DB is hosted on
+        #'HOST': 'cami-store',   # Or an IP Address that your DB is hosted on
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }

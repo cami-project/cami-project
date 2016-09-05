@@ -5,7 +5,9 @@ from django.http import HttpResponse
 from django.conf import settings #noqa
 from django.views.decorators.csrf import csrf_exempt
 from withings import WithingsApi, WithingsCredentials
-from .resources import MeasurementNotificationResource
+from tasks import send_measurement_notification
+# from .resources import MeasurementNotificationResource
+
 import json, logging, pprint
 
 logger = logging.getLogger("medical_compliance.measurement_callback")
@@ -41,4 +43,10 @@ def unsubscribe_notifications(request):
 @csrf_exempt
 def notify_measurements(request):
     logger.debug(pprint.pformat(request.POST))
+    # TODO: make this nicer and more error proof (i.e. check for existance of fields in post data)
+    send_measurement_notification(request.POST['userid'],
+                                  request.POST['startdate'],
+                                  request.POST['enddate'],
+                                  request.POST['appli'])
+
     return HttpResponse(status=200)

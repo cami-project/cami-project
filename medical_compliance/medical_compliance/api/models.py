@@ -30,6 +30,15 @@ class WithingsMeasurement(models.Model):
         (11, HEART_PULSE)
     )
 
+    @staticmethod
+    def get_measure_type_by_id(meas_id):
+        for m in WithingsMeasurement.MEASURE_CHOICES:
+            if m[0] == meas_id:
+                return m[1]
+
+        return None
+
+
     RETRIEVAL_CHOICES = (
         (0, 'sensed_sure'), (1, 'sensed_unsure'), (2, 'manual'),
         (4, 'manual_creation'), (5, 'auto_blood_pressure')
@@ -61,8 +70,8 @@ class WithingsMeasurement(models.Model):
         return u'Measurement of type: %s, value: %s %s, from: %s' % (self.type, self.value, self.MEASUREMENT_SI_UNIT[self.type], pretty_date)
 
 
-class MeasurementNotification(models.Model):
-    withings_user_id = models.BigIntegerField(name='userid')
-    startdate = models.BigIntegerField()
-    enddate = models.BigIntegerField()
-    measurement_type = models.IntegerField(name='appli')
+# class MeasurementNotification(models.Model):
+#     withings_user_id = models.BigIntegerField(name='userid')
+#     startdate = models.BigIntegerField()
+#     enddate = models.BigIntegerField()
+#     measurement_type = models.IntegerField(name='appli')
