@@ -44,9 +44,10 @@ def unsubscribe_notifications(request):
 def notify_measurements(request):
     logger.debug(pprint.pformat(request.POST))
     # TODO: make this nicer and more error proof (i.e. check for existance of fields in post data)
-    send_measurement_notification(request.POST['userid'],
-                                  request.POST['startdate'],
-                                  request.POST['enddate'],
-                                  request.POST['appli'])
+    send_measurement_notification.delay(
+                                    request.POST['userid'],
+                                    request.POST['startdate'],
+                                    request.POST['enddate'],
+                                    request.POST['appli'])
 
     return HttpResponse(status=200)

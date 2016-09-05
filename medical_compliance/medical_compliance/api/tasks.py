@@ -33,7 +33,7 @@ def send_measurement_notification(userid, start_ts, end_ts, measurement_type_id)
 
 
 
-@celery.task(name='medical_compliance.measurement_notification')
+@celery.task(name='medical_compliance.retrieve_measurement')
 def retrieve_measurement(userid, start_ts, end_ts, measurement_type_id):
     logger.debug(
         "Received request for measurement retrieval for userid: %s, start ts: %s, end ts: %s, type: %s",
