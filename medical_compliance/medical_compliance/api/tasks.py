@@ -50,7 +50,7 @@ def fetch_measurement(userid, start_ts, end_ts, measurement_type_id):
 
     for m in measures:
         meas = WithingsMeasurement(
-            type=measurement_type,
+            type=measurement_type_id,
             retrieval_type=m.attrib,
             measurement_unit=WithingsMeasurement.MEASUREMENT_SI_UNIT[measurement_type],
             timestamp=m.data['date'],
