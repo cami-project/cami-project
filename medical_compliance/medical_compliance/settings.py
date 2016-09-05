@@ -179,7 +179,7 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
-        'medical_compliance.measurement_notification': {
+        'medical_compliance.fetch_measurement': {
             'handlers': ['celery_file'],
             'level': 'DEBUG',
             'propagate': False,

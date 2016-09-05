@@ -15,7 +15,7 @@ from django.conf import settings #noqa
 from models import WithingsMeasurement
 from withings import WithingsCredentials, WithingsApi
 
-logger = get_task_logger("medical_compliance.measurement_notification")
+logger = get_task_logger("medical_compliance.fetch_measurement")
 
 
 app = Celery('api.tasks', broker=settings.BROKER_URL)
@@ -27,21 +27,10 @@ app.conf.update(
 )
 
 
-@app.task(name='medical_compliance.measurement_notification')
-def send_measurement_notification(userid, start_ts, end_ts, measurement_type_id):
+@app.task(name='medical_compliance.fetch_measurement')
+def fetch_measurement(userid, start_ts, end_ts, measurement_type_id):
     logger.debug(
         "Sending request for measurement retrieval for userid: %s, start ts: %s, end ts: %s, type: %s",
-        str(userid),
-        str(start_ts),
-        str(end_ts),
-        str(measurement_type_id)
-    )
-
-
-@celery.task(name='medical_compliance.retrieve_measurement')
-def retrieve_measurement(userid, start_ts, end_ts, measurement_type_id):
-    logger.debug(
-        "Received request for measurement retrieval for userid: %s, start ts: %s, end ts: %s, type: %s",
         str(userid),
         str(start_ts),
         str(end_ts),
@@ -61,11 +50,13 @@ def retrieve_measurement(userid, start_ts, end_ts, measurement_type_id):
 
     for m in measures:
         meas = WithingsMeasurement(
-            type = measurement_type,
-            retrieval_type = m.attrib,
-            measurement_unit = WithingsMeasurement.MEASUREMENT_SI_UNIT[measurement_type],
-            timestamp = m.data['date'],
-            timezone = measures.timezone,
-            value = m.__getattribute__(measurement_type))
+            type=measurement_type,
+            retrieval_type=m.attrib,
+            measurement_unit=WithingsMeasurement.MEASUREMENT_SI_UNIT[measurement_type],
+            timestamp=m.data['date'],
+            timezone=measures.timezone,
+            value=m.__getattribute__(measurement_type))
         meas.save()
+
+
 
