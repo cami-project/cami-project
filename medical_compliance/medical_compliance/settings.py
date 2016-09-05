@@ -162,6 +162,11 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': './debug.log',
         },
+        'celery_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': './celery.log',
+        }
     },
     'loggers': {
         'django': {
@@ -173,6 +178,11 @@ LOGGING = {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
+        },
+        'medical_compliance.measurement_notification': {
+            'handlers': ['celery_file'],
+            'level': 'DEBUG',
+            'propagate': False,
         },
     },
 }

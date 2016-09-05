@@ -15,7 +15,7 @@ from django.conf import settings #noqa
 from models import WithingsMeasurement
 from withings import WithingsCredentials, WithingsApi
 
-logger = get_task_logger(__name__)
+logger = get_task_logger("medical_compliance.measurement_notification")
 
 
 app = Celery('api.tasks', broker=settings.BROKER_URL)
