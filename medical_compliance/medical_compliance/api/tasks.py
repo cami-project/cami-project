@@ -29,8 +29,13 @@ app.conf.update(
 
 @app.task(name='medical_compliance.measurement_notification')
 def send_measurement_notification(userid, start_ts, end_ts, measurement_type_id):
-    pass
-
+    logger.debug(
+        "Sending request for measurement retrieval for userid: %s, start ts: %s, end ts: %s, type: %s",
+        str(userid),
+        str(start_ts),
+        str(end_ts),
+        str(measurement_type_id)
+    )
 
 
 @celery.task(name='medical_compliance.retrieve_measurement')
