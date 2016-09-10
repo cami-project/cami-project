@@ -46,6 +46,8 @@ def fetch_measurement(userid, start_ts, end_ts, measurement_type_id):
 
     client = WithingsApi(credentials)
     measures = client.get_measures(startdate=start_ts, enddate=end_ts, meastype=int(measurement_type_id))
+    # TODO: fix get_measures!
+    # measures = client.get_measures(limit=1)
     measurement_type = WithingsMeasurement.get_measure_type_by_id(int(measurement_type_id))
 
     for m in measures:

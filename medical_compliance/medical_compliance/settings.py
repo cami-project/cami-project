@@ -78,16 +78,14 @@ WSGI_APPLICATION = 'medical_compliance.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'cami',
         'USER': 'cami',
         'PASSWORD': 'cami',
-        #'HOST': 'cami-store',   # Or an IP Address that your DB is hosted on
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'HOST': 'cami-store',   # DEV : or actual db ip/hostname
+        'PORT': '3306' # DEV : or actual mysql port
     }
 }
 
@@ -136,15 +134,16 @@ X_FRAME_OPTIONS='ALLOW-FROM *'
 
 
 # WITHINGS API credentials
-WITHINGS_USER_ID = 11115034
-WITHINGS_CONSUMER_KEY = "5b1f8cbeb36cffe108fd8fdd666c51cb5d6eee9f2e2940983958b836451"
-WITHINGS_CONSUMER_SECRET = "2e75dfb7f1088f398b4cfc5ebed6d5909c48918ee637417e3b0de001b3b"
+WITHINGS_USER_ID = 11262861
+WITHINGS_CONSUMER_KEY = "734b6504c858bed3e3ecd7ce78b543f5f9e3cbe9b1b41fc40f012d1fdc96"
+WITHINGS_CONSUMER_SECRET = "4f3d74e3f148781ee6459cc881186b24e2c3850530b6370e60d81b5822"
 
-WITHINGS_OAUTH_V1_TOKEN = "59dd58ccbd19bfbd8b3522ce50d31c4cb6e530742d22234f4cb4bee11673084"
-WITHINGS_OAUTH_V1_TOKEN_SECRET = "cf31bc8e405d96b975b8014d93c722830bd55f44b437f27c7e6d5964b3"
+WITHINGS_OAUTH_V1_TOKEN = "394b9199422126c1ffc405bf003dd26cc6259cd02c8dee230b8bcd12634de5"
+WITHINGS_OAUTH_V1_TOKEN_SECRET = "5643779f862c5030c5631fd3387233cbf8465b8520c5b4b073850fd"
 
 
 # Celery settings
+# DEV : replace 5672 with actual Local Port and cami-rabbitmq with the actual IP/hostname (e.g. localhost)
 BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
 
 CELERY_DEFAULT_QUEUE = 'withings_measurements'
