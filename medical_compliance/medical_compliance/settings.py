@@ -84,8 +84,8 @@ DATABASES = {
         'NAME': 'cami',
         'USER': 'cami',
         'PASSWORD': 'cami',
-        'HOST': 'cami-store',   # DEV : or actual db ip/hostname
-        'PORT': '3306' # DEV : or actual mysql port
+        'HOST': 'cami-store',   #DEV : or actual db ip/hostname e.g. localhost for dev env
+        'PORT': '3306' #DEV : or actual mysql port
     }
 }
 
@@ -143,7 +143,7 @@ WITHINGS_OAUTH_V1_TOKEN_SECRET = "5643779f862c5030c5631fd3387233cbf8465b8520c5b4
 
 
 # Celery settings
-# DEV : replace 5672 with actual Local Port and cami-rabbitmq with the actual IP/hostname (e.g. localhost)
+#DEV : replace 5672 with actual Local Port and cami-rabbitmq with the actual IP/hostname (e.g. amqp://cami:cami@127.0.0.1:32781/cami)
 BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
 
 CELERY_DEFAULT_QUEUE = 'withings_measurements'

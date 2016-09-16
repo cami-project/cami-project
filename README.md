@@ -36,20 +36,20 @@ This instance hosts the MySQL database that will be used as a local store by all
 The provisioning script installs a safe MySQL instance, creates a `cami` database and imports a basic schema for the database. It also creates a user with name `cami` and password `cami` that has full privileges and can connect from any host.
 
 The MySQL image available on DockerHub uses MySQL's recommended configs for production which causes mysqld to eat up ~500MB when the container is started. Make sure that the system running the container has more than 1GB of RAM available.
-``
+
 Building the image
 ```
-docker build -t cami/store:1.0 -f docker\cami-store\Dockerfile .
+docker build -t cami/store:1.0 -f docker/cami-store/Dockerfile .
 ```
 Run the store container:
 ```
 docker run -d --hostname cami-store --name cami-store -P cami/store:1.0
 ```
-If you're not running the database in a VM, then you need to obtain the local port that redirects to the docker container's `3306` (default mysql port). To obtain it run the command:
+You need to obtain the local port that redirects to the docker container's `3306` (default mysql port). To obtain it run the command:
 ```
 $ docker ps -l
 ```
-And find the corresponding local port redirecting to 3306 from the output (e.g. 0.0.0.0:`32774`->3306) `[1]`
+And find the corresponding local port redirecting to 3306 (default mysql port) from the output (e.g. 0.0.0.0:`32777`->3306) `[1]`. Note this as you will need it later.
 
 ### cami-rabbitmq
 This instance hosts a Rabbit MQ server that will be used as a message broker by all **cami** components. The provisioning script installs the RabbitMQ instance, creates a `cami` vhost and a `cami` user
@@ -70,40 +70,46 @@ Get the corresponding local port on which we can acces the rabbitmq management i
 ```
 $ docker ps -l
 ```
-In this case we search for the entries `0.0.0.0:32778->5672/tcp` and `0.0.0.0:32776->15672/tcp`, meaning that:
-- to access the rabbitmq web admin console we use `http://{IP}:32776`
-- the amqp rabbit url will be `amqp://cami:cami@{IP}:32776/cami`  `[2]`
+In this case we search for the entries `0.0.0.0:32781->5672/tcp` (5672 is the default amqp port) and `0.0.0.0:32779->15672/tcp` (15672 is the default rabbitmq web console port), meaning that:
+- to access the rabbitmq web admin console go to a browser and type `http://localhost:32779` (default credentials cami / cami)
+- the amqp rabbit url will be `amqp://cami:cami@localhost:32781/cami`  `[2]`
+* replace 32781 and 32779 with the actual local ports redirecting to 5672 and 15672
 
 ### cami-medical-compliance
 This instance hosts the medical compliance module that exposes a REST API through Tastypie over Django. It connects to and uses the `cami` database on the `cami-store` instance and also the RabbitMQ instance from cami-rabbitmq.
 
-Build the image with docker:
+Build the image with docker (**not needed for dev environment**):
 ```
 docker build -t cami/medical-compliance:1.0 -f docker/cami-medical-compliance/Dockerfile .
 ```
 
-To run the container you first need to have a running `cami-store` container for the mysql dependency and a running `cami-rabbitmq` container for the mq server (see prev 2 sections).
+To run the container you first need to have a running `cami-store` container for the mysql dependency and a running `cami-rabbitmq` container for the mq server (see prev 2 sections) (**not needed for dev environment**).
+```
+docker run -d --hostname cami-medical-compliance --name cami-medical-compliance -P cami/medical-compliance:1.0
+```
 
 For the **development environment**, we need to extract the ports for the mysql-database and for the amqp url of rabbit mq: see `[1]` and `[2]`.
-These should be placed in `cami-project/medical_compliance/medical_compliance/settings.py` where we see the `DEV` tags and **never be commited** in git.
+These should be placed in `cami-project/medical_compliance/medical_compliance/settings.py` where we see the `#DEV` tags and **never be commited** in git.
 
-For the next commands we need to be in the medical_compliance directory from the project.
+For the next commands we need to be in the `medical_compliance` directory from the project.
 
-We need to bootstrap the mysql database using the following command (should only be run `once`):
+We need to bootstrap the mysql database using the following command (should only be run `once`) + install python dependencies:
 ```
-python medical_compliance/manage.py migrate
+pip install -r requirements.txt
+python manage.py migrate
 ```
 
 To run locally the medical_compliance [celery](http://www.celeryproject.org) tasks:
 ```
 $ celery -A medical_compliance worker
 ```
-This command should be left in a cmd and to add commands asynchronously we'll need a different terminal in the same path. To run add a task in the celery queue by name:
+This command should be left in a cmd and to add tasks asynchronously we'll need a different terminal in the same path. To run add a task in the celery queue by name:
 ```
 $ python manage.py shell
 > import medical_compliance
 > medical_compliance.celery.app.send_task('medical_compliance.fetch_measurement', [11262861, 1273406557553, 1473406557553, 1])
 ```
+The last command will generate some output in the celery task console (currently it has an error).
 
 This app also features some REST api which can be open by running:
 ```
