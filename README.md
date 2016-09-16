@@ -31,51 +31,89 @@ The docker-compose recipe is set up so that you can use the containers for devel
 ## Components
 
 ### cami-store
-The MySQL image available on DockerHub uses MySQL's recommended configs for production which causes mysqld to eat up ~500MB when the container is started. Make sure that the system running the container has more than 1GB of RAM available.
+This instance hosts the MySQL database that will be used as a local store by all **cami** components.
 
+The provisioning script installs a safe MySQL instance, creates a `cami` database and imports a basic schema for the database. It also creates a user with name `cami` and password `cami` that has full privileges and can connect from any host.
+
+The MySQL image available on DockerHub uses MySQL's recommended configs for production which causes mysqld to eat up ~500MB when the container is started. Make sure that the system running the container has more than 1GB of RAM available.
+``
+Building the image
+```
+docker build -t cami/store:1.0 -f docker\cami-store\Dockerfile .
+```
 Run the store container:
 ```
-docker run -d --name cami-store -P cami/store:1.0
+docker run -d --hostname cami-store --name cami-store -P cami/store:1.0
 ```
+If you're not running the database in a VM, then you need to obtain the local port that redirects to the docker container's `3306` (default mysql port). To obtain it run the command:
+```
+$ docker ps -l
+```
+And find the corresponding local port redirecting to 3306 from the output (e.g. 0.0.0.0:`32774`->3306) `[1]`
 
 ### cami-rabbitmq
-First build the image(wihth credentials builtin).
+This instance hosts a Rabbit MQ server that will be used as a message broker by all **cami** components. The provisioning script installs the RabbitMQ instance, creates a `cami` vhost and a `cami` user
+with full permissions on that vhost.
+
+Default ports for Rabbit MQ server are `15672` (for accessing the web console) amd `5672` for the amqp protocol used to send messages.
+
+First build the image (the credentials are builtin).
 ```
 docker build -t cami/rabbitmq:1.0 -f docker/cami-rabbitmq/Dockerfile .
 ```
-
-Run a container. We need to specify the hostname since it si usde by rabbitmq
-nodes to identify themselves.
+Run a container. We need to specify the hostname since it is used by rabbitmq nodes to identify themselves.
 ```
 docker run -d --hostname cami-rabbitmq --name cami-rabbitmq -P cami/rabbitmq:1.0
 ```
 
-Get the port on which we can acces the rabbitmq management interface. In this
- case the default port was is
+Get the corresponding local port on which we can acces the rabbitmq management interface and the amqp protocol. 
 ```
-vagrant@docker:~/cami-project$ docker ps -l
-CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                                                                                                                     NAMES
-47101a9ced98        cami/rabbitmq:1.0   "docker-entrypoint.sh"   4 seconds ago       Up 2 seconds        0.0.0.0:32775->4369/tcp, 0.0.0.0:32774->5671/tcp, 0.0.0.0:32773->5672/tcp, 0.0.0.0:32772->15671/tcp, 0.0.0.0:32771->15672/tcp, 0.0.0.0:32770->25672/tcp   cami-rabbitmq
+$ docker ps -l
 ```
-
-Access the management interface.
-```
-http://127.0.0.1:32771
-```
+In this case we search for the entries `0.0.0.0:32778->5672/tcp` and `0.0.0.0:32776->15672/tcp`, meaning that:
+- to access the rabbitmq web admin console we use `http://{IP}:32776`
+- the amqp rabbit url will be `amqp://cami:cami@{IP}:32776/cami`  `[2]`
 
 ### cami-medical-compliance
+This instance hosts the medical compliance module that exposes a REST API through Tastypie over Django. It connects to and uses the `cami` database on the `cami-store` instance and also the RabbitMQ instance from cami-rabbitmq.
+
 Build the image with docker:
 ```
 docker build -t cami/medical-compliance:1.0 -f docker/cami-medical-compliance/Dockerfile .
 ```
 
-To run the container you first need to have a running `cami-store` container for the mysql dependency:
-`docker run -d --name cami-store -P cami/store:1.0`
+To run the container you first need to have a running `cami-store` container for the mysql dependency and a running `cami-rabbitmq` container for the mq server (see prev 2 sections).
 
-Then run the `cami-medical-compliance` container linking it to the `cami-store` container.
-``
+For the **development environment**, we need to extract the ports for the mysql-database and for the amqp url of rabbit mq: see `[1]` and `[2]`.
+These should be placed in `cami-project/medical_compliance/medical_compliance/settings.py` where we see the `DEV` tags and **never be commited** in git.
 
-# Setup using Vagrant(this is broken right now and might not get revived!)
+For the next commands we need to be in the medical_compliance directory from the project.
+
+We need to bootstrap the mysql database using the following command (should only be run `once`):
+```
+python medical_compliance/manage.py migrate
+```
+
+To run locally the medical_compliance [celery](http://www.celeryproject.org) tasks:
+```
+$ celery -A medical_compliance worker
+```
+This command should be left in a cmd and to add commands asynchronously we'll need a different terminal in the same path. To run add a task in the celery queue by name:
+```
+$ python manage.py shell
+> import medical_compliance
+> medical_compliance.celery.app.send_task('medical_compliance.fetch_measurement', [11262861, 1273406557553, 1473406557553, 1])
+```
+
+This app also features some REST api which can be open by running:
+```
+$ python manage.py runserver 0.0.0.0:8000
+```
+If you are using [Visual Studio Code](https://code.visualstudio.com/download), the previous command can also be invoked from the IDE by running the `medical_compliance` task which also supports attachments of breakpoints (these can be set directly from the editor).
+
+Be sure to leave the celery worker always open as it needs to handle the async tasks.
+
+# Setup using Vagrant (this is broken right now and might not get revived!)
 
 The project has Ansible receipts for setting up instances for all `cami` components inside
 VirtualBox machines. Vagrant is used to manage the virtual machines.
@@ -108,47 +146,3 @@ You can ssh to the vagrant machines from the vagrant folder:
 cd cami-project/vagrant
 vagrant ssh cami-store
 ```
-
-## Components
-
-### cami-store
-
-This instance hosts the MySQL database that will be used as a local store by all **cami**
-components.
-
-The provisioning script installs a safe MySQL instance, creates a `cami` database and import a
-basic schema for the database. It also creates a user with name `cami` and password `cami` that
-has full privileges and can connect from any host.
-
-The predefined ip for the `cami-store` instance is: `192.168.73.11`.
-
-### cami-rabbitmq-server
-
-This instance hosts a Rabbit MQ server that will be used as a message broker by all **cami**
-components.
-
-The provisioning script installs the RabbitMQ instance, creates a `cami` vhost and a `cami` user
-with full permissions on that vhost.
-
-Provisioning also enables the management plugin which allows managing the server through a web api.
-The management interface can be accessed at `http://192.168.73.13:15672/` with user `guest` and
-password `guest`.
-
-The predefined ip for the `cami-rabbitmq-server` instance is: `192.168.73.13`.
-
-### cami-medical-compliance
-
-This instance hosts the medical compliance module that exposes a REST API through Tastypie over
-Django. It connects to and uses the `cami` database on the `cami-store` instance.
-
-The root of the REST API is: `http://192.168.73.12:8000/api/v1/`.
-
-Example endpoints:
-```
-GET http://192.168.73.12:8000/api/v1/medication-plans/
-
-{"meta": {"limit": 20, "next": null, "offset": 0, "previous": null, "total_count": 0}, "objects": []}
-
-```
-
-The predefined ip for the `cami-store` instance is: `192.168.73.12`.
