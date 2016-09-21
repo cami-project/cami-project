@@ -2,6 +2,8 @@
   "heart": "heartbeat",
   "weight": "dashboard",
   "sleep": "bed",
+  "blood": "tint",
+  "steps": "male",
   "warning": "exclamation",
   "ok": "check",
   "wakeup": "check",
