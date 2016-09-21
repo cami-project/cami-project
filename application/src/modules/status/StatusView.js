@@ -13,6 +13,8 @@ import StepsEntry from './components/StepsEntry';
 import SleepEntry from './components/SleepEntry';
 import BloodPressureEntry from './components/BloodPressureEntry';
 
+import variables from '../variables/CaregiverGlobalVariables';
+
 const StatusView = React.createClass({
   propTypes: {
     username: PropTypes.string.isRequired,
@@ -34,18 +36,12 @@ const StatusView = React.createClass({
     this.props.status.forEach((status, index) => {
       const EntryType = this.getEntryByType(index);
       if (EntryType)
-        entries.push(<EntryType key={index} statusItem={status}/>);
+        entries.push(<EntryType style={styles.statusEntry} key={index} statusItem={status}/>);
     });
 
     return (
-      <View style={styles.container}>
-        <View style={styles.iconContainer}>
-          <Text style={[styles.mainText, {fontWeight: 'bold'}]}>
-            Status
-          </Text>
-        </View>
-
-        <ScrollView>
+      <View style={variables.container}>
+        <ScrollView style={styles.statusContainer}>
           {entries}
         </ScrollView>
       </View>
@@ -54,23 +50,14 @@ const StatusView = React.createClass({
 });
 
 const styles = StyleSheet.create({
-  container: {
+  statusContainer: {
     flex: 1,
-    backgroundColor: 'moccasin'
-  },
-  iconContainer: {
-    // flex: 1,
-    backgroundColor: '#658d51',
-    zIndex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 20
-  },
-  mainText: {
-    fontSize: 26,
-    color: 'white',
-    lineHeight: 1.3*26
-  },
+    position: 'relative',
+    marginTop: 30,
+    paddingLeft: 10,
+    paddingRight: 10,
+    backgroundColor: 'transparent'
+  }
 });
 
 export default StatusView;
