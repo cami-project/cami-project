@@ -9,37 +9,6 @@ import {
 import Chart from 'react-native-chart';
 import {LineChart} from 'react-native-ios-charts';
 
-const chartStyles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  chartContainer: {
-    flex: 1,
-    backgroundColor: 'white',
-    padding: 10
-  },
-  chart: {
-    flex: 1,
-    height: 80,
-    paddingBottom: 10
-  },
-  value: {
-    fontSize: 26,
-    color: 'black',
-    lineHeight: 1.3*26,
-    textAlign: 'right'
-  },
-  unit: {
-    fontSize: 16,
-    color: 'black',
-    lineHeight: 1.3*26
-  },
-  description: {
-    fontSize: 18,
-    color: 'black',
-    lineHeight: 1.3*26
-  }
-});
 import Icon from 'react-native-vector-icons/FontAwesome';
 import icons from 'Cami/src/icons-fa';
 import moment from 'moment';
@@ -127,30 +96,97 @@ const StatusEntry = React.createClass({
     const lastStatus = this.props.data.get(this.props.data.size - 1).get('status');
 
     return (
-      <View style={chartStyles.container}>
-        <View style={{flexDirection: 'row'}}>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          </View>
-          <View>
-            <Text>{this.props.title}</Text>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.information}>
+            <View style={{width: 30, justifyContent: 'flex-start'}}>
               <Icon name={icons[this.props.type]} size={20} color={variables.colors.status[lastStatus]} style={{alignSelf: 'center'}}/>
+            </View>
+            <Text style={styles.title}>{this.props.title}</Text>
           </View>
-          <View style={{flex: 1}}>
-            <Text style={chartStyles.value}>
-              {lastValue} <Text style={chartStyles.unit}>{this.props.units}</Text>
-            </Text>
+          <View style={styles.values}>
+            <Text style={styles.unit}>{this.props.units}</Text>
+            <Text style={styles.value}>{lastValue}</Text>
           </View>
         </View>
-        <View style={{flexDirection: 'row'}}>
-          <View style={{justifyContent: 'flex-end', alignItems: 'flex-end'}}>
-            <Text>{this.props.timeUnits}</Text>
+        <View style={styles.content}>
+          <View style={styles.timeUnitContainer}>
+            <Text style={styles.timeUnit}>{this.props.timeUnits}</Text>
           </View>
-          <View style={chartStyles.chartContainer}>
-            <LineChart config={chartConfig} style={chartStyles.chart}/>
+          <View style={styles.chartContainer}>
+            <LineChart config={chartConfig} style={styles.chart}/>
           </View>
         </View>
       </View>
     );
+  }
+});
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 20,
+    backgroundColor: 'white'
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 10,
+    paddingRight: 10,
+    paddingLeft: 10
+  },
+  content: {
+    flexDirection: 'row'
+  },
+  information: {
+    flexDirection: 'row',
+    alignItems: 'flex-start'
+  },
+  values: {
+    flexDirection: 'row',
+    alignItems: 'flex-end'
+  },
+  title: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    paddingLeft: 10,
+    color: variables.colors.gray.darkest
+  },
+  unit: {
+    fontSize: 12,
+    color: variables.colors.gray.dark,
+    paddingRight: 5
+  },
+  value: {
+    fontSize: 18,
+    color: variables.colors.gray.darkest
+  },
+  timeUnitContainer: {
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
+    paddingLeft: 10,
+    width: 40,
+    paddingBottom: 10
+  },
+  timeUnit: {
+    fontSize: 12,
+    color: variables.colors.gray.dark,
+  },
+  chartContainer: {
+    flex: 1,
+    backgroundColor: 'white',
+    padding: 10
+  },
+  chart: {
+    flex: 1,
+    height: 80,
+    paddingBottom: 30,
+  },
+  description: {
+    fontSize: 18,
+    color: 'black',
+    lineHeight: 1.3*26
   }
 });
 
