@@ -20,7 +20,9 @@ const config = {
     colors: [variables.colors.gray.neutral],
     drawCubic: false,
     drawCircles: true,
-    lineWidth: 2
+    circleRadius: 4,
+    lineWidth: 2,
+    drawMarkers: false,
   }],
   backgroundColor: 'blue',
   // minOffset: 20,
@@ -37,6 +39,8 @@ const config = {
     drawGridLines: false,
     drawCubic: false,
     drawLimitLinesBehindData: false,
+    textColor: variables.colors.gray.dark,
+    textSize: 11
   },
   leftAxis: {
     enabled: false,
@@ -72,7 +76,7 @@ const StatusEntry = React.createClass({
 
   formatStatus(status) {
     return {
-      'ok': variables.colors.status.ok,
+      'ok': variables.colors.gray.neutral,
       'warning': variables.colors.status.warning,
       'alert': variables.colors.status.alert
     }[status];
@@ -176,7 +180,8 @@ const styles = StyleSheet.create({
   },
   timeUnit: {
     fontSize: 12,
-    color: variables.colors.gray.dark,
+    fontWeight: 'bold',
+    color: variables.colors.gray.neutral,
   },
   chartContainer: {
     flex: 1,
