@@ -13,7 +13,7 @@ from kombu import Queue, Exchange
 from django.conf import settings #noqa
 
 from models import WithingsMeasurement
-from withings import WithingsCredentials, WithingsApi
+from withings import WithingsCredentials, WithingsApi, WithingsMeasures
 
 logger = get_task_logger("medical_compliance.fetch_measurement")
 
@@ -45,9 +45,13 @@ def fetch_measurement(userid, start_ts, end_ts, measurement_type_id):
     # TODO: modify storage of user credentials in settings file to a per userid basis
 
     client = WithingsApi(credentials)
-    measures = client.get_measures(startdate=start_ts, enddate=end_ts, meastype=int(measurement_type_id))
-    # TODO: fix get_measures!
-    # measures = client.get_measures(limit=1)
+    response = client.request('measure', 'getmeas', {
+        'startdate': start_ts, 
+        'enddate': end_ts,
+        'meastype': int(measurement_type_id)
+    })
+    measures = WithingsMeasures(response)
+    timezoneStr = response['timezone']
     measurement_type = WithingsMeasurement.get_measure_type_by_id(int(measurement_type_id))
 
     for m in measures:
@@ -57,7 +61,7 @@ def fetch_measurement(userid, start_ts, end_ts, measurement_type_id):
             retrieval_type=m.attrib,
             measurement_unit=WithingsMeasurement.MEASUREMENT_SI_UNIT[measurement_type],
             timestamp=m.data['date'],
-            timezone=measures.timezone,
+            timezone=timezoneStr,
             value=m.__getattribute__(measurement_type))
         meas.save()
 

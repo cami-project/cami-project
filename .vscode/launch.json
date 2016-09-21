@@ -10,7 +10,8 @@
             "program": "${workspaceRoot}/medical_compliance/manage.py",
             "args": [
                 "runserver",
-                "--noreload"
+                "--noreload",
+                "0.0.0.0:8000"
             ],
             "debugOptions": [
                 "WaitOnAbnormalExit",
