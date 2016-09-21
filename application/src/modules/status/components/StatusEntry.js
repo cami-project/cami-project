@@ -8,9 +8,6 @@ import {
 } from 'react-native';
 import Chart from 'react-native-chart';
 import {LineChart} from 'react-native-ios-charts';
-import moment from 'moment';
-
-import {images} from 'Cami/src/images';
 
 const chartStyles = StyleSheet.create({
   container: {
@@ -43,6 +40,10 @@ const chartStyles = StyleSheet.create({
     lineHeight: 1.3*26
   }
 });
+import Icon from 'react-native-vector-icons/FontAwesome';
+import icons from 'Cami/src/icons-fa';
+import moment from 'moment';
+import variables from 'Cami/src/modules/variables/CaregiverGlobalVariables';
 
 const config = {
   dataSets: [{
@@ -129,10 +130,10 @@ const StatusEntry = React.createClass({
       <View style={chartStyles.container}>
         <View style={{flexDirection: 'row'}}>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Image source={images[this.props.type][lastStatus]}/>
           </View>
           <View>
             <Text>{this.props.title}</Text>
+              <Icon name={icons[this.props.type]} size={20} color={variables.colors.status[lastStatus]} style={{alignSelf: 'center'}}/>
           </View>
           <View style={{flex: 1}}>
             <Text style={chartStyles.value}>
