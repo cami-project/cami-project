@@ -17,7 +17,7 @@ import variables from 'Cami/src/modules/variables/CaregiverGlobalVariables';
 const config = {
   dataSets: [{
     drawValues: false,
-    colors: ['rgb(199, 255, 140)'],
+    colors: [variables.colors.gray.neutral],
     drawCubic: false,
     drawCircles: true,
     lineWidth: 2
@@ -67,9 +67,9 @@ const StatusEntry = React.createClass({
 
   formatStatus(status) {
     return {
-      'ok': 'green',
-      'warning': 'yellow',
-      'alert': 'red'
+      'ok': variables.colors.status.ok,
+      'warning': variables.colors.status.warning,
+      'alert': variables.colors.status.alert
     }[status];
   },
 
@@ -182,6 +182,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 80,
     paddingBottom: 30,
+    backgroundColor: 'white'
   },
   description: {
     fontSize: 18,
