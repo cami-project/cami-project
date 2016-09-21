@@ -1,0 +1,6 @@
+framework module Pods_CamiTests {
+  umbrella header "Pods-CamiTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
