@@ -265,7 +265,7 @@
 				FRAMEWORK_SEARCH_PATHS = $BUILD_DIR/$CONFIGURATION$EFFECTIVE_PLATFORM_NAME/Lock;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../React/**",
-					"$(SRCROOT)/../../react-native/React/**",
+					"$(SRCROOT)/../../../node_modules/react-native/React/**",
 					"${SRCROOT}/../../../ios/Pods/Headers/Public/**",
 					"${SRCROOT}/../../../ios/Pods/Headers/Public/Lock/**",
 				);
@@ -281,7 +281,7 @@
 				FRAMEWORK_SEARCH_PATHS = $BUILD_DIR/$CONFIGURATION$EFFECTIVE_PLATFORM_NAME/Lock;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../React/**",
-					"$(SRCROOT)/../../react-native/React/**",
+					"$(SRCROOT)/../../../node_modules/react-native/React/**",
 					"${SRCROOT}/../../../ios/Pods/Headers/Public/**",
 					"${SRCROOT}/../../../ios/Pods/Headers/Public/Lock/**",
 				);

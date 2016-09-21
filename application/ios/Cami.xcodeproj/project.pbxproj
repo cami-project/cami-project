@@ -25,7 +25,7 @@
 		1AB1EE910D984DBDA9D7D365 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9415B0009BE041CA934C3E1A /* Foundation.ttf */; };
 		1AFAD049DAD3490DACCED403 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5706C86F48645A29588E76F /* MaterialIcons.ttf */; };
 		32520E06088C4B4BA11D69D3 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F4CE278D9E0443ABABE2D2B7 /* Ionicons.ttf */; };
-		338AADFE1D926E4F0037FBFE /* libA0RNLock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8459CE221D5B2B910015D24C /* libA0RNLock.a */; };
+		337569C61D92873D006125FC /* libA0RNLock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 338AADEE1D926E140037FBFE /* libA0RNLock.a */; };
 		4FFF34BC17FA3061F9B55D5B /* Pods_CamiTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D206714B04A06F143F35452 /* Pods_CamiTests.framework */; };
 		5DFEF4A38E0B4D69986C7D1A /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B01F06020DE6415DA0D29B8F /* EvilIcons.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -157,13 +157,6 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
-		8459CE211D5B2B910015D24C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8459CE1D1D5B2B910015D24C /* A0RNLock.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 5F0499EE1CAE9F4A006F6C05;
-			remoteInfo = A0RNLock;
-		};
 		8494ED261D61EC1D008B8E7E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8494ED151D61EC1C008B8E7E /* RNSound.xcodeproj */;
@@ -221,7 +214,6 @@
 		44F210B653884FCE9A647C6A /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
-		8459CE1D1D5B2B910015D24C /* A0RNLock.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = A0RNLock.xcodeproj; path = "../node_modules/react-native-lock/ios/A0RNLock.xcodeproj"; sourceTree = "<group>"; };
 		84824B981D53759300A9A3D1 /* Cami-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Cami-Bridging-Header.h"; sourceTree = "<group>"; };
 		84824BA61D53759300A9A3D1 /* ABNumberFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ABNumberFormatter.swift; path = "../node_modules/react-native-ios-charts/RNiOSCharts/ABNumberFormatter.swift"; sourceTree = "<group>"; };
 		84824BA71D53759300A9A3D1 /* BarLineChartViewBaseExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BarLineChartViewBaseExtension.swift; path = "../node_modules/react-native-ios-charts/RNiOSCharts/BarLineChartViewBaseExtension.swift"; sourceTree = "<group>"; };
@@ -297,7 +289,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				338AADFE1D926E4F0037FBFE /* libA0RNLock.a in Frameworks */,
+				337569C61D92873D006125FC /* libA0RNLock.a in Frameworks */,
 				8494ED291D61EC3E008B8E7E /* libRNSound.a in Frameworks */,
 				849C31C01D41445F0097CB36 /* libART.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -489,7 +481,6 @@
 				832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */,
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
-				8459CE1D1D5B2B910015D24C /* A0RNLock.xcodeproj */,
 				BE9FAEE2CCA649F598F46139 /* RNBlur.xcodeproj */,
 				1CC4DFA7AB3E43588029ECDC /* RNVectorIcons.xcodeproj */,
 			);
@@ -525,14 +516,6 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* Cami.app */,
 				00E356EE1AD99517003FC87E /* CamiTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		8459CE1E1D5B2B910015D24C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				8459CE221D5B2B910015D24C /* libA0RNLock.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -656,7 +639,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 730;
-				LastUpgradeCheck = 730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
@@ -683,10 +666,6 @@
 				{
 					ProductGroup = 338AADEA1D926E140037FBFE /* Products */;
 					ProjectRef = 338AADE91D926E140037FBFE /* A0RNLock.xcodeproj */;
-				},
-				{
-					ProductGroup = 8459CE1E1D5B2B910015D24C /* Products */;
-					ProjectRef = 8459CE1D1D5B2B910015D24C /* A0RNLock.xcodeproj */;
 				},
 				{
 					ProductGroup = 849C31BB1D41443C0097CB36 /* Products */;
@@ -829,13 +808,6 @@
 			fileType = archive.ar;
 			path = libRCTText.a;
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		8459CE221D5B2B910015D24C /* libA0RNLock.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libA0RNLock.a;
-			remoteRef = 8459CE211D5B2B910015D24C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		8494ED271D61EC1D008B8E7E /* libRNSound.a */ = {
@@ -1123,6 +1095,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D50692D4E0DD0735E687BCD2 /* Pods-Cami.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1157,6 +1130,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 938FD9977D1735DEB15300EE /* Pods-Cami.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1198,8 +1172,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1208,6 +1184,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1228,7 +1205,7 @@
 					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1248,8 +1225,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1257,6 +1236,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1271,9 +1251,10 @@
 					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
