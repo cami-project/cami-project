@@ -53,8 +53,7 @@ const styles = StyleSheet.create({
   statusContainer: {
     flex: 1,
     position: 'relative',
-    marginTop: 20,
-    marginBottom: 10,
+    marginTop: 30,
     paddingLeft: 10,
     paddingRight: 10,
     backgroundColor: 'transparent'
