@@ -28,18 +28,23 @@ const config = {
   legend: {
     enabled: false,
     position: 'pieChartCenter',
+    formSize: 0
   },
   xAxis: {
     axisLineWidth: 0,
     drawLabels: true,
     position: 'bottom',
-    drawGridLines: false
+    drawGridLines: false,
+    drawCubic: false,
+    drawLimitLinesBehindData: false,
   },
   leftAxis: {
     enabled: false,
+    drawCubic: false,
   },
   rightAxis: {
-    enabled: false
+    enabled: false,
+    drawCubic: false,
   }
 };
 
