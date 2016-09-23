@@ -35,11 +35,11 @@ class WeightMeasurementResource(ModelResource):
         self.is_authenticated(request)
         self.throttle_check(request)
 
-        lastWeightMeasurements = WeightMeasurement.objects.all().order_by('-timestamp')[:5]
+        last_weight_measurements = WeightMeasurement.objects.all().order_by('-timestamp')[:20]
         amount = []
-        for measurement in lastWeightMeasurements:
+        for measurement in last_weight_measurements:
             amount = [measurement.value] + amount
-
+            
         status = "ok"
         if len(amount) > 0:
             darr = np.array(amount)

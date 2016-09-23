@@ -29,18 +29,12 @@ app.conf.update(
 
 @app.task(name='medical_compliance_measurements.fetch_weight_measurement')
 def fetch_weight_measurement(user_id, input_source, measurement_unit, timestamp, timezone, value):
-    logger.debug(
-        "Received weight measurement for user_id: %s, input_source: %s",
-        str(user_id),
-        str(input_source)
-    )
-
-    weightMeas = WeightMeasurement(
+    weight_measurement = WeightMeasurement(
             user_id = int(user_id),
             input_source=input_source,
             measurement_unit=measurement_unit,
             timestamp=timestamp,
             timezone=timezone,
             value=value)
-    weightMeas.save()
-    analyze_weights.delay(weightMeas.id)
+    weight_measurement.save()
+    analyze_weights.delay(weight_measurement.id)

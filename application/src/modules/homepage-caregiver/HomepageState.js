@@ -73,7 +73,7 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
     case SHOW_CHART_DATA:
       var valuesJson = json;
       valuesJson['weight'] = action.payload;
-      return state.set('status', fromJS({
+      return state.setIn(['status'], fromJS({
         visible: true,
         values: valuesJson
       }))

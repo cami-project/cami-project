@@ -27,18 +27,13 @@ app.conf.update(
 
 @app.task(name='medical_compliance_weight_analyzers.analyze_weights')
 def analyze_weights(weight_measurement_id):
-    DELTA_KG = 2
-    logger.debug(
-        "Received weight_measurement_id: %s",
-        str(weight_measurement_id)
-    )
     analyze_last_two_weights(weight_measurement_id)
 
 
 def analyze_last_two_weights(weight_measurement_id):
     measurement_list = WeightMeasurement.get_previous_weight_measures(weight_measurement_id, 2)
     if len(measurement_list) == 2:
-        currentMeasurement = measurement_list[0]
-        previousMeasurement = measurement_list[1]
+        current_measurement= measurement_list[0]
+        previous_measurement = measurement_list[1]
         
-        # TODO: analyze currentMeasurement vs previousMeasurement and generate notification
+        # TODO: analyze current_measurement vs previous_measurement and generate notification

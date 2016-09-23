@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # Create your models here.
@@ -86,7 +87,10 @@ class WeightMeasurement(models.Model):
     value = models.FloatField()
 
     @staticmethod
-    def get_previous_weight_measures(reference_id, no_weights):
-        return list(WeightMeasurement.objects.raw(
-            u'select * from api_weightmeasurement where timestamp <= (select timestamp from api_weightmeasurement where id=%s) order by timestamp desc limit %s' % (reference_id, no_weights)
-        ))
+    def get_previous_weight_measures(reference_id, weights_count):
+        try:
+            retrieved_measurement = WeightMeasurement.objects.get(id=reference_id)
+            last_weight_measurements = WeightMeasurement.objects.filter(timestamp__lte=retrieved_measurement.timestamp).order_by('-timestamp')[:weights_count]
+            return last_weight_measurements
+        except ObjectDoesNotExist:
+            return []
