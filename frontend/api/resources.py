@@ -37,7 +37,7 @@ class ApiModelResource(ModelResource):
 
 class NotificationResource(ApiModelResource):
     class Meta(ApiModelResource.Meta):
-        queryset = Notification.objects.all().order_by('-created')
+        queryset = Notification.objects.all().order_by('-timestamp')
         resource_name = 'notifications'
         filtering = {
             "created": ('gt'),
