@@ -5,8 +5,7 @@ from django.http import HttpResponse, HttpRequest
 from django.conf import settings #noqa
 from django.views.decorators.csrf import csrf_exempt
 from withings import WithingsApi, WithingsCredentials
-from tasks import fetch_measurement
-# from .resources import MeasurementNotificationResource
+from withings_tasks import fetch_measurement
 
 import json, logging, pprint
 

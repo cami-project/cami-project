@@ -107,7 +107,7 @@ This command should be left in a cmd and to add tasks asynchronously we'll need 
 ```
 $ python manage.py shell
 > import medical_compliance
-> medical_compliance.celery.app.send_task('medical_compliance.fetch_measurement', [11262861, 1273406557553, 1473406557553, 1])
+> medical_compliance.celery.app.send_task('withings_controller.fetch_measurement', [11262861, 1273406557553, 1473406557553, 1])
 ```
 The last command will generate some output in the celery task console (currently it has an error).
 

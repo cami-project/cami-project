@@ -41,12 +41,10 @@ const HomepageView = React.createClass({
       )),
       3000
     );
+    this.props.dispatch(HomepageState.initChartData());
   },
 
   render() {
-    const heartRateData = this.props.status.get('heart').get('rate');
-    const weightData = this.props.status.get('weight').get('amount');
-
     return (
       <View style={styles.container}>
 
@@ -73,24 +71,29 @@ const HomepageView = React.createClass({
           :
           null
         }
+        {
+          this.props.status.get('visible')
+          ?
+            <View style={{flexDirection: 'row'}}>
+              <StatusChart
+                data={this.props.status.get('values').get('heart').get('rate')}
+                text="Heart rate"
+                icon={icons.heart}
+                unit="bpm"
+                status="ok"
+              />
 
-          <View style={{flexDirection: 'row'}}>
-            <StatusChart
-              data={heartRateData}
-              text="Heart rate"
-              icon={icons.heart}
-              unit="bpm"
-              status="ok"
-            />
-
-            <StatusChart
-              data={weightData}
-              text="Weight"
-              icon={icons.weight}
-              unit="kg"
-              status="warning"
-            />
-          </View>
+              <StatusChart
+                data={this.props.status.get('values').get('weight').get('amount')}
+                text="Weight"
+                icon={icons.weight}
+                unit="kg"
+                status={this.props.status.get('values').get('weight').get('status')}
+              />
+            </View>
+          :
+          null
+        }
 
           <View style={{flex: 1}}>
             <Text style={[variables.h2, {marginTop: 20, color: variables.colors.gray.neutral}]}>

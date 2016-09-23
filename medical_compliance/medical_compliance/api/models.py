@@ -70,8 +70,23 @@ class WithingsMeasurement(models.Model):
         return u'Measurement of type: %s, value: %s %s, from: %s' % (self.type, self.value, self.MEASUREMENT_SI_UNIT[self.type], pretty_date)
 
 
-# class MeasurementNotification(models.Model):
-#     withings_user_id = models.BigIntegerField(name='userid')
-#     startdate = models.BigIntegerField()
-#     enddate = models.BigIntegerField()
-#     measurement_type = models.IntegerField(name='appli')
+class WeightMeasurement(models.Model):
+    INPUT_SOURCES = (
+        ('withings', 'withings'),
+    )
+    MEASUREMENT_UNITS = (
+        ('kg', 'kg'),
+    )
+
+    user_id = models.BigIntegerField(name='user_id')
+    input_source = models.CharField(max_length=20, choices=INPUT_SOURCES)
+    measurement_unit = models.CharField(max_length=2, choices=MEASUREMENT_UNITS)
+    timestamp = models.BigIntegerField()
+    timezone = models.CharField(max_length=64)
+    value = models.FloatField()
+
+    @staticmethod
+    def get_previous_weight_measures(reference_id, no_weights):
+        return list(WeightMeasurement.objects.raw(
+            u'select * from api_weightmeasurement where timestamp <= (select timestamp from api_weightmeasurement where id=%s) order by timestamp desc limit %s' % (reference_id, no_weights)
+        ))

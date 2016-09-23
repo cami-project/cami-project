@@ -33,7 +33,6 @@ async function fetchNotification() {
   return fetch(apiUrl)
     .then((response) => {
       return response.json().then(function(json) {
-        console.log(json);
         if (json.objects.length == 0) {
           return initialState.getIn(['notification']);
         }
@@ -48,7 +47,7 @@ async function fetchNotification() {
 // Simulates a periodic timer. This is for experimental purposes only, a proper timer should be used instead in
 // production.
 async function triggerFetchNotification() {
-  return Promise.delay(env.NOTIFICATIONS_POLL_INTERVAL_MILLIS).then(() => ({
+  return Promise.delay(env.POLL_INTERVAL_MILLIS).then(() => ({
     type: TRIGGER_REQUEST
   }))
 }

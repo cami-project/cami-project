@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'tastypie',
-    'medical_compliance.api'
+    'medical_compliance.api',
+    'medical_compliance.api.analyzers'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -149,6 +150,8 @@ BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
 CELERY_DEFAULT_QUEUE = 'withings_measurements'
 CELERY_QUEUES = (
     Queue('withings_measurements', Exchange('withings_measurements'), routing_key='withings_measurements'),
+    Queue('medical_compliance_measurements', Exchange('medical_compliance_measurements'), routing_key='medical_compliance_measurements'),
+    Queue('medical_compliance_weight_analyzers', Exchange('medical_compliance_weight_analyzers'), routing_key='medical_compliance_weight_analyzers'),
 )
 
 
@@ -178,7 +181,12 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
-        'medical_compliance.fetch_measurement': {
+        'withings_controller.fetch_measurement': {
+            'handlers': ['celery_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'medical_compliance.fetch_weight_measurement': {
             'handlers': ['celery_file'],
             'level': 'DEBUG',
             'propagate': False,
