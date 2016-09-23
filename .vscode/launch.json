@@ -5,7 +5,7 @@
             "name": "medical_compliance",
             "type": "python",
             "request": "launch",
-            "stopOnEntry": true,
+            "stopOnEntry": false,
             "pythonPath": "${config.python.pythonPath}",
             "program": "${workspaceRoot}/medical_compliance/manage.py",
             "args": [
