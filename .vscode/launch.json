@@ -11,7 +11,8 @@
             "args": [
                 "runserver",
                 "--noreload",
-                "0.0.0.0:8000"
+                "0.0.0.0:8000",
+                "--settings=medical_compliance.settings_local"
             ],
             "debugOptions": [
                 "WaitOnAbnormalExit",

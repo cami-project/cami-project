@@ -88,15 +88,20 @@ To run the container you first need to have a running `cami-store` container for
 docker run -d --hostname cami-medical-compliance --name cami-medical-compliance -P cami/medical-compliance:1.0
 ```
 
-For the **development environment**, we need to extract the ports for the mysql-database and for the amqp url of rabbit mq: see `[1]` and `[2]`.
-These should be placed in `cami-project/medical_compliance/medical_compliance/settings.py` where we see the `#DEV` tags and **never be commited** in git.
+For the next part we need to be in the `medical_compliance` directory from the project.
 
-For the next commands we need to be in the `medical_compliance` directory from the project.
+For the **development environment**, we need to extract the ports for the mysql-database and for the amqp url of rabbit mq: see `[1]` and `[2]`. Execute the next command to init the local settings file:
+
+```
+cp medical_compliance/settings_local_template.py medical_compliance/settings_local.py
+```
+
+These should be placed in `medical_compliance/settings_local.py`.
 
 We need to bootstrap the mysql database using the following command (should only be run `once`) + install python dependencies:
 ```
 pip install -r requirements.txt
-python manage.py migrate
+python manage.py migrate --settings=medical_compliance.settings_local
 ```
 
 To run locally the medical_compliance [celery](http://www.celeryproject.org) tasks:
@@ -113,7 +118,7 @@ The last command will generate some output in the celery task console (currently
 
 This app also features some REST api which can be open by running:
 ```
-$ python manage.py runserver 0.0.0.0:8000
+$ python manage.py runserver 0.0.0.0:8000 --settings=medical_compliance.settings_local
 ```
 If you are using [Visual Studio Code](https://code.visualstudio.com/download), the previous command can also be invoked from the IDE by running the `medical_compliance` task which also supports attachments of breakpoints (these can be set directly from the editor).
 
