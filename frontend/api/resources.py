@@ -42,5 +42,6 @@ class NotificationResource(ApiModelResource):
         resource_name = 'notifications'
         filtering = {
             "timestamp": ('gt'),
+            "recipient_type": ('exact')
         }
         paginator_class = Paginator

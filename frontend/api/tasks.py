@@ -29,8 +29,8 @@ app.conf.update(
 )
 
 @celery.task(name='frontend.send_notification')
-def send_notification(user_id, type, status, message, description):
+def send_notification(user_id, recipient_type, type, severity, message, description):
     timestamp = time.time()
-    n = Notification(user_id=user_id, type=type, status=status, timestamp=timestamp, message=message, description=description)
+    n = Notification(user_id=user_id, recipient_type=recipient_type, type=type, severity=severity, timestamp=timestamp, message=message, description=description)
     n.full_clean()
     n.save()

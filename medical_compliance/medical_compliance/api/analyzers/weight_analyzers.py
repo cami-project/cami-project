@@ -42,13 +42,20 @@ def analyze_last_two_weights(weight_measurement_id):
         if delta_value <= -2:
             message = u"Jim lost %s kg" % (abs(delta_value))
             description = "You can contact him and see what's wrong."
-            send_notification(current_measurement.user_id, "warning", message, description)
+            send_caregiver_notification(current_measurement.user_id, "medium", message, description)
+
         if delta_value >= 2:
             message = u"Jim gained %s kg" % (abs(delta_value))
             description = "Please check if this has to do with his diet."
-            send_notification(current_measurement.user_id, "warning", message, description)
+            send_caregiver_notification(current_measurement.user_id, "medium", message, description)
 
-def send_notification(user_id, status, message, description):
+def send_caregiver_notification(user_id, severity, message, description):
+    send_notification(user_id, 'caregiver', severity, message, description)
+
+def send_elderly_notification(user_id, severity, message, description):
+    send_notification(user_id, 'elderly', severity, message, description)
+
+def send_notification(user_id, recipient, severity, message, description):
     app = Celery()
     app.config_from_object('django.conf:settings')
-    app.send_task('frontend.send_notification', (user_id, 'weight', status, message, description), queue='frontend_notifications')
+    app.send_task('frontend.send_notification', (user_id, recipient, 'weight', severity, message, description), queue='frontend_notifications')
