@@ -29,11 +29,26 @@ app.conf.update(
 def analyze_weights(weight_measurement_id):
     analyze_last_two_weights(weight_measurement_id)
 
-
+# TODO: this is a dummy module and should be generalized at least with a task structure
+# all the tasks should listen on the same weight queue and all of them should compute some metrics (broadcast?)
 def analyze_last_two_weights(weight_measurement_id):
     measurement_list = WeightMeasurement.get_previous_weight_measures(weight_measurement_id, 2)
     if len(measurement_list) == 2:
         current_measurement= measurement_list[0]
         previous_measurement = measurement_list[1]
         
-        # TODO: analyze current_measurement vs previous_measurement and generate notification
+        delta_value = current_measurement.value - previous_measurement.value
+
+        if delta_value <= -2:
+            message = u"Jim lost %s kg" % (abs(delta_value))
+            description = "You can contact him and see what's wrong."
+            send_notification(current_measurement.user_id, "warning", message, description)
+        if delta_value >= 2:
+            message = u"Jim gained %s kg" % (abs(delta_value))
+            description = "Please check if this has to do with his diet."
+            send_notification(current_measurement.user_id, "warning", message, description)
+
+def send_notification(user_id, status, message, description):
+    app = Celery()
+    app.config_from_object('django.conf:settings')
+    app.send_task('frontend.send_notification', (user_id, 'weight', status, message, description), queue='frontend_notifications')

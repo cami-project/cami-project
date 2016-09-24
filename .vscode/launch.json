@@ -22,6 +22,26 @@
             ]
         },
         {
+            "name": "frontend",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": false,
+            "pythonPath": "${config.python.pythonPath}",
+            "program": "${workspaceRoot}/frontend/manage.py",
+            "args": [
+                "runserver",
+                "--noreload",
+                "0.0.0.0:8001",
+                "--settings=frontend.settings_local"
+            ],
+            "debugOptions": [
+                "WaitOnAbnormalExit",
+                "WaitOnNormalExit",
+                "RedirectOutput",
+                "DjangoDebugging"
+            ]
+        },
+        {
             "name": "Integrated Terminal/Console",
             "type": "python",
             "request": "launch",
