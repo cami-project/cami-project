@@ -11,6 +11,7 @@ from celery import Celery
 from celery.utils.log import get_task_logger
 from kombu import Queue, Exchange
 from django.conf import settings #noqa
+from notifications_adapter import NotificationsAdapter
 
 from ..models import WeightMeasurement
 
@@ -38,24 +39,22 @@ def analyze_last_two_weights(weight_measurement_id):
         previous_measurement = measurement_list[1]
         
         delta_value = current_measurement.value - previous_measurement.value
+        notifications_adapter = NotificationsAdapter()
 
         if delta_value <= -2:
             message = u"Jim lost %s kg" % (abs(delta_value))
             description = "You can contact him and see what's wrong."
-            send_caregiver_notification(current_measurement.user_id, "medium", message, description)
+            notifications_adapter.send_caregiver_notification(current_measurement.user_id, "weight", "medium", message, description)
+
+            message = u"There's a decrease of %s kg in your weight." % (abs(delta_value))
+            description = "Please take your meals regularly."
+            notifications_adapter.send_elderly_notification(current_measurement.user_id, "weight", "medium", message, description)
 
         if delta_value >= 2:
             message = u"Jim gained %s kg" % (abs(delta_value))
             description = "Please check if this has to do with his diet."
-            send_caregiver_notification(current_measurement.user_id, "medium", message, description)
+            notifications_adapter.send_caregiver_notification(current_measurement.user_id, "weight", "medium", message, description)
 
-def send_caregiver_notification(user_id, severity, message, description):
-    send_notification(user_id, 'caregiver', severity, message, description)
-
-def send_elderly_notification(user_id, severity, message, description):
-    send_notification(user_id, 'elderly', severity, message, description)
-
-def send_notification(user_id, recipient, severity, message, description):
-    app = Celery()
-    app.config_from_object('django.conf:settings')
-    app.send_task('frontend.send_notification', (user_id, recipient, 'weight', severity, message, description), queue='frontend_notifications')
+            message = u"There's an increase of %s kg in your weight." % (abs(delta_value))
+            description = "Please be careful with your meals."
+            notifications_adapter.send_elderly_notification(current_measurement.user_id, "weight", "medium", message, description)

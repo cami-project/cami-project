@@ -180,7 +180,7 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
-        'withings_controller.fetch_measurement': {
+        'withings_controller.save_measurement': {
             'handlers': ['celery_file'],
             'level': 'DEBUG',
             'propagate': False,
