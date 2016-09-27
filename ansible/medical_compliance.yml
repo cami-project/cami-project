@@ -19,6 +19,7 @@
         - name: Install requirements
           pip:
             requirements: "{{ project_dir }}/medical_compliance/requirements.txt"
+        - pip: name=inotify
 
         - name: Install daemon
           apt: pkg={{ item }} state=installed update-cache=yes
