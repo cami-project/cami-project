@@ -21,4 +21,4 @@ USER frontend
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
-EXPOSE 8000
+EXPOSE 8001

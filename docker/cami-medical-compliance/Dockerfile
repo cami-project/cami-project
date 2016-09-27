@@ -11,6 +11,14 @@ WORKDIR /cami-project
 RUN ansible-playbook ansible/medical_compliance.yml -c local
 
 COPY docker/cami-medical-compliance/docker-entrypoint.sh /usr/local/bin/
+COPY docker/cami-medical-compliance/docker-migration-entrypoint.sh /usr/local/bin/
+COPY docker/cami-medical-compliance/docker-message-worker-entrypoint.sh /usr/local/bin/
+
+RUN adduser --disabled-password --gecos '' medical_compliance
+RUN chown medical_compliance /cami-project
+
+USER medical_compliance
+
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 EXPOSE 8000
