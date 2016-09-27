@@ -31,17 +31,6 @@ const HomepageView = React.createClass({
   },
 
   componentDidMount() {
-    setTimeout(() =>
-      this.props.dispatch(HomepageState.showActionability(
-        'Jim',
-        icons.heart,
-        1469793600,
-        'Jim\'s heart rate has increased drastically!',
-        'He has been reminded 3 times to take his Accupril, but did not respond.'
-      )),
-      3000
-    );
-    this.props.dispatch(HomepageState.initChartData());
   },
 
   render() {
