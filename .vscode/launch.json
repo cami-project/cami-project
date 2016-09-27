@@ -5,7 +5,7 @@
             "name": "medical_compliance",
             "type": "python",
             "request": "launch",
-            "stopOnEntry": true,
+            "stopOnEntry": false,
             "pythonPath": "${config.python.pythonPath}",
             "program": "${workspaceRoot}/medical_compliance/manage.py",
             "args": [
@@ -13,6 +13,26 @@
                 "--noreload",
                 "0.0.0.0:8000",
                 "--settings=medical_compliance.settings_local"
+            ],
+            "debugOptions": [
+                "WaitOnAbnormalExit",
+                "WaitOnNormalExit",
+                "RedirectOutput",
+                "DjangoDebugging"
+            ]
+        },
+        {
+            "name": "frontend",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": false,
+            "pythonPath": "${config.python.pythonPath}",
+            "program": "${workspaceRoot}/frontend/manage.py",
+            "args": [
+                "runserver",
+                "--noreload",
+                "0.0.0.0:8001",
+                "--settings=frontend.settings_local"
             ],
             "debugOptions": [
                 "WaitOnAbnormalExit",

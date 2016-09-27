@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpRequest
 from django.conf import settings #noqa
 from django.views.decorators.csrf import csrf_exempt
 from withings import WithingsApi, WithingsCredentials
-from withings_tasks import fetch_measurement
+from withings_tasks import save_measurement
 
 import json, logging, pprint
 
@@ -43,7 +43,7 @@ def notify_measurements(request):
         startdate = request.POST['startdate']
         enddate = request.POST['enddate']
         appli = request.POST['appli']
-        fetch_measurement.delay(userid, startdate, enddate, appli)
+        save_measurement.delay(userid, startdate, enddate, appli)
     else:
         logger.debug(pprint.pformat("Received invalid post data; possibly related to a subscribe call"))
 

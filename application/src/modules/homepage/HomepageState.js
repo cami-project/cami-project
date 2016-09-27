@@ -24,7 +24,7 @@ export async function requestNotification() {
 }
 
 async function fetchNotification() {
-  var apiUrl = env.NOTIFICATIONS_REST_API;
+  var apiUrl = env.NOTIFICATIONS_REST_API + "?recipient_type=elderly&limit=1&offset=0";
 
   // Use random parameter to defeat cache.
   apiUrl += apiUrl.indexOf('?') > -1 ? '&' : '?';

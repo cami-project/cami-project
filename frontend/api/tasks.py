@@ -8,7 +8,11 @@ need to have the same module structure in the worker and the client.
 """
 
 import celery
+from kombu import Queue, Exchange
+from celery import Celery
+import time
 
+from django.conf import settings
 from celery.utils.log import get_task_logger
 
 from models import Notification
@@ -16,15 +20,17 @@ from models import Notification
 
 logger = get_task_logger(__name__)
 
+app = Celery('api.tasks', broker=settings.BROKER_URL)
+app.conf.update(
+    CELERY_DEFAULT_QUEUE='frontend_notifications',
+    CELERY_QUEUES=(
+        Queue('frontend_notifications', Exchange('frontend_notifications'), routing_key='frontend_notifications'),
+    ),
+)
 
 @celery.task(name='frontend.send_notification')
-def send_notification(message, type, severity):
-    n = Notification(message=message, type=type, severity=severity)
+def send_notification(user_id, recipient_type, type, severity, message, description):
+    timestamp = time.time()
+    n = Notification(user_id=user_id, recipient_type=recipient_type, type=type, severity=severity, timestamp=timestamp, message=message, description=description)
+    n.full_clean()
     n.save()
-
-    logger.debug(
-        "Received and saved notification: %s %s %s",
-        message,
-        type,
-        severity
-    )

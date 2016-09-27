@@ -6,6 +6,6 @@ module.exports = {
   AUTH0_CLIENT_ID: '',
   AUTH0_DOMAIN: '',
   POLL_INTERVAL_MILLIS: 5000,
-  NOTIFICATIONS_REST_API: 'http://127.0.0.1/notification.json',
+  NOTIFICATIONS_REST_API: 'http://127.0.0.1:8001/api/v1/notifications/',
   WEIGHT_MEASUREMENTS_LAST_VALUES: 'http://127.0.0.1:8000/api/v1/weight-measurements/last_values/'
 };

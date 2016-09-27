@@ -3,13 +3,31 @@ from __future__ import unicode_literals
 from django.db import models
 
 
-# Create your models here.
 class Notification(models.Model):
     class Meta:
         db_table = 'notification'
 
-    notification_id = models.AutoField(primary_key=True)
-    type = models.CharField(max_length=64)
-    severity = models.CharField(max_length=32)
-    message = models.CharField(max_length=1024)
-    created = models.DateTimeField(auto_now_add=True)
+    RECIPIENT_TYPES = (
+        ('elderly', 'elderly'),
+        ('caregiver', 'caregiver')
+    )
+
+    NOTIFICATION_TYPES = (
+        ('weight', 'weight'),
+        ('heart', 'heart'),
+        ('sleep', 'sleep')
+    )
+
+    NOTIFICATION_SEVERITIES = (
+        ('low', 'low'),
+        ('medium', 'medium'),
+        ('high', 'high')
+    )
+
+    user_id = models.BigIntegerField(name='user_id')
+    recipient_type = models.CharField(max_length=20, choices=RECIPIENT_TYPES)
+    type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
+    severity = models.CharField(max_length=20, choices=NOTIFICATION_SEVERITIES)
+    timestamp = models.BigIntegerField()
+    message = models.CharField(max_length=512)
+    description = models.CharField(max_length=1024)

@@ -11,6 +11,7 @@ from celery import Celery
 from celery.utils.log import get_task_logger
 from kombu import Queue, Exchange
 from django.conf import settings #noqa
+from notifications_adapter import NotificationsAdapter
 
 from ..models import WeightMeasurement
 
@@ -29,11 +30,31 @@ app.conf.update(
 def analyze_weights(weight_measurement_id):
     analyze_last_two_weights(weight_measurement_id)
 
-
+# TODO: this is a dummy module and should be generalized at least with a task structure
+# all the tasks should listen on the same weight queue and all of them should compute some metrics (broadcast?)
 def analyze_last_two_weights(weight_measurement_id):
     measurement_list = WeightMeasurement.get_previous_weight_measures(weight_measurement_id, 2)
     if len(measurement_list) == 2:
         current_measurement= measurement_list[0]
         previous_measurement = measurement_list[1]
         
-        # TODO: analyze current_measurement vs previous_measurement and generate notification
+        delta_value = current_measurement.value - previous_measurement.value
+        notifications_adapter = NotificationsAdapter()
+
+        if delta_value <= -2:
+            message = u"Jim lost %s kg" % (abs(delta_value))
+            description = "You can contact him and see what's wrong."
+            notifications_adapter.send_caregiver_notification(current_measurement.user_id, "weight", "medium", message, description)
+
+            message = u"There's a decrease of %s kg in your weight." % (abs(delta_value))
+            description = "Please take your meals regularly."
+            notifications_adapter.send_elderly_notification(current_measurement.user_id, "weight", "medium", message, description)
+
+        if delta_value >= 2:
+            message = u"Jim gained %s kg" % (abs(delta_value))
+            description = "Please check if this has to do with his diet."
+            notifications_adapter.send_caregiver_notification(current_measurement.user_id, "weight", "medium", message, description)
+
+            message = u"There's an increase of %s kg in your weight." % (abs(delta_value))
+            description = "Please be careful with your meals."
+            notifications_adapter.send_elderly_notification(current_measurement.user_id, "weight", "medium", message, description)

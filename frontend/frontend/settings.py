@@ -143,9 +143,9 @@ X_FRAME_OPTIONS='ALLOW-FROM *'
 # Celery settings
 BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
 
-CELERY_DEFAULT_QUEUE = 'frontend'
+CELERY_DEFAULT_QUEUE = 'frontend_notifications'
 CELERY_QUEUES = (
-    Queue('frontend', Exchange('frontend'), routing_key='frontend'),
+    Queue('frontend_notifications', Exchange('frontend_notifications'), routing_key='frontend_notifications'),
 )
 
 try:

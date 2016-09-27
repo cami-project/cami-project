@@ -4,6 +4,7 @@ from tastypie.authentication import Authentication
 from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource
 from tastypie.serializers import Serializer
+from tastypie.paginator import Paginator
 
 from models import Notification
 
@@ -37,8 +38,10 @@ class ApiModelResource(ModelResource):
 
 class NotificationResource(ApiModelResource):
     class Meta(ApiModelResource.Meta):
-        queryset = Notification.objects.all().order_by('-created')
+        queryset = Notification.objects.all().order_by('-timestamp')
         resource_name = 'notifications'
         filtering = {
-            "created": ('gt'),
+            "timestamp": ('gt'),
+            "recipient_type": ('exact')
         }
+        paginator_class = Paginator
