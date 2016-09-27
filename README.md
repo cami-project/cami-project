@@ -26,7 +26,16 @@ docker-compose logs
 
 Use `docker-compose stop` to stop the containers or Ctrl+C to stop then when not running as daemon.
 
+If you want to open the development environment, you can use the following command:
+
+```
+docker-compose -f docker-compose-dev.yml up
+```
+
+On each change of the code, the app will restart so you can test and develop the app fast. If the code does not reload, simply press Ctrl+C and run again the command.
+
 The docker-compose recipe is set up so that you can use the containers for development. All containers have the host project folder synced to the `/cami-project` folder from which the microservices are run. **Any change you do on the host will be reflected in the running apps.**
+The next sections are optional and they can be used if you want to run all the components that you are developing separately outside Docker.
 
 ## Components
 
