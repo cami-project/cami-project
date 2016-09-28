@@ -58,7 +58,7 @@ services:
   cami-frontend-migrate:
     build:
       context: .
-      dockerfile: docker/cami-frontend/Dockerfile
+      dockerfile: Dockerfile-frontend
     links:
       - cami-store
     volumes:
@@ -69,7 +69,7 @@ services:
   cami-frontend:
     build:
       context: .
-      dockerfile: docker/cami-frontend/Dockerfile
+      dockerfile: Dockerfile-frontend
     links:
       - cami-store
       - cami-rabbitmq
@@ -83,7 +83,7 @@ services:
   cami-frontend-message-worker:
     build:
       context: .
-      dockerfile: docker/cami-frontend/Dockerfile
+      dockerfile: Dockerfile-frontend
     links:
       # Needs the store to interact with the DB
       - cami-store
