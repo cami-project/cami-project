@@ -10,7 +10,7 @@ services:
   cami-rabbitmq:
     build:
       context: .
-      dockerfile: docker/cami-rabbitmq/Dockerfile
+      dockerfile: Dockerfile-rabbitmq
     ports:
       # Make the RabbitMQ server available on the host so VMs can access it
       - "5673:5672"
@@ -20,7 +20,7 @@ services:
   cami-medical-compliance-migrate:
     build:
       context: .
-      dockerfile: docker/cami-medical-compliance/Dockerfile
+      dockerfile: Dockerfile-medical-compliance
     links:
       - cami-store
     volumes:
@@ -30,7 +30,7 @@ services:
   cami-medical-compliance:
     build:
       context: .
-      dockerfile: docker/cami-medical-compliance/Dockerfile
+      dockerfile: Dockerfile-medical-compliance
     links:
       - cami-store
       - cami-rabbitmq
@@ -44,7 +44,7 @@ services:
   cami-medical-compliance-message-worker:
     build:
       context: .
-      dockerfile: docker/cami-medical-compliance/Dockerfile
+      dockerfile: Dockerfile-medical-compliance
     links:
       # Needs the store to interact with the DB
       - cami-store
