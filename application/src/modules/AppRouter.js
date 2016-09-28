@@ -7,6 +7,7 @@ import HomepageViewContainer from './homepage/HomepageViewContainer';
 import HomepageViewContainerCaregiver from './homepage-caregiver/HomepageViewContainer';
 import JournalViewContainer from './journal/JournalViewContainer';
 import StatusViewContainer from './status/StatusViewContainer';
+import LoginViewContainer from './login/LoginViewContainer';
 
 /**
  * AppRouter is responsible for mapping a navigator scene to a view
@@ -22,6 +23,8 @@ export default function AppRouter(props) {
       return <JournalViewContainer />;
     case 'Homepage':
       return <HomepageViewContainer />;
+    case 'Login':
+      return <LoginViewContainer />;
     default:
       throw new Error('Unknown navigation key: ' + key);
   }

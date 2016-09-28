@@ -8,6 +8,7 @@ import HomepageStateReducer from '../modules/homepage/HomepageState';
 import HomepageStateReducerCaregiver from '../modules/homepage-caregiver/HomepageState';
 import JournalStateReducer from '../modules/journal/JournalState';
 import StatusStateReducer from '../modules/status/StatusState';
+import LoginStateReducer from '../modules/login/LoginState';
 
 const reducers = {
   // Authentication/login state
@@ -28,7 +29,9 @@ const reducers = {
 
   journal: JournalStateReducer,
 
-  status: StatusStateReducer
+  status: StatusStateReducer,
+
+  login: LoginStateReducer
 };
 
 // initial state, accessor and mutator for supporting root-level
