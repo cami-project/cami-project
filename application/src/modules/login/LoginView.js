@@ -8,6 +8,8 @@ import {
   TouchableOpacity
 } from 'react-native';
 
+import LoginInput from './components/LoginInput';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 import icons from 'Cami/src/icons-fa';
 import variables from 'Cami/src/modules/variables/ElderGlobalVariables';
@@ -22,13 +24,9 @@ var tapButtonSound = new Sound('sounds/knuckle.mp3', Sound.MAIN_BUNDLE, (error) 
 });
 
 const LoginView = React.createClass({
-  propTypes: {
-    username: PropTypes.string.isRequired
-  },
-
   render() {
     return (
-      <View style={styles.container}>
+      <View style={variables.container}>
         <Image
           style={[styles.background, {zIndex: 1, resizeMode: 'cover'}]}
           source={require('../../../images/elder-bg-default.jpg')}
@@ -42,23 +40,44 @@ const LoginView = React.createClass({
             }
           ]}
         />
-        <View>
-          <Text>Welcome</Text>
+        <View style={styles.headerContainer}>
+          <View style={styles.iconContainer}>
+            <Icon
+              name={icons.heart_solid}
+              size={80}
+              color={Color('white').clearer(.25).rgbaString()}
+            />
+          </View>
+          <Text style={styles.greeting}>Welcome</Text>
         </View>
 
-        <View style={styles.buttonContainer}>
+        <View style={styles.mainContainer}>
+          <View style={styles.formContainer}>
+            <LoginInput
+              placeholder="Username"
+              icon="user"
+              secureTextEntry={false}
+              name="username"
+            />
+            <LoginInput
+              placeholder="Password"
+              icon="password"
+              secureTextEntry={true}
+              name="password"
+            />
+          </View>
           <TouchableOpacity
             style={[
               styles.button,
               styles.buttonConfirm,
               {
-                shadowColor: Color(variables.colors.status.low).darken(.7).hexString()
+                shadowColor: Color(variables.colors.status.low).darken(.8).hexString()
               }
             ]}
             onPress={() => tapButtonSound.setVolume(1.0).play()}
           >
-            <Text style={[styles.buttonText, {color: 'green'}]}>
-              Login
+            <Text style={styles.buttonText}>
+              LOGIN
             </Text>
           </TouchableOpacity>
         </View>
@@ -75,10 +94,6 @@ const buttonCircle = {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    position: 'relative'
-  },
   background: {
     position: 'absolute',
     flex: 1,
@@ -88,38 +103,37 @@ const styles = StyleSheet.create({
     left: 0,
     alignSelf: 'center',
   },
-  iconContainer: {
+  headerContainer: {
     flex: 1,
     zIndex: 5,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 20
+    justifyContent: 'flex-end',
+    paddingTop: 20,
+    backgroundColor: 'transparent'
+  },
+  iconContainer: {
+    backgroundColor: 'transparent',
+    marginBottom: 20
+  },
+  greeting: {
+    fontSize: 28,
+    color: Color('white').clearer(.1).rgbaString(),
+    backgroundColor: 'transparent'
   },
   mainContainer: {
-    flex: 3,
+    flex: 2,
     alignItems: 'center',
     zIndex: 4,
     backgroundColor: 'transparent',
     marginTop: 50
   },
-  textContainer: {
-    paddingTop: 40,
-    width: variables.dimensions.width*.8,
-    justifyContent: 'center'
-  },
-  text: {
-    fontSize: 26,
-    color: variables.colors.text,
-    lineHeight: 1.3*26
+  formContainer: {
+    marginBottom: 30
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: variables.dimensions.width*.8,
-    position: 'absolute',
-    bottom: variables.dimensions.width*.1,
-    left: variables.dimensions.width*.1
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   button: {
     ...buttonCircle,
@@ -127,20 +141,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     shadowRadius: 40,
     shadowOffset: {width: 0, height: 0},
-    shadowOpacity: 0.4,
+    shadowOpacity: 0.5,
+    backgroundColor: 'white'
   },
   buttonText: {
     backgroundColor: 'transparent',
     textAlign: 'center',
     alignSelf: 'center',
-    fontSize: 22,
-    fontWeight: 'bold'
-  },
-  buttonConfirm: {
-    backgroundColor: 'white',
-  },
-  buttonPanic: {
-    backgroundColor: variables.colors.panic
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: Color(variables.colors.status.low).clearer(.05).rgbaString()
   }
 });
 
