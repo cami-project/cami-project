@@ -3,17 +3,30 @@ http://www.camiproject.eu/
 
 # Setup using Docker
 
-The project now has a Docker containers configured for the microservices. This is still WIP but a functional dev env can be started using Docker.
+The project now has a Docker containers configured for the microservices. You can either run them using the images saved on DockerHub (`Production`) or using the local code (`Development`).
 
 You will need `docker-compose` to get the env running. Follow the [installation guide](https://docs.docker.com/compose/install/).
 
-Once you have `docker-compose` installed just run this from the project root:
+## Run for Production
+
+To run the project using the images from DockerHub (`Production Only` - **this will not use the local code!**), execute the next command:
+
+```
+docker-compose -f docker-compose-prod.yml up
+```
+
+## Run for Development
+
+If you want to open the development environment, you can use the following command from the project's root:
 ```
 docker-compose up
 ```
-This will start all cami microservices and output their standard output. It may take a while for all the containers to come online especially on the first run when the mysql database is initialised on cami-store. To check that all is working try this in your browser: `http://127.0.0.1:8000/api/v1/medication-plans/`. Replace `127.0.0.1` with your VM's ip if you're running Docker in a VM.
 
-Check out frontend notification API at `http://127.0.0.1:8001/api/v1/notifications/?limit=2`.
+This will start all cami microservices and output their standard output. It may take a while for all the containers to come online especially on the first run when the mysql database is initialised on cami-store. To check that all is working try this in your browser: `http://127.0.0.1:8000/api/v1/medication-plans/`. Replace `127.0.0.1` with your VM's ip if you're running Docker in a VM. Check out frontend notification API at `http://127.0.0.1:8001/api/v1/notifications/?limit=2`.
+
+On each change of the code, the app will restart so you can test and develop the app fast. If the code does not reload, simply press Ctrl+C and run again the command.
+
+The docker-compose recipe is set up so that you can use the containers for development. All the containers have the host project folder synced to the `/cami-project` folder from which the microservices are executed. **Any change you do on the host will be reflected in the running apps.**
 
 You can also run the containers as daemons:
 ```
@@ -26,15 +39,6 @@ docker-compose logs
 
 Use `docker-compose stop` to stop the containers or Ctrl+C to stop then when not running as daemon.
 
-If you want to open the development environment, you can use the following command:
-
-```
-docker-compose -f docker-compose-dev.yml up
-```
-
-On each change of the code, the app will restart so you can test and develop the app fast. If the code does not reload, simply press Ctrl+C and run again the command.
-
-The docker-compose recipe is set up so that you can use the containers for development. All containers have the host project folder synced to the `/cami-project` folder from which the microservices are run. **Any change you do on the host will be reflected in the running apps.**
 The next sections are optional and they can be used if you want to run all the components that you are developing separately outside Docker.
 
 ## Components

@@ -1,16 +1,12 @@
 version: '2'
 services:
   cami-store:
-    build:
-      context: .
-      dockerfile: Dockerfile-store
+    image: vitaminsoftware/cami-project:store
     ports:
       # Make the store MySQL available on the host so VMs can access it
       - "3307:3306"
   cami-rabbitmq:
-    build:
-      context: .
-      dockerfile: Dockerfile-rabbitmq
+    image: vitaminsoftware/cami-project:rabbitmq
     ports:
       # Make the RabbitMQ server available on the host so VMs can access it
       - "5673:5672"
@@ -18,9 +14,7 @@ services:
   # Run migrations in a separate container from the main applications. The
   # container will just run migrations and load fixtures and then exit.
   cami-medical-compliance-migrate:
-    build:
-      context: .
-      dockerfile: Dockerfile-medical-compliance
+    image: vitaminsoftware/cami-project:medical-compliance
     links:
       - cami-store
     volumes:
@@ -28,9 +22,7 @@ services:
     entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-migration-entrypoint.sh
 
   cami-medical-compliance:
-    build:
-      context: .
-      dockerfile: Dockerfile-medical-compliance
+    image: vitaminsoftware/cami-project:medical-compliance
     links:
       - cami-store
       - cami-rabbitmq
@@ -42,34 +34,27 @@ services:
 
   # Runs the Celery worker for consuming messages received by the medical-compliance
   cami-medical-compliance-message-worker:
-    build:
-      context: .
-      dockerfile: Dockerfile-medical-compliance
+    image: vitaminsoftware/cami-project:medical-compliance
     links:
       # Needs the store to interact with the DB
       - cami-store
       - cami-rabbitmq
     volumes:
       - .:/cami-project
-    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint-dev.sh
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
 
   # Run migrations in a separate container from the main applications. The
   # container will just run migrations and load fixtures and then exit.
   cami-frontend-migrate:
-    build:
-      context: .
-      dockerfile: Dockerfile-frontend
+    image: vitaminsoftware/cami-project:frontend
     links:
       - cami-store
     volumes:
       - .:/cami-project
     entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-migration-entrypoint.sh
 
-  # Should use cached image that is build for cami-frontend-migrate
   cami-frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile-frontend
+    image: vitaminsoftware/cami-project:frontend
     links:
       - cami-store
       - cami-rabbitmq
@@ -81,13 +66,11 @@ services:
 
   # Runs the Celery worker for consuming messages received by the frontend
   cami-frontend-message-worker:
-    build:
-      context: .
-      dockerfile: Dockerfile-frontend
+    image: vitaminsoftware/cami-project:frontend
     links:
       # Needs the store to interact with the DB
       - cami-store
       - cami-rabbitmq
     volumes:
       - .:/cami-project
-    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint-dev.sh
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
