@@ -1,4 +1,5 @@
 {
+  "heart_solid": "heart",
   "heart": "heartbeat",
   "weight": "dashboard",
   "sleep": "bed",
@@ -9,5 +10,7 @@
   "wakeup": "check",
   "plus": "plus",
   "phone": "phone",
-  "cancel": "times"
+  "cancel": "times",
+  "user": "user",
+  "password": "key"
 }
