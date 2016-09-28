@@ -3,14 +3,14 @@ services:
   cami-store:
     build:
       context: .
-      dockerfile: docker/cami-store/Dockerfile
+      dockerfile: Dockerfile-store
     ports:
       # Make the store MySQL available on the host so VMs can access it
       - "3307:3306"
   cami-rabbitmq:
     build:
       context: .
-      dockerfile: docker/cami-rabbitmq/Dockerfile
+      dockerfile: Dockerfile-rabbitmq
     ports:
       # Make the RabbitMQ server available on the host so VMs can access it
       - "5673:5672"
@@ -20,7 +20,7 @@ services:
   cami-medical-compliance-migrate:
     build:
       context: .
-      dockerfile: docker/cami-medical-compliance/Dockerfile
+      dockerfile: Dockerfile-medical-compliance
     links:
       - cami-store
     volumes:
@@ -30,7 +30,7 @@ services:
   cami-medical-compliance:
     build:
       context: .
-      dockerfile: docker/cami-medical-compliance/Dockerfile
+      dockerfile: Dockerfile-medical-compliance
     links:
       - cami-store
       - cami-rabbitmq
@@ -44,7 +44,7 @@ services:
   cami-medical-compliance-message-worker:
     build:
       context: .
-      dockerfile: docker/cami-medical-compliance/Dockerfile
+      dockerfile: Dockerfile-medical-compliance
     links:
       # Needs the store to interact with the DB
       - cami-store
@@ -58,7 +58,7 @@ services:
   cami-frontend-migrate:
     build:
       context: .
-      dockerfile: docker/cami-frontend/Dockerfile
+      dockerfile: Dockerfile-frontend
     links:
       - cami-store
     volumes:
@@ -69,7 +69,7 @@ services:
   cami-frontend:
     build:
       context: .
-      dockerfile: docker/cami-frontend/Dockerfile
+      dockerfile: Dockerfile-frontend
     links:
       - cami-store
       - cami-rabbitmq
@@ -83,7 +83,7 @@ services:
   cami-frontend-message-worker:
     build:
       context: .
-      dockerfile: docker/cami-frontend/Dockerfile
+      dockerfile: Dockerfile-frontend
     links:
       # Needs the store to interact with the DB
       - cami-store
