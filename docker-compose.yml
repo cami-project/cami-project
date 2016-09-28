@@ -3,7 +3,7 @@ services:
   cami-store:
     build:
       context: .
-      dockerfile: docker/cami-store/Dockerfile
+      dockerfile: Dockerfile-store
     ports:
       # Make the store MySQL available on the host so VMs can access it
       - "3307:3306"
