@@ -55,7 +55,11 @@ const HomepageView = React.createClass({
             <ActionabilityWidget
               style={{height: 180}}
               dispatch={this.props.dispatch}
-              {...this.props.actionability.get('params')}
+              name={this.props.actionability.get('params').get('name')}
+              icon={this.props.actionability.get('params').get('icon')}
+              timestamp={this.props.actionability.get('params').get('timestamp')}
+              message={this.props.actionability.get('params').get('message')}
+              description={this.props.actionability.get('params').get('description')}
             />
           :
           null
