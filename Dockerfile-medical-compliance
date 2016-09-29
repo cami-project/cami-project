@@ -17,6 +17,7 @@ COPY docker/cami-medical-compliance/docker-message-worker-entrypoint-dev.sh /usr
 
 RUN adduser --disabled-password --gecos '' medical_compliance
 RUN chown medical_compliance /cami-project
+RUN chmod a+rw medical_compliance/debug.log
 
 USER medical_compliance
 
