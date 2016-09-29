@@ -6,6 +6,9 @@
 cp env.example.js env.js
 npm install
 ```
+
+`Note`: This will use the Rest API of the backend deployed on Digital Ocean. If you want to link the mobile app with the local REST Api endpoint, just go to the env.js file and replace all the IPs with `127.0.0.1`.
+
 - Go to the ios folder and open the project with **XCode 8** by double clicking on `Cami.xcworkspace`
 - From the Project Navigator, expand Cami > Libraries and click on `RCTWebSocket.xcodeproj`
 - Go to Build Settings, find the **Other Warning Flags** and remove the entries `-Wall` and `-Werror`
