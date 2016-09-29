@@ -1,0 +1,73 @@
+cami-store:
+  image: vitaminsoftware/cami-project:store
+  ports:
+    - "3307:3306"
+  tty: true
+  stdin_open: true
+cami-rabbitmq:
+  image: vitaminsoftware/cami-project:rabbitmq
+  ports:
+    - "5673:5672"
+    - "15673:15672"
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  stdin_open: true
+cami-medical-compliance-migrate:
+  image: vitaminsoftware/cami-project:medical-compliance
+  links:
+    - 'cami-store'
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-migration-entrypoint.sh
+  labels:
+    io.rancher.container.pull_image: always
+cami-medical-compliance:
+  image: vitaminsoftware/cami-project:medical-compliance
+  links:
+    - 'cami-store'
+    - 'cami-rabbitmq'
+  ports:
+    - "8000:8000"
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-entrypoint.sh
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  stdin_open: true
+cami-medical-compliance-message-worker:
+  image: vitaminsoftware/cami-project:medical-compliance
+  links:
+    - 'cami-store'
+    - 'cami-rabbitmq'
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  stdin_open: true
+cami-frontend-migrate:
+  image: vitaminsoftware/cami-project:frontend
+  links:
+    - 'cami-store'
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-migration-entrypoint.sh
+  labels:
+    io.rancher.container.pull_image: always
+cami-frontend:
+  image: vitaminsoftware/cami-project:frontend
+  links:
+    - 'cami-store'
+    - 'cami-rabbitmq'
+  ports:
+    - "8001:8001"
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-entrypoint.sh
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  stdin_open: true
+cami-frontend-message-worker:
+  image: vitaminsoftware/cami-project:frontend
+  links:
+    - 'cami-store'
+    - 'cami-rabbitmq'
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  stdin_open: true
