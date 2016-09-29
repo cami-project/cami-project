@@ -162,11 +162,6 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': './debug.log',
-        },
-        'celery_file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': './celery.log',
         }
     },
     'loggers': {
@@ -181,12 +176,12 @@ LOGGING = {
             'propagate': True,
         },
         'withings_controller.save_measurement': {
-            'handlers': ['celery_file'],
+            'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': False,
         },
         'medical_compliance.fetch_weight_measurement': {
-            'handlers': ['celery_file'],
+            'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': False,
         },

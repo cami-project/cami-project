@@ -17,8 +17,6 @@ services:
     image: vitaminsoftware/cami-project:medical-compliance
     links:
       - cami-store
-    volumes:
-      - .:/cami-project
     entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-migration-entrypoint.sh
 
   cami-medical-compliance:
@@ -28,8 +26,6 @@ services:
       - cami-rabbitmq
     ports:
       - "8000:8000"
-    volumes:
-      - .:/cami-project
     entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-entrypoint.sh
 
   # Runs the Celery worker for consuming messages received by the medical-compliance
@@ -39,8 +35,6 @@ services:
       # Needs the store to interact with the DB
       - cami-store
       - cami-rabbitmq
-    volumes:
-      - .:/cami-project
     entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
 
   # Run migrations in a separate container from the main applications. The
@@ -49,8 +43,6 @@ services:
     image: vitaminsoftware/cami-project:frontend
     links:
       - cami-store
-    volumes:
-      - .:/cami-project
     entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-migration-entrypoint.sh
 
   cami-frontend:
@@ -60,8 +52,6 @@ services:
       - cami-rabbitmq
     ports:
       - "8001:8001"
-    volumes:
-      - .:/cami-project
     entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-entrypoint.sh
 
   # Runs the Celery worker for consuming messages received by the frontend
@@ -71,6 +61,4 @@ services:
       # Needs the store to interact with the DB
       - cami-store
       - cami-rabbitmq
-    volumes:
-      - .:/cami-project
     entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
