@@ -16,7 +16,7 @@ const initialState = Map({
   }),
   actionability: Map({
     visible: false,
-    params: {}
+    params: fromJS({})
   })
 });
 
@@ -104,7 +104,7 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
 
       return loop(
         state.setIn(['actionability', 'visible'], isVisible)
-          .setIn(['actionability', 'params'], action.payload.notification)
+          .setIn(['actionability', 'params'], Map(fromJS(action.payload.notification)))
           .setIn(['status', 'visible'], true)
           .setIn(['status', 'values'], fromJS(chartValuesJson)),
         Effects.promise(triggerFetchPageData)
