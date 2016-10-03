@@ -14,6 +14,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import icons from 'Cami/src/icons-fa';
 import variables from 'Cami/src/modules/variables/ElderGlobalVariables';
 
+import * as LoginState from './LoginState';
+
 var Color = require("color");
 
 var Sound = require('react-native-sound');
@@ -24,13 +26,29 @@ var tapButtonSound = new Sound('sounds/knuckle.mp3', Sound.MAIN_BUNDLE, (error) 
 });
 
 const LoginView = React.createClass({
+  username: "",
+  password: "",
+
+  propTypes: {
+    dispatch: PropTypes.func.isRequired
+  },
+  didChangeUsername(username) {
+    this.username = username;
+  },
+  didChangePassword(password) {
+    this.password = password;
+  },
+  logIn() {
+    tapButtonSound.setVolume(1.0).play();
+    this.props.dispatch(LoginState.logIn(this.username, this.password));
+  },
   render() {
     return (
       <View style={variables.container}>
         <Image
           style={[styles.background, {zIndex: 1, resizeMode: 'cover'}]}
           source={require('../../../images/elder-bg-default.jpg')}
-        />
+          />
         <View
           style={[
             styles.background,
@@ -39,14 +57,14 @@ const LoginView = React.createClass({
               backgroundColor: Color(variables.colors.status.low).clearer(.25).rgbaString()
             }
           ]}
-        />
+          />
         <View style={styles.headerContainer}>
           <View style={styles.iconContainer}>
             <Icon
               name={icons.heart_solid}
               size={80}
               color={Color('white').clearer(.25).rgbaString()}
-            />
+              />
           </View>
           <Text style={styles.greeting}>Welcome</Text>
         </View>
@@ -58,13 +76,15 @@ const LoginView = React.createClass({
               icon="user"
               secureTextEntry={false}
               name="username"
-            />
+              onTextChanged={this.didChangeUsername}
+              />
             <LoginInput
               placeholder="Password"
               icon="password"
               secureTextEntry={true}
               name="password"
-            />
+              onTextChanged={this.didChangePassword}
+              />
           </View>
           <TouchableOpacity
             style={[
@@ -74,8 +94,8 @@ const LoginView = React.createClass({
                 shadowColor: Color(variables.colors.status.low).darken(.8).hexString()
               }
             ]}
-            onPress={() => tapButtonSound.setVolume(1.0).play()}
-          >
+            onPress={this.logIn}
+            >
             <Text style={styles.buttonText}>
               LOGIN
             </Text>
@@ -137,21 +157,21 @@ const styles = StyleSheet.create({
   },
   button: {
     ...buttonCircle,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    shadowRadius: 40,
-    shadowOffset: {width: 0, height: 0},
-    shadowOpacity: 0.5,
-    backgroundColor: 'white'
+  alignSelf: 'center',
+  justifyContent: 'center',
+  shadowRadius: 40,
+  shadowOffset: {width: 0, height: 0},
+  shadowOpacity: 0.5,
+  backgroundColor: 'white'
   },
-  buttonText: {
-    backgroundColor: 'transparent',
+buttonText: {
+  backgroundColor: 'transparent',
     textAlign: 'center',
-    alignSelf: 'center',
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: Color(variables.colors.status.low).clearer(.05).rgbaString()
-  }
+      alignSelf: 'center',
+        fontSize: 16,
+          fontWeight: 'bold',
+            color: Color(variables.colors.status.low).clearer(.05).rgbaString()
+}
 });
 
 export default LoginView;

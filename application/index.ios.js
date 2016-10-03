@@ -1,6 +1,6 @@
 import {Provider} from 'react-redux';
 import store from './src/redux/store';
-import AppViewContainer from './src/modules/AppViewContainer';
+import LoginViewContainer from './src/modules/login/LoginViewContainer';
 import * as HomepageStateActions from './src/modules/homepage/HomepageState'
 import * as HomepageCaregiverStateActions from './src/modules/homepage-caregiver/HomepageState'
 
@@ -16,7 +16,7 @@ const Cami = React.createClass({
 
     return (
       <Provider store={store}>
-        <AppViewContainer />
+        <LoginViewContainer />
       </Provider>
     );
   }

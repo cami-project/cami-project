@@ -1,7 +1,7 @@
 import 'es6-symbol/implement';
 import {Provider} from 'react-redux';
 import store from './src/redux/store';
-import AppViewContainer from './src/modules/AppViewContainer';
+import LoginViewContainer from './src/modules/login/LoginViewContainer';
 import React from 'react';
 import {AppRegistry, BackAndroid} from 'react-native';
 import * as NavigationStateActions from './src/modules/navigation/NavigationState';
@@ -36,7 +36,7 @@ const Cami = React.createClass({
   render() {
     return (
       <Provider store={store}>
-        <AppViewContainer />
+        <LoginViewContainer />
       </Provider>
     );
   }
