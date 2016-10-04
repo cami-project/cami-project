@@ -64,7 +64,7 @@ class NotificationResource(ApiModelResource):
 
 class HealthcheckResource(Resource):
     status = fields.CharField(attribute='status', readonly=True)
-    mysql = fields.CharField(attribute='status', readonly=True)
+    mysql = fields.CharField(attribute='mysql', readonly=True)
     message_queue = fields.CharField(attribute='message_queue', readonly=True)
 
     class Meta:
