@@ -32,6 +32,17 @@ export function navigationCompleted() {
   return {type: NAVIGATION_COMPLETED};
 }
 
+// TODO: find a better way to navigate to the page than hardcoding the indexes from the routes
+const CaregiverPageIndex = 1;
+const ElderlyPageIndex = 4; 
+
+export function goToCaregiverPage() {
+  return switchTab(CaregiverPageIndex);
+}
+export function goToElderlyPage() {
+  return switchTab(ElderlyPageIndex);
+}
+
 const initialState = fromJS(
   createNavigationState('MainNavigation', 'App', '', [
     createNavigationState('Login', 'Login', 'ios-person', [{key: 'Login', title: 'Login'}], false),
