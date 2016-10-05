@@ -148,6 +148,9 @@ CELERY_QUEUES = (
     Queue('frontend_notifications', Exchange('frontend_notifications'), routing_key='frontend_notifications'),
 )
 
+# Healthcheker settings
+RABBITMQ_CHECK_TIMEOUT = 1
+
 try:
     from settings_local import *
 except:

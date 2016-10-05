@@ -35,7 +35,6 @@ class TZAwareDateSerializer(Serializer):
 class NoMetaPaginator(Paginator):
     """
     Our own paginator to hide the metadata
-    offset.
     """
 
     def page(self):

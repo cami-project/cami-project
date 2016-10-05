@@ -1,6 +1,7 @@
 import MySQLdb
 
 from django.conf import settings
+import pika
 
 class Healthchecker:
     def __init__(self):
@@ -20,8 +21,10 @@ class Healthchecker:
 
     def check_mysql(self):
         """ 
-            Try to connect to the database and run a dummy querry.
-            If the result is empty or an exception is thrown, then the connection failed.
+        Try to connect to the database and run a dummy querry.
+
+        If the result is empty or an exception is thrown, then 
+        the connection failed.
         """
         try:
             db = MySQLdb.connect(self.server, self.user, self.password, self.database)
@@ -35,8 +38,53 @@ class Healthchecker:
             else:
                 return False
         except MySQLdb.Error, e:
-            print "ERROR %d IN CONNECTION: %s" % (e.args[0], e.args[1])
+            print "ERROR %d IN MYSQL CONNECTION: %s" % (e.args[0], e.args[1])
         return False
 
     def check_message_queue(self):
-        return False
+        class Helper:
+            """
+            Helper class to close a connection and memorize a return value
+            """
+
+            def __init__(self):
+                self.ret = True
+
+            def close_connection(self, conn, ret):
+                self.ret = ret
+                conn.close()
+
+        helper = Helper()
+        
+        """
+        Try to connect to RabbitMQ server with pika
+
+        If the connection will timeout or an exception will be thrown, 
+        then the connection failed
+
+        NOTES: workaround needed - the built-in connection timeout parameters 
+        of pika don't work, so we had to use the callbacks of SelectConnection
+        """
+        try:
+            # Connect to RabbitMQ server
+            parameters = pika.URLParameters(settings.BROKER_URL)
+
+            # Connection ok
+            # Using on_connect callback of SelectConnection to close the
+            # connection(and the ioloop implicitly) and set the return
+            # value to True
+            connection = pika.SelectConnection(parameters, lambda conn: helper.close_connection(conn, True))
+
+            # Connection timeout
+            # Using on_timeout callback of SelectConnection to close 
+            # connection and set the return value to False
+            connection.ioloop.add_timeout(settings.RABBITMQ_CHECK_TIMEOUT, lambda: helper.close_connection(connection, False))
+
+            # Start the ioloop
+            connection.ioloop.start()
+
+        # Connection error
+        except pika.exceptions.AMQPConnectionError, e:
+            return False
+
+        return helper.ret
