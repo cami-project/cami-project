@@ -57,11 +57,10 @@ const OnboardingView = React.createClass({
         />
         <View style={styles.carouselWrapper}>
           <Swiper
-            index={4}
             style={styles.carousel}
             loop={false}
             showsButtons={true}
-            showsPagination={true}
+            showsPagination={false}
             nextButton={
               <Icon
                 name={icons.right}
@@ -76,6 +75,7 @@ const OnboardingView = React.createClass({
                 color={Color('white').clearer(.5).rgbaString()}
               />
             }
+            buttonWrapperStyle={{marginTop: variables.dimensions.height / 6}}
             onMomentumScrollEnd={this.handleScrollEnd}
           >
             <View style={[styles.carouselSlide, styles.carouselSlide1]}>
@@ -106,6 +106,14 @@ const OnboardingView = React.createClass({
               <View style={styles.mainContainer}>
                 <Text style={styles.greeting}>Stay Updated</Text>
                 <Text style={styles.copy}>You get regular updates on the activity of the person you care for. Automatic Journal Entries inform you about their state and health changes.</Text>
+                <Image
+                  style={{
+                    resizeMode: 'contain',
+                    width: variables.dimensions.width,
+                    height: 300,
+                  }}
+                  source={require('../../../images/onboarding-slide-2.png')}
+                />
               </View>
               <View style={styles.footerContainer}>
                 <View style={[styles.line, styles.lineFull, {backgroundColor: variablesCaregiver.colors.status.ok}]}></View>
@@ -124,6 +132,14 @@ const OnboardingView = React.createClass({
               <View style={styles.mainContainer}>
                 <Text style={styles.greeting}>Monitor Health</Text>
                 <Text style={styles.copy}>CAMI turns the data it collects from sensors into quick reference diagrams. That's how you always know what's going on, without having to worry.</Text>
+                <Image
+                  style={{
+                    resizeMode: 'contain',
+                    width: variables.dimensions.width,
+                    height: 300,
+                  }}
+                  source={require('../../../images/onboarding-slide-3.png')}
+                />
               </View>
               <View style={styles.footerContainer}>
                 <View style={[styles.line, styles.lineFull, {backgroundColor: variablesCaregiver.colors.status.warning}]}></View>
@@ -142,6 +158,14 @@ const OnboardingView = React.createClass({
               <View style={styles.mainContainer}>
                 <Text style={styles.greeting}>React in Time</Text>
                 <Text style={styles.copy}>As soon as the app detects that something is wrong, it alerts you immediately. Emergency notifications empower you to take action fast.</Text>
+                <Image
+                  style={{
+                    resizeMode: 'contain',
+                    width: variables.dimensions.width,
+                    height: 300,
+                  }}
+                  source={require('../../../images/onboarding-slide-4.png')}
+                />
               </View>
               <View style={styles.footerContainer}>
                 <View style={[styles.line, styles.lineFull, {backgroundColor: variablesCaregiver.colors.status.alert}]}></View>
