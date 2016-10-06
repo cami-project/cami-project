@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     backgroundColor: 'transparent',
-    marginBottom: 20
+    marginBottom: 30
   },
   greeting: {
     fontSize: 28,

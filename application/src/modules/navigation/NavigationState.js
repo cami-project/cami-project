@@ -38,7 +38,8 @@ const initialState = fromJS(
     createNavigationState('Status', 'Status', 'ios-pulse', [{key: 'Status', title: 'Status'}]),
     createNavigationState('Journal', 'Journal', 'ios-paper', [{key: 'Journal', title: 'Journal'}]),
     createNavigationState('HomepageTab', 'Settings', 'ios-cog', [{key: 'Homepage', title: 'Homepage'}]),
-    createNavigationState('Login', 'Login', 'ios-person', [{key: 'Login', title: 'Login'}])
+    createNavigationState('Login', 'Login', 'ios-person', [{key: 'Login', title: 'Login'}]),
+    createNavigationState('Onboarding', 'Onboard', 'ios-help-buoy', [{key: 'Onboarding', title: 'Onboard'}])
   ]));
 
 export default function NavigationReducer(state = initialState, action) {

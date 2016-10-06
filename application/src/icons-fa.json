@@ -12,5 +12,10 @@
   "phone": "phone",
   "cancel": "times",
   "user": "user",
-  "password": "key"
+  "password": "key",
+  "left": "chevron-left",
+  "right": "chevron-right",
+  "camera": "video-camera",
+  "tv": "television",
+  "smartphone": "mobile"
 }
