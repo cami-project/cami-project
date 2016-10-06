@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'medical_compliance.wsgi.application'
 # Sentry integration
 RAVEN_CONFIG = {
     # Set the Sentry API key here
-    'dsn': 'https://4ad0b1ff1c2e4bf5936163523ce43067:c70b24e0d31747fc93e07f689724d3ff@sentry.io/103830',
+    'dsn': 'https://d9bec7e9f54943a281d5271c29932e7c:b57cfbbc5edc456aa2ece299cabbd785@sentry.io/104123',
 }
 
 LOGGING = {
