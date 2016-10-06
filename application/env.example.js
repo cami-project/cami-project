@@ -3,8 +3,8 @@
 // 2. Fill in the blanks
 
 module.exports = {
-  AUTH0_CLIENT_ID: '',
-  AUTH0_DOMAIN: '',
+  AUTH0_CLIENT_ID: 'xqN8fSjHL6850gI2m8AUkk5GICgvTCUs',
+  AUTH0_DOMAIN: 'vitamin.eu.auth0.com',
   POLL_INTERVAL_MILLIS: 5000,
   NOTIFICATIONS_REST_API: 'http://139.59.181.210:8001/api/v1/notifications/',
   WEIGHT_MEASUREMENTS_LAST_VALUES: 'http://139.59.181.210:8000/api/v1/weight-measurements/last_values/'

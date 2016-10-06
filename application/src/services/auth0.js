@@ -4,6 +4,8 @@ import * as AuthStateActions from '../modules/auth/AuthState';
 import store from '../redux/store';
 const {Platform} = require('react-native');
 
+import {redirectToHomePage} from '../modules/navigation/NavigationState';
+
 const clientId = env.AUTH0_CLIENT_ID;
 const domain = env.AUTH0_DOMAIN;
 const authenticationEnabled = clientId && domain;
@@ -24,7 +26,9 @@ export function showLogin() {
   }
 
   const options = {
-    closable: true
+    closable: false,
+    disableSignUp: true,
+    connections: ["cami"]
   };
 
   if (Platform.OS === 'ios') {
@@ -52,5 +56,6 @@ export function showLogin() {
 
     // Authentication worked!
     store.dispatch(AuthStateActions.onUserLoginSuccess(profile, token));
+    store.dispatch(redirectToHomePage(profile.userMetadata.userType));
   });
 }

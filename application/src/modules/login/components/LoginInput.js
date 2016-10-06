@@ -16,8 +16,7 @@ const LoginInput = React.createClass({
     placeholder: PropTypes.string.isRequired,
     icon: PropTypes.string.isRequired,
     secureTextEntry: PropTypes.bool.isRequired,
-    name: PropTypes.string.isRequired,
-    onTextChanged: PropTypes.func.isRequired
+    name: PropTypes.string.isRequired
   },
 
   getInitialState() {
@@ -41,10 +40,6 @@ const LoginInput = React.createClass({
     })
   },
 
-  onTextChanged(text) {
-    this.props.onTextChanged(text);
-  },
-
   render() {
     return (
       <View style={styles.inputContainer}>
@@ -56,7 +51,6 @@ const LoginInput = React.createClass({
           />
         </View>
         <TextInput
-          onChangeText={(text) => this.onTextChanged(text)}
           style={[
             styles.inputField,
             styles[this.props.name],
