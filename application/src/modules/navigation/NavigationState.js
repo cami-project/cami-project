@@ -32,14 +32,25 @@ export function navigationCompleted() {
   return {type: NAVIGATION_COMPLETED};
 }
 
+// TODO: find a better way to navigate to the page than hardcoding the indexes from the routes
+const CaregiverPageIndex = 1;
+const ElderlyPageIndex = 4; 
+
+export function goToCaregiverPage() {
+  return switchTab(CaregiverPageIndex);
+}
+export function goToElderlyPage() {
+  return switchTab(ElderlyPageIndex);
+}
+
 const initialState = fromJS(
   createNavigationState('MainNavigation', 'App', '', [
-    createNavigationState('HomepageCaregiver', 'Home', 'ios-home', [{key: 'HomepageCaregiver', title: 'Home'}]),
-    createNavigationState('Status', 'Status', 'ios-pulse', [{key: 'Status', title: 'Status'}]),
-    createNavigationState('Journal', 'Journal', 'ios-paper', [{key: 'Journal', title: 'Journal'}]),
-    createNavigationState('HomepageTab', 'Settings', 'ios-cog', [{key: 'Homepage', title: 'Homepage'}]),
-    createNavigationState('Login', 'Login', 'ios-person', [{key: 'Login', title: 'Login'}]),
-    createNavigationState('Onboarding', 'Onboard', 'ios-help-buoy', [{key: 'Onboarding', title: 'Onboard'}])
+    createNavigationState('Login', 'Login', 'ios-person', [{key: 'Login', title: 'Login'}], false),
+    createNavigationState('HomepageCaregiver', 'Home', 'ios-home', [{key: 'HomepageCaregiver', title: 'Home'}], true),
+    createNavigationState('Status', 'Status', 'ios-pulse', [{key: 'Status', title: 'Status'}], true),
+    createNavigationState('Journal', 'Journal', 'ios-paper', [{key: 'Journal', title: 'Journal'}], true),
+    createNavigationState('HomepageTab', 'Settings', 'ios-cog', [{key: 'Homepage', title: 'Homepage'}], false),
+    createNavigationState('Onboarding', 'Onboard', 'ios-help-buoy', [{key: 'Onboarding', title: 'Onboard'}], true)
   ]));
 
 export default function NavigationReducer(state = initialState, action) {
@@ -73,13 +84,14 @@ export default function NavigationReducer(state = initialState, action) {
 
 // Helper for creating a state object compatible with the
 // RN NavigationExperimental navigator
-function createNavigationState(key, title, icon, routes) {
+function createNavigationState(key, title, icon, routes, showInTabBar) {
   return {
     key,
     title,
     icon,
     index: 0,
-    routes
+    routes,
+    showInTabBar
   };
 }
 

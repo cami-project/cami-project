@@ -36,12 +36,18 @@ const NavigationView = React.createClass({
     return (
       <View style={styles.container}>
         {tabs}
-        <TabBar
-          height={TAB_BAR_HEIGHT}
-          tabs={routes}
-          currentTabIndex={index}
-          switchTab={this.props.switchTab}
-        />
+        {
+          routes[index].showInTabBar
+          ?
+            <TabBar
+              height={TAB_BAR_HEIGHT}
+              tabs={routes}
+              currentTabIndex={index}
+              switchTab={this.props.switchTab}
+            />
+          :
+            null
+        }
       </View>
     );
   }

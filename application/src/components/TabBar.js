@@ -17,13 +17,18 @@ const TabBar = React.createClass({
   },
 
   render() {
-    const buttons = this.props.tabs.map((tab, index) => (
+    var tabIndexes = {};
+    const filteredTabs = this.props.tabs.filter((tab, index) => {
+      tabIndexes[tab.key] = index;
+      return tab.showInTabBar;
+    });
+    const buttons = filteredTabs.map((tab, index) => (
       <TabBarButton
         key={'tab-bar-button-' + tab.title}
         text={tab.title}
         image={tab.image}
-        action={() => this.props.switchTab(index)}
-        isSelected={index === this.props.currentTabIndex}
+        action={() => this.props.switchTab(tabIndexes[tab.key])}
+        isSelected={tabIndexes[tab.key] === this.props.currentTabIndex}
         icon={tab.icon}
       />
     ));
