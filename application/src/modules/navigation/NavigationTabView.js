@@ -40,7 +40,7 @@ const NavigationTabView = React.createClass({
     // elder homepage this happens when notifications change.
 
     // play sound on start to load of new scene
-    tapButtonSound.setVolume(1.0).play();
+    // tapButtonSound.setVolume(1.0).play();
 
     return (
       <Navigation.Card
