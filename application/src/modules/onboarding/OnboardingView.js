@@ -61,6 +61,7 @@ const OnboardingView = React.createClass({
             loop={false}
             showsButtons={true}
             showsPagination={false}
+            removeClippedSubviews={false}
             nextButton={
               <Icon
                 name={icons.right}
