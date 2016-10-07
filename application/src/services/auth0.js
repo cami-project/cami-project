@@ -9,6 +9,7 @@ import {redirectToHomePage} from '../modules/navigation/NavigationState';
 const clientId = env.AUTH0_CLIENT_ID;
 const domain = env.AUTH0_DOMAIN;
 const authenticationEnabled = clientId && domain;
+const notificationsSubscriptionApi = env.NOTIFICATIONS_SUBSCRIPTION_API;
 
 let lock = null;
 if (authenticationEnabled) {
@@ -57,5 +58,9 @@ export function showLogin() {
     // Authentication worked!
     store.dispatch(AuthStateActions.onUserLoginSuccess(profile, token));
     store.dispatch(redirectToHomePage(profile.userMetadata.userType));
+
+    fetch(notificationsSubscriptionApi).then((response) => {
+    }).catch((error) => {
+    });
   });
 }
