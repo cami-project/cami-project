@@ -26,27 +26,6 @@ var tapButtonSound = new Sound('sounds/knuckle.mp3', Sound.MAIN_BUNDLE, (error) 
 });
 
 const LoginView = React.createClass({
-  propTypes: {
-    goToCaregiverPage: PropTypes.func.isRequired,
-    goToElderlyPage: PropTypes.func.isRequired
-  },
-  
-  username: "",
-  password: "",
-
-  didChangeUsername(username) {
-    this.username = username;
-  },
-  didChangePassword(password) {
-    this.password = password;
-  },
-  logIn() {
-    tapButtonSound.setVolume(1.0).play();
-
-    // TODO: integrate login and use the functions goToCaregiverPage or goToElderlyPage accordingly
-    // e.g. now it is always hardcoded to the caregiver's' page
-    this.props.goToCaregiverPage();
-  },
   render() {
     return (
       <View style={variables.container}>
@@ -81,14 +60,12 @@ const LoginView = React.createClass({
               icon="user"
               secureTextEntry={false}
               name="username"
-              onTextChanged={this.didChangeUsername}
               />
             <LoginInput
               placeholder="Password"
               icon="password"
               secureTextEntry={true}
               name="password"
-              onTextChanged={this.didChangePassword}
               />
           </View>
           <TouchableOpacity

@@ -34,13 +34,15 @@ export function navigationCompleted() {
 
 // TODO: find a better way to navigate to the page than hardcoding the indexes from the routes
 const CaregiverPageIndex = 1;
-const ElderlyPageIndex = 4; 
+const ElderlyPageIndex = 4;
 
-export function goToCaregiverPage() {
-  return switchTab(CaregiverPageIndex);
-}
-export function goToElderlyPage() {
-  return switchTab(ElderlyPageIndex);
+export function redirectToHomePage(userType) {
+  switch (userType) {
+      case 'elderly':
+        return switchTab(ElderlyPageIndex);
+      default:
+        return switchTab(CaregiverPageIndex);
+    }
 }
 
 const initialState = fromJS(
