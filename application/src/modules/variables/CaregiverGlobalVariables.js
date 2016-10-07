@@ -9,7 +9,10 @@ const colors = {
     warning: '#D2B52E',
     ok: '#658d51',
     wakeup: '#658d51',
-    alert: '#c23f21'
+    alert: '#c23f21',
+    low: '#658d51',
+    medium: '#658d51',
+    high: '#c23f21'
   },
   gray: {
     darkest: '#212121',

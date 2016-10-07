@@ -64,8 +64,7 @@ async function fetchPageData() {
           message: receivedNotification.message,
           description: receivedNotification.description
         }
-        for (var i = 1; i < notificationList.length; i++) {
-          var notification = notificationList[i];
+        notificationList.forEach((notification) => {
           result.lastEvents.push({
             type: notification.type,
             status: notification.severity,
@@ -73,7 +72,7 @@ async function fetchPageData() {
             title: notification.message,
             message: notification.description
           });
-        }
+        });
         result.hasNotification = true;
       }
       var apiUrl = env.WEIGHT_MEASUREMENTS_LAST_VALUES;
