@@ -37,8 +37,19 @@ class WeightMeasurementResource(ModelResource):
 
         last_weight_measurements = WeightMeasurement.objects.all().order_by('-timestamp')[:20]
         amount = []
-        for measurement in last_weight_measurements:
+        data_list = []
+        
+        for index, measurement in enumerate(last_weight_measurements):
             amount = [measurement.value] + amount
+            data_entry = {}
+            data_entry['timestamp'] = measurement.timestamp
+            data_entry['value'] = measurement.value
+            data_entry['status'] = "ok"
+            if index > 0:
+                prev_measurement = last_weight_measurements[index - 1]
+                if abs(measurement.value - prev_measurement.value) >= 2:
+                    data_entry['status'] = "warning"
+            data_list = [data_entry] + data_list
             
         status = "ok"
         if len(amount) > 0:
@@ -49,7 +60,8 @@ class WeightMeasurementResource(ModelResource):
         jsonResult = {
             "weight": {
                 "status": status,
-                "amount": amount
+                "amount": amount,
+                "data": data_list
             }
         }
         return self.create_response(request, jsonResult)
