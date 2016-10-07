@@ -104,11 +104,16 @@ const StatusEntry = React.createClass({
     dataSet.circleColors = [];
     this.props.data.forEach(item => {
       chartConfig.labels.push(this.formatTimestamp(item.get('timestamp')));
-      dataSet.values.push(formatValue(item.get('status'), item.get('value'), this.props.threshold));
+      
+      var value = formatValue(item.get('status'), item.get('value'), this.props.threshold);
+      if(this.props.type == 'weight') {
+        value = item.get('value');
+      }
+      dataSet.values.push(value);
       dataSet.circleColors.push(this.formatStatus(item.get('status')));
     });
-    const lastValue = this.props.data.get(this.props.data.size - 1).get('value');
-    const lastStatus = this.props.data.get(this.props.data.size - 1).get('status');
+    const lastValue = this.props.data.size > 0 ? this.props.data.get(this.props.data.size - 1).get('value') : 0;
+    const lastStatus = this.props.data.size > 0 ? this.props.data.get(this.props.data.size - 1).get('status') : "ok";
 
     return (
       <View style={styles.container}>

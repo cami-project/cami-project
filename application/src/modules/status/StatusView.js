@@ -18,13 +18,13 @@ import variables from '../variables/CaregiverGlobalVariables';
 const StatusView = React.createClass({
   propTypes: {
     username: PropTypes.string.isRequired,
-    status: PropTypes.instanceOf(Map).isRequired
+    status: PropTypes.instanceOf(Map).isRequired,
+    weight: PropTypes.instanceOf(Map).isRequired
   },
 
   getEntryByType(type) {
-    switch(type) {
+    switch (type) {
       case 'heart': return HeartRateEntry;
-      case 'weight': return WeightEntry;
       case 'steps': return StepsEntry;
       case 'sleep': return SleepEntry;
       case 'blood': return BloodPressureEntry;
@@ -42,6 +42,13 @@ const StatusView = React.createClass({
     return (
       <View style={variables.container}>
         <ScrollView style={styles.statusContainer}>
+          {
+            this.props.weight.get('data').size > 0
+            ?
+              <WeightEntry style={styles.statusEntry} key={100} weight={this.props.weight}/>
+            :
+              null
+          }
           {entries}
         </ScrollView>
       </View>
