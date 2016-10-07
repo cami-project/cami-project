@@ -18,7 +18,13 @@ const initialState = Map({
     visible: false,
     params: fromJS({})
   }),
-  lastEvents: fromJS([])
+  lastEvents: fromJS([]),
+  weight: fromJS({
+    "status": "ok",
+    "amount": [],
+    "data": [],
+    "threshold": 72,
+  })
 });
 
 // Actions
@@ -46,7 +52,9 @@ async function fetchPageData() {
     hasNotification: false,
     weight: {
       "status": "ok",
-      "amount": []
+      "amount": [],
+      "data": [],
+      "threshold": 72,
     },
     lastEvents: []
   };
@@ -118,6 +126,7 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
           .setIn(['actionability', 'params'], Map(fromJS(action.payload.notification)))
           .setIn(['status', 'visible'], true)
           .setIn(['status', 'values'], fromJS(chartValuesJson))
+          .setIn(['weight'], fromJS(action.payload.weight))
           .setIn(['lastEvents'], fromJS(action.payload.lastEvents)),
         Effects.promise(triggerFetchPageData)
       );

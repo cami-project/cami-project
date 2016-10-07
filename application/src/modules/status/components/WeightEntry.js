@@ -5,7 +5,7 @@ import StatusEntry from './StatusEntry';
 
 const WeightEntry = React.createClass({
   propTypes: {
-    statusItem: PropTypes.instanceOf(Map).isRequired
+    weight: PropTypes.instanceOf(Map).isRequired
   },
 
   render() {
@@ -13,8 +13,8 @@ const WeightEntry = React.createClass({
       <StatusEntry
         title="Weight"
         type="weight"
-        data={this.props.statusItem.get('data')}
-        threshold={this.props.statusItem.get('threshold')}
+        data={this.props.weight.get('data')}
+        threshold={this.props.weight.get('threshold')}
         units="kg"
         timeUnits="Day"
         timestampFormat="DD"
