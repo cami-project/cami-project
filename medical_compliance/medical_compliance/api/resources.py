@@ -52,7 +52,10 @@ class WeightMeasurementResource(ModelResource):
             data_list = [data_entry] + data_list
             
         status = "ok"
+        threshold = 80
+        
         if len(amount) > 0:
+            threshold = np.mean(amount)
             darr = np.array(amount)
             if abs(max(darr) - min(darr)) >= 2:
                 status = "warning"
@@ -61,7 +64,8 @@ class WeightMeasurementResource(ModelResource):
             "weight": {
                 "status": status,
                 "amount": amount,
-                "data": data_list
+                "data": data_list,
+                "threshold": threshold
             }
         }
         return self.create_response(request, jsonResult)
