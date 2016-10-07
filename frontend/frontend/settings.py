@@ -81,6 +81,7 @@ WSGI_APPLICATION = 'frontend.wsgi.application'
 RAVEN_CONFIG = {
     # Set the Sentry API key here
     'dsn': 'https://d9bec7e9f54943a281d5271c29932e7c:b57cfbbc5edc456aa2ece299cabbd785@sentry.io/104123',
+    'release': raven.fetch_git_sha(os.path.dirname(__file__) + "/../../")
 }
 
 LOGGING = {
