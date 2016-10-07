@@ -25,7 +25,7 @@ const HomepageView = React.createClass({
   propTypes: {
     username: PropTypes.string.isRequired,
     status: PropTypes.instanceOf(Map).isRequired,
-    events: PropTypes.instanceOf(List).isRequired,
+    lastEvents: PropTypes.instanceOf(List).isRequired,
     actionability: PropTypes.instanceOf(Map).isRequired,
     dispatch: PropTypes.func.isRequired
   },
@@ -97,7 +97,7 @@ const HomepageView = React.createClass({
               {/* TODO */}
               {/* Limit somehow the latest entries count */}
               {/* Maybe show only for today, or only last 5 */}
-              {this.props.events.map((event, index) =>
+              {this.props.lastEvents.map((event, index) =>
                 <JournalEntry
                   key={index}
                   type={event.get('type')}

@@ -7,6 +7,6 @@ export default connect(
     username: state.getIn(['auth', 'currentUser', 'name']),
     status: state.getIn(['homepageCaregiver', 'status']),
     actionability: state.getIn(['homepageCaregiver', 'actionability']),
-    events: state.getIn(['journal', 'events']),
+    lastEvents: state.getIn(['homepageCaregiver', 'lastEvents']),
   })
 )(HomepageView);
