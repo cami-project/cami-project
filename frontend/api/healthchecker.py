@@ -1,7 +1,11 @@
 import MySQLdb
+import pika
+import logging
 
 from django.conf import settings
-import pika
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 class Healthchecker:
     def __init__(self):
@@ -33,12 +37,13 @@ class Healthchecker:
             cursor.execute("SELECT VERSION()")
 
             results = cursor.fetchone()
+
             if results:
                 return True
             else:
                 return False
         except MySQLdb.Error, e:
-            print "ERROR %d IN MYSQL CONNECTION: %s" % (e.args[0], e.args[1])
+            logger.error("ERROR %d IN MYSQL CONNECTION: %s" % (e.args[0], e.args[1]))
         return False
 
     def check_message_queue(self):
@@ -53,6 +58,8 @@ class Healthchecker:
             def close_connection(self, conn, ret):
                 self.ret = ret
                 conn.close()
+                if ret is False:
+                    logger.error("ERROR in RabbitMQ connection: Connection timed out")
 
         helper = Helper()
         
@@ -85,6 +92,7 @@ class Healthchecker:
 
         # Connection error
         except pika.exceptions.AMQPConnectionError, e:
+            logger.error("ERROR in RabbitMQ connection")
             return False
 
         return helper.ret

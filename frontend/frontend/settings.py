@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import raven
 
 from kombu import Exchange, Queue
 
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'raven.contrib.django.raven_compat',
     'corsheaders',
     'tastypie',
     'api'
@@ -75,6 +77,69 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'frontend.wsgi.application'
 
+# Sentry integration
+RAVEN_CONFIG = {
+    # Set the Sentry API key here
+    'dsn': 'https://d9bec7e9f54943a281d5271c29932e7c:b57cfbbc5edc456aa2ece299cabbd785@sentry.io/104123',
+    'release': raven.fetch_git_sha(os.path.dirname(__file__) + "/../../")
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s '
+                      '%(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {
+        'sentry': {
+            'level': 'ERROR', # Set the Sentry logging level here
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'frontend': {
+            'level': 'DEBUG',
+            'handlers': ['sentry', 'console'],
+        },
+        'api': {
+            'level': 'DEBUG',
+            'handlers': ['sentry', 'console'],
+        },
+        'django': {
+            'level': 'DEBUG',
+            'handlers': ['sentry', 'console'],
+        },
+        'django.db.backends': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'celery': {
+            'level': 'ERROR',
+            'handlers': ['sentry', 'console'],
+        }
+    },
+}
+
+SENTRY_AUTO_LOG_STACKS = True
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases

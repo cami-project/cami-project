@@ -14,7 +14,7 @@ from django.utils.timezone import is_naive
 from healthchecker import Healthchecker
 
 # Get an instance of a logger
-logger = logging.getLogger('django')
+logger = logging.getLogger(__name__)
 
 
 class TZAwareDateSerializer(Serializer):
