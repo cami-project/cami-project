@@ -17,7 +17,8 @@ const initialState = Map({
   actionability: Map({
     visible: false,
     params: fromJS({})
-  })
+  }),
+  lastEvents: fromJS([])
 });
 
 // Actions
@@ -39,14 +40,15 @@ export async function requestCaregiverData() {
 }
 
 async function fetchPageData() {
-  var notificationsUrl = env.NOTIFICATIONS_REST_API + "?recipient_type=caregiver&limit=1&offset=0";
+  var notificationsUrl = env.NOTIFICATIONS_REST_API + "?recipient_type=caregiver&limit=10&offset=0";
   notificationsUrl += '&r=' + Math.floor(Math.random() * 10000);
   var result = {
     hasNotification: false,
     weight: {
       "status": "ok",
       "amount": []
-    }
+    },
+    lastEvents: []
   };
   return fetch(notificationsUrl)
     .then((response) => response.json())
@@ -61,6 +63,16 @@ async function fetchPageData() {
           timestamp: parseInt(receivedNotification.timestamp),
           message: receivedNotification.message,
           description: receivedNotification.description
+        }
+        for (var i = 1; i < notificationList.length; i++) {
+          var notification = notificationList[i];
+          result.lastEvents.push({
+            type: notification.type,
+            status: notification.severity,
+            timestamp: parseInt(notification.timestamp),
+            title: notification.message,
+            message: notification.description
+          });
         }
         result.hasNotification = true;
       }
@@ -106,7 +118,8 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
         state.setIn(['actionability', 'visible'], isVisible)
           .setIn(['actionability', 'params'], Map(fromJS(action.payload.notification)))
           .setIn(['status', 'visible'], true)
-          .setIn(['status', 'values'], fromJS(chartValuesJson)),
+          .setIn(['status', 'values'], fromJS(chartValuesJson))
+          .setIn(['lastEvents'], fromJS(action.payload.lastEvents)),
         Effects.promise(triggerFetchPageData)
       );
 
