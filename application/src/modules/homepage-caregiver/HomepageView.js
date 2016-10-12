@@ -42,7 +42,7 @@ const HomepageView = React.createClass({
           <View style={styles.headerContainerInner}>
             <Image style={styles.avatar} source={require('../../../images/old-man.jpg')}/>
             <View style={styles.headerTextContainer}>
-              <Text style={[styles.headerText, {fontWeight: 'bold'}]}>{this.props.username + '\'s'}</Text>
+              <Text style={[styles.headerText, {fontWeight: 'bold'}]}>{'Jim' + '\'s'}</Text>
               <Text style={[styles.headerText, {fontSize: 18}]}>doing fine</Text>
             </View>
           </View>
