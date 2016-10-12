@@ -87,7 +87,7 @@ const ActionabilityWidget = React.createClass({
           </View>
           <View style={{flex: 3, alignItems: 'flex-start', justifyContent: 'center'}}>
             <Text style={[{fontSize: 14}]}>{this.props.message}</Text>
-            <Text style={[{fontSize: 14, marginTop: 10}]}>{this.props.description}</Text>
+            <Text style={[{fontSize: 14, marginTop: 10, paddingRight: 20}]}>{this.props.description}</Text>
           </View>
         </View>
         <View style={{flexDirection: 'row', flex: 1}}>
@@ -96,21 +96,21 @@ const ActionabilityWidget = React.createClass({
             onPress={this.call911}
           >
             <Icon name={icons.plus} size={16} color="white"/>
-            <Text style={[{fontSize: 14, color: "white", fontWeight: 'bold'}]}>Call 911</Text>
+            <Text style={[{fontSize: 14, color: "white", fontWeight: 'bold', paddingTop: 5}]}>Call 911</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{flex: 2, alignItems: 'center', justifyContent: 'center', backgroundColor: variables.colors.status.ok}}
             onPress={this.callElderly}
           >
             <Icon name={icons.phone} size={16} color="white"/>
-            <Text style={[{fontSize: 14, color: "white", fontWeight: 'bold'}]}>Call {this.props.name}</Text>
+            <Text style={[{fontSize: 14, color: "white", fontWeight: 'bold', paddingTop: 5}]}>Call {this.props.name}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: variables.colors.gray.neutral}}
             onPress={this.cancel}
           >
             <Icon name={icons.cancel} size={16} color="white"/>
-            <Text style={[{fontSize: 14, color: "white", fontWeight: 'bold'}]}>Cancel</Text>
+            <Text style={[{fontSize: 14, color: "white", fontWeight: 'bold', paddingTop: 5}]}>Dismiss</Text>
           </TouchableOpacity>
         </View>
       </Animated.View>

@@ -39,11 +39,26 @@ const HomepageView = React.createClass({
 
         <View style={styles.headerContainer}>
           <Image style={styles.headerBackgroundImage} source={require('../../../images/old-man.jpg')}/>
-          <View style={styles.headerContainerInner}>
+          <View
+            style={[
+              styles.headerContainerInner,
+              {
+                backgroundColor: !this.props.actionability.get('visible')
+                  ? Color(variables.colors.status.ok).clearer(.1).rgbaString()
+                  : Color(variables.colors.status.alert).clearer(.1).rgbaString()
+              }
+            ]}
+          >
             <Image style={styles.avatar} source={require('../../../images/old-man.jpg')}/>
             <View style={styles.headerTextContainer}>
-              <Text style={[styles.headerText, {fontWeight: 'bold'}]}>{'Jim' + '\'s'}</Text>
-              <Text style={[styles.headerText, {fontSize: 18}]}>doing fine</Text>
+              <Text style={[styles.headerText, {fontWeight: 'bold'}]}>{'Jim'}</Text>
+              <Text style={[styles.headerText, {fontSize: 18}]}>
+                {
+                  !this.props.actionability.get('visible')
+                    ? 'is doing fine'
+                    : 'needs help'
+                }
+              </Text>
             </View>
           </View>
         </View>
@@ -133,7 +148,6 @@ const styles = StyleSheet.create({
   headerContainerInner: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: Color(variables.colors.status.ok).clearer(.1).rgbaString(),
     width: variables.dimensions.width,
     paddingTop: 20
   },
