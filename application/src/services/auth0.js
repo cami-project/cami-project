@@ -4,6 +4,9 @@ import * as AuthStateActions from '../modules/auth/AuthState';
 import store from '../redux/store';
 const {Platform} = require('react-native');
 
+import Color from 'color';
+import variables from '../modules/variables/ElderGlobalVariables';
+
 import {redirectToHomePage} from '../modules/navigation/NavigationState';
 
 const clientId = env.AUTH0_CLIENT_ID;
@@ -34,17 +37,18 @@ export function showLogin() {
 
   if (Platform.OS === 'ios') {
     lock.customizeTheme({
-      A0ThemePrimaryButtonNormalColor: '#39babd',
-      A0ThemePrimaryButtonHighlightedColor: '#08AFB3',
-      A0ThemeSecondaryButtonTextColor: '#ffffff',
-      A0ThemeTextFieldTextColor: '#ffffff',
-      A0ThemeTextFieldPlaceholderTextColor: '#ffffff',
-      A0ThemeTextFieldIconColor: '#ffffff',
-      A0ThemeTitleTextColor: '#ffffff',
-      A0ThemeDescriptionTextColor: '#ffffff',
-      A0ThemeSeparatorTextColor: '#ffffff',
-      A0ThemeScreenBackgroundColor: '#39babd',
-      A0ThemeIconImageName: 'pepperoni',
+      A0ThemePrimaryButtonNormalColor: variables.colors.status.low,
+      A0ThemePrimaryButtonHighlightedColor: Color(variables.colors.status.low).darken(.25).hexString(),
+      A0ThemeSecondaryButtonTextColor: variables.colors.gray.dark,
+      A0ThemeTextFieldTextColor: variables.colors.gray.dark,
+      A0ThemeTextFieldPlaceholderTextColor: variables.colors.gray.neutral,
+      A0ThemeTextFieldIconColor: variables.colors.status.low,
+      A0ThemeTitleTextColor: variables.colors.gray.dark,
+      A0ThemeDescriptionTextColor: variables.colors.gray.dark,
+      A0ThemeSeparatorTextColor: variables.colors.gray.light,
+      A0ThemeScreenBackgroundColor: variables.colors.gray.lightest,
+      A0ThemeIconBackgroundColor: variables.colors.gray.lightest,
+      A0ThemeIconImageName: '',
       A0ThemeCredentialBoxBorderColor: '' //transparent
     });
   }
