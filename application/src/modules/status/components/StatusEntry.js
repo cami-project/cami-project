@@ -28,9 +28,9 @@ const config = {
     highlightPerTap: false,
     highlightValues: false,
     drawHorizontalHighlightIndicator: false,
-    drawVerticalHighlightIndicator: false,
+    drawVerticalHighlightIndicator: false
   }],
-  backgroundColor: 'blue',
+  backgroundColor: '#ffffff',
   // minOffset: 20,
   scaleYEnabled: false,
   legend: {
@@ -104,7 +104,7 @@ const StatusEntry = React.createClass({
     dataSet.circleColors = [];
     this.props.data.forEach(item => {
       chartConfig.labels.push(this.formatTimestamp(item.get('timestamp')));
-      
+
       var value = formatValue(item.get('status'), item.get('value'), this.props.threshold);
       if(this.props.type == 'weight') {
         value = item.get('value');
