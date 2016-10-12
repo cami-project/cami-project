@@ -74,6 +74,7 @@ const HomepageView = React.createClass({
                 icon={icons.heart}
                 unit="bpm"
                 status="ok"
+                decimals={0}
               />
 
               <StatusChart
@@ -82,6 +83,7 @@ const HomepageView = React.createClass({
                 icon={icons.weight}
                 unit="kg"
                 status={this.props.status.get('values').get('weight').get('status')}
+                decimals={2}
               />
             </View>
           :
