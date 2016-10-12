@@ -11,7 +11,7 @@ const colors = {
     wakeup: '#658d51',
     alert: '#c23f21',
     low: '#658d51',
-    medium: '#658d51',
+    medium: '#D2B52E',
     high: '#c23f21'
   },
   gray: {

@@ -59,7 +59,8 @@ const StatusChart = React.createClass({
     data: PropTypes.instanceOf(List).isRequired,
     unit: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired
+    status: PropTypes.string.isRequired,
+    decimals: PropTypes.number
   },
 
   render() {
@@ -75,7 +76,11 @@ const StatusChart = React.createClass({
           </View>
           <View style={chartStyles.infoContainer}>
             <Text style={chartStyles.value}>
-              {currentValue} <Text style={chartStyles.unit}>{this.props.unit}</Text>
+              {
+                this.props.decimals > 0
+                  ? currentValue.toFixed(this.props.decimals)
+                  : currentValue
+              } <Text style={chartStyles.unit}>{this.props.unit}</Text>
             </Text>
             <Text style={chartStyles.description}>{this.props.text}</Text>
           </View>

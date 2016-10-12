@@ -39,11 +39,26 @@ const HomepageView = React.createClass({
 
         <View style={styles.headerContainer}>
           <Image style={styles.headerBackgroundImage} source={require('../../../images/old-man.jpg')}/>
-          <View style={styles.headerContainerInner}>
+          <View
+            style={[
+              styles.headerContainerInner,
+              {
+                backgroundColor: !this.props.actionability.get('visible')
+                  ? Color(variables.colors.status.ok).clearer(.1).rgbaString()
+                  : Color(variables.colors.status.alert).clearer(.1).rgbaString()
+              }
+            ]}
+          >
             <Image style={styles.avatar} source={require('../../../images/old-man.jpg')}/>
             <View style={styles.headerTextContainer}>
-              <Text style={[styles.headerText, {fontWeight: 'bold'}]}>{this.props.username + '\'s'}</Text>
-              <Text style={[styles.headerText, {fontSize: 18}]}>doing fine</Text>
+              <Text style={[styles.headerText, {fontWeight: 'bold'}]}>{'Jim'}</Text>
+              <Text style={[styles.headerText, {fontSize: 18}]}>
+                {
+                  !this.props.actionability.get('visible')
+                    ? 'is doing fine'
+                    : 'needs help'
+                }
+              </Text>
             </View>
           </View>
         </View>
@@ -74,6 +89,7 @@ const HomepageView = React.createClass({
                 icon={icons.heart}
                 unit="bpm"
                 status="ok"
+                decimals={0}
               />
 
               <StatusChart
@@ -82,6 +98,7 @@ const HomepageView = React.createClass({
                 icon={icons.weight}
                 unit="kg"
                 status={this.props.status.get('values').get('weight').get('status')}
+                decimals={2}
               />
             </View>
           :
@@ -131,7 +148,6 @@ const styles = StyleSheet.create({
   headerContainerInner: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: Color(variables.colors.status.ok).clearer(.1).rgbaString(),
     width: variables.dimensions.width,
     paddingTop: 20
   },

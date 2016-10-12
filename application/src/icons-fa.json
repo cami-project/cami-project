@@ -6,6 +6,8 @@
   "blood": "tint",
   "steps": "male",
   "warning": "exclamation",
+  "medium": "exclamation",
+  "low": "check",
   "ok": "check",
   "wakeup": "check",
   "plus": "plus",
