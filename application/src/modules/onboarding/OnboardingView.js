@@ -6,7 +6,8 @@ import {
   View,
   Image,
   TouchableOpacity,
-  Alert
+  Alert,
+  Linking
 } from 'react-native';
 
 import Swiper from 'react-native-swiper';
@@ -42,6 +43,8 @@ const OnboardingView = React.createClass({
   },
   skipPressed: function () {
     if (this.state.lastSlide) {
+      var url = 'http://www.camiproject.eu/';
+      Linking.openURL(url).catch(err => console.error('An error occurred', err));
       return;
     }
     Alert.alert(
