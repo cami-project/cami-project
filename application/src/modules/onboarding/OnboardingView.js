@@ -1,11 +1,13 @@
-import {Map} from 'immutable'
-import React, {PropTypes} from 'react';
+import { Map } from 'immutable'
+import React, { PropTypes } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert,
+  Linking
 } from 'react-native';
 
 import Swiper from 'react-native-swiper';
@@ -14,6 +16,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import icons from 'Cami/src/icons-fa';
 import variables from 'Cami/src/modules/variables/ElderGlobalVariables';
 import variablesCaregiver from 'Cami/src/modules/variables/CaregiverGlobalVariables';
+import { redirectToCaregiverPage } from '../navigation/NavigationState';
 
 var Color = require("color");
 
@@ -26,26 +29,44 @@ var tapButtonSound = new Sound('sounds/just-like-that.mp3', Sound.MAIN_BUNDLE, (
 
 const OnboardingView = React.createClass({
   getInitialState() {
-      return {
-        lastSlide: false
-      };
+    return {
+      lastSlide: false
+    };
   },
 
   handleScrollEnd: function (e, state, context) {
     if (context.state.index == (context.state.total - 1)) {
-      this.setState({lastSlide: true});
+      this.setState({ lastSlide: true });
     } else {
-      this.setState({lastSlide: false});
+      this.setState({ lastSlide: false });
     }
+  },
+  skipPressed: function () {
+    if (this.state.lastSlide) {
+      var url = 'http://www.camiproject.eu/';
+      Linking.openURL(url).catch(err => console.error('An error occurred', err));
+      return;
+    }
+    Alert.alert(
+      'Skip',
+      'Are you sure you want to skip ?',
+      [
+        { text: 'Cancel', onPress: () => { } },
+        { text: 'OK', onPress: () => this.props.dispatch(redirectToCaregiverPage()) },
+      ]
+    );
+  },
+  openCaregiverPage: function () {
+    this.props.dispatch(redirectToCaregiverPage());
   },
 
   render() {
     return (
-      <View style={[variables.container, {flex: 1}]}>
+      <View style={[variables.container, { flex: 1 }]}>
         <Image
-          style={[styles.background, {zIndex: 1, resizeMode: 'cover'}]}
+          style={[styles.background, { zIndex: 1, resizeMode: 'cover' }]}
           source={require('../../../images/elder-bg-default.jpg')}
-        />
+          />
         <View
           style={[
             styles.background,
@@ -54,7 +75,7 @@ const OnboardingView = React.createClass({
               backgroundColor: Color(variables.colors.status.low).clearer(.25).rgbaString()
             }
           ]}
-        />
+          />
         <View style={styles.carouselWrapper}>
           <Swiper
             style={styles.carousel}
@@ -67,38 +88,38 @@ const OnboardingView = React.createClass({
                 name={icons.right}
                 size={20}
                 color={Color('white').clearer(.5).rgbaString()}
-              />
+                />
             }
             prevButton={
               <Icon
                 name={icons.left}
                 size={20}
                 color={Color('white').clearer(.5).rgbaString()}
-              />
+                />
             }
-            buttonWrapperStyle={{marginTop: variables.dimensions.height / 6}}
+            buttonWrapperStyle={{ marginTop: variables.dimensions.height / 6 }}
             onMomentumScrollEnd={this.handleScrollEnd}
-          >
+            >
             <View style={[styles.carouselSlide, styles.carouselSlide1]}>
               <View style={styles.mainContainer}>
                 <Icon
-                  style={{marginBottom: 30}}
+                  style={{ marginBottom: 30 }}
                   name={icons.heart_solid}
                   size={80}
                   color={Color('white').clearer(.25).rgbaString()}
-                />
+                  />
                 <Text style={styles.greeting}>Welcome</Text>
                 <Text style={styles.copy}>Thank you for chosing CAMI to help you care for your loved one! Before you get started, here are a few things that will help you out.</Text>
               </View>
               <View style={styles.footerContainer}>
-                <View style={[styles.line, styles.lineRight, {backgroundColor: 'white'}]}></View>
-                <View style={[styles.statusIconContainer, {backgroundColor: 'white'}]}>
+                <View style={[styles.line, styles.lineRight, { backgroundColor: 'white' }]}></View>
+                <View style={[styles.statusIconContainer, { backgroundColor: 'white' }]}>
                   <Icon
-                    style={[styles.statusIcon, {paddingLeft: 2}]}
+                    style={[styles.statusIcon, { paddingLeft: 2 }]}
                     name={icons.right}
                     size={16}
                     color={variablesCaregiver.colors.status.ok}
-                  />
+                    />
                 </View>
               </View>
             </View>
@@ -114,17 +135,17 @@ const OnboardingView = React.createClass({
                     height: 300,
                   }}
                   source={require('../../../images/onboarding-slide-2.png')}
-                />
+                  />
               </View>
               <View style={styles.footerContainer}>
-                <View style={[styles.line, styles.lineFull, {backgroundColor: variablesCaregiver.colors.status.ok}]}></View>
-                <View style={[styles.statusIconContainer, {backgroundColor: variablesCaregiver.colors.status.ok}]}>
+                <View style={[styles.line, styles.lineFull, { backgroundColor: variablesCaregiver.colors.status.ok }]}></View>
+                <View style={[styles.statusIconContainer, { backgroundColor: variablesCaregiver.colors.status.ok }]}>
                   <Icon
                     style={styles.statusIcon}
                     name={icons.ok}
                     size={16}
                     color="white"
-                  />
+                    />
                 </View>
               </View>
             </View>
@@ -140,17 +161,17 @@ const OnboardingView = React.createClass({
                     height: 300,
                   }}
                   source={require('../../../images/onboarding-slide-3.png')}
-                />
+                  />
               </View>
               <View style={styles.footerContainer}>
-                <View style={[styles.line, styles.lineFull, {backgroundColor: variablesCaregiver.colors.status.warning}]}></View>
-                <View style={[styles.statusIconContainer, {backgroundColor: variablesCaregiver.colors.status.warning}]}>
+                <View style={[styles.line, styles.lineFull, { backgroundColor: variablesCaregiver.colors.status.warning }]}></View>
+                <View style={[styles.statusIconContainer, { backgroundColor: variablesCaregiver.colors.status.warning }]}>
                   <Icon
                     style={styles.statusIcon}
                     name={icons.warning}
                     size={16}
                     color="white"
-                  />
+                    />
                 </View>
               </View>
             </View>
@@ -166,17 +187,17 @@ const OnboardingView = React.createClass({
                     height: 300,
                   }}
                   source={require('../../../images/onboarding-slide-4.png')}
-                />
+                  />
               </View>
               <View style={styles.footerContainer}>
-                <View style={[styles.line, styles.lineFull, {backgroundColor: variablesCaregiver.colors.status.alert}]}></View>
-                <View style={[styles.statusIconContainer, {backgroundColor: variablesCaregiver.colors.status.alert}]}>
+                <View style={[styles.line, styles.lineFull, { backgroundColor: variablesCaregiver.colors.status.alert }]}></View>
+                <View style={[styles.statusIconContainer, { backgroundColor: variablesCaregiver.colors.status.alert }]}>
                   <Icon
                     style={styles.statusIcon}
                     name={icons.warning}
                     size={16}
                     color="white"
-                  />
+                    />
                 </View>
               </View>
             </View>
@@ -185,31 +206,31 @@ const OnboardingView = React.createClass({
               <View style={styles.mainContainer}>
                 <Text style={styles.greeting}>Get Started!</Text>
                 <Text style={styles.copy}>Connect CAMI with the devices that monitor the person you care for. Together we'll make sure they stay well and healthy!</Text>
-                <View style={{flexDirection: 'row', padding: 40}}>
+                <View style={{ flexDirection: 'row', padding: 40 }}>
                   <Icon
-                    style={{padding: 10}}
+                    style={{ padding: 10 }}
                     name={icons.weight}
                     size={28}
                     color={Color('white').clearer(.5).rgbaString()}
-                  />
+                    />
                   <Icon
-                    style={{padding: 10}}
+                    style={{ padding: 10 }}
                     name={icons.heart}
                     size={28}
                     color={Color('white').clearer(.5).rgbaString()}
-                  />
+                    />
                   <Icon
-                    style={{padding: 10}}
+                    style={{ padding: 10 }}
                     name={icons.camera}
                     size={28}
                     color={Color('white').clearer(.5).rgbaString()}
-                  />
+                    />
                   <Icon
-                    style={{padding: 10}}
+                    style={{ padding: 10 }}
                     name={icons.tv}
                     size={28}
                     color={Color('white').clearer(.5).rgbaString()}
-                  />
+                    />
                 </View>
                 <TouchableOpacity
                   style={[
@@ -219,26 +240,26 @@ const OnboardingView = React.createClass({
                       shadowColor: Color(variables.colors.status.low).darken(.8).hexString()
                     }
                   ]}
-                  onPress={() => tapButtonSound.setVolume(1.0).play()}
-                >
+                  onPress={() => tapButtonSound.setVolume(1.0).play() && this.openCaregiverPage()}
+                  >
                   <Icon
-                    style={{paddingBottom: 4, marginTop: -8}}
+                    style={{ paddingBottom: 4, marginTop: -8 }}
                     name={icons.smartphone}
                     size={40}
                     color={variables.colors.status.low}
-                  />
+                    />
                   <Text style={styles.buttonText}>Let's Go!</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.footerContainer}>
-                <View style={[styles.line, styles.lineLeft, {backgroundColor: 'white'}]}></View>
-                <View style={[styles.statusIconContainer, {backgroundColor: 'white'}]}>
+                <View style={[styles.line, styles.lineLeft, { backgroundColor: 'white' }]}></View>
+                <View style={[styles.statusIconContainer, { backgroundColor: 'white' }]}>
                   <Icon
                     style={styles.statusIcon}
                     name={icons.ok}
                     size={16}
                     color={variablesCaregiver.colors.status.ok}
-                  />
+                    />
                 </View>
               </View>
             </View>
@@ -246,8 +267,8 @@ const OnboardingView = React.createClass({
           <View style={styles.skipContainer}>
             <TouchableOpacity
               style={styles.skipButton}
-              onPress={() => tapButtonSound.setVolume(1.0).play()}
-            >
+              onPress={() => tapButtonSound.setVolume(1.0).play() && this.skipPressed()}
+              >
               <Text style={styles.skipText}>{!this.state.lastSlide ? 'SKIP' : 'Need help?'}</Text>
             </TouchableOpacity>
           </View>
@@ -376,23 +397,23 @@ const styles = StyleSheet.create({
   },
   button: {
     ...buttonCircle,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowRadius: 40,
-    shadowOffset: {width: 0, height: 0},
-    shadowOpacity: 0.5,
-    backgroundColor: 'white',
-    marginTop: 20
+  alignSelf: 'center',
+  justifyContent: 'center',
+  alignItems: 'center',
+  shadowRadius: 40,
+  shadowOffset: { width: 0, height: 0 },
+  shadowOpacity: 0.5,
+  backgroundColor: 'white',
+  marginTop: 20
   },
-  buttonText: {
-    backgroundColor: 'transparent',
+buttonText: {
+  backgroundColor: 'transparent',
     textAlign: 'center',
-    alignSelf: 'center',
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: Color(variables.colors.status.low).clearer(.05).rgbaString()
-  }
+      alignSelf: 'center',
+        fontSize: 16,
+          fontWeight: 'bold',
+            color: Color(variables.colors.status.low).clearer(.05).rgbaString()
+}
 });
 
 export default OnboardingView;

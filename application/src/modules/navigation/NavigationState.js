@@ -35,14 +35,16 @@ export function navigationCompleted() {
 // TODO: find a better way to navigate to the page than hardcoding the indexes from the routes
 const CaregiverPageIndex = 1;
 const ElderlyPageIndex = 4;
+const OnboardingPageIndex = 5;
 
-export function redirectToHomePage(userType) {
-  switch (userType) {
-      case 'elderly':
-        return switchTab(ElderlyPageIndex);
-      default:
-        return switchTab(CaregiverPageIndex);
-    }
+export function redirectToCaregiverPage() {
+  return switchTab(CaregiverPageIndex);
+}
+export function redirectToOnboardingPage() {
+  return switchTab(OnboardingPageIndex);
+}
+export function redirectToElderlyPage() {
+  return switchTab(ElderlyPageIndex);
 }
 
 const initialState = fromJS(
@@ -52,7 +54,7 @@ const initialState = fromJS(
     createNavigationState('Status', 'Status', 'ios-pulse', [{key: 'Status', title: 'Status'}], true),
     createNavigationState('Journal', 'Journal', 'ios-paper', [{key: 'Journal', title: 'Journal'}], true),
     createNavigationState('HomepageTab', 'Settings', 'ios-cog', [{key: 'Homepage', title: 'Homepage'}], false),
-    createNavigationState('Onboarding', 'Onboard', 'ios-help-buoy', [{key: 'Onboarding', title: 'Onboard'}], true)
+    createNavigationState('Onboarding', 'Onboard', 'ios-help-buoy', [{key: 'Onboarding', title: 'Onboard'}], false)
   ]));
 
 export default function NavigationReducer(state = initialState, action) {
