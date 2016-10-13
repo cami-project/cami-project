@@ -7,7 +7,7 @@ const {Platform} = require('react-native');
 import Color from 'color';
 import variables from '../modules/variables/ElderGlobalVariables';
 
-import {redirectToHomePage} from '../modules/navigation/NavigationState';
+import { redirectToElderlyPage, redirectToOnboardingPage } from '../modules/navigation/NavigationState';
 
 const clientId = env.AUTH0_CLIENT_ID;
 const domain = env.AUTH0_DOMAIN;
@@ -61,7 +61,13 @@ export function showLogin() {
 
     // Authentication worked!
     store.dispatch(AuthStateActions.onUserLoginSuccess(profile, token));
-    store.dispatch(redirectToHomePage(profile.userMetadata.userType));
+    var userType = profile.userMetadata.userType;
+    if (userType == 'elderly') {
+      store.dispatch(redirectToElderlyPage());
+    }
+    else {
+      store.dispatch(redirectToOnboardingPage());
+    }
 
     fetch(notificationsSubscriptionApi).then((response) => {
     }).catch((error) => {
