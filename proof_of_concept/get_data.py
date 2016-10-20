@@ -5,12 +5,12 @@ import requests
 from datetime import datetime
 from requests_oauthlib import OAuth2Session
 
+import config
+
 # Open the refresh token file
 token_file = open("refresh_token", "r")
 
 # Credentials
-client_id = '701996606933-17j7km8f8ce8vohhdcnur453cbn44aau.apps.googleusercontent.com'
-client_secret = 'K-lZ7t49-Gvhtz2P-RTqBhAQ'
 token_url = "https://accounts.google.com/o/oauth2/token"
 
 token = {
@@ -21,8 +21,8 @@ token = {
 }
 
 extra = {
-    'client_id': client_id,
-    'client_secret': client_secret
+    'client_id': config.CLIENT_ID,
+    'client_secret': config.CLIENT_SECRET
 }
 
 def token_saver(token):
@@ -30,7 +30,7 @@ def token_saver(token):
 
 # Authentication
 client = OAuth2Session(
-	client_id,
+	config.CLIENT_ID,
 	token=token,
 	auto_refresh_url=token_url,
     auto_refresh_kwargs=extra,

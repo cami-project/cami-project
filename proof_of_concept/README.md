@@ -7,12 +7,7 @@ How to run the script
  python get_refresh_token.py
  ```
 2. Ctrl + left click on the link you get from the script
-3. Login with the test account
-
-```
-email: mcvx07@gmail.com
-pass: testgooglefit
-```
+3. Login with the test account you'll find on drive
 4. You'll be prompted to grant some permissions, do it
 5. You'll be redirected to http://google.ro, but the redirect url contains useful information; copy the url from the address bar and paste it in the script's console
 6. The script will write the refresh_token in a file
