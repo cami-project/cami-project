@@ -1,6 +1,6 @@
 How to run the script
 =====================
-
+### Step 0 - Download ```config.py``` from CAMI folder from VS Google Drive and put it in the same folder with the scripts
 ### Step 1 - Go to login page to authorize our application and get a refresh token
 1. Run get_refresh_token.py
  ```
