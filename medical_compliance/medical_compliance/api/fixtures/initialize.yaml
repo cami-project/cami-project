@@ -34,3 +34,33 @@
     timestamp: 1474965274, 
     timezone: Europe/Bucharest,
     value: 78}
+- model: api.heartratemeasurement
+  pk: 1
+  fields: {user_id: 11262861, input_source: google_api, measurement_unit: bpm,
+    timestamp: 1474965274, 
+    timezone: Europe/Bucharest,
+    value: 66}
+- model: api.heartratemeasurement
+  pk: 2
+  fields: {user_id: 11262861, input_source: google_api, measurement_unit: bpm,
+    timestamp: 1474975274, 
+    timezone: Europe/Bucharest,
+    value: 115}
+- model: api.heartratemeasurement
+  pk: 3
+  fields: {user_id: 11262861, input_source: google_api, measurement_unit: bpm,
+    timestamp: 1474985274, 
+    timezone: Europe/Bucharest,
+    value: 75}
+- model: api.heartratemeasurement
+  pk: 4
+  fields: {user_id: 11262861, input_source: google_api, measurement_unit: bpm,
+    timestamp: 1474995274, 
+    timezone: Europe/Bucharest,
+    value: 69}
+- model: api.heartratemeasurement
+  pk: 5
+  fields: {user_id: 11262861, input_source: google_api, measurement_unit: bpm,
+    timestamp: 1474105274, 
+    timezone: Europe/Bucharest,
+    value: 72}
