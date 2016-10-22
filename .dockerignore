@@ -75,3 +75,7 @@ settings_local.py
 
 # Don't copy the client application
 application
+
+# Celery beat files
+medical_compliance/celerybeat-schedule
+medical_compliance/celerybeat.pid

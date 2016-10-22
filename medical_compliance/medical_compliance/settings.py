@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 import raven
 
+from datetime import timedelta
 from kombu import Exchange, Queue
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -239,6 +240,14 @@ WITHINGS_OAUTH_V1_TOKEN_SECRET = "cf31bc8e405d96b975b8014d93c722830bd55f44b437f2
 GOOGLE_FIT_CLIENT_ID = '701996606933-17j7km8f8ce8vohhdcnur453cbn44aau.apps.googleusercontent.com'
 GOOGLE_FIT_CLIENT_SECRET = 'K-lZ7t49-Gvhtz2P-RTqBhAQ'
 GOOGLE_FIT_REFRESH_TOKEN = '1/bcaHAkmLUs6Is5pTyVhqtjw0vYIqbZcWkuTnQWNf87c'
+
+# Google Fit Fetch Heart Rate Scheduled Task
+CELERYBEAT_SCHEDULE = {
+    'fetch_heart_rate_data': {
+        'task': 'medical_compliance_measurements.fetch_heart_rate_measurement',
+        'schedule': timedelta(minutes=5),
+    }
+}
 
 # Celery settings
 BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
