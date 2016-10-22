@@ -31,4 +31,5 @@ urlpatterns = [
     url(r'^subscribe_notifications/', views.subscribe_notifications, name="subscribe_notifications"),
     url(r'^unsubscribe_notifications/', views.unsubscribe_notifications, name="unsubscribe_notifications"),
     url(r'^notify_measurements/$', views.notify_measurements, name="notify_measurements"),
+    url(r'^test/$', views.test_heart_rate_fetch, name="test_heart_rate_fetch"),
 ]

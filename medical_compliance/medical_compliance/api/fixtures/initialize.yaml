@@ -45,7 +45,7 @@
   fields: {user_id: 11262861, input_source: google_api, measurement_unit: bpm,
     timestamp: 1474975274, 
     timezone: Europe/Bucharest,
-    value: 115}
+    value: 0}
 - model: api.heartratemeasurement
   pk: 3
   fields: {user_id: 11262861, input_source: google_api, measurement_unit: bpm,
