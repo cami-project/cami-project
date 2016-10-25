@@ -42,6 +42,16 @@ cami-medical-compliance-message-worker:
     io.rancher.container.pull_image: always
   tty: true
   stdin_open: true
+cami-medical-compliance-task-scheduler:
+  image: vitaminsoftware/cami-project:medical-compliance
+  links:
+    - 'cami-store'
+    - 'cami-rabbitmq'
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-task-scheduler-entrypoint.sh
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  stdin_open: true
 cami-frontend-migrate:
   image: vitaminsoftware/cami-project:frontend
   links:

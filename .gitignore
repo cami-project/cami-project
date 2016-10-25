@@ -78,3 +78,7 @@ application/images/Thumbs.db
 
 # git
 *.orig
+
+# Celery beat files
+medical_compliance/celerybeat-schedule
+medical_compliance/celerybeat.pid

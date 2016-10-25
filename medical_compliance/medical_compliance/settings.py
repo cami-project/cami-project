@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 import raven
 
+from datetime import timedelta
 from kombu import Exchange, Queue
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -235,6 +236,19 @@ WITHINGS_CONSUMER_SECRET = "2e75dfb7f1088f398b4cfc5ebed6d5909c48918ee637417e3b0d
 WITHINGS_OAUTH_V1_TOKEN = "59dd58ccbd19bfbd8b3522ce50d31c4cb6e530742d22234f4cb4bee11673084"
 WITHINGS_OAUTH_V1_TOKEN_SECRET = "cf31bc8e405d96b975b8014d93c722830bd55f44b437f27c7e6d5964b3"
 
+# Google Fit API credentials
+GOOGLE_FIT_CLIENT_ID = '701996606933-17j7km8f8ce8vohhdcnur453cbn44aau.apps.googleusercontent.com'
+GOOGLE_FIT_CLIENT_SECRET = 'K-lZ7t49-Gvhtz2P-RTqBhAQ'
+GOOGLE_FIT_REFRESH_TOKEN = '1/bcaHAkmLUs6Is5pTyVhqtjw0vYIqbZcWkuTnQWNf87c'
+
+# Google Fit Fetch Heart Rate Scheduled Task
+CELERYBEAT_SCHEDULE = {
+    'fetch_heart_rate_data': {
+        'task': 'medical_compliance_measurements.fetch_heart_rate_measurement',
+        'schedule': timedelta(minutes=5),
+    }
+}
+
 # Celery settings
 BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
 
@@ -243,6 +257,7 @@ CELERY_QUEUES = (
     Queue('withings_measurements', Exchange('withings_measurements'), routing_key='withings_measurements'),
     Queue('medical_compliance_measurements', Exchange('medical_compliance_measurements'), routing_key='medical_compliance_measurements'),
     Queue('medical_compliance_weight_analyzers', Exchange('medical_compliance_weight_analyzers'), routing_key='medical_compliance_weight_analyzers'),
+    Queue('medical_compliance_heart_rate_analyzers', Exchange('medical_compliance_heart_rate_analyzers'), routing_key='medical_compliance_heart_rate_analyzers'),
 )
 
 try:

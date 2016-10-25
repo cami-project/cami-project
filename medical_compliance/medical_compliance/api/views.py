@@ -1,15 +1,19 @@
 # Create your views here.
-from django.shortcuts import render
-
-from django.http import HttpResponse, HttpRequest
-from django.conf import settings #noqa
-from django.views.decorators.csrf import csrf_exempt
-from withings import WithingsApi, WithingsCredentials
-from withings_tasks import save_measurement
 
 import json, logging, pprint
 
+from django.shortcuts import render
+from django.http import HttpResponse, HttpRequest
+from django.conf import settings #noqa
+from django.views.decorators.csrf import csrf_exempt
+
+from withings import WithingsApi, WithingsCredentials
+from withings_tasks import save_measurement
+from tasks import fetch_heart_rate_measurement
+
+
 logger = logging.getLogger("medical_compliance.measurement_callback")
+
 
 def get_full_callback_url(request):
     return request.build_absolute_uri("/notify_measurements/")
@@ -33,6 +37,9 @@ def unsubscribe_notifications(request):
     client = WithingsApi(credentials)
     response_data = client.unsubscribe(get_full_callback_url(request), appli=1)
     return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+def test_heart_rate_fetch(request):
+    return HttpResponse(fetch_heart_rate_measurement(), content_type="text/html")
 
 @csrf_exempt
 def notify_measurements(request):
