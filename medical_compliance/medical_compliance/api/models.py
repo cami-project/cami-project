@@ -94,3 +94,28 @@ class WeightMeasurement(models.Model):
             return last_weight_measurements
         except ObjectDoesNotExist:
             return []
+
+
+class HeartRateMeasurement(models.Model):
+    INPUT_SOURCES = (
+        ('google_fit', 'google_fit'),
+    )
+    MEASUREMENT_UNITS = (
+        ('bpm', 'bpm'),
+    )
+
+    user_id = models.BigIntegerField(name='user_id')
+    input_source = models.CharField(max_length=20, choices=INPUT_SOURCES)
+    measurement_unit = models.CharField(max_length=3, choices=MEASUREMENT_UNITS)
+    timestamp = models.BigIntegerField()
+    timezone = models.CharField(max_length=64)
+    value = models.FloatField()
+
+    @staticmethod
+    def get_previous_hr_measures(reference_id, hrm_count):
+        try:
+            retrieved_measurement = HeartRateMeasurement.objects.get(id=reference_id)
+            last_hr_measurements = HeartRateMeasurement.objects.filter(timestamp__lte=retrieved_measurement.timestamp).order_by('-timestamp')[:hrm_count]
+            return last_hr_measurements
+        except ObjectDoesNotExist:
+            return []
