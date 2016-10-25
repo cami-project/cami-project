@@ -46,7 +46,7 @@ def fetch_weight_measurement(user_id, input_source, measurement_unit, timestamp,
 @app.task(name='medical_compliance_measurements.fetch_heart_rate_measurement')
 def fetch_heart_rate_measurement():
     if HeartRateMeasurement.objects.count() > 0:
-        last_meas = HeartRateMeasurement.objects.all().order_by('-timestamp')[0]
+        last_measurement = HeartRateMeasurement.objects.all().order_by('-timestamp')[0]
         time_from = str(last_meas.timestamp + 1) + '000000000'
     else:
         time_from = str(0)
@@ -74,6 +74,6 @@ def fetch_heart_rate_measurement():
         )
         heart_rate_measurement.save()
 
-    analyze_heart_rates.delay(last_meas)
+    analyze_heart_rates.delay(last_measurement)
 
     return json.dumps(measurements, indent=4, sort_keys=True)
