@@ -4,6 +4,7 @@ How to run the scripts
 ### Step 1 - Run ```pip install -r requirements.txt``` to install the required python libraries
 ### Step 2 - Go to login page to authorize our application and get a refresh token
 1. Run get_refresh_token.py
+
  ```
  python get_refresh_token.py
  ```
