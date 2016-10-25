@@ -86,11 +86,7 @@ def fetch_heart_rate_measurement():
         )
         heart_rate_measurement.save()
 
-    if len(measurements) > 0:
-        analyze_heart_rates.delay(
-            last_cinch_measurement 
-                if time_from_cinch < time_from_test
-                else last_test_measurement
-        )
+    analyze_heart_rates.delay(last_cinch_measurement, 'cinch')
+    analyze_heart_rates.delay(last_test_measurement, 'test')
 
     return json.dumps(measurements, indent=4, sort_keys=True)
