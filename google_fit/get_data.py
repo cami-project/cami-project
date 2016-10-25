@@ -19,18 +19,18 @@ date_from = "01/01/2016"
 date_to = "30/12/2016"
 
 # Convert dates to timestamps
-date_from_converted = str(int(
-		time.mktime(datetime.strptime(date_from, "%d/%m/%Y").timetuple())
-	)) + "000000000"
-date_to_converted = str(int(
-		time.mktime(datetime.strptime(date_to, "%d/%m/%Y").timetuple())
-	)) + "000000000"
+date_from_converted = int(
+    time.mktime(datetime.strptime(date_from, "%d/%m/%Y").timetuple())
+)
+date_to_converted = int(
+    time.mktime(datetime.strptime(date_to, "%d/%m/%Y").timetuple())
+)
 
 # Get data from Cinch only
 heart_rate_data = google_fit.get_data(
-	"raw:com.google.heart_rate.bpm:com.ryansteckler.perfectcinch:", 
-	date_from_converted,
-	date_to_converted
+    "raw:com.google.heart_rate.bpm:com.ryansteckler.perfectcinch:", 
+    date_from_converted,
+    date_to_converted
 )
 
 # Print data

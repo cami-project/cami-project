@@ -8,6 +8,10 @@ from django.conf import settings
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'google_fit'))
 from GoogleFitHeartRate import GoogleFitHeartRate
 
+def add_3_hours(heart_rate):
+    heart_rate['timestamp'] = heart_rate['timestamp'] + 10800
+    return heart_rate
+
 def get_heart_rate_data(time_from, time_to):
     # Create GoogleFitHeartRate object
     google_fit = GoogleFitHeartRate(
@@ -19,8 +23,9 @@ def get_heart_rate_data(time_from, time_to):
     # Get data from Cinch
     heart_rate_data = google_fit.get_data(
         "raw:com.google.heart_rate.bpm:com.ryansteckler.perfectcinch:", 
-        time_from,
-        time_to
+        time_from - 10800,
+        time_to - 10800,
+        add_3_hours
     )
 
     # Get data from CAMI Test

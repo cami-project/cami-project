@@ -45,21 +45,21 @@ def fetch_weight_measurement(user_id, input_source, measurement_unit, timestamp,
 
 @app.task(name='medical_compliance_measurements.fetch_heart_rate_measurement')
 def fetch_heart_rate_measurement():
+    last_measurement = None
+
     if HeartRateMeasurement.objects.count() > 0:
         last_measurement = HeartRateMeasurement.objects.all().order_by('-timestamp')[0]
-        time_from = str(last_measurement.timestamp + 1) + '000000000'
+        time_from = last_measurement.timestamp + 1
     else:
-        time_from = str(0)
+        time_from = 0
 
-    time_to = str(
-        int(
-            (
-                datetime.datetime.today() + 
-                datetime.timedelta(days=1) - 
-                datetime.datetime(1970, 1, 1)
-            ).total_seconds()
-        )
-    ) + '000000000'
+    time_to = int(
+        (
+            datetime.datetime.today() + 
+            datetime.timedelta(days=1) - 
+            datetime.datetime(1970, 1, 1)
+        ).total_seconds()
+    )
     
     measurements = google_fit.get_heart_rate_data(time_from, time_to)
 

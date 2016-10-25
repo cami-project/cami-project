@@ -35,8 +35,13 @@ def analyze_heart_rates(last_measurement):
 # TODO: this is a dummy module and should be generalized at least with a task structure
 # all the tasks should listen on the same heart rate queue and all of them should compute some metrics (broadcast?)
 def analyze_last_heart_rates(last_measurement):
+    last_timestamp = 0
+
+    if last_measurement:
+        last_timestamp = last_measurement.timestamp
+
     measurement_list = HeartRateMeasurement.objects.filter(
-        timestamp__gt=last_measurement.timestamp
+        timestamp__gt=last_timestamp
     ).order_by('timestamp')
 
     notifications_adapter = NotificationsAdapter()

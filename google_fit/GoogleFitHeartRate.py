@@ -116,7 +116,9 @@ class GoogleFitHeartRate:
 
         return json.loads(r.text)
 
-    def get_data(self, datastream_id, time_from, time_to):
+    def get_data(self, datastream_id, time_from, time_to, transform = None):
+        time_from = str(time_from) + '000000000'
+        time_to = str(time_to) + '000000000'
         dataset_id = time_from + "-" + time_to
 
         r = self.client.get(
@@ -132,6 +134,9 @@ class GoogleFitHeartRate:
 
             hr['timestamp'] = int(p['startTimeNanos'][:-9])
             hr['value'] = float(p['value'][0]['fpVal'])
+
+            if transform:
+                hr = transform(hr)
 
             data.append(hr)
 
