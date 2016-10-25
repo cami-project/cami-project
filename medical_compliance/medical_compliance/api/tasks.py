@@ -47,7 +47,7 @@ def fetch_weight_measurement(user_id, input_source, measurement_unit, timestamp,
 def fetch_heart_rate_measurement():
     if HeartRateMeasurement.objects.count() > 0:
         last_measurement = HeartRateMeasurement.objects.all().order_by('-timestamp')[0]
-        time_from = str(last_meas.timestamp + 1) + '000000000'
+        time_from = str(last_measurement.timestamp + 1) + '000000000'
     else:
         time_from = str(0)
 
