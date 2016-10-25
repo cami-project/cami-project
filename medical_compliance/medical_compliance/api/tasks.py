@@ -18,6 +18,7 @@ import google_fit
 from models import WeightMeasurement, HeartRateMeasurement
 
 from analyzers.weight_analyzers import analyze_weights
+from analyzers.heart_rate_analyzers import analyze_heart_rates
 
 
 app = Celery('api.tasks', broker=settings.BROKER_URL)
@@ -64,7 +65,7 @@ def fetch_heart_rate_measurement():
 
     for m in measurements:
         heart_rate_measurement = HeartRateMeasurement(
-            user_id = 11111,
+            user_id = 11262861,
             input_source='google_fit',
             measurement_unit='bpm',
             timestamp=m['timestamp'],
@@ -73,6 +74,6 @@ def fetch_heart_rate_measurement():
         )
         heart_rate_measurement.save()
 
-    # TODO: Analyze
+    analyze_heart_rates.delay()
 
     return json.dumps(measurements, indent=4, sort_keys=True)
