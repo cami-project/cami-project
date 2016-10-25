@@ -45,28 +45,40 @@ def fetch_weight_measurement(user_id, input_source, measurement_unit, timestamp,
 
 @app.task(name='medical_compliance_measurements.fetch_heart_rate_measurement')
 def fetch_heart_rate_measurement():
-    last_measurement = None
+    """
+        It's very ugly what I did here, only for demo purpose
+        We MUST clean this
+    """
+    last_cinch_measurement = None
+    last_test_measurement = None
 
-    if HeartRateMeasurement.objects.count() > 0:
-        last_measurement = HeartRateMeasurement.objects.all().order_by('-timestamp')[0]
-        time_from = last_measurement.timestamp + 1
-    else:
-        time_from = 0
+    try:
+        last_cinch_measurement = HeartRateMeasurement.objects.all().filter(input_source='cinch').order_by('-timestamp')[0]
+        time_from_cinch = last_cinch_measurement.timestamp + 1
+    except:
+        time_from_cinch = 0
+
+    try:
+        last_test_measurement = HeartRateMeasurement.objects.all().filter(input_source='test').order_by('-timestamp')[0]
+        time_from_test = last_test_measurement.timestamp + 1
+    except:
+        time_from_test = 0
 
     time_to = int(
         (
             datetime.datetime.today() + 
-            datetime.timedelta(days=1) - 
+            datetime.timedelta(days=30) - 
             datetime.datetime(1970, 1, 1)
         ).total_seconds()
     )
     
-    measurements = google_fit.get_heart_rate_data(time_from, time_to)
+    measurements = google_fit.get_heart_rate_data_from_cinch(time_from_cinch, time_to)
+    measurements = measurements + google_fit.get_heart_rate_data_from_test(time_from_test, time_to)
 
     for m in measurements:
         heart_rate_measurement = HeartRateMeasurement(
             user_id = 11262861,
-            input_source='google_fit',
+            input_source=m['source'],
             measurement_unit='bpm',
             timestamp=m['timestamp'],
             timezone='Europe/Bucharest',
@@ -74,6 +86,11 @@ def fetch_heart_rate_measurement():
         )
         heart_rate_measurement.save()
 
-    analyze_heart_rates.delay(last_measurement)
+    if len(measurements) > 0:
+        analyze_heart_rates.delay(
+            last_cinch_measurement 
+                if time_from_cinch < time_from_test
+                else last_test_measurement
+        )
 
     return json.dumps(measurements, indent=4, sort_keys=True)
