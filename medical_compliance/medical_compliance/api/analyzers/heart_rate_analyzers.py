@@ -29,88 +29,50 @@ app.conf.update(
 )
 
 @app.task(name='medical_compliance_heart_rate_analyzers.analyze_heart_rates')
-def analyze_heart_rates():
-    analyze_last_heart_rates()
+def analyze_heart_rates(last_measurement):
+    analyze_last_heart_rates(last_measurement)
 
 # TODO: this is a dummy module and should be generalized at least with a task structure
 # all the tasks should listen on the same heart rate queue and all of them should compute some metrics (broadcast?)
-def write_last_notified_hrm_timestamp(timestamp):
-    f = open("last_timestamp", "w")
-    f.write(str(timestamp))
-    f.close()
+def analyze_last_heart_rates(last_measurement):
+    measurement_list = HeartRateMeasurement.objects.filter(
+        timestamp__gt=last_measurement.timestamp
+    ).order_by('timestamp')
 
-def read_last_notified_hrm_timestamp():
-    f = open("last_timestamp", "r")
-    timestamp = int(f.read())
-    f.close()
-    return timestamp
-
-def analyze_last_heart_rates():
     notifications_adapter = NotificationsAdapter()
 
-    last_timestamp = read_last_notified_hrm_timestamp()
-    measurement_list = HeartRateMeasurement.objects.filter(
-        timestamp__gt=last_timestamp
-    ).order_by('-timestamp')
+    for m in measurement_list:
+        if m.value < 60:
+            message = u"Jim's heart rate is dangerously low: only %d." % int(m.value)
+            description = "Please take action now!"
+            notifications_adapter.send_caregiver_notification(measurement_list[0].user_id, "heart", "high", message, description, m.timestamp)
 
-    values = []
-    timestamps = []
-    window_timestamp = measurement_list[len(measurement_list) - 1].timestamp + 1200
+            message = u"Hey Jim! Your heart rate is quite low: %d." % int(m.value)
+            description = "I have contacted your caregiver."
+            notifications_adapter.send_elderly_notification(measurement_list[0].user_id, "heart", "high", message, description, m.timestamp)
+        elif m.value < 70:
+            message = u"Jim's heart rate is a bit low: only %d" % int(m.value)
+            description = "Please make sure he's all right."
+            notifications_adapter.send_caregiver_notification(measurement_list[0].user_id, "heart", "medium", message, description, m.timestamp)
 
-    for m in reversed(measurement_list):
-        if m.timestamp <= window_timestamp and m is not measurement_list[0]:
-            values.append(m.value)
-            timestamps.append(m.timestamp)
-        else:
-            if m is measurement_list[0] and m.timestamp <= window_timestamp:
-                values.append(m.value)
-                timestamps.append(m.timestamp)
-            
-            if len(values) < 3:
-                values = [m.value]
-                timestamps = [m.timestamp]
-                window_timestamp = window_timestamp + 1200
-                continue
+            message = u"Hey Jim! Your heart rate is just a bit low: %d." % int(m.value)
+            description = "How about some exercise?"
+            notifications_adapter.send_elderly_notification(measurement_list[0].user_id, "heart", "medium", message, description, m.timestamp)
 
-            mean_val = np.mean(values)
-            time_from = datetime.fromtimestamp(
-                timestamps[0]
-            ).strftime('%H:%M')
-            time_to = datetime.fromtimestamp(
-                timestamps[-1]
-            ).strftime('%H:%M')
+        if m.value > 100:
+            message = u"Jim's heart rate is dangerously high: over %d." % int(m.value)
+            description = "Please take action now!"
+            notifications_adapter.send_caregiver_notification(measurement_list[0].user_id, "heart", "high", message, description, m.timestamp)
 
-            sent_notification = False
+            message = u"Hey Jim! Your heart rate is quite high: %d." % int(m.value)
+            description = "I have contacted your caregiver."
+            notifications_adapter.send_elderly_notification(measurement_list[0].user_id, "heart", "high", message, description, m.timestamp)
 
-            if mean_val < 60:
-                message = u"Jim had a low heart rate: %d between %s and %s" % \
-                    (int(mean_val), time_from, time_to)
-                description = "You can contact him and see what was wrong."
-                notifications_adapter.send_caregiver_notification(measurement_list[0].user_id, "heart", "medium", message, description)
+        elif m.value > 85:
+            message = u"Jim's heart rate is a bit high: over %d." % int(m.value)
+            description = "Please make sure he's alright."
+            notifications_adapter.send_caregiver_notification(measurement_list[0].user_id, "heart", "medium", message, description, m.timestamp)
 
-                message = u"You had a low heart rate: %d between %s and %s" % \
-                    (int(mean_val), time_from, time_to)
-                description = "Please take care."
-                notifications_adapter.send_elderly_notification(measurement_list[0].user_id, "heart", "medium", message, description)
-                sent_notification = True
-
-            if mean_val > 100:
-                message = u"Jim had a high heart rate: %d between %s and %s" % \
-                    (int(mean_val), time_from, time_to)
-                description = "You can contact him and see what was wrong."
-                notifications_adapter.send_caregiver_notification(measurement_list[0].user_id, "heart", "medium", message, description)
-
-                message = u"You had a high heart rate: %d between %s and %s" % \
-                    (int(mean_val), time_from, time_to)
-                description = "Please take care."
-                notifications_adapter.send_elderly_notification(measurement_list[0].user_id, "heart", "medium", message, description)
-                sent_notification = True
-
-            if sent_notification:
-                last_timestamp = timestamps[-1]
-
-            values = [m.value]
-            timestamps = [m.timestamp]
-            window_timestamp = window_timestamp + 1200
-
-    write_last_notified_hrm_timestamp(last_timestamp)
+            message = u"Hey Jim! Your heart rate is just a bit high: %d." % int(m.value)
+            description = "Why not rest for a bit?"
+            notifications_adapter.send_elderly_notification(measurement_list[0].user_id, "heart", "medium", message, description, m.timestamp)

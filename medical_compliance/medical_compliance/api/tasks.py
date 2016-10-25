@@ -74,6 +74,6 @@ def fetch_heart_rate_measurement():
         )
         heart_rate_measurement.save()
 
-    analyze_heart_rates.delay()
+    analyze_heart_rates.delay(last_meas)
 
     return json.dumps(measurements, indent=4, sort_keys=True)
