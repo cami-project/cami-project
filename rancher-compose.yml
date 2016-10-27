@@ -8,6 +8,8 @@ cami-medical-compliance:
   scale: 1
 cami-medical-compliance-message-worker:
   scale: 1
+cami-medical-compliance-task-scheduler:
+  scale: 1
 cami-frontend-migrate:
   scale: 1
 cami-frontend:
