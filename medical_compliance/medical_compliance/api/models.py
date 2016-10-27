@@ -98,7 +98,8 @@ class WeightMeasurement(models.Model):
 
 class HeartRateMeasurement(models.Model):
     INPUT_SOURCES = (
-        ('google_fit', 'google_fit'),
+        ('cinch', 'cinch'),
+        ('test', 'test')
     )
     MEASUREMENT_UNITS = (
         ('bpm', 'bpm'),

@@ -29,15 +29,20 @@ app.conf.update(
 )
 
 @app.task(name='medical_compliance_heart_rate_analyzers.analyze_heart_rates')
-def analyze_heart_rates(last_measurement):
-    analyze_last_heart_rates(last_measurement)
+def analyze_heart_rates(last_measurement, input_source):
+    analyze_last_heart_rates(last_measurement, input_source)
 
 # TODO: this is a dummy module and should be generalized at least with a task structure
 # all the tasks should listen on the same heart rate queue and all of them should compute some metrics (broadcast?)
-def analyze_last_heart_rates(last_measurement):
+def analyze_last_heart_rates(last_measurement, input_source):
+    last_timestamp = 0
+
+    if last_measurement:
+        last_timestamp = last_measurement.timestamp
+
     measurement_list = HeartRateMeasurement.objects.filter(
-        timestamp__gt=last_measurement.timestamp
-    ).order_by('timestamp')
+        timestamp__gt=last_timestamp
+    ).filter(input_source=input_source).order_by('timestamp')
 
     notifications_adapter = NotificationsAdapter()
 
