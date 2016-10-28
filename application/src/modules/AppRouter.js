@@ -25,6 +25,7 @@ export default function AppRouter(props) {
     case 'Homepage':
       return <HomepageViewContainer />;
     case 'Login':
+    case 'Logout':
       return <LoginViewContainer />;
     case 'Onboarding':
       return <OnboardingViewContainer />;
