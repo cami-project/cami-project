@@ -24,7 +24,8 @@ var tapButtonSound = new Sound('sounds/knuckle.mp3', Sound.MAIN_BUNDLE, (error) 
 const HomepageView = React.createClass({
   propTypes: {
     notification: PropTypes.instanceOf(Map).isRequired,
-    username: PropTypes.string.isRequired
+    username: PropTypes.string.isRequired,
+    logout: PropTypes.func.isRequired
   },
 
   render() {
@@ -51,7 +52,7 @@ const HomepageView = React.createClass({
           <View style={styles.logoutButtonContainer}>
             <TouchableOpacity
               style={styles.logoutButton}
-              onPress={() => tapButtonSound.setVolume(1.0).play()}
+              onPress={() => tapButtonSound.setVolume(1.0).play() && this.props.logout()}
             >
               <Icon
                 name={icons.logout}
