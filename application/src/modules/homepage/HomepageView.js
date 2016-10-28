@@ -24,7 +24,8 @@ var tapButtonSound = new Sound('sounds/knuckle.mp3', Sound.MAIN_BUNDLE, (error) 
 const HomepageView = React.createClass({
   propTypes: {
     notification: PropTypes.instanceOf(Map).isRequired,
-    username: PropTypes.string.isRequired
+    username: PropTypes.string.isRequired,
+    logout: PropTypes.func.isRequired
   },
 
   render() {
@@ -48,6 +49,18 @@ const HomepageView = React.createClass({
           source={require('../../../images/elder-mainContent-bg.png')}
         />
         <View style={styles.iconContainer}>
+          <View style={styles.logoutButtonContainer}>
+            <TouchableOpacity
+              style={styles.logoutButton}
+              onPress={() => tapButtonSound.setVolume(1.0).play() && this.props.logout()}
+            >
+              <Icon
+                name={icons.logout}
+                size={16}
+                color={Color('white').clearer(.25).rgbaString()}
+              />
+            </TouchableOpacity>
+          </View>
           <View style={styles.outerRing}>
             <View style={styles.iconRing}>
               <Icon
@@ -139,7 +152,14 @@ const styles = StyleSheet.create({
     zIndex: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 20
+    paddingTop: 20,
+    position: 'relative'
+  },
+  logoutButtonContainer: {
+    position: 'absolute',
+    top: 25,
+    left: 20,
+    backgroundColor: 'transparent'
   },
   outerRing: {
     borderWidth: 2,
