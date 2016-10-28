@@ -1,6 +1,7 @@
 import {connect} from 'react-redux';
-import {popRoute, switchTab, navigationCompleted} from './NavigationState';
+import {popRoute, switchTab, navigationCompleted, redirectToLoginPage} from './NavigationState';
 import NavigationView from './NavigationView';
+import {logout} from '../auth/AuthState';
 
 export default connect(
   state => ({
@@ -15,6 +16,10 @@ export default connect(
     },
     onNavigateCompleted() {
       dispatch(navigationCompleted());
+    },
+    logout() {
+      dispatch(logout());
+      dispatch(redirectToLoginPage());
     }
   })
 )(NavigationView);

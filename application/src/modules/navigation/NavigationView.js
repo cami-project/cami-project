@@ -6,6 +6,7 @@ import {
 import AppRouter from '../AppRouter';
 import NavigationTabView from './NavigationTabView';
 import TabBar from '../../components/TabBar';
+import {isLogoutPageIndex} from './NavigationState';
 
 const TAB_BAR_HEIGHT = 50;
 
@@ -15,7 +16,15 @@ const NavigationView = React.createClass({
     navigationState: PropTypes.object.isRequired,
     onNavigateBack: PropTypes.func.isRequired,
     onNavigateCompleted: PropTypes.func.isRequired,
-    switchTab: PropTypes.func.isRequired
+    switchTab: PropTypes.func.isRequired,
+    logout: PropTypes.func.isRequired
+  },
+  precheckSwitchTab(index) {
+    if(isLogoutPageIndex(index)) {
+      this.props.logout();
+      return;
+    }
+    this.props.switchTab(index);
   },
 
   render() {
@@ -43,7 +52,7 @@ const NavigationView = React.createClass({
               height={TAB_BAR_HEIGHT}
               tabs={routes}
               currentTabIndex={index}
-              switchTab={this.props.switchTab}
+              switchTab={this.precheckSwitchTab}
             />
           :
             null
