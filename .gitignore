@@ -82,3 +82,5 @@ application/images/Thumbs.db
 # Celery beat files
 medical_compliance/celerybeat-schedule
 medical_compliance/celerybeat.pid
+/google_fit/refresh_token
+/google_fit/config.py
