@@ -6,6 +6,7 @@ export default connect(
   state => ({
     username: state.getIn(['auth', 'currentUser', 'name']),
     status: state.getIn(['status']),
-    weight: state.getIn(['homepageCaregiver', 'weight'])
+    weight: state.getIn(['homepageCaregiver', 'weight']),
+    heart_rate: state.getIn(['homepageCaregiver', 'heart_rate'])
   })
 )(StatusView);

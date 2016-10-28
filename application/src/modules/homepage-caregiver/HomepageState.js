@@ -24,6 +24,12 @@ const initialState = Map({
     "amount": [],
     "data": [],
     "threshold": 72,
+  }),
+  heart_rate: fromJS({
+    "status": "ok",
+    "amount": [],
+    "data": [],
+    "threshold": 80
   })
 });
 
@@ -56,14 +62,25 @@ async function fetchPageData() {
       "data": [],
       "threshold": 72,
     },
+    heart_rate: {
+      "status": "ok",
+      "amount": [],
+      "data": [],
+      "threshold": 80
+    },
     lastEvents: []
   };
+
   return fetch(notificationsUrl)
     .then((response) => response.json())
     .then((notificationJson) => {
+
       var notificationList = notificationJson.objects;
+
       if (notificationList.length > 0) {
+
         var receivedNotification = notificationList[0];
+
         result.notification = {
           id: receivedNotification.id,
           name: "Jim",
@@ -72,6 +89,7 @@ async function fetchPageData() {
           message: receivedNotification.message,
           description: receivedNotification.description
         }
+
         notificationList.forEach((notification) => {
           result.lastEvents.push({
             type: notification.type,
@@ -81,18 +99,35 @@ async function fetchPageData() {
             message: notification.description
           });
         });
+
         result.hasNotification = true;
       }
-      var apiUrl = env.WEIGHT_MEASUREMENTS_LAST_VALUES;
-      return fetch(apiUrl).then((response) => response.json())
+
+      var weightApiUrl = env.WEIGHT_MEASUREMENTS_LAST_VALUES;
+      var heartRateApiUrl = env.HEARTRATE_MEASUREMENTS_LAST_VALUES;
+
+      return fetch(weightApiUrl).then((response) => response.json())
         .then((weightsJson) => {
+
           result.weight = weightsJson.weight;
-          return result;
-        });
-    }).catch((error) => {
-      return result;
-    });
+
+          return fetch(heartRateApiUrl).then((response) => response.json())
+            .then((heartRateJson) => {
+
+              result.heart_rate = heartRateJson.heart_rate;
+
+              return result;
+          }).catch((error) => {
+
+            return result;
+          });
+      }).catch((error) => {
+
+        return result;
+      });
+  });
 }
+
 async function triggerFetchPageData() {
   return Promise.delay(env.POLL_INTERVAL_MILLIS).then(() => ({
     type: CAREGIVER_DATA_REQUEST
@@ -114,6 +149,7 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
     case CAREGIVER_DATA_RESPONSE:
       var chartValuesJson = json;
       chartValuesJson['weight'] = action.payload.weight;
+      chartValuesJson['heart_rate'] = action.payload.heart_rate;
 
       var isVisible = state.getIn(['actionability', 'visible']);
       if (!isVisible) {
@@ -127,6 +163,7 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
           .setIn(['status', 'visible'], true)
           .setIn(['status', 'values'], fromJS(chartValuesJson))
           .setIn(['weight'], fromJS(action.payload.weight))
+          .setIn(['heart_rate'], fromJS(action.payload.heart_rate))
           .setIn(['lastEvents'], fromJS(action.payload.lastEvents)),
         Effects.promise(triggerFetchPageData)
       );

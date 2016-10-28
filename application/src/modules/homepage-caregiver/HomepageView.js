@@ -84,11 +84,11 @@ const HomepageView = React.createClass({
           ?
             <View style={{flexDirection: 'row'}}>
               <StatusChart
-                data={this.props.status.get('values').get('heart').get('rate')}
+                data={this.props.status.get('values').get('heart_rate').get('amount')}
                 text="Heart rate"
                 icon={icons.heart}
                 unit="bpm"
-                status="ok"
+                status={this.props.status.get('values').get('heart_rate').get('status')}
                 decimals={0}
               />
 
