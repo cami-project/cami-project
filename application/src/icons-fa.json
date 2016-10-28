@@ -20,5 +20,6 @@
   "right": "chevron-right",
   "camera": "video-camera",
   "tv": "television",
-  "smartphone": "mobile"
+  "smartphone": "mobile",
+  "logout": "sign-out"
 }
