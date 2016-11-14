@@ -8,6 +8,7 @@ import * as SessionStateActions from '../modules/session/SessionState';
 import store from '../redux/store';
 import DeveloperMenu from '../components/DeveloperMenu';
 import PushNotification from 'react-native-push-notification';
+import * as PushNotificationsState from './push-notifications/PushNotificationsState';
 
 const AppView = React.createClass({
   propTypes: {
@@ -32,21 +33,12 @@ const AppView = React.createClass({
       });
 
       PushNotification.configure({
-        onRegister: function(token) {
-          tokenString = token.token
-          operatingSystem = token.os
-          // TODO: send token to the server
-          Alert.alert(
-            'Token for ' + operatingSystem,
-            tokenString
-          );
-        },
-        onNotification: function(notification) {
-          Alert.alert(
-            'New Notification',
-            notification.message
-          );
-        },
+        onRegister: ((token) => {
+          this.props.dispatch(PushNotificationsState.didReceiveMobileNotificationKey(token.token, token.os));
+        }),
+        onNotification: ((notification) => {
+          Alert.alert('New Notification', notification.message);
+        }),
         popInitialNotification: true,
         requestPermissions: true
       });

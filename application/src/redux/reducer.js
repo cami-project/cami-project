@@ -10,6 +10,7 @@ import JournalStateReducer from '../modules/journal/JournalState';
 import StatusStateReducer from '../modules/status/StatusState';
 import LoginStateReducer from '../modules/login/LoginState';
 import OnboardingStateReducer from '../modules/onboarding/OnboardingState';
+import PushNotificationsStateReducer from '../modules/push-notifications/PushNotificationsState';
 
 const reducers = {
   // Authentication/login state
@@ -34,7 +35,9 @@ const reducers = {
 
   login: LoginStateReducer,
 
-  onboarding: OnboardingStateReducer
+  onboarding: OnboardingStateReducer,
+
+  pushNotifications: PushNotificationsStateReducer
 };
 
 // initial state, accessor and mutator for supporting root-level
