@@ -7,7 +7,7 @@ from tastypie.resources import ModelResource, Resource
 from tastypie.serializers import Serializer
 from tastypie.paginator import Paginator
 
-from models import Notification
+from models import Notification, MobileNotificationKey
 
 from django.utils.timezone import is_naive
 
@@ -87,3 +87,31 @@ class HealthcheckResource(Resource):
     def obj_get(self, request=None, key=None, **kwargs):
         healthcheck = Healthchecker()
         return healthcheck
+
+
+class MobileNotificationKeyResource(Resource):
+    class Meta:
+        resource_name = 'mobile-notification-key'
+        allowed_methods = ['post']
+        authentication = Authentication()
+        authorization = Authorization()
+        object_class = MobileNotificationKey
+
+    def obj_create(self, bundle, **kwargs):
+
+        if bundle.data.has_key("mobile_key") and bundle.data.has_key("mobile_os"):
+            mobile_key = bundle.data.get("mobile_key")
+            mobile_os = bundle.data.get("mobile_os")
+            
+            # TODO: to be changed to a user id form the session
+            dummy_user_id = 11262861
+            dummy_recipient_type = "caregiver"
+
+            notification_key, created = MobileNotificationKey.objects.get_or_create(
+                user_id=dummy_user_id,
+                recipient_type=dummy_recipient_type,
+                mobile_key=mobile_key,
+                mobile_os=mobile_os
+            )
+            return notification_key
+        return bundle
