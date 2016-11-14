@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {View, StyleSheet, ActivityIndicator} from 'react-native';
+import {View, StyleSheet, ActivityIndicator, Alert} from 'react-native';
 import NavigationViewContainer from './navigation/NavigationViewContainer';
 import AppRouter from './AppRouter';
 import * as auth0 from '../services/auth0';
@@ -7,6 +7,7 @@ import * as snapshotUtil from '../utils/snapshot';
 import * as SessionStateActions from '../modules/session/SessionState';
 import store from '../redux/store';
 import DeveloperMenu from '../components/DeveloperMenu';
+import PushNotification from 'react-native-push-notification';
 
 const AppView = React.createClass({
   propTypes: {
@@ -28,6 +29,26 @@ const AppView = React.createClass({
         store.subscribe(() => {
           snapshotUtil.saveSnapshot(store.getState());
         });
+      });
+
+      PushNotification.configure({
+        onRegister: function(token) {
+          tokenString = token.token
+          operatingSystem = token.os
+          // TODO: send token to the server
+          Alert.alert(
+            'Token for ' + operatingSystem,
+            tokenString
+          );
+        },
+        onNotification: function(notification) {
+          Alert.alert(
+            'New Notification',
+            notification.message
+          );
+        },
+        popInitialNotification: true,
+        requestPermissions: true
       });
   },
 

@@ -6,7 +6,6 @@ const {Platform} = require('react-native');
 
 import Color from 'color';
 import variables from '../modules/variables/ElderGlobalVariables';
-import PushNotification from 'react-native-push-notification';
 
 import { redirectToElderlyPage, redirectToOnboardingPage } from '../modules/navigation/NavigationState';
 
@@ -68,21 +67,6 @@ export function showLogin() {
         }
         else {
             store.dispatch(redirectToOnboardingPage());
-
-            PushNotification.configure({
-              onRegister: function(token) {
-                // TODO: send token to the server
-                alert('RECEIVED_TOKEN:' + token);
-              },
-              onNotification: function(notification) {
-                alert(notification);
-              },
-              permissions: {
-                alert: true,
-                badge: true,
-                sound: true
-              }
-            });
         }
 
         fetch(notificationsSubscriptionApi).then((response) => {
