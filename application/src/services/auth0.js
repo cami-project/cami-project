@@ -6,6 +6,7 @@ const {Platform} = require('react-native');
 
 import Color from 'color';
 import variables from '../modules/variables/ElderGlobalVariables';
+import PushNotification from 'react-native-push-notification';
 
 import { redirectToElderlyPage, redirectToOnboardingPage } from '../modules/navigation/NavigationState';
 
@@ -16,61 +17,76 @@ const notificationsSubscriptionApi = env.NOTIFICATIONS_SUBSCRIPTION_API;
 
 let lock = null;
 if (authenticationEnabled) {
-  lock = new Auth0Lock({
-    clientId,
-    domain
-  });
+    lock = new Auth0Lock({
+        clientId,
+        domain
+    });
 } else {
-  console.warn('Authentication not enabled: Auth0 configuration not provided');
+    console.warn('Authentication not enabled: Auth0 configuration not provided');
 }
 
 export function showLogin() {
-  if (!authenticationEnabled) {
-    return;
-  }
+    if (!authenticationEnabled) {
+        return;
+    }
 
-  const options = {
-    closable: false,
-    disableSignUp: true,
-    connections: ["cami"]
-  };
+    const options = {
+        closable: false,
+        disableSignUp: true,
+        connections: ["cami"]
+    };
 
-  if (Platform.OS === 'ios') {
-    lock.customizeTheme({
-      A0ThemePrimaryButtonNormalColor: variables.colors.status.low,
-      A0ThemePrimaryButtonHighlightedColor: Color(variables.colors.status.low).darken(.25).hexString(),
-      A0ThemeSecondaryButtonTextColor: variables.colors.gray.dark,
-      A0ThemeTextFieldTextColor: variables.colors.gray.dark,
-      A0ThemeTextFieldPlaceholderTextColor: variables.colors.gray.neutral,
-      A0ThemeTextFieldIconColor: variables.colors.status.low,
-      A0ThemeTitleTextColor: variables.colors.gray.dark,
-      A0ThemeDescriptionTextColor: variables.colors.gray.dark,
-      A0ThemeSeparatorTextColor: variables.colors.gray.light,
-      A0ThemeScreenBackgroundColor: variables.colors.gray.lightest,
-      A0ThemeIconBackgroundColor: variables.colors.gray.lightest,
-      A0ThemeIconImageName: '',
-      A0ThemeCredentialBoxBorderColor: '' //transparent
+    if (Platform.OS === 'ios') {
+        lock.customizeTheme({
+            A0ThemePrimaryButtonNormalColor: variables.colors.status.low,
+            A0ThemePrimaryButtonHighlightedColor: Color(variables.colors.status.low).darken(.25).hexString(),
+            A0ThemeSecondaryButtonTextColor: variables.colors.gray.dark,
+            A0ThemeTextFieldTextColor: variables.colors.gray.dark,
+            A0ThemeTextFieldPlaceholderTextColor: variables.colors.gray.neutral,
+            A0ThemeTextFieldIconColor: variables.colors.status.low,
+            A0ThemeTitleTextColor: variables.colors.gray.dark,
+            A0ThemeDescriptionTextColor: variables.colors.gray.dark,
+            A0ThemeSeparatorTextColor: variables.colors.gray.light,
+            A0ThemeScreenBackgroundColor: variables.colors.gray.lightest,
+            A0ThemeIconBackgroundColor: variables.colors.gray.lightest,
+            A0ThemeIconImageName: '',
+            A0ThemeCredentialBoxBorderColor: '' //transparent
+        });
+    }
+
+    lock.show(options, (err, profile, token) => {
+        if (err) {
+            store.dispatch(AuthStateActions.onUserLoginError(err));
+            return;
+        }
+
+        // Authentication worked!
+        store.dispatch(AuthStateActions.onUserLoginSuccess(profile, token));
+        var userType = profile.userMetadata.userType;
+        if (userType == 'elderly') {
+            store.dispatch(redirectToElderlyPage());
+        }
+        else {
+            store.dispatch(redirectToOnboardingPage());
+
+            PushNotification.configure({
+              onRegister: function(token) {
+                // TODO: send token to the server
+                alert('RECEIVED_TOKEN:' + token);
+              },
+              onNotification: function(notification) {
+                alert(notification);
+              },
+              permissions: {
+                alert: true,
+                badge: true,
+                sound: true
+              }
+            });
+        }
+
+        fetch(notificationsSubscriptionApi).then((response) => {
+        }).catch((error) => {
+        });
     });
-  }
-
-  lock.show(options, (err, profile, token) => {
-    if (err) {
-      store.dispatch(AuthStateActions.onUserLoginError(err));
-      return;
-    }
-
-    // Authentication worked!
-    store.dispatch(AuthStateActions.onUserLoginSuccess(profile, token));
-    var userType = profile.userMetadata.userType;
-    if (userType == 'elderly') {
-      store.dispatch(redirectToElderlyPage());
-    }
-    else {
-      store.dispatch(redirectToOnboardingPage());
-    }
-
-    fetch(notificationsSubscriptionApi).then((response) => {
-    }).catch((error) => {
-    });
-  });
 }
