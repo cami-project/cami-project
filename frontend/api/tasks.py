@@ -14,6 +14,7 @@ import time
 
 from django.conf import settings
 from celery.utils.log import get_task_logger
+from push_notifications.models import APNSDevice
 
 from models import Notification
 
@@ -34,3 +35,6 @@ def send_notification(user_id, recipient_type, type, severity, message, descript
     n = Notification(user_id=user_id, recipient_type=recipient_type, type=type, severity=severity, timestamp=timestamp, message=message, description=description)
     n.full_clean()
     n.save()
+
+    device = APNSDevice.objects.get(name=recipient_type)
+    device.send_message(message, sound="default")
