@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'raven.contrib.django.raven_compat',
     'corsheaders',
     'tastypie',
-    'api'
+    'api',
+    'push_notifications'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -215,6 +216,12 @@ CELERY_QUEUES = (
 
 # Healthcheker settings
 RABBITMQ_CHECK_TIMEOUT = 1
+
+
+PUSH_NOTIFICATIONS_SETTINGS = {
+    "APNS_CERTIFICATE": "/cami-project/frontend/frontend/push-notifications/ios/prod/apns-cert.pem",
+    "APNS_HOST": "gateway.push.apple.com"
+}
 
 try:
     from settings_local import *

@@ -6,8 +6,10 @@ from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource, Resource
 from tastypie.serializers import Serializer
 from tastypie.paginator import Paginator
+from datetime import datetime
 
-from models import Notification, MobileNotificationKey
+from models import Notification
+from push_notifications.models import APNSDevice, GCMDevice
 
 from django.utils.timezone import is_naive
 
@@ -95,23 +97,23 @@ class MobileNotificationKeyResource(Resource):
         allowed_methods = ['post']
         authentication = Authentication()
         authorization = Authorization()
-        object_class = MobileNotificationKey
+        object_class = APNSDevice
 
     def obj_create(self, bundle, **kwargs):
 
         if bundle.data.has_key("mobile_key") and bundle.data.has_key("mobile_os"):
             mobile_key = bundle.data.get("mobile_key")
             mobile_os = bundle.data.get("mobile_os")
-            
-            # TODO: to be changed to a user id form the session
-            dummy_user_id = 11262861
-            dummy_recipient_type = "caregiver"
+            recipient_type = bundle.data.has_key("recipient_type")
 
-            notification_key, created = MobileNotificationKey.objects.get_or_create(
-                user_id=dummy_user_id,
-                recipient_type=dummy_recipient_type,
-                mobile_key=mobile_key,
-                mobile_os=mobile_os
+            # TODO: APNSDevice can receive user_id attribute
+            # save APNSDevice or GCMDevice depending on mobile_os
+
+            notification_key, created = APNSDevice.objects.get_or_create(
+                name=recipient_type,
+                active=True,
+                date_created= datetime.now(),
+                registration_id=mobile_key,
             )
             return notification_key
         return bundle
