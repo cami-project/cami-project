@@ -130,6 +130,6 @@ class MobileNotificationKeyResource(Resource):
         latest_notification_array = Notification.objects.filter(recipient_type="caregiver").order_by('-timestamp')[:1]
         if latest_notification_array.count() > 0:
             latest_notification = latest_notification_array[0]
-            device = APNSDevice.objects.get(name=latest_notification.recipient_type)
-            device.send_message(latest_notification.message, sound="default")
+            devices = APNSDevice.objects.filter(name=latest_notification.recipient_type)
+            devices.send_message(latest_notification.message, sound="default")
         return self.create_response(request, {})

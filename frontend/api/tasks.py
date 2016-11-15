@@ -36,5 +36,5 @@ def send_notification(user_id, recipient_type, type, severity, message, descript
     n.full_clean()
     n.save()
 
-    device = APNSDevice.objects.get(name=recipient_type)
-    device.send_message(message, sound="default")
+    devices = APNSDevice.objects.filter(name=recipient_type)
+    devices.send_message(message, sound="default")
