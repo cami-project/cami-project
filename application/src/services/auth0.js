@@ -13,6 +13,7 @@ const clientId = env.AUTH0_CLIENT_ID;
 const domain = env.AUTH0_DOMAIN;
 const authenticationEnabled = clientId && domain;
 const notificationsSubscriptionApi = env.NOTIFICATIONS_SUBSCRIPTION_API;
+const mobileNotificationKeyApi = env.MOBILE_NOTIFICATION_KEY_API;
 
 let lock = null;
 if (authenticationEnabled) {
@@ -72,5 +73,27 @@ export function showLogin() {
         fetch(notificationsSubscriptionApi).then((response) => {
         }).catch((error) => {
         });
+
+        const pushNotificationsState = store.getState().get('pushNotifications');
+        var didReceiveKey = pushNotificationsState.getIn(['didReceiveKey']);
+        if (didReceiveKey) {
+            mobileNotificationKey = pushNotificationsState.getIn(['mobileNotificationKey']);
+            mobileOS = pushNotificationsState.getIn(['mobileOS']);
+
+            fetch(mobileNotificationKeyApi, {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    mobile_key: mobileNotificationKey,
+                    mobile_os: mobileOS,
+                    recipient_type: userType
+                })
+            }).then((response) => {
+            }).catch((error) => {
+            });
+        }
     });
 }

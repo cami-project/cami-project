@@ -107,7 +107,7 @@ class MobileNotificationKeyResource(Resource):
         if bundle.data.has_key("mobile_key") and bundle.data.has_key("mobile_os"):
             mobile_key = bundle.data.get("mobile_key")
             mobile_os = bundle.data.get("mobile_os")
-            recipient_type = bundle.data.has_key("recipient_type")
+            recipient_type = bundle.data.get("recipient_type")
 
             # TODO: APNSDevice can receive user_id attribute
             # save APNSDevice or GCMDevice depending on mobile_os
