@@ -1,5 +1,7 @@
 import logging
 
+from django.conf.urls import url
+from tastypie.utils import trailing_slash
 from tastypie import fields
 from tastypie.authentication import Authentication
 from tastypie.authorization import Authorization
@@ -14,6 +16,7 @@ from push_notifications.models import APNSDevice, GCMDevice
 from django.utils.timezone import is_naive
 
 from healthchecker import Healthchecker
+from push_notifications.models import APNSDevice
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -117,3 +120,16 @@ class MobileNotificationKeyResource(Resource):
             )
             return notification_key
         return bundle
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/resend%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('resend_last_notification'), name="api_resend_last_notification"),
+        ]
+
+    def resend_last_notification(self, request, **kwargs):
+        latest_notification_array = Notification.objects.filter(recipient_type="caregiver").order_by('-timestamp')[:1]
+        if latest_notification_array.count() > 0:
+            latest_notification = latest_notification_array[0]
+            device = APNSDevice.objects.get(name=latest_notification.recipient_type)
+            device.send_message(latest_notification.message, sound="default")
+        return self.create_response(request, {})
