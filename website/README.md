@@ -12,6 +12,19 @@ In order to provide only aesthetic changes and not alter the website's core func
 * [ruby](https://www.ruby-lang.org/en/documentation/installation/)
 * [sass](http://sass-lang.com/install)
 
+The currently used WordPress themes needs to include the following enqueuing function at the end of the `functions.php` file:
+
+```
+// Styles: Enqueue the global styles overrides
+// -- we're using the file's date/time at the end of file to override caching
+// --------------------------------------------------------------------------
+function mq_global_styles_overrides() {
+	wp_register_style('mq-bundle-styles-overrides', get_stylesheet_directory_uri() . '/css/styles-overrides-bundle.min.css', '', date('U', filemtime(get_stylesheet_directory() . '/css/styles-overrides-bundle.min.css')), '');
+	wp_enqueue_style('mq-bundle-styles-overrides');
+}
+add_action('wp_print_styles', 'mq_global_styles_overrides');
+```
+
 ## Development
 
 In order to start working on the styles run the following commands in a terminl window inside the current directory:
