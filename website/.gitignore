@@ -1,5 +1,8 @@
-node_modules/
-.sass-cache/
+node_modules/*
+.sass-cache/*
 *.swp
 *.swo
-DS_Store
+*.log
+.DS_Store
+*~
+src/css/**
