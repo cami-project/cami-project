@@ -1,6 +1,6 @@
 # CAMI-WEB styling overrides
 
-![Cami App Logo](../application/ios/Cami/Image.xcassets/AppIcon.appiconset/cami-ios-app-icon-183.png)
+![Cami App Logo](../application/ios/Cami/Images.xcassets/AppIcon.appiconset/cami-ios-app-icon-183.png)
 
 The purpose of these overrides is to unify the look of the WordPress-based web front-end of the CAMI System with the already established iOS app.
 
