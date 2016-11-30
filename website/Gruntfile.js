@@ -66,7 +66,7 @@ module.exports = function(grunt) {
       // only run sass and cssmin
       stylesheets: {
         files: ['src/sass//*.scss'],
-        tasks: ['sass', 'concat:styles', 'cssmin', 'notify:sheets'],
+        tasks: ['sass', 'concat:styles', 'cssmin', 'notify:stylesheets'],
         options: {
           livereload: true,
           atBegin: false,
