@@ -25,5 +25,35 @@
 // ! General Rules
 // --------------------------------------------------------
 
-body #page {background-color: $color-background;}
+html {
+  font-size: $font-size-base;
+  background-color: $color-elder-status-low;
+}
+
+body.mq.maronqua.styles-overrides.styles-overrides-bundle {
+  min-height: 100vh;
+  background:  url('../images/body-bg.min.jpg');
+  background-position: center top;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+
+  // insuring that page always stretches to fill the screen
+  // -- no matter how much content it supports
+  #page {
+    background: transparent;
+    position: relative;
+    min-height: 100vh;
+
+    // using pseudo class to create color mask on top of body
+    &:before {
+      background-color: rgba($color-elder-status-low, .85);
+      position: absolute;
+      content: ' ';
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+  }
+}
 
