@@ -78,6 +78,65 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
       }
     }
   }
+
+  // App Icons List
+  #content .vc_row.wpb_row:not(.personaltop) {
+
+    // Icon slate
+    .vc_icon_element.vc_icon_element-outer {
+      margin: 0 auto;
+      position: relative;
+      background-color: rgba(white, .75);
+      padding: .75rem .75rem 2.5rem;
+      z-index: 4;
+      border: 1px solid darken($color-elder-status-low, 5%);
+      border-radius: .25rem;
+      @include box-shadow(0 .1rem 1.5rem rgba(darken($color-elder-status-low, 9%), .7));
+
+      .vc_icon_element-inner {
+        background: transparent;
+        width: 3rem !important;
+        height: 3rem !important;
+        position: initial;
+
+        .vc_icon_element-icon {
+          font-size: 3rem !important;
+          line-height: 1 !important;
+          color: green;
+          display: inline-block;
+          top: 2.5rem;
+
+          // override the way the link is displayed to cover most of the slate
+          & + a.vc_icon_element-link {
+            top: 0;
+            left: 0;
+            z-index: 6;
+          }
+        }
+      }
+
+      // insure slate text is wrapped inside slate
+      & + .wpb_text_column {
+        position: relative;
+        margin-top: -2rem;
+        margin-bottom: 2.5rem;
+        z-index: 5;
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.1;
+        &,
+        a,
+        a:active,
+        a:visited,
+        a:focus {color: green}
+
+        a {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
   // insuring that page always stretches to fill the screen
   // -- no matter how much content it supports
   #page {
