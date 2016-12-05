@@ -1,0 +1,114 @@
+// _______ _______  ______  _____  __   _  _____  _     _ _______
+// |  |  | |_____| |_____/ |     | | \  | |   __| |     | |_____|
+// |  |  | |     | |    \_ |_____| |  \_| |____\| |_____| |     |
+//
+// Theme Name:    cami-web
+// Author:        rtud <radu@maronqua.ro>
+// Company:       Maronqua
+// Company URI:   http://maronqua.ro
+// File Name:     _additional-mixins.scss
+// Notes:         Maronqua's mixins
+//
+// -------------------------------------------------------------------
+
+
+@mixin rotate3d($x, $y, $z, $degrees) {
+  -webkit-transform: rotate3d($x, $y, $z, $degrees);
+      -ms-transform: rotate3d($x, $y, $z, $degrees);
+       -o-transform: rotate3d($x, $y, $z, $degrees);
+          transform: rotate3d($x, $y, $z, $degrees);
+}
+
+@mixin animation($animate...) {
+    $max: length($animate);
+    $animations: '';
+
+    @for $i from 1 through $max {
+        $animations: #{$animations + nth($animate, $i)};
+
+        @if $i < $max {
+            $animations: #{$animations + ", "};
+        }
+    }
+    -webkit-animation: $animations;
+    -moz-animation:    $animations;
+    -o-animation:      $animations;
+    animation:         $animations;
+}
+
+@mixin keyframes($animationName) {
+    @-webkit-keyframes #{$animationName} {@content;}
+    @-moz-keyframes #{$animationName} {@content;}
+    @-o-keyframes #{$animationName} {@content;}
+    @keyframes #{$animationName} {@content;}
+}
+
+@mixin flexbox {
+  display:-webkit-box;
+  display:-moz-box;
+  display:-ms-flexbox;
+  display:-webkit-flex;
+  display:flex;
+}
+
+@mixin flex($values) {
+  -webkit-box-flex: $values;
+  -moz-box-flex:  $values;
+  -ms-flex:  $values;
+  -webkit-flex:  $values;
+  flex:  $values;
+}
+
+@mixin flex-order($order) {
+  -webkit-box-ordinal-group: $order;
+  -moz-box-ordinal-group: $order;
+  -ms-flex-order: $order;
+  -webkit-order: $order;
+  order: $order;
+}
+
+@mixin justify-content($value) {
+  -webkit-justify-content: $value;
+  -moz-justify-content: $value;
+  justify-content: $value;
+}
+
+@mixin flex-wrap($value) {
+  -webkit-flex-wrap: $value;
+  -moz-flex-wrap: $value;
+  flex-wrap: $value;
+}
+
+@mixin align-items($value) {
+  -webkit-align-items: $value;
+  align-items: $value;
+}
+
+@mixin align-self($value) {
+  -webkit-align-self: $value;
+  align-self: $value;
+}
+
+@mixin flex-direction($direction) {
+  @if $direction == column {
+    -webkit-flex-direction:vertical;
+    -moz-flex-direction:vertical;
+    -ms-flex-direction:column;
+    -webkit-flex-direction:column;
+    flex-direction:column;
+  }
+
+  @else {
+    -webkit-flex-direction:horizontal;
+    -moz-flex-direction:horizontal;
+    -ms-flex-direction:row;
+    -webkit-flex-direction:row;
+    flex-direction:row;
+  }
+}
+
+@mixin gradient-radial-custom($inner-color: #555, $outer-color: #333, $model: '', $positionX: '', $positionY: '') {
+  background-image: -webkit-radial-gradient($positionX $positionY, circle $model, $inner-color, $outer-color);
+  background-image: radial-gradient($positionX $positionY, circle $model, $inner-color, $outer-color);
+  background-repeat: no-repeat;
+}

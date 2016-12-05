@@ -1,0 +1,27 @@
+// _______ _______  ______  _____  __   _  _____  _     _ _______
+// |  |  | |_____| |_____/ |     | | \  | |   __| |     | |_____|
+// |  |  | |     | |    \_ |_____| |  \_| |____\| |_____| |     |
+//
+// Theme Name:    cami-web
+// Author:        rtud <radu@maronqua.ro>
+// Company:       Maronqua
+// Company URI:   http://maronqua.ro
+// File Name:     main.scss
+// Notes:         General cami-web stying overrides
+//
+// --------------------------------------------------------
+
+// --------------------------------------------------------
+// ! Imports of General Tools and Utilities
+// --------------------------------------------------------
+
+@import '_variables.scss';
+@import '_additional-mixins.scss';
+
+
+// --------------------------------------------------------
+// ! General Rules
+// --------------------------------------------------------
+
+body #page {background-color: $color-background;}
+
