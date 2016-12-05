@@ -37,6 +37,47 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
   background-size: 100% auto;
   background-repeat: no-repeat;
 
+  // App Top Header Styles
+  .personaltop {
+    background-color: transparent;
+    padding: 0 calc((100vw - 1250px) / 2 + 60px) 0 !important;
+
+    .uvc-type-wrap div.ultimate-vticker.ticker {
+      color: white !important;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .vc_column-inner {
+
+      // Overrding microphone logo looks
+      .vc_icon_element {
+        text-align: right;
+
+        .vc_icon_element-inner {
+          background: white;
+          border: 1px solid darken($color-elder-status-low, 5%);
+
+          .vc_icon_element-icon {color: $color-status-high;}
+        }
+      }
+
+      // Overriding main header logo w/ improved one
+      // -- requires new logo to be placed in theme/images dir
+      .wpb_single_image {
+        text-align: left;
+
+        .vc_single_image-wrapper {
+          background-image: url(../images/logo-white.min.png);
+          background-size: 125px auto;
+          background-position: left center;
+          background-repeat: no-repeat;
+        }
+
+        img.vc_single_image-img {@include opacity(0);}
+      }
+    }
+  }
   // insuring that page always stretches to fill the screen
   // -- no matter how much content it supports
   #page {
