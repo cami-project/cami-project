@@ -58,7 +58,11 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
           background: white;
           border: 1px solid darken($color-elder-status-low, 5%);
 
-          .vc_icon_element-icon {color: $color-status-high;}
+          .vc_icon_element-icon {
+            color: $color-status-high;
+            font-size: 1.5rem !important;
+            line-height: 1.5rem !important;
+          }
         }
       }
 
@@ -66,6 +70,7 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
       // -- requires new logo to be placed in theme/images dir
       .wpb_single_image {
         text-align: left;
+        margin: .75rem 0 0;
 
         .vc_single_image-wrapper {
           background-image: url(../images/logo-white.min.png);
@@ -79,8 +84,15 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
     }
   }
 
+  // Elder Profile Icon
+  .wpb_column.topicon {
+    background-color: transparent;
+
+    .ult-spacer {display: none !important;}
+  }
+
   // App Icons List
-  #content .vc_row.wpb_row:not(.personaltop) {
+  #content > .vc_row.wpb_row:not(.personaltop) {
 
     // Icon slate
     .vc_icon_element.vc_icon_element-outer {
