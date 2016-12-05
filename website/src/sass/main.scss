@@ -167,5 +167,78 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
       left: 0;
     }
   }
+
+  // Home Screen Overrides
+  &.page_home-page {
+    .vc_row.vc_row-o-equal-height.vc_row-flex {
+      margin-top: -1.25rem;
+
+      > .vc_column_container > .vc_column-inner {
+        background-color: rgba(white, .75);
+        border: 1px solid darken($color-elder-status-low, 5%) !important;
+        border-radius: .25rem !important;
+        @include box-shadow(0 .1rem 1.5rem rgba(darken($color-elder-status-low, 9%), .7));
+        padding: 1.5rem 1.75rem 1.75rem;
+
+        .dt-fancy-separator {
+          .dt-fancy-title {
+            color: $gray-dark !important;
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1.2;
+          }
+        }
+
+        .ult-spacer + .wpb_content_element > .wpb_wrapper h3 {margin-bottom: 1rem !important;}
+
+        h3 {
+          font-size: 1rem;
+          color: $gray-neutral;
+
+          span {color: $color-status-ok !important;}
+        }
+
+        .vc_btn3-container.morebtn {
+          margin-bottom: 0;
+
+          a.vc_btn3, i.vc_btn3-icon {
+            font-size: 1rem !important;
+            line-height: 1rem !important;
+          }
+
+          a.vc_btn3 {
+            background-image: none;
+            background-color: $color-elder-status-low;
+            border-radius: 3px;
+            border: 1px solid darken($color-elder-status-low, 5%) !important;
+            font-weight: 600;
+          }
+
+          i.vc_btn3-icon {
+            margin-right: .25rem;
+          }
+        }
+
+        .ult-spacer + .vc_row.wpb_row.vc_row-fluid {
+          padding: .5rem 0;
+
+          h3 {
+            font-size: 1.25rem;
+            text-align: left !important;
+            color: $gray-dark;
+
+            em {font-size: .75rem;}
+          }
+
+          .vc_column-inner {
+            padding-top: 0;
+          }
+        }
+
+        .vc_icon_element-inner.vc_icon_element-color-green .vc_icon_element-icon {color: $color-status-ok;}
+        .vc_icon_element-inner.vc_icon_element-color-orange .vc_icon_element-icon {color: $color-status-medium;}
+      }
+    }
+  }
 }
 
