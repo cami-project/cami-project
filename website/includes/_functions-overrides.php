@@ -12,6 +12,8 @@
   * Notes:        File needs to be required at the end of theme's main functions.php
   */
 
+
+
 // Styles: Append the global styles overrides
 // -----------------------------------------------------------------
 function mq_global_styles_overrides() {
@@ -32,7 +34,9 @@ function mq_global_body_classes($classes) {
     'mq',
     'maronqua',
     'styles-overrides',
-    'styles-overrides-bundle'
+    'styles-overrides-bundle',
+    // create page specific class from the title
+    get_the_title() ? 'page_' . sanitize_title(get_the_title()) : ''
   );
 
   return array_merge($classes, $body_classes_overrides);
