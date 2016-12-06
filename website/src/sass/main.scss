@@ -61,6 +61,31 @@ html {
   padding: 1.75rem;
 }
 
+
+// --------------------------------------------------------
+// ! Class-based color palette definitions
+// --------------------------------------------------------
+
+@mixin message-box-color($color) {
+  &.vc_message_box {
+    color: darken($color, 8%);
+    border-color: rgba($color, .5);
+    background-color: rgba(lighten($color, 45%), .75);
+  }
+
+  &.vc_message_box .vc_message_box-icon {color: $color;}
+}
+
+.vc_color-green {@include message-box-color($color-status-ok);}
+.vc_color-orange {@include message-box-color($color-status-warning);}
+.vc_color-red {@include message-box-color($color-status-alert);}
+
+
+// Icon color based on status
+.vc_icon_element-inner.vc_icon_element-color-green .vc_icon_element-icon {color: $color-status-ok;}
+.vc_icon_element-inner.vc_icon_element-color-orange .vc_icon_element-icon {color: $color-status-warning;}
+
+
 body.mq.maronqua.styles-overrides.styles-overrides-bundle {
   min-height: 100vh;
   background:  url('../images/body-bg.min.jpg');
@@ -90,7 +115,7 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
           border: 1px solid darken($color-elder-status-low, 5%);
 
           .vc_icon_element-icon {
-            color: $color-status-high;
+            color: $color-status-alert;
             font-size: 1.5rem !important;
             line-height: 1.5rem !important;
           }
@@ -291,10 +316,6 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
             line-height: 1.4;
           }
         }
-
-        // Icon color based on status
-        .vc_icon_element-inner.vc_icon_element-color-green .vc_icon_element-icon {color: $color-status-ok;}
-        .vc_icon_element-inner.vc_icon_element-color-orange .vc_icon_element-icon {color: $color-status-medium;}
       }
     }
   }
