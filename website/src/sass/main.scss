@@ -61,6 +61,54 @@ html {
   padding: 1.75rem;
 }
 
+// used for styling secondary navigation buttons
+@mixin icon-slate() {
+  background-color: rgba(white, .75) !important;
+  border: 1px solid darken($color-elder-status-low, 5%) !important;
+  border-radius: .25rem !important;
+  @include box-shadow(0 .1rem 1.5rem rgba(darken($color-elder-status-low, 9%), .7));
+  position: relative;
+  padding: .75rem;
+  z-index: 4;
+
+  .vc_icon_element-inner {
+    background: transparent;
+    width: 100% !important;
+    height: 2.5rem !important;
+    position: initial;
+
+    .vc_icon_element-icon {
+      font-size: 2.5rem !important;
+      line-height: 1 !important;
+      color: rgba($color-elder-status-low, .95);
+      display: inline-block;
+      top: 2.5rem;
+
+      // override the way the link is displayed to cover most of the slate
+      & + a.vc_icon_element-link {
+        top: 0;
+        left: 0;
+        z-index: 6;
+      }
+    }
+  }
+
+  // insure slate text is wrapped inside slate
+  .vc_icon_element + .wpb_text_column {
+    position: relative;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.1;
+    &,
+    a,
+    a:active,
+    a:visited,
+    a:focus {color: $gray-dark}
+
+    a {text-decoration: none;}
+  }
+}
+
 
 // --------------------------------------------------------
 // ! Class-based color palette definitions
@@ -157,63 +205,6 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
     .ult-spacer {display: none !important;}
   }
 
-  // App Icons List
-  #DISABLED > .vc_row.wpb_row:not(.personaltop) {
-
-    // Icon slate
-    .vc_icon_element.vc_icon_element-outer {
-      margin: 0 auto;
-      position: relative;
-      background-color: rgba(white, .75);
-      padding: .75rem .75rem 2.5rem;
-      z-index: 4;
-      border: 1px solid darken($color-elder-status-low, 5%);
-      border-radius: .25rem;
-      @include box-shadow(0 .1rem 1.5rem rgba(darken($color-elder-status-low, 9%), .7));
-
-      .vc_icon_element-inner {
-        background: transparent;
-        width: 3rem !important;
-        height: 3rem !important;
-        position: initial;
-
-        .vc_icon_element-icon {
-          font-size: 3rem !important;
-          line-height: 1 !important;
-          color: green;
-          display: inline-block;
-          top: 2.5rem;
-
-          // override the way the link is displayed to cover most of the slate
-          & + a.vc_icon_element-link {
-            top: 0;
-            left: 0;
-            z-index: 6;
-          }
-        }
-      }
-
-      // insure slate text is wrapped inside slate
-      & + .wpb_text_column {
-        position: relative;
-        margin-top: -2rem;
-        margin-bottom: 2.5rem;
-        z-index: 5;
-        font-size: 1rem;
-        font-weight: 700;
-        line-height: 1.1;
-        &,
-        a,
-        a:active,
-        a:visited,
-        a:focus {color: green}
-
-        a {
-          text-decoration: none;
-        }
-      }
-    }
-  }
 
   // insuring that page always stretches to fill the screen
   // -- no matter how much content it supports
@@ -385,6 +376,14 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
         }
       }
     }
+
+    // secondary nav icon slates
+    .vc_row.vc_row-o-equal-height.vc_row-flex:not(.botmenu) {
+      .vc_column-inner {@include icon-slate();}
+    }
+
+    // even out spacing between icon slates & footer nav
+    .vc_row.vc_row-o-equal-height.vc_row-flex.botmenu {margin-top: .75rem;}
   }
 }
 
