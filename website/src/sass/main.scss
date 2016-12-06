@@ -180,6 +180,7 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
         @include box-shadow(0 .1rem 1.5rem rgba(darken($color-elder-status-low, 9%), .7));
         padding: 1.5rem 1.75rem 1.75rem;
 
+        // Column Titles
         .dt-fancy-separator {
           .dt-fancy-title {
             color: $gray-dark !important;
@@ -191,6 +192,7 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
 
         .ult-spacer + .wpb_content_element > .wpb_wrapper h3 {margin-bottom: 1rem !important;}
 
+        // Column sub-title
         h3 {
           font-size: 1rem;
           color: $gray-neutral;
@@ -198,6 +200,7 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
           span {color: $color-status-ok !important;}
         }
 
+        // More Button styling
         .vc_btn3-container.morebtn {
           margin-bottom: 0;
 
@@ -219,6 +222,10 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
           }
         }
 
+        // Status Widgets
+        // - heart rate
+        // - weight
+        // - blood pressure
         .ult-spacer + .vc_row.wpb_row.vc_row-fluid {
           padding: .5rem 0;
 
@@ -235,6 +242,24 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
           }
         }
 
+        .vc_message_box.vc_message_box-rounded {
+          border-radius: 3px;
+          background-color: rgba(white, .85);
+          border: 1px solid rgba(darken($color-elder-status-low, 5%), .4) !important;
+
+          .vc_message_box-icon {
+            color: $gray-neutral;
+          }
+
+          p {
+            color: $gray-dark;
+            font-size: .9rem;
+            font-weight: 500;
+            line-height: 1.4;
+          }
+        }
+
+        // Icon color based on status
         .vc_icon_element-inner.vc_icon_element-color-green .vc_icon_element-icon {color: $color-status-ok;}
         .vc_icon_element-inner.vc_icon_element-color-orange .vc_icon_element-icon {color: $color-status-medium;}
       }
