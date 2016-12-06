@@ -170,7 +170,7 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
 
   // Home Screen Overrides
   &.page_home-page {
-    .vc_row.vc_row-o-equal-height.vc_row-flex {
+    .vc_row.vc_row-o-equal-height.vc_row-flex:not(.botmenu) {
       margin-top: -1.25rem;
 
       > .vc_column_container > .vc_column-inner {
@@ -265,5 +265,39 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
       }
     }
   }
+
+  // Footer Menu Buttons Overrides
+  .vc_row.vc_row-o-equal-height.vc_row-flex.botmenu {
+    background-color: rgba(white, .75);
+    @include box-shadow(0 -.25rem 1rem rgba(darken($color-elder-status-low, 9%), .7));
+
+    // Individual button overrides
+    .vc_column_container.vc_col-has-fill {
+      .vc_column-inner {
+        border-color: rgba($color-elder-status-low, .95) !important;
+        border-left-width: 2px !important;
+        border-right-width: 2px !important;
+        padding-top: .5rem;
+        padding-bottom: .5rem;
+        background-color: rgba(white, .55);
+
+        .ult-spacer {display: none !important;}
+
+        .vc_icon_element-icon {
+          color: rgba($color-elder-status-low, .95);
+        }
+
+        .wpb_text_column.wpb_content_element {margin: .5rem 0 0;}
+
+        .botlink {
+          color: $gray-dark;
+          font-size: 1rem;
+          font-weight: 600;
+          line-height: 1.2;
+        }
+      }
+    }
+  }
+
 }
 
