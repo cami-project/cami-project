@@ -15,6 +15,9 @@
 // ! Imports of General Tools and Utilities
 // --------------------------------------------------------
 
+@import '_vendor-prefixes.scss';
+@import '_opacity.scss';
+@import '_gradients.scss';
 @import '_variables.scss';
 @import '_additional-mixins.scss';
 
@@ -23,5 +26,285 @@
 // ! General Rules
 // --------------------------------------------------------
 
-body #page {background-color: $color-background;}
+html {
+  font-size: $font-size-base;
+  background-color: $color-elder-status-low;
+}
+
+body.mq.maronqua.styles-overrides.styles-overrides-bundle {
+  min-height: 100vh;
+  background:  url('../images/body-bg.min.jpg');
+  background-position: center top;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+
+  // App Top Header Styles
+  .personaltop {
+    background-color: transparent;
+    padding: 0 calc((100vw - 1250px) / 2 + 60px) 0 !important;
+
+    .uvc-type-wrap div.ultimate-vticker.ticker {
+      color: white !important;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .vc_column-inner {
+
+      // Overrding microphone logo looks
+      .vc_icon_element {
+        text-align: right;
+
+        .vc_icon_element-inner {
+          background: white;
+          border: 1px solid darken($color-elder-status-low, 5%);
+
+          .vc_icon_element-icon {
+            color: $color-status-high;
+            font-size: 1.5rem !important;
+            line-height: 1.5rem !important;
+          }
+        }
+      }
+
+      // Overriding main header logo w/ improved one
+      // -- requires new logo to be placed in theme/images dir
+      .wpb_single_image {
+        text-align: left;
+        margin: .75rem 0 0;
+
+        .vc_single_image-wrapper {
+          background-image: url(../images/logo-white.min.png);
+          background-size: 125px auto;
+          background-position: left center;
+          background-repeat: no-repeat;
+        }
+
+        img.vc_single_image-img {@include opacity(0);}
+      }
+    }
+  }
+
+  // Elder Profile Icon
+  .wpb_column.topicon {
+    background-color: transparent;
+
+    .ult-spacer {display: none !important;}
+  }
+
+  // App Icons List
+  #DISABLED > .vc_row.wpb_row:not(.personaltop) {
+
+    // Icon slate
+    .vc_icon_element.vc_icon_element-outer {
+      margin: 0 auto;
+      position: relative;
+      background-color: rgba(white, .75);
+      padding: .75rem .75rem 2.5rem;
+      z-index: 4;
+      border: 1px solid darken($color-elder-status-low, 5%);
+      border-radius: .25rem;
+      @include box-shadow(0 .1rem 1.5rem rgba(darken($color-elder-status-low, 9%), .7));
+
+      .vc_icon_element-inner {
+        background: transparent;
+        width: 3rem !important;
+        height: 3rem !important;
+        position: initial;
+
+        .vc_icon_element-icon {
+          font-size: 3rem !important;
+          line-height: 1 !important;
+          color: green;
+          display: inline-block;
+          top: 2.5rem;
+
+          // override the way the link is displayed to cover most of the slate
+          & + a.vc_icon_element-link {
+            top: 0;
+            left: 0;
+            z-index: 6;
+          }
+        }
+      }
+
+      // insure slate text is wrapped inside slate
+      & + .wpb_text_column {
+        position: relative;
+        margin-top: -2rem;
+        margin-bottom: 2.5rem;
+        z-index: 5;
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.1;
+        &,
+        a,
+        a:active,
+        a:visited,
+        a:focus {color: green}
+
+        a {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
+  // insuring that page always stretches to fill the screen
+  // -- no matter how much content it supports
+  #page {
+    background: transparent;
+    @include gradient-vertical-three-colors (
+      rgba($color-elder-status-low, 0),
+      rgba($color-elder-status-low, .5),
+      70%,
+      rgba($color-elder-status-low, 1)
+    );
+    position: relative;
+    min-height: 100vh;
+
+    // using pseudo class to create color mask on top of body
+    &:before {
+      background-color: rgba($color-elder-status-low, .85);
+      position: absolute;
+      content: ' ';
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+  }
+
+  // Home Screen Overrides
+  &.page_home-page {
+    .vc_row.vc_row-o-equal-height.vc_row-flex:not(.botmenu) {
+      margin-top: -1.25rem;
+
+      > .vc_column_container > .vc_column-inner {
+        background-color: rgba(white, .75);
+        border: 1px solid darken($color-elder-status-low, 5%) !important;
+        border-radius: .25rem !important;
+        @include box-shadow(0 .1rem 1.5rem rgba(darken($color-elder-status-low, 9%), .7));
+        padding: 1.5rem 1.75rem 1.75rem;
+
+        // Column Titles
+        .dt-fancy-separator {
+          .dt-fancy-title {
+            color: $gray-dark !important;
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1.2;
+          }
+        }
+
+        .ult-spacer + .wpb_content_element > .wpb_wrapper h3 {margin-bottom: 1rem !important;}
+
+        // Column sub-title
+        h3 {
+          font-size: 1rem;
+          color: $gray-neutral;
+
+          span {color: $color-status-ok !important;}
+        }
+
+        // More Button styling
+        .vc_btn3-container.morebtn {
+          margin-bottom: 0;
+
+          a.vc_btn3, i.vc_btn3-icon {
+            font-size: 1rem !important;
+            line-height: 1rem !important;
+          }
+
+          a.vc_btn3 {
+            background-image: none;
+            background-color: $color-elder-status-low;
+            border-radius: 3px;
+            border: 1px solid darken($color-elder-status-low, 5%) !important;
+            font-weight: 600;
+          }
+
+          i.vc_btn3-icon {
+            margin-right: .25rem;
+          }
+        }
+
+        // Status Widgets
+        // - heart rate
+        // - weight
+        // - blood pressure
+        .ult-spacer + .vc_row.wpb_row.vc_row-fluid {
+          padding: .5rem 0;
+
+          h3 {
+            font-size: 1.25rem;
+            text-align: left !important;
+            color: $gray-dark;
+
+            em {font-size: .75rem;}
+          }
+
+          .vc_column-inner {
+            padding-top: 0;
+          }
+        }
+
+        .vc_message_box.vc_message_box-rounded {
+          border-radius: 3px;
+          background-color: rgba(white, .85);
+          border: 1px solid rgba(darken($color-elder-status-low, 5%), .4) !important;
+
+          .vc_message_box-icon {
+            color: $gray-neutral;
+          }
+
+          p {
+            color: $gray-dark;
+            font-size: .9rem;
+            font-weight: 500;
+            line-height: 1.4;
+          }
+        }
+
+        // Icon color based on status
+        .vc_icon_element-inner.vc_icon_element-color-green .vc_icon_element-icon {color: $color-status-ok;}
+        .vc_icon_element-inner.vc_icon_element-color-orange .vc_icon_element-icon {color: $color-status-medium;}
+      }
+    }
+  }
+
+  // Footer Menu Buttons Overrides
+  .vc_row.vc_row-o-equal-height.vc_row-flex.botmenu {
+    background-color: rgba(white, .75);
+    @include box-shadow(0 -.25rem 1rem rgba(darken($color-elder-status-low, 9%), .7));
+
+    // Individual button overrides
+    .vc_column_container.vc_col-has-fill {
+      .vc_column-inner {
+        border-color: rgba($color-elder-status-low, .95) !important;
+        border-left-width: 2px !important;
+        border-right-width: 2px !important;
+        padding-top: .5rem;
+        padding-bottom: .5rem;
+        background-color: rgba(white, .55);
+
+        .ult-spacer {display: none !important;}
+
+        .vc_icon_element-icon {
+          color: rgba($color-elder-status-low, .95);
+        }
+
+        .wpb_text_column.wpb_content_element {margin: .5rem 0 0;}
+
+        .botlink {
+          color: $gray-dark;
+          font-size: 1rem;
+          font-weight: 600;
+          line-height: 1.2;
+        }
+      }
+    }
+  }
+
+}
 
