@@ -17,6 +17,7 @@
 
 @import '_vendor-prefixes.scss';
 @import '_opacity.scss';
+@import '_gradients.scss';
 @import '_variables.scss';
 @import '_additional-mixins.scss';
 
@@ -153,6 +154,12 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
   // -- no matter how much content it supports
   #page {
     background: transparent;
+    @include gradient-vertical-three-colors (
+      rgba($color-elder-status-low, 0),
+      rgba($color-elder-status-low, .5),
+      70%,
+      rgba($color-elder-status-low, 1)
+    );
     position: relative;
     min-height: 100vh;
 
