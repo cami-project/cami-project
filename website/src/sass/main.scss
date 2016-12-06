@@ -86,6 +86,16 @@ html {
 .vc_icon_element-inner.vc_icon_element-color-orange .vc_icon_element-icon {color: $color-status-warning;}
 
 
+// --------------------------------------------------------
+// ! Main Override Styles
+// --------------------------------------------------------
+
+// we're using the power of SASS tree hierarchy
+// - in order for the overrides to apply, we're using a CSS feature called **specificity**
+// - this calls for us to use many classes appended to a core page element
+// - we've chosen the **body** element
+// - these classes are appended using a WP filter inside _functions-overrides.php
+
 body.mq.maronqua.styles-overrides.styles-overrides-bundle {
   min-height: 100vh;
   background:  url('../images/body-bg.min.jpg');
@@ -353,5 +363,28 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
     }
   }
 
+  // Health Screen Overrides
+  &.page_health {
+    @include topicon();
+
+    // panel that displays latest sensor-based analyzed information
+    // - requires adding the .main-panel class inside Visual Composer layout
+    .main-panel {
+      border-radius: .25rem;
+      @include box-shadow(0 .1rem 1.5rem rgba(darken($color-elder-status-low, 9%), .7));
+
+      .vc_column-inner {
+        @include main-panel();
+
+        .ult-spacer {display: none !important;}
+
+        .vc_message_box {
+          margin: 0;
+
+          & + .vc_message_box {margin-top: .875rem;}
+        }
+      }
+    }
+  }
 }
 
