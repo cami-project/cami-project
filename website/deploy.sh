@@ -13,7 +13,7 @@ wget --output-document=/var/www/html/wp-content/themes/theme/css/styles-override
 
 # Grab the latest _functions-overrides.php tpl that enables the overrides capabilities
 echo -e "\n${symHammers} ${bold}${white}Grabbing latest functions overrides...${reset}\n"
-wget --output-document=/var/www/html/wp-content/themes/theme/_functions-overrides.php https://raw.githubusercontent.com/cami-project/cami-project/master/website/assets/includes/_functions-overrides.php 2>&1 | tee -a $HOME/deploy.log
+wget --output-document=/var/www/html/wp-content/themes/theme/_functions-overrides.php https://raw.githubusercontent.com/cami-project/cami-project/master/website/includes/_functions-overrides.php 2>&1 | tee -a $HOME/deploy.log
 
 # Insure spacing in-between log entries
 echo -e "\n=============================================================\n" >> deploy.log
