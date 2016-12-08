@@ -1,7 +1,19 @@
 # cami-project
 http://www.camiproject.eu/
 
-# Setup using Docker
+# Architecture
+The system within this repository is made up of two main components:
+* an iOS mobile application, based on React Native (Pepperoni boilerplate)
+* a backend powered by microservices, deployed in DigitalOcean
+
+For the mobile app, we have chosen React Native for its ease of use and for the possibility to easily port the application to Android, when the time comes.
+
+For the backend, we have chosen a microservices-based infrastructure for several reasons:
+* the consortium implementing CAMI is made up of multiple partners, who need to integrate their work
+* microservices is the modern way of implementing multi-component architectures
+* the underlying platform that we have chosen (Docker and Rancher) allow us to easily run the containers on any infrastructure, including your local development laptop
+
+# Setup backend using Docker
 
 The project now has a Docker containers configured for the microservices. You can either run them using the images saved on DockerHub (`Production`) or using the local code (`Development`).
 
