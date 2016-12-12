@@ -93,6 +93,7 @@ html {
         top: 0;
         left: 0;
         z-index: 6;
+
       }
     }
   }
@@ -107,7 +108,14 @@ html {
     a,
     a:active,
     a:visited,
-    a:focus {color: $gray-dark}
+    a:focus {
+      color: $gray-dark;
+
+      @media (max-width: 991px) {
+        font-size: .8rem;
+        font-weight: 600;
+      }
+    }
 
     a {text-decoration: none;}
   }
@@ -154,6 +162,22 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
   background-position: center top;
   background-size: 100% auto;
   background-repeat: no-repeat;
+
+  // Insures footer menu is sticky and is excluded from content's entire height
+  // -- when we reach the bottom when scrolling, footer menu doesn't overlap the content
+  #content {
+    position: relative;
+    padding-bottom: 7.5rem;
+
+    .botmenu {
+      position: fixed !important;
+      bottom: 0;
+      left: 0 !important;
+      margin-left: 0 !important;
+      width: 100% !important;
+      z-index: 999;
+    }
+  }
 
   // App Top Header Styles
   .personaltop {
@@ -203,7 +227,7 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
 
     // Responsive Behaviour: Tablet
     @media (max-width: 991px) {
-      padding-top: 1rem !important;
+      padding-top: .55rem !important;
 
       > div.wpb_column:first-child,
       > div.wpb_column:last-child {
@@ -396,7 +420,7 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
         border-right-width: 2px !important;
         padding-top: .5rem;
         padding-bottom: .5rem;
-        background-color: rgba(white, .55);
+        background-color: rgba(white, .75);
 
         .ult-spacer {display: none !important;}
 
@@ -437,6 +461,10 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
 
         .vc_message_box {
           margin: 0;
+
+          @media (max-width: 991px) {
+            font-size: 1rem;
+          }
 
           & + .vc_message_box {margin-top: .875rem;}
         }
