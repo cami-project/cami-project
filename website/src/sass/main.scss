@@ -438,6 +438,10 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
         .vc_message_box {
           margin: 0;
 
+          @media (max-width: 991px) {
+            font-size: 1rem;
+          }
+
           & + .vc_message_box {margin-top: .875rem;}
         }
       }
