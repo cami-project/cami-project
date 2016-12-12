@@ -59,6 +59,10 @@ html {
   border-radius: .25rem !important;
   @include box-shadow(0 .1rem 1.5rem rgba(darken($color-elder-status-low, 9%), .7));
   padding: 1.75rem;
+
+  @media (max-width: 991px) {
+    padding: 1rem;
+  }
 }
 
 // used for styling secondary navigation buttons
@@ -269,6 +273,13 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
     .vc_row.vc_row-o-equal-height.vc_row-flex:not(.botmenu) {
       margin-top: -1.25rem;
 
+      > .vc_column_container {
+        @media (max-width: 991px) {
+          &:first-child {padding: 1rem .5rem 1rem 1rem;}
+          &:last-child {padding: 1rem 1rem 1rem .5rem;}
+        }
+      }
+
       > .vc_column_container > .vc_column-inner {
         @include main-panel();
 
@@ -279,6 +290,10 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
             font-size: 1.5rem;
             font-weight: 500;
             line-height: 1.2;
+
+            @media (max-width: 991px) {
+              font-size: 1.25rem;
+            }
           }
         }
 
@@ -351,6 +366,10 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
           }
         }
       }
+    }
+    // Responsive Behaviour: Tablet
+    @media (max-width: 991px) {
+
     }
   }
 
