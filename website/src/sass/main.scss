@@ -196,6 +196,40 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
         img.vc_single_image-img {@include opacity(0);}
       }
     }
+
+    // Responsive Behaviour: Tablet
+    @media (max-width: 991px) {
+      padding-top: 25px !important;
+
+      > div.wpb_column:first-child,
+      > div.wpb_column:last-child {
+        width: 50%;
+
+        .ult-spacer {display: none !important;}
+
+        .vc_icon_element.vc_icon_element-outer {
+          margin-bottom: 0;
+        }
+      }
+
+      > div.wpb_column:first-child {
+        .vc_column-inner .wpb_single_image {
+          margin: -18px 0 0 25px;
+
+          .vc_single_image-wrapper {
+            background-size: 100px auto;
+          }
+        }
+
+        .vc_column-inner .vc_icon_element {
+          text-align: left;
+        }
+      }
+
+      > div.wpb_column:last-child {
+        > .vc_column-inner > .wpb_wrapper {margin-right: 25px;}
+      }
+    }
   }
 
   // Elder Profile Icon
