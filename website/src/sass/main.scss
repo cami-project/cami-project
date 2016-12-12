@@ -59,6 +59,10 @@ html {
   border-radius: .25rem !important;
   @include box-shadow(0 .1rem 1.5rem rgba(darken($color-elder-status-low, 9%), .7));
   padding: 1.75rem;
+
+  @media (max-width: 991px) {
+    padding: 1rem;
+  }
 }
 
 // used for styling secondary navigation buttons
@@ -196,6 +200,39 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
         img.vc_single_image-img {@include opacity(0);}
       }
     }
+
+    // Responsive Behaviour: Tablet
+    @media (max-width: 991px) {
+      padding-top: 1rem !important;
+
+      > div.wpb_column:first-child,
+      > div.wpb_column:last-child {
+        width: 50%;
+
+        .ult-spacer {display: none !important;}
+
+        .vc_icon_element.vc_icon_element-outer {
+          margin-bottom: 0;
+        }
+      }
+
+      > div.wpb_column:first-child {
+        .vc_column-inner .wpb_single_image {
+          margin: -.25rem 0 0 1rem;
+
+          .vc_single_image-wrapper {
+            background-size: 100px auto;
+            height: 4.15rem;
+          }
+        }
+
+        .vc_column-inner .vc_icon_element {text-align: left;}
+      }
+
+      > div.wpb_column:last-child {
+        > .vc_column-inner > .wpb_wrapper {margin-right: 1rem;}
+      }
+    }
   }
 
   // Elder Profile Icon
@@ -236,6 +273,13 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
     .vc_row.vc_row-o-equal-height.vc_row-flex:not(.botmenu) {
       margin-top: -1.25rem;
 
+      > .vc_column_container {
+        @media (max-width: 991px) {
+          &:first-child {padding: 1rem .5rem 1rem 1rem;}
+          &:last-child {padding: 1rem 1rem 1rem .5rem;}
+        }
+      }
+
       > .vc_column_container > .vc_column-inner {
         @include main-panel();
 
@@ -246,6 +290,10 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
             font-size: 1.5rem;
             font-weight: 500;
             line-height: 1.2;
+
+            @media (max-width: 991px) {
+              font-size: 1.25rem;
+            }
           }
         }
 
@@ -319,12 +367,26 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
         }
       }
     }
+    // Responsive Behaviour: Tablet
+    @media (max-width: 991px) {
+
+    }
   }
 
   // Footer Menu Buttons Overrides
   .vc_row.vc_row-o-equal-height.vc_row-flex.botmenu {
     background-color: rgba(white, .75);
     @include box-shadow(0 -.25rem 1rem rgba(darken($color-elder-status-low, 9%), .7));
+
+    @media (max-width: 991px) {
+      margin-top: -1rem;
+
+      > .vc_col-xs-1 {display: none;}
+
+      > .vc_col-xs-2 {
+        width: calc(100% / 5);
+      }
+    }
 
     // Individual button overrides
     .vc_column_container.vc_col-has-fill {
@@ -349,6 +411,10 @@ body.mq.maronqua.styles-overrides.styles-overrides-bundle {
           font-size: 1rem;
           font-weight: 600;
           line-height: 1.2;
+
+          @media (max-width: 991px) {
+            font-size: .8rem;
+          }
         }
       }
     }
