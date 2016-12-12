@@ -107,7 +107,14 @@ html {
     a,
     a:active,
     a:visited,
-    a:focus {color: $gray-dark}
+    a:focus {
+      color: $gray-dark;
+
+      @media (max-width: 991px) {
+        font-size: .8rem;
+        font-weight: 600;
+      }
+    }
 
     a {text-decoration: none;}
   }
