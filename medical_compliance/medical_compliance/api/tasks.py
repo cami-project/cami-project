@@ -42,6 +42,7 @@ def fetch_weight_measurement(user_id, input_source, measurement_unit, timestamp,
     )
     weight_measurement.save()
     analyze_weights.delay(weight_measurement.id)
+    broadcast_measurement('weight', weight_measurement)
 
 @app.task(name='medical_compliance_measurements.fetch_heart_rate_measurement')
 def fetch_heart_rate_measurement():
@@ -85,8 +86,25 @@ def fetch_heart_rate_measurement():
             value=m['value']
         )
         heart_rate_measurement.save()
+        broadcast_measurement('heartrate', heart_rate_measurement)
 
     analyze_heart_rates.delay(last_cinch_measurement, 'cinch')
     analyze_heart_rates.delay(last_test_measurement, 'test')
 
     return json.dumps(measurements, indent=4, sort_keys=True)
+
+
+def broadcast_measurement(measurement_type, measurement):
+    measurement_json = {
+        'type': measurement_type,
+        'user_id': measurement.user_id,
+        'input_source': measurement.input_source,
+        'measurement_unit': measurement.measurement_unit,
+        'timestamp': measurement.timestamp,
+        'timezone': measurement.timezone,
+        'value': measurement.value
+    }
+    global_app = Celery()
+    global_app.config_from_object('django.conf:settings')
+    global_app.send_task('cami.parse_measurement', [measurement_json], queue='broadcast_measurement')
+    
