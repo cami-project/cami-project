@@ -1,4 +1,5 @@
 import {Map, fromJS} from 'immutable';
+import * as auth0 from '../../services/auth0';
 
 // Initial state
 const initialState = Map({
@@ -12,6 +13,7 @@ const initialState = Map({
 // Actions
 const USER_LOGIN_SUCCESS = 'AppState/USER_LOGIN_SUCCESS';
 const USER_LOGIN_ERROR = 'AppState/USER_LOGIN_ERROR';
+const USER_LOGOUT = 'AppState/USER_LOGOUT';
 
 export function onUserLoginSuccess(profile, token) {
   return {
@@ -31,6 +33,12 @@ export function onUserLoginError(error) {
   };
 }
 
+export function logout() {
+  return {
+    type: USER_LOGOUT
+  };
+}
+
 // Reducer
 export default function AuthStateReducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -41,6 +49,10 @@ export default function AuthStateReducer(state = initialState, action = {}) {
         .set('authenticationToken', action.payload.token);
     case USER_LOGIN_ERROR:
       return initialState;
+    case USER_LOGOUT:
+      auth0.showLogin();
+      return state
+        .set('isLoggedIn', false)
     default:
       return state;
   }

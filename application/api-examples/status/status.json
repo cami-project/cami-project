@@ -36,43 +36,6 @@
       "status": "alert"
     }]
   },
-  "weight": {
-    "status": "warning",
-    "threshold": 72,
-    "data": [{
-      "timestamp": 1468479600,
-      "value": 72,
-      "status": "ok"
-    }, {
-      "timestamp": 1468566000,
-      "value": 72,
-      "status": "ok"
-    }, {
-      "timestamp": 1468652400,
-      "value": 72,
-      "status": "ok"
-    }, {
-      "timestamp": 1468738800,
-      "value": 72,
-      "status": "ok"
-    }, {
-      "timestamp": 1468825200,
-      "value": 70,
-      "status": "warning"
-    }, {
-      "timestamp": 1468911600,
-      "value": 68,
-      "status": "warning"
-    }, {
-      "timestamp": 1468998000,
-      "value": 65,
-      "status": "alert"
-    }, {
-      "timestamp": 1469084400,
-      "value": 68,
-      "status": "warning"
-    }]
-  },
   "steps": {
     "status": "ok",
     "threshold": 235,

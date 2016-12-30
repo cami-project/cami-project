@@ -1,0 +1,8 @@
+node_modules/*
+.sass-cache/*
+*.swp
+*.swo
+*.log
+.DS_Store
+*~
+src/css/**

@@ -8,13 +8,15 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  Component
+  Component,
+  RefreshControl
 } from 'react-native';
 import Color from 'color';
 import moment from 'moment';
 
 import JournalEntry from './components/JournalEntry';
 import variables from '../variables/CaregiverGlobalVariables';
+import * as JournalStateActions from './JournalState'
 
 const DATE_FORMAT = 'D MMM';
 const WEEK_DATE_FORMAT = 'ddd D MMM';
@@ -22,15 +24,23 @@ const WEEK_DATE_FORMAT = 'ddd D MMM';
 const JournalView = React.createClass({
   propTypes: {
     events: PropTypes.instanceOf(List).isRequired,
-    username: PropTypes.string.isRequired
+    username: PropTypes.string.isRequired,
+    refreshing: PropTypes.bool.isRequired,
+    dispatch: PropTypes.func.isRequired
+  },
+  componentDidMount() {
+    this.onRefresh();  
+  },
+
+  onRefresh() {
+    this.props.dispatch(JournalStateActions.markStartRefreshing());
+    this.props.dispatch(JournalStateActions.requestJournalData());
   },
 
   render() {
-    // TODO switch places the following 2 lines
-    // const todayDateText = moment().format(DATE_FORMAT);
-    const todayDateText = moment(new Date(this.props.events.get(0).get('timestamp') * 1000)).format(DATE_FORMAT);
-    const firstEventDateText = moment(new Date(this.props.events.get(0).get('timestamp') * 1000)).format(DATE_FORMAT);
-    const headerDateText = todayDateText == firstEventDateText ? 'Today ' + todayDateText : firstEventDateText;
+    const todayDateText = (this.props.events.length > 0) ? moment(new Date(this.props.events.get(0).get('timestamp') * 1000)).format(DATE_FORMAT) : '';
+    const firstEventDateText = (this.props.events.length > 0) ? moment(new Date(this.props.events.get(0).get('timestamp') * 1000)).format(DATE_FORMAT) : '';
+    const headerDateText = (this.props.events.length > 0) ? (todayDateText == firstEventDateText ? 'Today ' + todayDateText : firstEventDateText) : '';
 
     const events = [];
     let dayKey = firstEventDateText;
@@ -69,7 +79,15 @@ const JournalView = React.createClass({
 
         <View style={styles.timeline}></View>
 
-        <ScrollView style={styles.journalContainer}>
+        <ScrollView 
+            style={styles.journalContainer}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.props.refreshing}
+                onRefresh={this.onRefresh}
+                />
+            }
+            >
           {events}
         </ScrollView>
       </View>

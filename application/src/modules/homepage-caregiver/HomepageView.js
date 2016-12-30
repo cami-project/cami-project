@@ -25,38 +25,40 @@ const HomepageView = React.createClass({
   propTypes: {
     username: PropTypes.string.isRequired,
     status: PropTypes.instanceOf(Map).isRequired,
-    events: PropTypes.instanceOf(List).isRequired,
+    lastEvents: PropTypes.instanceOf(List).isRequired,
     actionability: PropTypes.instanceOf(Map).isRequired,
     dispatch: PropTypes.func.isRequired
   },
 
   componentDidMount() {
-    setTimeout(() =>
-      this.props.dispatch(HomepageState.showActionability(
-        'Jim',
-        icons.heart,
-        1469793600,
-        'Jim\'s heart rate has increased drastically!',
-        'He has been reminded 3 times to take his Accupril, but did not respond.'
-      )),
-      3000
-    );
   },
 
   render() {
-    const heartRateData = this.props.status.get('heart').get('rate');
-    const weightData = this.props.status.get('weight').get('amount');
-
     return (
       <View style={styles.container}>
 
         <View style={styles.headerContainer}>
           <Image style={styles.headerBackgroundImage} source={require('../../../images/old-man.jpg')}/>
-          <View style={styles.headerContainerInner}>
+          <View
+            style={[
+              styles.headerContainerInner,
+              {
+                backgroundColor: !this.props.actionability.get('visible')
+                  ? Color(variables.colors.status.ok).clearer(.1).rgbaString()
+                  : Color(variables.colors.status.alert).clearer(.1).rgbaString()
+              }
+            ]}
+          >
             <Image style={styles.avatar} source={require('../../../images/old-man.jpg')}/>
             <View style={styles.headerTextContainer}>
-              <Text style={[styles.headerText, {fontWeight: 'bold'}]}>{this.props.username + '\'s'}</Text>
-              <Text style={[styles.headerText, {fontSize: 18}]}>doing fine</Text>
+              <Text style={[styles.headerText, {fontWeight: 'bold'}]}>{'Jim'}</Text>
+              <Text style={[styles.headerText, {fontSize: 18}]}>
+                {
+                  !this.props.actionability.get('visible')
+                    ? 'is doing fine'
+                    : 'needs help'
+                }
+              </Text>
             </View>
           </View>
         </View>
@@ -68,29 +70,40 @@ const HomepageView = React.createClass({
             <ActionabilityWidget
               style={{height: 180}}
               dispatch={this.props.dispatch}
-              {...this.props.actionability.get('params')}
+              name={this.props.actionability.get('params').get('name')}
+              icon={this.props.actionability.get('params').get('icon')}
+              timestamp={this.props.actionability.get('params').get('timestamp')}
+              message={this.props.actionability.get('params').get('message')}
+              description={this.props.actionability.get('params').get('description')}
             />
           :
           null
         }
+        {
+          this.props.status.get('visible')
+          ?
+            <View style={{flexDirection: 'row'}}>
+              <StatusChart
+                data={this.props.status.get('values').get('heart_rate').get('amount')}
+                text="Heart rate"
+                icon={icons.heart}
+                unit="bpm"
+                status={this.props.status.get('values').get('heart_rate').get('status')}
+                decimals={0}
+              />
 
-          <View style={{flexDirection: 'row'}}>
-            <StatusChart
-              data={heartRateData}
-              text="Heart rate"
-              icon={icons.heart}
-              unit="bpm"
-              status="ok"
-            />
-
-            <StatusChart
-              data={weightData}
-              text="Weight"
-              icon={icons.weight}
-              unit="kg"
-              status="warning"
-            />
-          </View>
+              <StatusChart
+                data={this.props.status.get('values').get('weight').get('amount')}
+                text="Weight"
+                icon={icons.weight}
+                unit="kg"
+                status={this.props.status.get('values').get('weight').get('status')}
+                decimals={2}
+              />
+            </View>
+          :
+          null
+        }
 
           <View style={{flex: 1}}>
             <Text style={[variables.h2, {marginTop: 20, color: variables.colors.gray.neutral}]}>
@@ -101,7 +114,7 @@ const HomepageView = React.createClass({
               {/* TODO */}
               {/* Limit somehow the latest entries count */}
               {/* Maybe show only for today, or only last 5 */}
-              {this.props.events.map((event, index) =>
+              {this.props.lastEvents.map((event, index) =>
                 <JournalEntry
                   key={index}
                   type={event.get('type')}
@@ -135,7 +148,6 @@ const styles = StyleSheet.create({
   headerContainerInner: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: Color(variables.colors.status.ok).clearer(.1).rgbaString(),
     width: variables.dimensions.width,
     paddingTop: 20
   },

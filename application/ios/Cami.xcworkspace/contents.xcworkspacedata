@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../node_modules/react-native-lock/ios/A0RNLock.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:Cami.xcodeproj">
    </FileRef>
    <FileRef

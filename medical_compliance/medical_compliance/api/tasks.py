@@ -5,59 +5,88 @@ need to have the same module structure in the worker and the client.
 [1] http://docs.celeryproject.org/en/latest/userguide/tasks.html#task-naming-relative-imports
 """
 
-import celery
+import json
+import datetime
 
 from celery import Celery
 from celery.utils.log import get_task_logger
 from kombu import Queue, Exchange
 from django.conf import settings #noqa
 
-from models import WithingsMeasurement
-from withings import WithingsCredentials, WithingsApi
+import google_fit
 
-logger = get_task_logger("medical_compliance.fetch_measurement")
+from models import WeightMeasurement, HeartRateMeasurement
+
+from analyzers.weight_analyzers import analyze_weights
+from analyzers.heart_rate_analyzers import analyze_heart_rates
 
 
 app = Celery('api.tasks', broker=settings.BROKER_URL)
 app.conf.update(
-    CELERY_DEFAULT_QUEUE='withings_measurements',
+    CELERY_DEFAULT_QUEUE='medical_compliance_measurements',
     CELERY_QUEUES=(
-        Queue('withings_measurements', Exchange('withings_measurements'), routing_key='withings_measurements'),
+        Queue('medical_compliance_measurements', Exchange('medical_compliance_measurements'), routing_key='medical_compliance_measurements'),
     ),
 )
 
 
-@app.task(name='medical_compliance.fetch_measurement')
-def fetch_measurement(userid, start_ts, end_ts, measurement_type_id):
-    logger.debug(
-        "Sending request for measurement retrieval for userid: %s, start ts: %s, end ts: %s, type: %s",
-        str(userid),
-        str(start_ts),
-        str(end_ts),
-        str(measurement_type_id)
+@app.task(name='medical_compliance_measurements.fetch_weight_measurement')
+def fetch_weight_measurement(user_id, input_source, measurement_unit, timestamp, timezone, value):
+    weight_measurement = WeightMeasurement(
+        user_id = int(user_id),
+        input_source=input_source,
+        measurement_unit=measurement_unit,
+        timestamp=timestamp,
+        timezone=timezone,
+        value=value
     )
+    weight_measurement.save()
+    analyze_weights.delay(weight_measurement.id)
 
-    credentials = WithingsCredentials(access_token=settings.WITHINGS_OAUTH_V1_TOKEN,
-                                      access_token_secret=settings.WITHINGS_OAUTH_V1_TOKEN_SECRET,
-                                      consumer_key=settings.WITHINGS_CONSUMER_KEY,
-                                      consumer_secret=settings.WITHINGS_CONSUMER_SECRET,
-                                      user_id=userid)
-    # TODO: modify storage of user credentials in settings file to a per userid basis
+@app.task(name='medical_compliance_measurements.fetch_heart_rate_measurement')
+def fetch_heart_rate_measurement():
+    """
+        It's very ugly what I did here, only for demo purpose
+        We MUST clean this
+    """
+    last_cinch_measurement = None
+    last_test_measurement = None
 
-    client = WithingsApi(credentials)
-    measures = client.get_measures(startdate=start_ts, enddate=end_ts, meastype=int(measurement_type_id))
-    measurement_type = WithingsMeasurement.get_measure_type_by_id(int(measurement_type_id))
+    try:
+        last_cinch_measurement = HeartRateMeasurement.objects.all().filter(input_source='cinch').order_by('-timestamp')[0]
+        time_from_cinch = last_cinch_measurement.timestamp + 1
+    except:
+        time_from_cinch = 0
 
-    for m in measures:
-        meas = WithingsMeasurement(
-            withings_user_id = int(userid),
-            type=measurement_type_id,
-            retrieval_type=m.attrib,
-            measurement_unit=WithingsMeasurement.MEASUREMENT_SI_UNIT[measurement_type],
-            timestamp=m.data['date'],
-            timezone=measures.timezone,
-            value=m.__getattribute__(measurement_type))
-        meas.save()
+    try:
+        last_test_measurement = HeartRateMeasurement.objects.all().filter(input_source='test').order_by('-timestamp')[0]
+        time_from_test = last_test_measurement.timestamp + 1
+    except:
+        time_from_test = 0
 
+    time_to = int(
+        (
+            datetime.datetime.today() + 
+            datetime.timedelta(days=30) - 
+            datetime.datetime(1970, 1, 1)
+        ).total_seconds()
+    )
+    
+    measurements = google_fit.get_heart_rate_data_from_cinch(time_from_cinch, time_to)
+    measurements = measurements + google_fit.get_heart_rate_data_from_test(time_from_test, time_to)
 
+    for m in measurements:
+        heart_rate_measurement = HeartRateMeasurement(
+            user_id = 11262861,
+            input_source=m['source'],
+            measurement_unit='bpm',
+            timestamp=m['timestamp'],
+            timezone='Europe/Bucharest',
+            value=m['value']
+        )
+        heart_rate_measurement.save()
 
+    analyze_heart_rates.delay(last_cinch_measurement, 'cinch')
+    analyze_heart_rates.delay(last_test_measurement, 'test')
+
+    return json.dumps(measurements, indent=4, sort_keys=True)

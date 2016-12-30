@@ -6,3 +6,8 @@ gunicorn==19.4.5
 MySQL-python==1.2.5
 requests==2.10.0
 pytz==2016.6.1
+celery==3.1.23
+withings==0.3
+requests-oauthlib==0.6.2
+numpy==1.6.2
+raven==5.27.1

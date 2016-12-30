@@ -1,0 +1,66 @@
+- model: api.weightmeasurement
+  pk: 1
+  fields: {user_id: 11262861, input_source: withings, measurement_unit: kg,
+    timestamp: 1474915274, 
+    timezone: Europe/Bucharest,
+    value: 80.51}
+- model: api.weightmeasurement
+  pk: 2
+  fields: {user_id: 11262861, input_source: withings, measurement_unit: kg,
+    timestamp: 1474925274, 
+    timezone: Europe/Bucharest,
+    value: 81.51}
+- model: api.weightmeasurement
+  pk: 3
+  fields: {user_id: 11262861, input_source: withings, measurement_unit: kg,
+    timestamp: 1474925274, 
+    timezone: Europe/Bucharest,
+    value: 82.5}
+- model: api.weightmeasurement
+  pk: 4
+  fields: {user_id: 11262861, input_source: withings, measurement_unit: kg,
+    timestamp: 1474935274, 
+    timezone: Europe/Bucharest,
+    value: 80.9}
+- model: api.weightmeasurement
+  pk: 5
+  fields: {user_id: 11262861, input_source: withings, measurement_unit: kg,
+    timestamp: 1474955274, 
+    timezone: Europe/Bucharest,
+    value: 80}
+- model: api.weightmeasurement
+  pk: 6
+  fields: {user_id: 11262861, input_source: withings, measurement_unit: kg,
+    timestamp: 1474965274, 
+    timezone: Europe/Bucharest,
+    value: 78}
+- model: api.heartratemeasurement
+  pk: 1
+  fields: {user_id: 11262861, input_source: cinch, measurement_unit: bpm,
+    timestamp: 1474965274, 
+    timezone: Europe/Bucharest,
+    value: 66}
+- model: api.heartratemeasurement
+  pk: 2
+  fields: {user_id: 11262861, input_source: cinch, measurement_unit: bpm,
+    timestamp: 1474975274, 
+    timezone: Europe/Bucharest,
+    value: 44}
+- model: api.heartratemeasurement
+  pk: 3
+  fields: {user_id: 11262861, input_source: cinch, measurement_unit: bpm,
+    timestamp: 1474985274, 
+    timezone: Europe/Bucharest,
+    value: 75}
+- model: api.heartratemeasurement
+  pk: 4
+  fields: {user_id: 11262861, input_source: cinch, measurement_unit: bpm,
+    timestamp: 1474995274, 
+    timezone: Europe/Bucharest,
+    value: 69}
+- model: api.heartratemeasurement
+  pk: 5
+  fields: {user_id: 11262861, input_source: cinch, measurement_unit: bpm,
+    timestamp: 1477413390, 
+    timezone: Europe/Bucharest,
+    value: 72}

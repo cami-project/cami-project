@@ -1,11 +1,25 @@
 {
+  "heart_solid": "heart",
   "heart": "heartbeat",
   "weight": "dashboard",
   "sleep": "bed",
+  "blood": "tint",
+  "steps": "male",
   "warning": "exclamation",
+  "medium": "exclamation",
+  "high": "exclamation",
+  "low": "check",
   "ok": "check",
   "wakeup": "check",
   "plus": "plus",
   "phone": "phone",
-  "cancel": "times"
+  "cancel": "times",
+  "user": "user",
+  "password": "key",
+  "left": "chevron-left",
+  "right": "chevron-right",
+  "camera": "video-camera",
+  "tv": "television",
+  "smartphone": "mobile",
+  "logout": "sign-out"
 }

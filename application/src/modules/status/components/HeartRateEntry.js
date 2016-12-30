@@ -5,7 +5,7 @@ import StatusEntry from './StatusEntry';
 
 const HeartRateEntry = React.createClass({
   propTypes: {
-    statusItem: PropTypes.instanceOf(Map).isRequired
+    heart: PropTypes.instanceOf(Map).isRequired
   },
 
   render() {
@@ -13,8 +13,8 @@ const HeartRateEntry = React.createClass({
       <StatusEntry
         title="Heart rate"
         type="heart"
-        data={this.props.statusItem.get('data')}
-        threshold={this.props.statusItem.get('threshold')}
+        data={this.props.heart.get('data')}
+        threshold={this.props.heart.get('threshold')}
         units="bpm"
         timeUnits="Hrs"
       />

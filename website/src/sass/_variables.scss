@@ -1,0 +1,77 @@
+// _______ _______  ______  _____  __   _  _____  _     _ _______
+// |  |  | |_____| |_____/ |     | | \  | |   __| |     | |_____|
+// |  |  | |     | |    \_ |_____| |  \_| |____\| |_____| |     |
+//
+// Theme Name:    cami-web
+// Author:        rtud <radu@maronqua.ro>
+// Company:       Maronqua
+// Company URI:   http://maronqua.ro
+// File Name:     _variables.scss
+// Notes:         Main SASS variables for use w/ the cami-web style overrides
+//
+// -------------------------------------------------------------------
+
+
+// --------------------------------------------------------
+// ! Elder's Color Palette
+// --------------------------------------------------------
+
+$color-elder-status-low:      #0fad82;
+$color-elder-status-medium:   #a7b50a;
+$color-elder-status-high:     #458bcc;
+
+
+// --------------------------------------------------------
+// ! Caregiver Color Palette
+// --------------------------------------------------------
+
+$color-status-warning:  #D2B52E;
+$color-status-ok:       #658d51;
+$color-status-alert:    #c23f21;
+
+
+// --------------------------------------------------------
+// ! Universal Color Palette
+// --------------------------------------------------------
+
+$color-active:          #00A4EE;
+$color-background:      #eeeeee;
+
+$gray-darkest:          #212121;
+$gray-darker:           #484748;
+$gray-dark:             #5a5a5a;
+$gray-neutral:          #858585;
+$gray-light:            #dbdbdb;
+$gray-lighter:          #eaeaea;
+$gray-lightest:         #fafafa;
+
+// --------------------------------------------------------
+// ! Typography
+// --------------------------------------------------------
+
+$font-family-sans-serif:  'Open Sans', Helvetica, Arial, sans-serif;
+//** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
+$font-family-base:        $font-family-sans-serif;
+
+$font-size-base:          20px;
+$font-size-large:         ceil(($font-size-base * 1.25)); // ~18px
+$font-size-small:         ceil(($font-size-base * 0.85)); // ~12px
+
+$font-size-h1:            floor(($font-size-base * 2.6)); // ~36px
+$font-size-h2:            floor(($font-size-base * 2.15)); // ~30px
+$font-size-h3:            ceil(($font-size-base * 1.7)); // ~24px
+$font-size-h4:            ceil(($font-size-base * 1.25)); // ~18px
+$font-size-h5:            $font-size-base;
+$font-size-h6:            ceil(($font-size-base * 0.85)); // ~12px
+
+//** Unit-less `line-height` for use in components like buttons.
+$line-height-base:        1.428571429; // 20/14
+//** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
+$line-height-computed:    floor(($font-size-base * $line-height-base)); // ~20px
+
+//** By default, this inherits from the `<body>`.
+$headings-font-family:    $font-family-sans-serif;
+$headings-font-weight:    700;
+$headings-line-height:    1.1;
+$headings-color:          inherit;
+

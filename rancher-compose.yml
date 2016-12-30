@@ -1,0 +1,18 @@
+cami-rabbitmq:
+  scale: 1
+cami-store:
+  scale: 1
+cami-medical-compliance-migrate:
+  scale: 1
+cami-medical-compliance:
+  scale: 1
+cami-medical-compliance-message-worker:
+  scale: 1
+cami-medical-compliance-task-scheduler:
+  scale: 1
+cami-frontend-migrate:
+  scale: 1
+cami-frontend:
+  scale: 1
+cami-frontend-message-worker:
+  scale: 1

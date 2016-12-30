@@ -1,35 +1,42 @@
+import Promise from 'bluebird';
 import {fromJS, Map} from 'immutable';
+import {loop, Effects} from 'redux-loop';
+import icons from 'Cami/src/icons-fa';
 
 import * as env from '../../../env';
 
 var json = require('../../../api-examples/homepage-caregiver/eldery-status.json');
+var previousNotificationId = "";
 
 // Initial state
 const initialState = Map({
-  status: fromJS(json),
+  status: Map({
+    visible: false,
+    values: fromJS(json)
+  }),
   actionability: Map({
     visible: false,
-    params: {}
+    params: fromJS({})
+  }),
+  lastEvents: fromJS([]),
+  weight: fromJS({
+    "status": "ok",
+    "amount": [],
+    "data": [],
+    "threshold": 72,
+  }),
+  heart_rate: fromJS({
+    "status": "ok",
+    "amount": [],
+    "data": [],
+    "threshold": 80
   })
 });
 
 // Actions
-const SHOW_ACTIONABILITY = 'HomepageState/SHOW_ACTIONABILITY';
 const HIDE_ACTIONABILITY = 'HomepageState/HIDE_ACTIONABILITY';
-
-// Action creators
-export function showActionability(name, icon, timestamp, message, description) {
-  return {
-    type: SHOW_ACTIONABILITY,
-    payload: {
-      name,
-      icon,
-      timestamp,
-      message,
-      description
-    }
-  };
-}
+const CAREGIVER_DATA_RESPONSE = 'HomepageState/CAREGIVER_DATA_RESPONSE';
+const CAREGIVER_DATA_REQUEST = 'HomepageState/CAREGIVER_DATA_REQUEST';
 
 export function hideActionability() {
   return {
@@ -37,14 +44,130 @@ export function hideActionability() {
   };
 }
 
+export async function requestCaregiverData() {
+  return {
+    type: CAREGIVER_DATA_RESPONSE,
+    payload: await fetchPageData()
+  };
+}
+
+async function fetchPageData() {
+  var notificationsUrl = env.NOTIFICATIONS_REST_API + "?recipient_type=caregiver&limit=10&offset=0";
+  notificationsUrl += '&r=' + Math.floor(Math.random() * 10000);
+  var result = {
+    hasNotification: false,
+    weight: {
+      "status": "ok",
+      "amount": [],
+      "data": [],
+      "threshold": 72,
+    },
+    heart_rate: {
+      "status": "ok",
+      "amount": [],
+      "data": [],
+      "threshold": 80
+    },
+    lastEvents: []
+  };
+
+  return fetch(notificationsUrl)
+    .then((response) => response.json())
+    .then((notificationJson) => {
+
+      var notificationList = notificationJson.objects;
+
+      if (notificationList.length > 0) {
+
+        var receivedNotification = notificationList[0];
+
+        result.notification = {
+          id: receivedNotification.id,
+          name: "Jim",
+          icon: icons[receivedNotification.type],
+          timestamp: parseInt(receivedNotification.timestamp),
+          message: receivedNotification.message,
+          description: receivedNotification.description
+        }
+
+        notificationList.forEach((notification) => {
+          result.lastEvents.push({
+            type: notification.type,
+            status: notification.severity,
+            timestamp: parseInt(notification.timestamp),
+            title: notification.message,
+            message: notification.description
+          });
+        });
+
+        result.hasNotification = true;
+      }
+
+      var weightApiUrl = env.WEIGHT_MEASUREMENTS_LAST_VALUES;
+      var heartRateApiUrl = env.HEARTRATE_MEASUREMENTS_LAST_VALUES;
+
+      return fetch(weightApiUrl).then((response) => response.json())
+        .then((weightsJson) => {
+
+          result.weight = weightsJson.weight;
+
+          return fetch(heartRateApiUrl).then((response) => response.json())
+            .then((heartRateJson) => {
+
+              result.heart_rate = heartRateJson.heart_rate;
+
+              return result;
+          }).catch((error) => {
+
+            return result;
+          });
+      }).catch((error) => {
+
+        return result;
+      });
+  });
+}
+
+async function triggerFetchPageData() {
+  return Promise.delay(env.POLL_INTERVAL_MILLIS).then(() => ({
+    type: CAREGIVER_DATA_REQUEST
+  }))
+}
+
 // Reducer
 export default function HomepageStateReducer(state = initialState, action = {}) {
   switch (action.type) {
-    case SHOW_ACTIONABILITY:
-      return state.setIn(['actionability', 'visible'], true)
-                  .setIn(['actionability', 'params'], action.payload);
     case HIDE_ACTIONABILITY:
       return state.setIn(['actionability', 'visible'], false);
+
+    case CAREGIVER_DATA_REQUEST:
+      return loop(
+        state,
+        Effects.promise(requestCaregiverData)
+      );
+
+    case CAREGIVER_DATA_RESPONSE:
+      var chartValuesJson = json;
+      chartValuesJson['weight'] = action.payload.weight;
+      chartValuesJson['heart_rate'] = action.payload.heart_rate;
+
+      var isVisible = state.getIn(['actionability', 'visible']);
+      if (!isVisible) {
+        isVisible = action.payload.hasNotification && previousNotificationId !== action.payload.notification.id;
+        previousNotificationId = action.payload.hasNotification ? action.payload.notification.id : previousNotificationId;
+      }
+
+      return loop(
+        state.setIn(['actionability', 'visible'], isVisible)
+          .setIn(['actionability', 'params'], Map(fromJS(action.payload.notification)))
+          .setIn(['status', 'visible'], true)
+          .setIn(['status', 'values'], fromJS(chartValuesJson))
+          .setIn(['weight'], fromJS(action.payload.weight))
+          .setIn(['heart_rate'], fromJS(action.payload.heart_rate))
+          .setIn(['lastEvents'], fromJS(action.payload.lastEvents)),
+        Effects.promise(triggerFetchPageData)
+      );
+
     default:
       return state;
   }

@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import raven
 
+from datetime import timedelta
 from kombu import Exchange, Queue
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -39,9 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'raven.contrib.django.raven_compat',
     'corsheaders',
     'tastypie',
-    'medical_compliance.api'
+    'medical_compliance.api',
+    'medical_compliance.api.analyzers'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -75,19 +79,100 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'medical_compliance.wsgi.application'
 
+# Sentry integration
+RAVEN_CONFIG = {
+    # Set the Sentry API key here
+    'dsn': 'https://d9bec7e9f54943a281d5271c29932e7c:b57cfbbc5edc456aa2ece299cabbd785@sentry.io/104123',
+    'release': raven.fetch_git_sha(os.path.dirname(__file__) + "/../../")
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s '
+                      '%(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {
+        'sentry': {
+            'level': 'ERROR', # Set the Sentry logging level here
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': './debug.log',
+        }
+    },
+    'loggers': {
+        'medical_compliance': {
+            'level': 'DEBUG',
+            'handlers': ['sentry', 'console'],
+        },
+        'api': {
+            'level': 'DEBUG',
+            'handlers': ['sentry', 'console'],
+        },
+        'django': {
+            'level': 'DEBUG',
+            'handlers': ['sentry', 'console', 'file'],
+        },
+        'django.db.backends': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'celery': {
+            'level': 'ERROR',
+            'handlers': ['sentry', 'console'],
+        },
+        'medical_compliance.measurement_callback': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'withings_controller.save_measurement': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'medical_compliance.fetch_weight_measurement': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+SENTRY_AUTO_LOG_STACKS = True
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'cami',
         'USER': 'cami',
         'PASSWORD': 'cami',
-        #'HOST': 'cami-store',   # Or an IP Address that your DB is hosted on
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'HOST': 'cami-store',
+        'PORT': '3306'
     }
 }
 
@@ -136,6 +221,14 @@ X_FRAME_OPTIONS='ALLOW-FROM *'
 
 
 # WITHINGS API credentials
+# WITHINGS_USER_ID = 11262861
+# WITHINGS_CONSUMER_KEY = "734b6504c858bed3e3ecd7ce78b543f5f9e3cbe9b1b41fc40f012d1fdc96"
+# WITHINGS_CONSUMER_SECRET = "4f3d74e3f148781ee6459cc881186b24e2c3850530b6370e60d81b5822"
+
+# WITHINGS_OAUTH_V1_TOKEN = "394b9199422126c1ffc405bf003dd26cc6259cd02c8dee230b8bcd12634de5"
+# WITHINGS_OAUTH_V1_TOKEN_SECRET = "5643779f862c5030c5631fd3387233cbf8465b8520c5b4b073850fd"
+
+# Temporary WITHINGS API credentials for the demo
 WITHINGS_USER_ID = 11115034
 WITHINGS_CONSUMER_KEY = "5b1f8cbeb36cffe108fd8fdd666c51cb5d6eee9f2e2940983958b836451"
 WITHINGS_CONSUMER_SECRET = "2e75dfb7f1088f398b4cfc5ebed6d5909c48918ee637417e3b0de001b3b"
@@ -143,6 +236,18 @@ WITHINGS_CONSUMER_SECRET = "2e75dfb7f1088f398b4cfc5ebed6d5909c48918ee637417e3b0d
 WITHINGS_OAUTH_V1_TOKEN = "59dd58ccbd19bfbd8b3522ce50d31c4cb6e530742d22234f4cb4bee11673084"
 WITHINGS_OAUTH_V1_TOKEN_SECRET = "cf31bc8e405d96b975b8014d93c722830bd55f44b437f27c7e6d5964b3"
 
+# Google Fit API credentials
+GOOGLE_FIT_CLIENT_ID = '701996606933-17j7km8f8ce8vohhdcnur453cbn44aau.apps.googleusercontent.com'
+GOOGLE_FIT_CLIENT_SECRET = 'K-lZ7t49-Gvhtz2P-RTqBhAQ'
+GOOGLE_FIT_REFRESH_TOKEN = '1/bcaHAkmLUs6Is5pTyVhqtjw0vYIqbZcWkuTnQWNf87c'
+
+# Google Fit Fetch Heart Rate Scheduled Task
+CELERYBEAT_SCHEDULE = {
+    'fetch_heart_rate_data': {
+        'task': 'medical_compliance_measurements.fetch_heart_rate_measurement',
+        'schedule': timedelta(minutes=5),
+    }
+}
 
 # Celery settings
 BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
@@ -150,42 +255,10 @@ BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
 CELERY_DEFAULT_QUEUE = 'withings_measurements'
 CELERY_QUEUES = (
     Queue('withings_measurements', Exchange('withings_measurements'), routing_key='withings_measurements'),
+    Queue('medical_compliance_measurements', Exchange('medical_compliance_measurements'), routing_key='medical_compliance_measurements'),
+    Queue('medical_compliance_weight_analyzers', Exchange('medical_compliance_weight_analyzers'), routing_key='medical_compliance_weight_analyzers'),
+    Queue('medical_compliance_heart_rate_analyzers', Exchange('medical_compliance_heart_rate_analyzers'), routing_key='medical_compliance_heart_rate_analyzers'),
 )
-
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': './debug.log',
-        },
-        'celery_file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': './celery.log',
-        }
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'medical_compliance.measurement_callback': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'medical_compliance.fetch_measurement': {
-            'handlers': ['celery_file'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-    },
-}
 
 try:
     from settings_local import *

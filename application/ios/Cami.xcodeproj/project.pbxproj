@@ -18,13 +18,14 @@
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		1AB1EE910D984DBDA9D7D365 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9415B0009BE041CA934C3E1A /* Foundation.ttf */; };
 		1AFAD049DAD3490DACCED403 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5706C86F48645A29588E76F /* MaterialIcons.ttf */; };
 		32520E06088C4B4BA11D69D3 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F4CE278D9E0443ABABE2D2B7 /* Ionicons.ttf */; };
+		337569C61D92873D006125FC /* libA0RNLock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 338AADEE1D926E140037FBFE /* libA0RNLock.a */; };
+		33C8FCB71DD9C9E60024D26C /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 33C8FCAE1DD9C9C90024D26C /* libRCTPushNotification.a */; };
 		4FFF34BC17FA3061F9B55D5B /* Pods_CamiTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D206714B04A06F143F35452 /* Pods_CamiTests.framework */; };
 		5DFEF4A38E0B4D69986C7D1A /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B01F06020DE6415DA0D29B8F /* EvilIcons.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -66,7 +67,6 @@
 		AE7C539A0DC94CF18B2D4C70 /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D5BB39EEE0F4E53878141DC /* libRNBlur.a */; };
 		AE891D22B73E40B1AB815BF5 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1BE5FA6199C64797A7246756 /* Octicons.ttf */; };
 		C3CC020A2E13449B82D422B1 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FEC5CBA1B45F4EDD80CDABFD /* Zocial.ttf */; };
-		C479462A5C42476786A6A1D0 /* libA0RNLock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CDA06CD398E24534B72848C5 /* libA0RNLock.a */; };
 		D361894B649845808138D428 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 44F210B653884FCE9A647C6A /* libRNVectorIcons.a */; };
 		EF5C67FF2FEA4B9B98DC4F2A /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8B973CDA360C4BF1B6E4D026 /* FontAwesome.ttf */; };
 		F4452C737A31C24665190D56 /* Pods_Cami.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6B9E6C0DFE2F02CCAEEE3A0 /* Pods_Cami.framework */; };
@@ -136,6 +136,20 @@
 			remoteGlobalIDString = 83CBBA2E1A601D0E00E9B192;
 			remoteInfo = React;
 		};
+		338AADED1D926E140037FBFE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 338AADE91D926E140037FBFE /* A0RNLock.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5F0499EE1CAE9F4A006F6C05;
+			remoteInfo = A0RNLock;
+		};
+		33C8FCAD1DD9C9C90024D26C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 33C8FCA21DD9C9C90024D26C /* RCTPushNotification.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RCTPushNotification;
+		};
 		78C398B81ACF4ADC00677621 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */;
@@ -149,13 +163,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
-		};
-		8459CE211D5B2B910015D24C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8459CE1D1D5B2B910015D24C /* A0RNLock.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 5F0499EE1CAE9F4A006F6C05;
-			remoteInfo = A0RNLock;
 		};
 		8494ED261D61EC1D008B8E7E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -202,7 +209,6 @@
 		13B07F961A680F5B00A75B9A /* Cami.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cami.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Cami/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Cami/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Cami/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Cami/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Cami/main.m; sourceTree = "<group>"; };
@@ -210,10 +216,12 @@
 		1A3873B0FFF34BF8F6900569 /* Pods-CamiTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CamiTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CamiTests/Pods-CamiTests.release.xcconfig"; sourceTree = "<group>"; };
 		1BE5FA6199C64797A7246756 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		1CC4DFA7AB3E43588029ECDC /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
+		336D46001DDA010800E63633 /* Cami.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Cami.entitlements; path = Cami/Cami.entitlements; sourceTree = "<group>"; };
+		338AADE91D926E140037FBFE /* A0RNLock.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = A0RNLock.xcodeproj; path = Cami/A0RNLock/A0RNLock.xcodeproj; sourceTree = "<group>"; };
+		33C8FCA21DD9C9C90024D26C /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		44F210B653884FCE9A647C6A /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
-		8459CE1D1D5B2B910015D24C /* A0RNLock.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = A0RNLock.xcodeproj; path = "../node_modules/react-native-lock/ios/A0RNLock.xcodeproj"; sourceTree = "<group>"; };
 		84824B981D53759300A9A3D1 /* Cami-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Cami-Bridging-Header.h"; sourceTree = "<group>"; };
 		84824BA61D53759300A9A3D1 /* ABNumberFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ABNumberFormatter.swift; path = "../node_modules/react-native-ios-charts/RNiOSCharts/ABNumberFormatter.swift"; sourceTree = "<group>"; };
 		84824BA71D53759300A9A3D1 /* BarLineChartViewBaseExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BarLineChartViewBaseExtension.swift; path = "../node_modules/react-native-ios-charts/RNiOSCharts/BarLineChartViewBaseExtension.swift"; sourceTree = "<group>"; };
@@ -269,7 +277,6 @@
 		B01F06020DE6415DA0D29B8F /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		BE9FAEE2CCA649F598F46139 /* RNBlur.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBlur.xcodeproj; path = "../node_modules/react-native-blur/ios/RNBlur.xcodeproj"; sourceTree = "<group>"; };
 		BF26C2189612698CD62FF4C1 /* Pods-CamiTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CamiTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CamiTests/Pods-CamiTests.debug.xcconfig"; sourceTree = "<group>"; };
-		CDA06CD398E24534B72848C5 /* libA0RNLock.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libA0RNLock.a; sourceTree = "<group>"; };
 		D50692D4E0DD0735E687BCD2 /* Pods-Cami.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cami.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Cami/Pods-Cami.debug.xcconfig"; sourceTree = "<group>"; };
 		E5706C86F48645A29588E76F /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		F4CE278D9E0443ABABE2D2B7 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
@@ -290,6 +297,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33C8FCB71DD9C9E60024D26C /* libRCTPushNotification.a in Frameworks */,
+				337569C61D92873D006125FC /* libA0RNLock.a in Frameworks */,
 				8494ED291D61EC3E008B8E7E /* libRNSound.a in Frameworks */,
 				849C31C01D41445F0097CB36 /* libART.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -302,7 +311,6 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				C479462A5C42476786A6A1D0 /* libA0RNLock.a in Frameworks */,
 				AE7C539A0DC94CF18B2D4C70 /* libRNBlur.a in Frameworks */,
 				D361894B649845808138D428 /* libRNVectorIcons.a in Frameworks */,
 				F4452C737A31C24665190D56 /* Pods_Cami.framework in Frameworks */,
@@ -388,6 +396,7 @@
 		13B07FAE1A68108700A75B9A /* Cami */ = {
 			isa = PBXGroup;
 			children = (
+				336D46001DDA010800E63633 /* Cami.entitlements */,
 				84824BA61D53759300A9A3D1 /* ABNumberFormatter.swift */,
 				84824BA71D53759300A9A3D1 /* BarLineChartViewBaseExtension.swift */,
 				84824BA81D53759300A9A3D1 /* chartDataHelpers.swift */,
@@ -435,7 +444,6 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				84824B981D53759300A9A3D1 /* Cami-Bridging-Header.h */,
 			);
@@ -446,6 +454,22 @@
 			isa = PBXGroup;
 			children = (
 				146834041AC3E56700842450 /* libReact.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		338AADEA1D926E140037FBFE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				338AADEE1D926E140037FBFE /* libA0RNLock.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		33C8FCA31DD9C9C90024D26C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				33C8FCAE1DD9C9C90024D26C /* libRCTPushNotification.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -461,6 +485,8 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				33C8FCA21DD9C9C90024D26C /* RCTPushNotification.xcodeproj */,
+				338AADE91D926E140037FBFE /* A0RNLock.xcodeproj */,
 				8494ED151D61EC1C008B8E7E /* RNSound.xcodeproj */,
 				849C31BA1D41443C0097CB36 /* ART.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
@@ -473,7 +499,6 @@
 				832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */,
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
-				8459CE1D1D5B2B910015D24C /* A0RNLock.xcodeproj */,
 				BE9FAEE2CCA649F598F46139 /* RNBlur.xcodeproj */,
 				1CC4DFA7AB3E43588029ECDC /* RNVectorIcons.xcodeproj */,
 			);
@@ -509,14 +534,6 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* Cami.app */,
 				00E356EE1AD99517003FC87E /* CamiTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		8459CE1E1D5B2B910015D24C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				8459CE221D5B2B910015D24C /* libA0RNLock.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -639,16 +656,24 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 730;
+				LastSwiftUpdateCheck = 730;
+				LastUpgradeCheck = 800;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = 9CS49M282C;
+						ProvisioningStyle = Manual;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = 83Q467VS4Q;
+						DevelopmentTeam = 9CS49M282C;
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -665,8 +690,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 8459CE1E1D5B2B910015D24C /* Products */;
-					ProjectRef = 8459CE1D1D5B2B910015D24C /* A0RNLock.xcodeproj */;
+					ProductGroup = 338AADEA1D926E140037FBFE /* Products */;
+					ProjectRef = 338AADE91D926E140037FBFE /* A0RNLock.xcodeproj */;
 				},
 				{
 					ProductGroup = 849C31BB1D41443C0097CB36 /* Products */;
@@ -691,6 +716,10 @@
 				{
 					ProductGroup = 00C302D41ABCB9D200DB3ED1 /* Products */;
 					ProjectRef = 00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */;
+				},
+				{
+					ProductGroup = 33C8FCA31DD9C9C90024D26C /* Products */;
+					ProjectRef = 33C8FCA21DD9C9C90024D26C /* RCTPushNotification.xcodeproj */;
 				},
 				{
 					ProductGroup = 139105B71AF99BAD00B5F7CC /* Products */;
@@ -790,6 +819,20 @@
 			remoteRef = 146834031AC3E56700842450 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		338AADEE1D926E140037FBFE /* libA0RNLock.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libA0RNLock.a;
+			remoteRef = 338AADED1D926E140037FBFE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		33C8FCAE1DD9C9C90024D26C /* libRCTPushNotification.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTPushNotification.a;
+			remoteRef = 33C8FCAD1DD9C9C90024D26C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		78C398B91ACF4ADC00677621 /* libRCTLinking.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -802,13 +845,6 @@
 			fileType = archive.ar;
 			path = libRCTText.a;
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		8459CE221D5B2B910015D24C /* libA0RNLock.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libA0RNLock.a;
-			remoteRef = 8459CE211D5B2B910015D24C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		8494ED271D61EC1D008B8E7E /* libRNSound.a */ = {
@@ -854,7 +890,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				0FF2EC1E70F64A278DA8B6B6 /* Entypo.ttf in Resources */,
 				5DFEF4A38E0B4D69986C7D1A /* EvilIcons.ttf in Resources */,
 				EF5C67FF2FEA4B9B98DC4F2A /* FontAwesome.ttf in Resources */,
@@ -1036,24 +1071,15 @@
 		};
 /* End PBXTargetDependency section */
 
-/* Begin PBXVariantGroup section */
-		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				13B07FB21A68108700A75B9A /* Base */,
-			);
-			name = LaunchScreen.xib;
-			path = Cami;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BF26C2189612698CD62FF4C1 /* Pods-CamiTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 9CS49M282C;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1068,6 +1094,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cami.app/Cami";
 			};
 			name = Debug;
@@ -1077,7 +1105,10 @@
 			baseConfigurationReference = 1A3873B0FFF34BF8F6900569 /* Pods-CamiTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 9CS49M282C;
 				INFOPLIST_FILE = CamiTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1087,7 +1118,10 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cami.app/Cami";
 			};
 			name = Release;
@@ -1096,11 +1130,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D50692D4E0DD0735E687BCD2 /* Pods-Cami.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = Cami/Cami.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Ionut Paraschiv (RG8RERN6HL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = 9CS49M282C;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1108,6 +1146,7 @@
 					"$(SRCROOT)/../node_modules/react-native-lock/A0RNLock/**",
 					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
+					"$(SRCROOT)/../node_modules/react-native/Libraries/PushNotificationIOS/**",
 				);
 				INFOPLIST_FILE = Cami/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1117,11 +1156,13 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.pepperoni.Cami;
+				PRODUCT_BUNDLE_IDENTIFIER = com.3angletech.Cami;
 				PRODUCT_NAME = Cami;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "f4191b37-f753-49af-8a49-8407b3d02c1a";
+				PROVISIONING_PROFILE_SPECIFIER = "3angleTech - Cami Dev";
 				SWIFT_OBJC_BRIDGING_HEADER = "Cami-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -1129,10 +1170,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 938FD9977D1735DEB15300EE /* Pods-Cami.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = Cami/Cami.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Ionut Paraschiv (RG8RERN6HL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = 9CS49M282C;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1140,6 +1186,7 @@
 					"$(SRCROOT)/../node_modules/react-native-lock/A0RNLock/**",
 					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
+					"$(SRCROOT)/../node_modules/react-native/Libraries/PushNotificationIOS/**",
 				);
 				INFOPLIST_FILE = Cami/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1149,10 +1196,12 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.pepperoni.Cami;
+				PRODUCT_BUNDLE_IDENTIFIER = com.3angletech.Cami;
 				PRODUCT_NAME = Cami;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "f4191b37-f753-49af-8a49-8407b3d02c1a";
+				PROVISIONING_PROFILE_SPECIFIER = "3angleTech - Cami Dev";
 				SWIFT_OBJC_BRIDGING_HEADER = "Cami-Bridging-Header.h";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -1169,16 +1218,21 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Ionut Paraschiv (RG8RERN6HL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ionut Paraschiv (RG8RERN6HL)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = S2BV3DBR26;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1199,9 +1253,12 @@
 					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.3angletech.Cami;
+				PROVISIONING_PROFILE = "be96b69a-a7b6-462f-b579-4d8c2aec4892";
+				PROVISIONING_PROFILE_SPECIFIER = "be96b69a-a7b6-462f-b579-4d8c2aec4892";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1219,15 +1276,20 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Ionut Paraschiv (RG8RERN6HL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ionut Paraschiv (RG8RERN6HL)";
 				COPY_PHASE_STRIP = YES;
+				DEVELOPMENT_TEAM = S2BV3DBR26;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1242,9 +1304,13 @@
 					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.3angletech.Cami;
+				PROVISIONING_PROFILE = "be96b69a-a7b6-462f-b579-4d8c2aec4892";
+				PROVISIONING_PROFILE_SPECIFIER = "be96b69a-a7b6-462f-b579-4d8c2aec4892";
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
