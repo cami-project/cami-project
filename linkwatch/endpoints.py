@@ -4,8 +4,8 @@ import json
 import logging
 import datetime, pytz
 import constants
+from settings import *
 
-URL_BASE = "https://linkwatchrestservicetest.azurewebsites.net/"
 logging.basicConfig()
 logger = logging.getLogger(name="endpoints")
 logger.setLevel(logging.INFO)
@@ -77,7 +77,7 @@ class LoginEndpoint(Endpoint):
             u"UserName": username,
             u"Password": password
         }
-        url = urlparse.urljoin(URL_BASE, "api/v1/authentication/login")
+        url = urlparse.urljoin(LINKWATCH_URL_BASE, "api/v1/authentication/login")
 
         super(LoginEndpoint, self).__init__(url, data = data, return_cls=LoginResult)
 
@@ -88,7 +88,7 @@ class LoginEndpoint(Endpoint):
 
 class SendObservationsEndpoint(Endpoint):
     def __init__(self, token, observations):
-        url = urlparse.urljoin(URL_BASE, "api/v1/observation")
+        url = urlparse.urljoin(LINKWATCH_URL_BASE, "api/v1/observation")
         headers = self._set_headers(token)
         data = self._set_data(observations)
 
@@ -187,7 +187,7 @@ class Observation(object):
 
 def save_measurement(measurement_json):
     # Login and get API token
-    login_endpoint = LoginEndpoint(u"CNetDemo", u"password")
+    login_endpoint = LoginEndpoint(LINKWATCH_USER, LINKWATCH_PASSWORD)
     login_res = login_endpoint.post()
     if login_res.is_error():
         logger.error("Could not log demo user in. " + login_res.get_error_reason())
