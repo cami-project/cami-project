@@ -15,6 +15,7 @@ import raven
 
 from datetime import timedelta
 from kombu import Exchange, Queue
+from kombu.common import Broadcast
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -258,7 +259,10 @@ CELERY_QUEUES = (
     Queue('medical_compliance_measurements', Exchange('medical_compliance_measurements'), routing_key='medical_compliance_measurements'),
     Queue('medical_compliance_weight_analyzers', Exchange('medical_compliance_weight_analyzers'), routing_key='medical_compliance_weight_analyzers'),
     Queue('medical_compliance_heart_rate_analyzers', Exchange('medical_compliance_heart_rate_analyzers'), routing_key='medical_compliance_heart_rate_analyzers'),
+    Broadcast('broadcast_measurement'),
 )
+# Every measurement sent on the broadcast_measurement queue will be broadcasted to all the workers that listen on the cami.parse_measurement task on it
+CELERY_ROUTES = {'cami.parse_measurement': {'queue': 'broadcast_measurement'}}
 
 try:
     from settings_local import *

@@ -185,8 +185,7 @@ class Observation(object):
         self.comment = comment
 
 
-
-if __name__ == "__main__":
+def save_measurement(measurement_json):
     # Login and get API token
     login_endpoint = LoginEndpoint(u"CNetDemo", u"password")
     login_res = login_endpoint.post()
@@ -202,17 +201,32 @@ if __name__ == "__main__":
 
 
     # Send a weight measurement
-    t = datetime.datetime.now(tz = pytz.timezone("Europe/Bucharest"))
-    weight_measurement = Measurement(constants.MeasurementType.WEIGHT, 82.1, constants.UnitCode.KILOGRAM)
-    obs = Observation(constants.DeviceType.WEIGHTING_SCALE, t, "TEST", measurements=[weight_measurement], comment="Test weight measurement.")
+    t = datetime.datetime.fromtimestamp(measurement_json['timestamp'])
+    if measurement_json['type'] == 'weight':
+        weight_measurement = Measurement(constants.MeasurementType.WEIGHT, measurement_json['value'], constants.UnitCode.KILOGRAM)
+        obs = Observation(constants.DeviceType.WEIGHTING_SCALE, t, "TEST", measurements=[weight_measurement], comment=measurement_json['input_source'])
+    else:
+        logger.info("Unsupported measurement type: " + measurement_json['type'])
+        return
 
     obs_endpoint = SendObservationsEndpoint(token, [obs])
     obs_res = obs_endpoint.post()
 
     if not obs_res.is_error():
-        logger.info("Weight observation status: " + str(obs_res.get_status()))
+        logger.info("Observation status: " + str(obs_res.get_status()))
     else:
         try:
             obs_res.response.raise_for_status()
         except Exception, e:
             logging.exception("Failed to send new weight observation!", e)
+
+
+if __name__ == "__main__":
+    save_measurement({
+        'type': 'weight',
+        'user_id': 1234,
+        'input_source': 'withings',
+        'timestamp': 1474965274,
+        'value': 79.1,
+        'timezone': 'Europe/Bucharest'
+    })
