@@ -71,3 +71,12 @@ services:
       - cami-store
       - cami-rabbitmq
     entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
+
+  # Runs the Celery worker for consuming measurements and distribute them to the Linkwatch platform
+  cami-linkwatch-worker:
+    image: vitaminsoftware/cami-project:linkwatch
+    links:
+      # Needs the store to interact with the DB
+      - cami-store
+      - cami-rabbitmq
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
