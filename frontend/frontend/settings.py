@@ -85,6 +85,8 @@ RAVEN_CONFIG = {
     'release': raven.fetch_git_sha(os.path.dirname(__file__) + "/../../")
 }
 
+PAPERTRAILS_LOGGING_HOSTNAME = 'logs4.papertrailapp.com'
+PAPERTRAILS_LOGGING_PORT = 43843
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -103,16 +105,22 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
-        }
+        },
+        'syslog': {
+            'level':'DEBUG',
+            'class':'logging.handlers.SysLogHandler',
+            'formatter': 'verbose',
+            'address':(PAPERTRAILS_LOGGING_HOSTNAME, PAPERTRAILS_LOGGING_PORT)
+        },
     },
     'loggers': {
         'frontend': {
             'level': 'DEBUG',
-            'handlers': ['sentry', 'console'],
+            'handlers': ['sentry', 'console', 'syslog'],
         },
         'api': {
             'level': 'DEBUG',
-            'handlers': ['sentry', 'console'],
+            'handlers': ['sentry', 'console', 'syslog'],
         },
         'django': {
             'level': 'DEBUG',
@@ -136,7 +144,7 @@ LOGGING = {
         'celery': {
             'level': 'ERROR',
             'handlers': ['sentry', 'console'],
-        }
+        },
     },
 }
 
