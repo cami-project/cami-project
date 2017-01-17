@@ -145,6 +145,10 @@ LOGGING = {
             'level': 'ERROR',
             'handlers': ['sentry', 'console'],
         },
+        'frontend.tasks': {
+            'level': 'DEBUG',
+            'handlers': ['sentry', 'console', 'syslog'],
+        },
     },
 }
 
