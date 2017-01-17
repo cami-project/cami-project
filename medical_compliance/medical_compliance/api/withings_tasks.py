@@ -32,7 +32,7 @@ app.conf.update(
 @app.task(name='withings_controller.save_measurement')
 def save_measurement(userid, start_ts, end_ts, measurement_type_id):
     logger.debug(
-        "Sending Withings request for measurement retrieval for { userid: %s, start ts: %s, end ts: %s, type: %s }" %
+        "[medical-compliance] Sending Withings request for measurement retrieval for { userid: %s, start ts: %s, end ts: %s, type: %s }" %
         (userid, start_ts, end_ts, measurement_type_id)
     )
 
@@ -52,7 +52,7 @@ def save_measurement(userid, start_ts, end_ts, measurement_type_id):
     response = client.request('measure', 'getmeas', req_params)
 
     logger.debug(
-        "Got the following Withings response for user_id %s and req params %s: %s" %
+        "[medical-compliance] Got the following Withings response for user_id %s and req params %s: %s" %
         (userid, req_params, response)
     )
 

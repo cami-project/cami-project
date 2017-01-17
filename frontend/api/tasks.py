@@ -30,7 +30,7 @@ app.conf.update(
 
 @celery.task(name='frontend.send_notification')
 def send_notification(user_id, recipient_type, type, severity, message, description, timestamp):
-    logger.debug("Send notification request: { user_id: %s, recipient_type: %s, type: %s, severity: %s, message: %s, description: %s, timestamp: %s}" 
+    logger.debug("[frontend] Send notification request: { user_id: %s, recipient_type: %s, type: %s, severity: %s, message: %s, description: %s, timestamp: %s}" 
         % (user_id, recipient_type, type, severity, message, description, timestamp))
 
     if timestamp is None:
