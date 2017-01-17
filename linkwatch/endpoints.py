@@ -1,14 +1,11 @@
 import requests
 import urlparse
 import json
-import logging
 import datetime, pytz
 import constants
-from settings import *
 
-logging.basicConfig()
-logger = logging.getLogger(name="endpoints")
-logger.setLevel(logging.INFO)
+from custom_logging import logger
+from settings import *
 
 class EndpointResult(object):
     '''
@@ -190,14 +187,14 @@ def save_measurement(measurement_json):
     login_endpoint = LoginEndpoint(LINKWATCH_USER, LINKWATCH_PASSWORD)
     login_res = login_endpoint.post()
     if login_res.is_error():
-        logger.error("Could not log demo user in. " + login_res.get_error_reason())
+        logger.error("[linkwatch] Could not log demo user in. " + login_res.get_error_reason())
 
     token = login_res.get_token()
 
     if not token:
-        logger.error("Token unavailable due to error in login_endpoint call. Reason: " + login_res.get_error_reason())
+        logger.error("[linkwatch] Auth token unavailable due to error in login_endpoint call. Reason: " + login_res.get_error_reason())
     else:
-        logger.info("Token value is: " + token)
+        logger.info("[linkwatch] Auth token value is: " + token)
 
 
     # Send a weight measurement
@@ -209,19 +206,19 @@ def save_measurement(measurement_json):
         heartrate_measurement = Measurement(constants.MeasurementType.HF_HEARTRATE, measurement_json['value'], constants.UnitCode.BPM)
         obs = Observation(constants.DeviceType.HEART_RATE, t, "TEST", measurements=[heartrate_measurement], comment=measurement_json['input_source'])
     else:
-        logger.info("Unsupported measurement type: " + measurement_json['type'])
+        logger.info("[linkwatch] Unsupported measurement type: " + measurement_json['type'])
         return
 
     obs_endpoint = SendObservationsEndpoint(token, [obs])
     obs_res = obs_endpoint.post()
 
     if not obs_res.is_error():
-        logger.info("Observation status: " + str(obs_res.get_status()))
+        logger.info("[linkwatch] Observation status: " + str(obs_res.get_status()))
     else:
         try:
             obs_res.response.raise_for_status()
         except Exception, e:
-            logging.exception("Failed to send new weight observation!", e)
+            logging.exception("[linkwatch] Failed to send new weight observation!", e)
 
 
 if __name__ == "__main__":
