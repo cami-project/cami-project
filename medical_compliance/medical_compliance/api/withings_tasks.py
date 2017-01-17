@@ -32,11 +32,8 @@ app.conf.update(
 @app.task(name='withings_controller.save_measurement')
 def save_measurement(userid, start_ts, end_ts, measurement_type_id):
     logger.debug(
-        "Sending request for measurement retrieval for userid: %s, start ts: %s, end ts: %s, type: %s",
-        str(userid),
-        str(start_ts),
-        str(end_ts),
-        str(measurement_type_id)
+        "Sending Withings request for measurement retrieval for { userid: %s, start ts: %s, end ts: %s, type: %s }" %
+        (userid, start_ts, end_ts, measurement_type_id)
     )
 
     credentials = WithingsCredentials(access_token=settings.WITHINGS_OAUTH_V1_TOKEN,
@@ -47,11 +44,18 @@ def save_measurement(userid, start_ts, end_ts, measurement_type_id):
     # TODO: modify storage of user credentials in settings file to a per userid basis
 
     client = WithingsApi(credentials)
-    response = client.request('measure', 'getmeas', {
-        'startdate': start_ts, 
+    req_params = {
+        'startdate': start_ts,
         'enddate': end_ts,
         'meastype': int(measurement_type_id)
-    })
+    }
+    response = client.request('measure', 'getmeas', req_params)
+
+    logger.debug(
+        "Got the following Withings response for user_id %s and req params %s: %s" %
+        (userid, req_params, response)
+    )
+
     measures = WithingsMeasures(response)
     timezoneStr = response['timezone']
     measurement_type = WithingsMeasurement.get_measure_type_by_id(int(measurement_type_id))

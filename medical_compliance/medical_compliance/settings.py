@@ -153,20 +153,30 @@ LOGGING = {
             'handlers': ['sentry', 'console'],
         },
         'medical_compliance.measurement_callback': {
-            'handlers': ['file'],
+            'handlers': ['file', 'syslog'],
             'level': 'DEBUG',
             'propagate': True,
         },
         'withings_controller.save_measurement': {
-            'handlers': ['file'],
+            'handlers': ['file', 'syslog'],
             'level': 'DEBUG',
             'propagate': True,
         },
-        'medical_compliance.fetch_weight_measurement': {
-            'handlers': ['file'],
+        'medical_compliance_measurements.fetch_measurement': {
+            'handlers': ['file', 'syslog'],
             'level': 'DEBUG',
             'propagate': True,
         },
+        'medical_compliance_heart_rate_analyzers.analyze_heart_rates': {
+            'handlers': ['file', 'syslog'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'medical_compliance_weight_analyzers.analyze_weight': {
+            'handlers': ['file', 'syslog'],
+            'level': 'DEBUG',
+            'propagate': True,
+        }
     },
 }
 
