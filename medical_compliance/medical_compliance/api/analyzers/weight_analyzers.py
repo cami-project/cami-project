@@ -33,7 +33,16 @@ def analyze_weights(weight_measurement_id):
 # TODO: this is a dummy module and should be generalized at least with a task structure
 # all the tasks should listen on the same weight queue and all of them should compute some metrics (broadcast?)
 def analyze_last_two_weights(weight_measurement_id):
+    logger.debug("[medical-compliance] Analyze weights request: { weight_measurement_id: %s }" % 
+        (weight_measurement_id)
+    )
+
     measurement_list = WeightMeasurement.get_previous_weight_measures(weight_measurement_id, 2)
+    
+    logger.debug("[medical-compliance] Last two weights for weight_measurement_id %s: %s" % 
+        (weight_measurement_id, measurement_list)
+    )
+    
     if len(measurement_list) == 2:
         current_measurement= measurement_list[0]
         previous_measurement = measurement_list[1]

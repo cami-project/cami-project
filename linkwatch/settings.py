@@ -7,6 +7,9 @@ LINKWATCH_URL_BASE = "https://linkwatchrestservicetest.azurewebsites.net/"
 LINKWATCH_USER = 'CNetDemo'
 LINKWATCH_PASSWORD = 'password'
 
+PAPERTRAILS_LOGGING_HOSTNAME = 'logs4.papertrailapp.com'
+PAPERTRAILS_LOGGING_PORT = 43843
+
 try:
     from settings_local import *
 except:

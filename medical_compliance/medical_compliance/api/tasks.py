@@ -20,6 +20,7 @@ from models import WeightMeasurement, HeartRateMeasurement
 from analyzers.weight_analyzers import analyze_weights
 from analyzers.heart_rate_analyzers import analyze_heart_rates
 
+logger = get_task_logger('medical_compliance_measurements.fetch_measurement')
 
 app = Celery('api.tasks', broker=settings.BROKER_URL)
 app.conf.update(
@@ -32,6 +33,9 @@ app.conf.update(
 
 @app.task(name='medical_compliance_measurements.fetch_weight_measurement')
 def fetch_weight_measurement(user_id, input_source, measurement_unit, timestamp, timezone, value):
+    logger.debug("Fetch weight measurement request: { user_id: %s, input_source: %s, measurement_unit: %s, timestamp: %s, timezone: %s, value: %s }" % 
+        (user_id, input_source, measurement_unit, timestamp, timezone, value))
+
     weight_measurement = WeightMeasurement(
         user_id = int(user_id),
         input_source=input_source,
@@ -50,6 +54,8 @@ def fetch_heart_rate_measurement():
         It's very ugly what I did here, only for demo purpose
         We MUST clean this
     """
+    logger.debug("Fetch heart measurement request")
+
     last_cinch_measurement = None
     last_test_measurement = None
 

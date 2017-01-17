@@ -87,6 +87,8 @@ RAVEN_CONFIG = {
     'release': raven.fetch_git_sha(os.path.dirname(__file__) + "/../../")
 }
 
+PAPERTRAILS_LOGGING_HOSTNAME = 'logs4.papertrailapp.com'
+PAPERTRAILS_LOGGING_PORT = 43843
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -110,16 +112,22 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': './debug.log',
-        }
+        },
+        'syslog': {
+            'level':'DEBUG',
+            'class':'logging.handlers.SysLogHandler',
+            'formatter': 'verbose',
+            'address':(PAPERTRAILS_LOGGING_HOSTNAME, PAPERTRAILS_LOGGING_PORT)
+        },
     },
     'loggers': {
         'medical_compliance': {
             'level': 'DEBUG',
-            'handlers': ['sentry', 'console'],
+            'handlers': ['sentry', 'console', 'syslog'],
         },
         'api': {
             'level': 'DEBUG',
-            'handlers': ['sentry', 'console'],
+            'handlers': ['sentry', 'console', 'syslog'],
         },
         'django': {
             'level': 'DEBUG',
@@ -145,20 +153,30 @@ LOGGING = {
             'handlers': ['sentry', 'console'],
         },
         'medical_compliance.measurement_callback': {
-            'handlers': ['file'],
+            'handlers': ['file', 'syslog'],
             'level': 'DEBUG',
             'propagate': True,
         },
         'withings_controller.save_measurement': {
-            'handlers': ['file'],
+            'handlers': ['file', 'syslog'],
             'level': 'DEBUG',
             'propagate': True,
         },
-        'medical_compliance.fetch_weight_measurement': {
-            'handlers': ['file'],
+        'medical_compliance_measurements.fetch_measurement': {
+            'handlers': ['file', 'syslog'],
             'level': 'DEBUG',
             'propagate': True,
         },
+        'medical_compliance_heart_rate_analyzers.analyze_heart_rates': {
+            'handlers': ['file', 'syslog'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'medical_compliance_weight_analyzers.analyze_weight': {
+            'handlers': ['file', 'syslog'],
+            'level': 'DEBUG',
+            'propagate': True,
+        }
     },
 }
 

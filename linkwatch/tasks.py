@@ -1,6 +1,8 @@
 from celery import Celery
 from kombu import Queue, Exchange
 from kombu.common import Broadcast
+from custom_logging import logger
+
 import endpoints
 from settings import *
 
@@ -14,4 +16,5 @@ app.conf.update(
 
 @app.task(name=BROKER_TASK)
 def parse_measurement(measurement_json):
+    logger.debug('[linkwatch] Parse measurement request: %s' % (measurement_json))
     endpoints.save_measurement(measurement_json)
