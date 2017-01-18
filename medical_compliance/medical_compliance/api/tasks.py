@@ -33,7 +33,7 @@ app.conf.update(
 
 @app.task(name='medical_compliance_measurements.fetch_weight_measurement')
 def fetch_weight_measurement(user_id, input_source, measurement_unit, timestamp, timezone, value):
-    logger.debug("Fetch weight measurement request: { user_id: %s, input_source: %s, measurement_unit: %s, timestamp: %s, timezone: %s, value: %s }" % 
+    logger.debug("[medical-compliance] Fetch weight measurement request: { user_id: %s, input_source: %s, measurement_unit: %s, timestamp: %s, timezone: %s, value: %s }" % 
         (user_id, input_source, measurement_unit, timestamp, timezone, value))
 
     weight_measurement = WeightMeasurement(
@@ -54,7 +54,7 @@ def fetch_heart_rate_measurement():
         It's very ugly what I did here, only for demo purpose
         We MUST clean this
     """
-    logger.debug("Fetch heart measurement request")
+    logger.debug("[medical-compliance] Fetch heart measurement request")
 
     last_cinch_measurement = None
     last_test_measurement = None
