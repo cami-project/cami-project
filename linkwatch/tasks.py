@@ -1,10 +1,14 @@
 from celery import Celery
+from celery.utils.log import get_task_logger
+
 from kombu import Queue, Exchange
 from kombu.common import Broadcast
-from custom_logging import logger
 
 import endpoints
-from settings import *
+import sys
+
+from custom_logging import logger
+from settings import BROKER_URL, BROKER_QUEUE, BROKER_TASK
 
 app = Celery('api.tasks', broker=BROKER_URL)
 app.conf.update(
