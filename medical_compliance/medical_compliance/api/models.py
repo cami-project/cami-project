@@ -120,3 +120,7 @@ class HeartRateMeasurement(models.Model):
             return last_hr_measurements
         except ObjectDoesNotExist:
             return []
+    
+    def __str__(self):
+        return "{ user_id: %s, input_source: %s, measurement_unit: %s, timestamp: %s, timezone: %s, value: %s}" % \
+            (self.user_id, self.input_source, self.measurement_unit, self.timestamp, self.timezone, self.value)
