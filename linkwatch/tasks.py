@@ -8,7 +8,7 @@ import endpoints
 import sys
 
 from custom_logging import logger
-from settings import *
+from settings import BROKER_URL, BROKER_QUEUE, BROKER_TASK
 
 app = Celery('api.tasks', broker=BROKER_URL)
 app.conf.update(
