@@ -110,6 +110,9 @@ def broadcast_measurement(measurement_type, measurement):
         'timezone': measurement.timezone,
         'value': measurement.value
     }
+    
+    logger.debug("[medical-compliance] Broadcasting measurement: %s" % measurement_json)
+
     global_app = Celery()
     global_app.config_from_object('django.conf:settings')
     global_app.send_task('cami.parse_measurement', [measurement_json], queue='broadcast_measurement')
