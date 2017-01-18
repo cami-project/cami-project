@@ -5,7 +5,7 @@ import datetime, pytz
 import constants
 
 from custom_logging import logger
-from settings import *
+from settings import LINKWATCH_URL_BASE, LINKWATCH_USER, LINKWATCH_PASSWORD
 
 class EndpointResult(object):
     '''
