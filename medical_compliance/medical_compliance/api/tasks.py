@@ -20,7 +20,7 @@ from models import WeightMeasurement, HeartRateMeasurement
 from analyzers.weight_analyzers import analyze_weights
 from analyzers.heart_rate_analyzers import analyze_heart_rates
 
-logger = get_task_logger('medical_compliance_measurements.fetch_measurement')
+logger = get_task_logger('medical_compliance_measurements.process_measurement')
 
 global_app = Celery()
 global_app.config_from_object('django.conf:settings')
@@ -36,7 +36,7 @@ app.conf.update(
 
 @app.task(name='medical_compliance_measurements.process_weight_measurement')
 def process_weight_measurement(user_id, input_source, measurement_unit, timestamp, timezone, value):
-    logger.debug("[medical-compliance] Fetch weight measurement request: %s" % (locals()))
+    logger.debug("[medical-compliance] Process weight measurement: %s" % (locals()))
 
     weight_measurement = WeightMeasurement(
         user_id = int(user_id),
@@ -62,7 +62,7 @@ def process_heart_rate_measurement():
         It's very ugly what I did here, only for demo purpose
         We MUST clean this
     """
-    logger.debug("[medical-compliance] Fetch heart measurement request: %s. Retrieving test and cinch heart rate measurements since the last one..." % (locals()))
+    logger.debug("[medical-compliance] Process heart measurement: %s. Retrieving test and cinch heart rate measurements since the last one..." % (locals()))
 
     last_cinch_measurement = None
     last_test_measurement = None

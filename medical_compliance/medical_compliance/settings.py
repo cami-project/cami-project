@@ -162,7 +162,7 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
-        'medical_compliance_measurements.fetch_measurement': {
+        'medical_compliance_measurements.process_measurement': {
             'handlers': ['file', 'syslog'],
             'level': 'DEBUG',
             'propagate': True,
