@@ -169,7 +169,10 @@ class Measurement(object):
                     "TypeId": None,
                     "Context": None
                 }
-
+    
+    def __str__(self):
+        return "{ type: %s, value: %s, measurement_unit: %s, context_type: %s }" % \
+            (self.type, self.value, self.measurement_unit, self.context_type)
 
 
 class Observation(object):
