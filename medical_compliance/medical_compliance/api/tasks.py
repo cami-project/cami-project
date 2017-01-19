@@ -126,5 +126,5 @@ def broadcast_measurement(measurement_type, measurement):
         'value': measurement.value
     }
     
-    global_app.send_task('cami.parse_measurement', [measurement_json], queue='broadcast_measurement')
+    global_app.send_task('cami.on_measurement_received', [measurement_json], queue='broadcast_measurement')
     

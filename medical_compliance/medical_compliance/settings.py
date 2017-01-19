@@ -279,8 +279,8 @@ CELERY_QUEUES = (
     Queue('medical_compliance_heart_rate_analyzers', Exchange('medical_compliance_heart_rate_analyzers'), routing_key='medical_compliance_heart_rate_analyzers'),
     Broadcast('broadcast_measurement'),
 )
-# Every measurement sent on the broadcast_measurement queue will be broadcasted to all the workers that listen on the cami.parse_measurement task on it
-CELERY_ROUTES = {'cami.parse_measurement': {'queue': 'broadcast_measurement'}}
+# Every measurement sent on the broadcast_measurement queue will be broadcasted to all the workers that listen on the cami.on_measurement_received task on it
+CELERY_ROUTES = {'cami.on_measurement_received': {'queue': 'broadcast_measurement'}}
 
 try:
     from settings_local import *
