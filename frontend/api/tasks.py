@@ -30,14 +30,16 @@ app.conf.update(
 
 @celery.task(name='frontend.send_notification')
 def send_notification(user_id, recipient_type, type, severity, message, description, timestamp):
-    logger.debug("[frontend] Send notification request: { user_id: %s, recipient_type: %s, type: %s, severity: %s, message: %s, description: %s, timestamp: %s}" 
-        % (user_id, recipient_type, type, severity, message, description, timestamp))
+    logger.debug("[frontend] Send notification request: %s" % (locals()))
 
     if timestamp is None:
         timestamp = time.time()
+        
     n = Notification(user_id=user_id, recipient_type=recipient_type, type=type, severity=severity, timestamp=timestamp, message=message, description=description)
     n.full_clean()
     n.save()
 
     devices = APNSDevice.objects.filter(name=recipient_type)
     devices.send_message(message, sound="default")
+    
+    logger.debug("[frontend] Notifications were successfully sent.")

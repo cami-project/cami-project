@@ -31,10 +31,7 @@ app.conf.update(
 
 @app.task(name='withings_controller.save_measurement')
 def save_measurement(userid, start_ts, end_ts, measurement_type_id):
-    logger.debug(
-        "[medical-compliance] Sending Withings request for measurement retrieval for { userid: %s, start ts: %s, end ts: %s, type: %s }" %
-        (userid, start_ts, end_ts, measurement_type_id)
-    )
+    logger.debug("[medical-compliance] Sending Withings request for measurement retrieval for %s" % (locals()))
 
     credentials = WithingsCredentials(access_token=settings.WITHINGS_OAUTH_V1_TOKEN,
                                       access_token_secret=settings.WITHINGS_OAUTH_V1_TOKEN_SECRET,
