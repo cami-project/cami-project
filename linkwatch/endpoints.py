@@ -192,9 +192,10 @@ def process_measurement(measurement_json):
         logger.error("[linkwatch] Auth token unavailable due to error in login_endpoint call. Reason: %s" % (login_res.get_error_reason()))
     else:
         logger.info("[linkwatch] Auth token value is: %s" % (token))
-
+    
+    obs = None
     try:
-        obs_res.response.raise_for_status()
+        obs = get_observation_from_measurement_json(measurement_json)
     except Exception, e:
         logger.error("[linkwatch] Could not convert measurement to linkwatch observation: %s" % (measurement_json))
         return
@@ -202,7 +203,7 @@ def process_measurement(measurement_json):
     send_observation(token, obs)
 
 def get_api_token():
-    logger.error("[linkwatch] Getting auth token...")
+    logger.debug("[linkwatch] Getting auth token...")
 
     login_endpoint = LoginEndpoint(LINKWATCH_USER, LINKWATCH_PASSWORD)
     login_res = login_endpoint.post()
@@ -212,7 +213,7 @@ def get_api_token():
     return login_res.get_token()
 
 def get_observation_from_measurement_json(measurement_json):
-    logger.error("[linkwatch] Converting measurement %s to linkwatch observation..." % (measurement_json))
+    logger.debug("[linkwatch] Converting measurement %s to linkwatch observation..." % (measurement_json))
 
     t = datetime.datetime.fromtimestamp(measurement_json['timestamp'])
     if measurement_json['type'] == 'weight':
