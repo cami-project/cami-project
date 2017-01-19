@@ -58,7 +58,7 @@ def analyze_last_two_weights(weight_measurement_id):
             description = "Please take your meals regularly."
             notifications_adapter.send_elderly_notification(current_measurement.user_id, "weight", "medium", message, description)
 
-        if delta_value >= DELTA_WEIGHT:
+        elif delta_value >= DELTA_WEIGHT:
             logger.debug("[medical-compliance] New weight measurement > last one. Difference: %s. Sending notifications..." % (delta_value))
 
             message = u"Jim gained %s kg" % (abs(delta_value))
@@ -68,3 +68,6 @@ def analyze_last_two_weights(weight_measurement_id):
             message = u"There's an increase of %s kg in your weight." % (abs(delta_value))
             description = "Please be careful with your meals."
             notifications_adapter.send_elderly_notification(current_measurement.user_id, "weight", "medium", message, description)
+        
+        else:
+            logger.debug("[medical-compliance] Weight difference < delta_weight (%s kg). Not sending notifications." % (delta_value))
