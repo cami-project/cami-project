@@ -15,9 +15,9 @@ from django.conf import settings #noqa
 from models import WithingsMeasurement
 from withings import WithingsCredentials, WithingsApi, WithingsMeasures
 
-from tasks import fetch_weight_measurement
+from tasks import process_weight_measurement
 
-logger = get_task_logger("withings_controller.save_measurement")
+logger = get_task_logger("withings_controller.retrieve_and_save_withings_measurements")
 
 
 app = Celery('api.tasks', broker=settings.BROKER_URL)
@@ -29,12 +29,9 @@ app.conf.update(
 )
 
 
-@app.task(name='withings_controller.save_measurement')
-def save_measurement(userid, start_ts, end_ts, measurement_type_id):
-    logger.debug(
-        "[medical-compliance] Sending Withings request for measurement retrieval for { userid: %s, start ts: %s, end ts: %s, type: %s }" %
-        (userid, start_ts, end_ts, measurement_type_id)
-    )
+@app.task(name='withings_controller.retrieve_and_save_withings_measurements')
+def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measurement_type_id):
+    logger.debug("[medical-compliance] Query Withings API to retrieve measurement: %s" % (locals()))
 
     credentials = WithingsCredentials(access_token=settings.WITHINGS_OAUTH_V1_TOKEN,
                                       access_token_secret=settings.WITHINGS_OAUTH_V1_TOKEN_SECRET,
@@ -69,6 +66,9 @@ def save_measurement(userid, start_ts, end_ts, measurement_type_id):
             timestamp=m.data['date'],
             timezone=timezoneStr,
             value=m.__getattribute__(measurement_type))
+
+        logger.debug("[medical-compliance] Saving Withings measurement in cami DB: %s" % (meas))
         meas.save()
 
-        fetch_weight_measurement.delay(userid, "withings", meas.measurement_unit, meas.timestamp, meas.timezone, meas.value)
+        logger.debug("[medical-compliance] Sending Withings weight measurement for processing: %s" % (meas))
+        process_weight_measurement.delay(userid, "withings", meas.measurement_unit, meas.timestamp, meas.timezone, meas.value)

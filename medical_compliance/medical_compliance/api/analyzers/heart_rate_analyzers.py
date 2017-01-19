@@ -35,8 +35,7 @@ def analyze_heart_rates(last_measurement, input_source):
 # TODO: this is a dummy module and should be generalized at least with a task structure
 # all the tasks should listen on the same heart rate queue and all of them should compute some metrics (broadcast?)
 def analyze_last_heart_rates(last_measurement, input_source):
-    logger.debug("[medical-compliance] Analyze heart rates request: { last_measurement: %s, input_source: %s }" % 
-        (last_measurement, input_source))
+    logger.debug("[medical-compliance] Analyze heart rates request: %s" % (locals()))
 
     last_timestamp = 0
 
@@ -47,13 +46,15 @@ def analyze_last_heart_rates(last_measurement, input_source):
         timestamp__gt=last_timestamp
     ).filter(input_source=input_source).order_by('timestamp')
 
-    logger.debug("[medical-compliance] Measurements since last measurement (%s): %s" % 
+    logger.debug("[medical-compliance] Heart rate measurements since last measurement (%s): %s" % 
         (last_measurement, measurement_list))
 
     notifications_adapter = NotificationsAdapter()
 
     for m in measurement_list:
         if m.value < 60:
+            logger.debug("[medical-compliance] Heart rate measurement value < 60. Sending notifications to caregiver + elderly.")
+            
             message = u"Jim's heart rate is dangerously low: only %d." % int(m.value)
             description = "Please take action now!"
             notifications_adapter.send_caregiver_notification(measurement_list[0].user_id, "heart", "high", message, description, m.timestamp)
@@ -62,6 +63,8 @@ def analyze_last_heart_rates(last_measurement, input_source):
             description = "I have contacted your caregiver."
             notifications_adapter.send_elderly_notification(measurement_list[0].user_id, "heart", "high", message, description, m.timestamp)
         elif m.value < 70:
+            logger.debug("[medical-compliance] Heart rate measurement value < 70. Sending notifications to caregiver + elderly.")
+
             message = u"Jim's heart rate is a bit low: only %d" % int(m.value)
             description = "Please make sure he's all right."
             notifications_adapter.send_caregiver_notification(measurement_list[0].user_id, "heart", "medium", message, description, m.timestamp)
@@ -71,6 +74,8 @@ def analyze_last_heart_rates(last_measurement, input_source):
             notifications_adapter.send_elderly_notification(measurement_list[0].user_id, "heart", "medium", message, description, m.timestamp)
 
         if m.value > 100:
+            logger.debug("[medical-compliance] Heart rate measurement value > 100. Sending notifications to caregiver + elderly.")
+
             message = u"Jim's heart rate is dangerously high: over %d." % int(m.value)
             description = "Please take action now!"
             notifications_adapter.send_caregiver_notification(measurement_list[0].user_id, "heart", "high", message, description, m.timestamp)
@@ -80,6 +85,8 @@ def analyze_last_heart_rates(last_measurement, input_source):
             notifications_adapter.send_elderly_notification(measurement_list[0].user_id, "heart", "high", message, description, m.timestamp)
 
         elif m.value > 85:
+            logger.debug("[medical-compliance] Heart rate measurement value < 85. Sending notifications to caregiver + elderly.")
+
             message = u"Jim's heart rate is a bit high: over %d." % int(m.value)
             description = "Please make sure he's alright."
             notifications_adapter.send_caregiver_notification(measurement_list[0].user_id, "heart", "medium", message, description, m.timestamp)

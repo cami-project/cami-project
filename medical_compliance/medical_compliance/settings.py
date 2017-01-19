@@ -157,12 +157,12 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
-        'withings_controller.save_measurement': {
+        'withings_controller.retrieve_and_save_withings_measurements': {
             'handlers': ['file', 'syslog'],
             'level': 'DEBUG',
             'propagate': True,
         },
-        'medical_compliance_measurements.fetch_measurement': {
+        'medical_compliance_measurements.process_measurement': {
             'handlers': ['file', 'syslog'],
             'level': 'DEBUG',
             'propagate': True,
@@ -263,7 +263,7 @@ GOOGLE_FIT_REFRESH_TOKEN = '1/bcaHAkmLUs6Is5pTyVhqtjw0vYIqbZcWkuTnQWNf87c'
 # Google Fit Fetch Heart Rate Scheduled Task
 CELERYBEAT_SCHEDULE = {
     'fetch_heart_rate_data': {
-        'task': 'medical_compliance_measurements.fetch_heart_rate_measurement',
+        'task': 'medical_compliance_measurements.process_heart_rate_measurement',
         'schedule': timedelta(minutes=5),
     }
 }
@@ -279,8 +279,8 @@ CELERY_QUEUES = (
     Queue('medical_compliance_heart_rate_analyzers', Exchange('medical_compliance_heart_rate_analyzers'), routing_key='medical_compliance_heart_rate_analyzers'),
     Broadcast('broadcast_measurement'),
 )
-# Every measurement sent on the broadcast_measurement queue will be broadcasted to all the workers that listen on the cami.parse_measurement task on it
-CELERY_ROUTES = {'cami.parse_measurement': {'queue': 'broadcast_measurement'}}
+# Every measurement sent on the broadcast_measurement queue will be broadcasted to all the workers that listen on the cami.on_measurement_received task on it
+CELERY_ROUTES = {'cami.on_measurement_received': {'queue': 'broadcast_measurement'}}
 
 try:
     from settings_local import *

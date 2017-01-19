@@ -20,7 +20,10 @@ from models import WeightMeasurement, HeartRateMeasurement
 from analyzers.weight_analyzers import analyze_weights
 from analyzers.heart_rate_analyzers import analyze_heart_rates
 
-logger = get_task_logger('medical_compliance_measurements.fetch_measurement')
+logger = get_task_logger('medical_compliance_measurements.process_measurement')
+
+global_app = Celery()
+global_app.config_from_object('django.conf:settings')
 
 app = Celery('api.tasks', broker=settings.BROKER_URL)
 app.conf.update(
@@ -31,10 +34,9 @@ app.conf.update(
 )
 
 
-@app.task(name='medical_compliance_measurements.fetch_weight_measurement')
-def fetch_weight_measurement(user_id, input_source, measurement_unit, timestamp, timezone, value):
-    logger.debug("[medical-compliance] Fetch weight measurement request: { user_id: %s, input_source: %s, measurement_unit: %s, timestamp: %s, timezone: %s, value: %s }" % 
-        (user_id, input_source, measurement_unit, timestamp, timezone, value))
+@app.task(name='medical_compliance_measurements.process_weight_measurement')
+def process_weight_measurement(user_id, input_source, measurement_unit, timestamp, timezone, value):
+    logger.debug("[medical-compliance] Process weight measurement: %s" % (locals()))
 
     weight_measurement = WeightMeasurement(
         user_id = int(user_id),
@@ -44,21 +46,27 @@ def fetch_weight_measurement(user_id, input_source, measurement_unit, timestamp,
         timezone=timezone,
         value=value
     )
+
+    logger.debug("[medical-compliance] Saving weight measurement: %s" % (weight_measurement))
     weight_measurement.save()
+
+    logger.debug("[medical-compliance] Sending the weight measurement with id %s for analysis." % (weight_measurement.id))
     analyze_weights.delay(weight_measurement.id)
+
+    logger.debug("[medical-compliance] Broadcasting weight measurement: %s" % (weight_measurement))
     broadcast_measurement('weight', weight_measurement)
 
-@app.task(name='medical_compliance_measurements.fetch_heart_rate_measurement')
-def fetch_heart_rate_measurement():
+@app.task(name='medical_compliance_measurements.process_heart_rate_measurement')
+def process_heart_rate_measurement():
     """
         It's very ugly what I did here, only for demo purpose
         We MUST clean this
     """
-    logger.debug("[medical-compliance] Fetch heart measurement request")
+    logger.debug("[medical-compliance] Process heart measurement: %s. Retrieving test and cinch heart rate measurements since the last one..." % (locals()))
 
     last_cinch_measurement = None
     last_test_measurement = None
-
+    
     try:
         last_cinch_measurement = HeartRateMeasurement.objects.all().filter(input_source='cinch').order_by('-timestamp')[0]
         time_from_cinch = last_cinch_measurement.timestamp + 1
@@ -81,7 +89,7 @@ def fetch_heart_rate_measurement():
     
     measurements = google_fit.get_heart_rate_data_from_cinch(time_from_cinch, time_to)
     measurements = measurements + google_fit.get_heart_rate_data_from_test(time_from_test, time_to)
-
+    
     for m in measurements:
         heart_rate_measurement = HeartRateMeasurement(
             user_id = 11262861,
@@ -91,10 +99,17 @@ def fetch_heart_rate_measurement():
             timezone='Europe/Bucharest',
             value=m['value']
         )
-        heart_rate_measurement.save()
-        broadcast_measurement('heartrate', heart_rate_measurement)
 
+        logger.debug("[medical-compliance] Saving heart rate measurement: %s" % (heart_rate_measurement))
+        heart_rate_measurement.save()
+
+        logger.debug("[medical-compliance] Broadcasting heart rate measurement: %s" % (heart_rate_measurement))
+        broadcast_measurement('heartrate', heart_rate_measurement)
+    
+    logger.debug("[medical-compliance] Sending the last cinch heart rate measurement for analysis: %s" % (last_cinch_measurement))
     analyze_heart_rates.delay(last_cinch_measurement, 'cinch')
+
+    logger.debug("[medical-compliance] Sending the last test heart rate measurement for analysis: %s" % (last_test_measurement))
     analyze_heart_rates.delay(last_test_measurement, 'test')
 
     return json.dumps(measurements, indent=4, sort_keys=True)
@@ -111,9 +126,5 @@ def broadcast_measurement(measurement_type, measurement):
         'value': measurement.value
     }
     
-    logger.debug("[medical-compliance] Broadcasting measurement: %s" % measurement_json)
-
-    global_app = Celery()
-    global_app.config_from_object('django.conf:settings')
-    global_app.send_task('cami.parse_measurement', [measurement_json], queue='broadcast_measurement')
+    global_app.send_task('cami.on_measurement_received', [measurement_json], queue='broadcast_measurement')
     
