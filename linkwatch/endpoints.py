@@ -181,48 +181,63 @@ class Observation(object):
         self.measurements = measurements
         self.comment = comment
 
+    def __str__(self):
+        return "{ device_type: %s, timestamp: %s, input_type: %s, equipment_id: %s, measurements: %s, comment: %s}" % \
+            (self.device_type, self.timestamp, self.input_type, self.equipment_id, self.measurements, self.comment)
 
-def save_measurement(measurement_json):
-    # Login and get API token
-    login_endpoint = LoginEndpoint(LINKWATCH_USER, LINKWATCH_PASSWORD)
-    login_res = login_endpoint.post()
-    if login_res.is_error():
-        logger.error("[linkwatch] Could not log demo user in. " + login_res.get_error_reason())
-
-    token = login_res.get_token()
+def process_measurement(measurement_json):
+    token = get_api_token()
 
     if not token:
         logger.error("[linkwatch] Auth token unavailable due to error in login_endpoint call. Reason: " + login_res.get_error_reason())
     else:
         logger.info("[linkwatch] Auth token value is: " + token)
 
+    try:
+        obs_res.response.raise_for_status()
+    except Exception, e:
+        logging.exception("[linkwatch] Could not convert measurement to linkwatch observation", e)
+        return
 
-    # Send a weight measurement
+    send_observation(token, obs)
+
+def get_api_token():
+    logger.error("[linkwatch] Getting auth token...")
+
+    login_endpoint = LoginEndpoint(LINKWATCH_USER, LINKWATCH_PASSWORD)
+    login_res = login_endpoint.post()
+    if login_res.is_error():
+        logger.error("[linkwatch] Could not log demo user in. " + login_res.get_error_reason())
+    
+    return login_res.get_token()
+
+def get_observation_from_measurement_json(measurement_json):
+    logger.error("[linkwatch] Converting measurement %s to linkwatch observation..." % (measurement_json))
+
     t = datetime.datetime.fromtimestamp(measurement_json['timestamp'])
     if measurement_json['type'] == 'weight':
         weight_measurement = Measurement(constants.MeasurementType.WEIGHT, measurement_json['value'], constants.UnitCode.KILOGRAM)
-        obs = Observation(constants.DeviceType.WEIGHTING_SCALE, t, "TEST", measurements=[weight_measurement], comment=measurement_json['input_source'])
+        return Observation(constants.DeviceType.WEIGHTING_SCALE, t, "TEST", measurements=[weight_measurement], comment=measurement_json['input_source'])
     elif measurement_json['type'] == 'heartrate':
         heartrate_measurement = Measurement(constants.MeasurementType.HF_HEARTRATE, measurement_json['value'], constants.UnitCode.BPM)
-        obs = Observation(constants.DeviceType.HEART_RATE, t, "TEST", measurements=[heartrate_measurement], comment=measurement_json['input_source'])
-    else:
-        logger.info("[linkwatch] Unsupported measurement type: " + measurement_json['type'])
-        return
+        return Observation(constants.DeviceType.HEART_RATE, t, "TEST", measurements=[heartrate_measurement], comment=measurement_json['input_source'])
 
-    obs_endpoint = SendObservationsEndpoint(token, [obs])
+    raise Exception("Unsupported measurement type: %s" % (measurement_json['type']))
+
+def send_observation(api_token, observation):
+    obs_endpoint = SendObservationsEndpoint(api_token, [observation])
     obs_res = obs_endpoint.post()
 
     if not obs_res.is_error():
-        logger.info("[linkwatch] Observation status: " + str(obs_res.get_status()))
+        logger.info("[linkwatch] Observation POST result for %s: %s" % (observation, obs_res.get_status()))
     else:
         try:
             obs_res.response.raise_for_status()
         except Exception, e:
-            logging.exception("[linkwatch] Failed to send new weight observation!", e)
-
+            logging.exception("[linkwatch] Failed to POST new weight observation!", e)
 
 if __name__ == "__main__":
-    save_measurement({
+    process_measurement({
         'type': 'weight',
         'user_id': 1234,
         'input_source': 'withings',

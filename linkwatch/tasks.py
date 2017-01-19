@@ -20,5 +20,5 @@ app.conf.update(
 
 @app.task(name=BROKER_TASK)
 def on_measurement_received(measurement_json):
-    logger.debug('[linkwatch] Parse measurement request: %s' % (measurement_json))
-    endpoints.save_measurement(measurement_json)
+    logger.debug('[linkwatch] Measurement received: %s' % (measurement_json))
+    endpoints.process_measurement(measurement_json)
