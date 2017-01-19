@@ -189,14 +189,14 @@ def process_measurement(measurement_json):
     token = get_api_token()
 
     if not token:
-        logger.error("[linkwatch] Auth token unavailable due to error in login_endpoint call. Reason: " + login_res.get_error_reason())
+        logger.error("[linkwatch] Auth token unavailable due to error in login_endpoint call. Reason: %s" % (login_res.get_error_reason()))
     else:
-        logger.info("[linkwatch] Auth token value is: " + token)
+        logger.info("[linkwatch] Auth token value is: %s" % (token))
 
     try:
         obs_res.response.raise_for_status()
     except Exception, e:
-        logging.exception("[linkwatch] Could not convert measurement to linkwatch observation", e)
+        logger.error("[linkwatch] Could not convert measurement to linkwatch observation: %s" % (measurement_json))
         return
 
     send_observation(token, obs)
@@ -207,7 +207,7 @@ def get_api_token():
     login_endpoint = LoginEndpoint(LINKWATCH_USER, LINKWATCH_PASSWORD)
     login_res = login_endpoint.post()
     if login_res.is_error():
-        logger.error("[linkwatch] Could not log demo user in. " + login_res.get_error_reason())
+        logger.error("[linkwatch] Could not log demo user in. Login result: %s" % (login_res.get_error_reason()))
     
     return login_res.get_token()
 
@@ -234,7 +234,7 @@ def send_observation(api_token, observation):
         try:
             obs_res.response.raise_for_status()
         except Exception, e:
-            logging.exception("[linkwatch] Failed to POST new weight observation!", e)
+            logger.error("[linkwatch] Failed to POST new weight observation: %s" % (observation))
 
 if __name__ == "__main__":
     process_measurement({
