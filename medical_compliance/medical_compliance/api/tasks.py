@@ -34,8 +34,8 @@ app.conf.update(
 )
 
 
-@app.task(name='medical_compliance_measurements.fetch_weight_measurement')
-def fetch_weight_measurement(user_id, input_source, measurement_unit, timestamp, timezone, value):
+@app.task(name='medical_compliance_measurements.process_weight_measurement')
+def process_weight_measurement(user_id, input_source, measurement_unit, timestamp, timezone, value):
     logger.debug("[medical-compliance] Fetch weight measurement request: %s" % (locals()))
 
     weight_measurement = WeightMeasurement(
@@ -56,8 +56,8 @@ def fetch_weight_measurement(user_id, input_source, measurement_unit, timestamp,
     logger.debug("[medical-compliance] Broadcasting weight measurement: %s" % (weight_measurement))
     broadcast_measurement('weight', weight_measurement)
 
-@app.task(name='medical_compliance_measurements.fetch_heart_rate_measurement')
-def fetch_heart_rate_measurement():
+@app.task(name='medical_compliance_measurements.process_heart_rate_measurement')
+def process_heart_rate_measurement():
     """
         It's very ugly what I did here, only for demo purpose
         We MUST clean this

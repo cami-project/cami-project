@@ -263,7 +263,7 @@ GOOGLE_FIT_REFRESH_TOKEN = '1/bcaHAkmLUs6Is5pTyVhqtjw0vYIqbZcWkuTnQWNf87c'
 # Google Fit Fetch Heart Rate Scheduled Task
 CELERYBEAT_SCHEDULE = {
     'fetch_heart_rate_data': {
-        'task': 'medical_compliance_measurements.fetch_heart_rate_measurement',
+        'task': 'medical_compliance_measurements.process_heart_rate_measurement',
         'schedule': timedelta(minutes=5),
     }
 }

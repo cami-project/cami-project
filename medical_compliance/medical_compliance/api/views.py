@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from withings import WithingsApi, WithingsCredentials
 from withings_tasks import save_measurement
-from tasks import fetch_heart_rate_measurement
+from tasks import process_heart_rate_measurement
 
 
 logger = logging.getLogger("medical_compliance.measurement_callback")
@@ -45,7 +45,7 @@ def unsubscribe_notifications(request):
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def test_heart_rate_fetch(request):
-    return HttpResponse(fetch_heart_rate_measurement(), content_type="text/html")
+    return HttpResponse(process_heart_rate_measurement(), content_type="text/html")
 
 @csrf_exempt
 def measurements_notification_received(request):

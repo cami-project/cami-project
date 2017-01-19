@@ -15,7 +15,7 @@ from django.conf import settings #noqa
 from models import WithingsMeasurement
 from withings import WithingsCredentials, WithingsApi, WithingsMeasures
 
-from tasks import fetch_weight_measurement
+from tasks import process_weight_measurement
 
 logger = get_task_logger("withings_controller.save_measurement")
 
@@ -68,4 +68,4 @@ def save_measurement(userid, start_ts, end_ts, measurement_type_id):
             value=m.__getattribute__(measurement_type))
         meas.save()
 
-        fetch_weight_measurement.delay(userid, "withings", meas.measurement_unit, meas.timestamp, meas.timezone, meas.value)
+        process_weight_measurement.delay(userid, "withings", meas.measurement_unit, meas.timestamp, meas.timezone, meas.value)
