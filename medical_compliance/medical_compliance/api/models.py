@@ -34,7 +34,7 @@ class WithingsMeasurement(models.Model):
     @staticmethod
     def get_measure_type_by_id(meas_id):
         for m in WithingsMeasurement.MEASURE_CHOICES:
-            if m[0] == meas_id:
+            if m[0] == int(meas_id):
                 return m[1]
 
         return None
