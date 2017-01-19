@@ -22,6 +22,9 @@ from analyzers.heart_rate_analyzers import analyze_heart_rates
 
 logger = get_task_logger('medical_compliance_measurements.fetch_measurement')
 
+global_app = Celery()
+global_app.config_from_object('django.conf:settings')
+
 app = Celery('api.tasks', broker=settings.BROKER_URL)
 app.conf.update(
     CELERY_DEFAULT_QUEUE='medical_compliance_measurements',
@@ -110,7 +113,6 @@ def broadcast_measurement(measurement_type, measurement):
         'timezone': measurement.timezone,
         'value': measurement.value
     }
-    global_app = Celery()
-    global_app.config_from_object('django.conf:settings')
+    
     global_app.send_task('cami.parse_measurement', [measurement_json], queue='broadcast_measurement')
     
