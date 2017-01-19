@@ -17,7 +17,7 @@ from withings import WithingsCredentials, WithingsApi, WithingsMeasures
 
 from tasks import process_weight_measurement
 
-logger = get_task_logger("withings_controller.save_measurement")
+logger = get_task_logger("withings_controller.retrieve_and_save_withings_measurements")
 
 
 app = Celery('api.tasks', broker=settings.BROKER_URL)
@@ -29,8 +29,8 @@ app.conf.update(
 )
 
 
-@app.task(name='withings_controller.save_measurement')
-def save_measurement(userid, start_ts, end_ts, measurement_type_id):
+@app.task(name='withings_controller.retrieve_and_save_withings_measurements')
+def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measurement_type_id):
     logger.debug("[medical-compliance] Sending Withings request for measurement retrieval for %s" % (locals()))
 
     credentials = WithingsCredentials(access_token=settings.WITHINGS_OAUTH_V1_TOKEN,

@@ -157,7 +157,7 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
-        'withings_controller.save_measurement': {
+        'withings_controller.retrieve_and_save_withings_measurements': {
             'handlers': ['file', 'syslog'],
             'level': 'DEBUG',
             'propagate': True,

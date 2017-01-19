@@ -8,7 +8,7 @@ from django.conf import settings #noqa
 from django.views.decorators.csrf import csrf_exempt
 
 from withings import WithingsApi, WithingsCredentials
-from withings_tasks import save_measurement
+from withings_tasks import retrieve_and_save_withings_measurements
 from tasks import process_heart_rate_measurement
 
 
@@ -57,9 +57,9 @@ def measurements_notification_received(request):
         enddate = request.POST['enddate']
         appli = request.POST['appli']
 
-        logger.debug("[medical-compliance] Passing data to the save_measurement task: { userid: %s, startdate: %s, enddate: %s, appli: %s }" %
+        logger.debug("[medical-compliance] Passing data to the retrieve_and_save_withings_measurements task: { userid: %s, startdate: %s, enddate: %s, appli: %s }" %
             (userid, startdate, enddate, appli))
-        save_measurement.delay(userid, startdate, enddate, appli)
+        retrieve_and_save_withings_measurements.delay(userid, startdate, enddate, appli)
     else:
         logger.debug("[medical-compliance] Received invalid POST data in measurements hook - possibly related to a subscribe call")
 
