@@ -68,7 +68,9 @@ class WithingsMeasurement(models.Model):
         import datetime, pytz
 
         pretty_date = datetime.datetime.fromtimestamp(self.timestamp, tz = pytz.timezone(self.timezone)).strftime("%Y-%m-%d %H:%M:%S %z")
-        return u'Measurement of type: %s, value: %s %s, from: %s' % (self.type, self.value, self.MEASUREMENT_SI_UNIT[self.type], pretty_date)
+        measurement_type = WithingsMeasurement.get_measure_type_by_id(self.type)
+        
+        return u'Measurement of type: %s, value: %s %s, from: %s' % (self.type, self.value, self.MEASUREMENT_SI_UNIT[measurement_type], pretty_date)
 
 
 class WeightMeasurement(models.Model):
