@@ -31,7 +31,7 @@ app.conf.update(
 
 @app.task(name='withings_controller.retrieve_and_save_withings_measurements')
 def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measurement_type_id):
-    logger.debug("[medical-compliance] Sending Withings request for measurement retrieval for %s" % (locals()))
+    logger.debug("[medical-compliance] Query Withings API to retrieve measurement: %s" % (locals()))
 
     credentials = WithingsCredentials(access_token=settings.WITHINGS_OAUTH_V1_TOKEN,
                                       access_token_secret=settings.WITHINGS_OAUTH_V1_TOKEN_SECRET,
@@ -66,6 +66,9 @@ def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measuremen
             timestamp=m.data['date'],
             timezone=timezoneStr,
             value=m.__getattribute__(measurement_type))
+
+        logger.debug("[medical-compliance] Saving Withings measurement in cami DB: %s" % (meas))
         meas.save()
 
+        logger.debug("[medical-compliance] Sending Withings weight measurement for processing: %s" % (meas))
         process_weight_measurement.delay(userid, "withings", meas.measurement_unit, meas.timestamp, meas.timezone, meas.value)
