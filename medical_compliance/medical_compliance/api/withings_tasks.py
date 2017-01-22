@@ -16,6 +16,7 @@ from models import WithingsMeasurement
 from withings import WithingsCredentials, WithingsApi, WithingsMeasures
 
 from tasks import process_weight_measurement
+from withings_utils import get_withings_user
 
 logger = get_task_logger("withings_controller.retrieve_and_save_withings_measurements")
 
@@ -33,12 +34,18 @@ app.conf.update(
 def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measurement_type_id):
     logger.debug("[medical-compliance] Query Withings API to retrieve measurement: %s" % (locals()))
 
-    credentials = WithingsCredentials(access_token=settings.WITHINGS_OAUTH_V1_TOKEN,
-                                      access_token_secret=settings.WITHINGS_OAUTH_V1_TOKEN_SECRET,
+    withings_user = None
+    try:
+        withings_user = get_withings_user(userid)
+    except Exception as e:
+        logger.error("[medical-compliance] Unable to retrieve withings user by userid in the settings file: %s" % (e))
+        return
+    
+    credentials = WithingsCredentials(access_token=withings_user.oauth_token,
+                                      access_token_secret=withings_user.oauth_token_secret,
                                       consumer_key=settings.WITHINGS_CONSUMER_KEY,
                                       consumer_secret=settings.WITHINGS_CONSUMER_SECRET,
-                                      user_id=userid)
-    # TODO: modify storage of user credentials in settings file to a per userid basis
+                                      user_id=withings_user.userid)
 
     client = WithingsApi(credentials)
     req_params = {
