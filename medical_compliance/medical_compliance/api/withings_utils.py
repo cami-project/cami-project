@@ -12,7 +12,7 @@ class WithingsUser(object):
         self.oauth_token_secret = oauth_token_secret
 
 def get_withings_user(userid):
-    result = [user for user in settings.WITHINGS_USERS if user['userid'] == userid]
+    result = [user for user in settings.WITHINGS_USERS if user['userid'] == int(userid)]
 
     logger.debug("[medical-compliance] settings.WITHINGS_USERS: %s" % (settings.WITHINGS_USERS))
     logger.debug("[medical-compliance] Looked up userid: %s" % (userid))
