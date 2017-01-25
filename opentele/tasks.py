@@ -23,6 +23,6 @@ def on_measurement_received(measurement_json):
     logger.debug('[opentele] Measurement received: %s' % (measurement_json))
 
     try:
-        enpoints.process_measurement(measurement_json)
+        endpoints.process_measurement(measurement_json)
     except Exception, e:
         logger.error('[opentele] Error processing measurement: %s' % (e))
