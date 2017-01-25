@@ -6,7 +6,8 @@ import logging
 import datetime, pytz
 import constants
 
-URL_BASE = "http://opentele.aliviate.dk:4288/opentele-citizen-server"
+from settings import OPENTELE_URL_BASE, OPENTELE_USER, OPENTELE_PASSWORD
+
 logging.basicConfig()
 logger = logging.getLogger(name="endpoints")
 logger.setLevel(logging.INFO)
@@ -33,21 +34,21 @@ class GetObservations(object):
 
 
 class GetWeightObservations(GetObservations):
-    URL = URL_BASE + "/patient/measurements/weight"
+    URL = OPENTELE_URL_BASE + "/patient/measurements/weight"
 
     def __init__(self, credentials, params):
         super(GetWeightObservations, self).__init__(GetWeightObservations.URL, credentials, params)
 
 
 class GetBPObservations(GetObservations):
-    URL = URL_BASE + "/patient/measurements/blood_pressure"
+    URL = OPENTELE_URL_BASE + "/patient/measurements/blood_pressure"
 
     def __init__(self, credentials, params):
         super(GetBPObservations, self).__init__(GetBPObservations.URL, credentials, params)
 
 
 class GetSaturationObservations(GetObservations):
-    URL = URL_BASE + "/patient/measurements/saturation"
+    URL = OPENTELE_URL_BASE + "/patient/measurements/saturation"
 
     def __init__(self, credentials, params):
         super(GetSaturationObservations, self).__init__(GetSaturationObservations.URL, credentials, params)
@@ -55,7 +56,7 @@ class GetSaturationObservations(GetObservations):
 
 
 class SendObservation(object):
-    URL = URL_BASE + "/rest/questionnaire/listing/"
+    URL = OPENTELE_URL_BASE + "/rest/questionnaire/listing/"
 
     def __init__(self, credentials, observation, url = None):
         if url:
@@ -152,8 +153,8 @@ class Observation(object):
 if __name__ == "__main__":
     # Basic HTTP AUTH data
     credentials = {
-        'user': "nancyann",
-        'pass': "abcd1234"
+        'user': OPENTELE_USER,
+        'pass': OPENTELE_PASSWORD
     }
 
 
