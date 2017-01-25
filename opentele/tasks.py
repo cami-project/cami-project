@@ -21,3 +21,8 @@ app.conf.update(
 @app.task(name=BROKER_TASK)
 def on_measurement_received(measurement_json):
     logger.debug('[opentele] Measurement received: %s' % (measurement_json))
+
+    try:
+        enpoints.process_measurement(measurement_json)
+    except Exception, e:
+        logger.error('[opentele] Error processing measurement: %s' % (e))

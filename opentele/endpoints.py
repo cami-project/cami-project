@@ -8,10 +8,7 @@ import constants
 
 from settings import OPENTELE_URL_BASE, OPENTELE_USER, OPENTELE_PASSWORD
 
-logging.basicConfig()
-logger = logging.getLogger(name="endpoints")
-logger.setLevel(logging.INFO)
-
+from custom_logging import logger
 
 class GetObservations(object):
     def __init__(self, url, credentials, params = None):
@@ -149,14 +146,28 @@ class Observation(object):
         else:
             return None
 
-
-if __name__ == "__main__":
-    # Basic HTTP AUTH data
-    credentials = {
+def get_credentials():
+    return {
         'user': OPENTELE_USER,
         'pass': OPENTELE_PASSWORD
     }
 
+def process_measurement(measurement_json):
+    logger.debug("[opentele] Processing measurement: %s" % (measurement_json))
+
+    if measurement_json['type'] == 'weight':
+        logger.debug("[opentele] Sending weight measurement to OpenTele: %s" % (measurement_json))
+        send_weight_req = SendWeight(get_credentials(), measurement_json['value'])
+        res = send_weight.post()
+        logger.debug("[opentele] The result of posting %s to OpenTele: %s" % (measurement_json, str(res)))
+        
+        return
+
+    raise Exception("Unsupported measurement type: %s" % (measurement_json['type']))
+
+if __name__ == "__main__":
+    # Basic HTTP AUTH data
+    credentials = get_credentials()
 
     # ==== Send a weight measurement ====
     logger.info("Sending a weight measurement ...")
