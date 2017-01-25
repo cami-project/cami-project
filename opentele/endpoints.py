@@ -158,7 +158,7 @@ def process_measurement(measurement_json):
     if measurement_json['type'] == 'weight':
         logger.debug("[opentele] Sending weight measurement to OpenTele: %s" % (measurement_json))
         send_weight_req = SendWeight(get_credentials(), measurement_json['value'])
-        res = send_weight.post()
+        res = send_weight_req.post()
         logger.debug("[opentele] The result of posting %s to OpenTele: %s" % (measurement_json, str(res)))
         
         return
