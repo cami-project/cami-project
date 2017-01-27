@@ -85,7 +85,7 @@ class SendBP(SendObservation):
 
         ts = datetime.datetime.now(tz = pytz.timezone("Europe/Bucharest"))
 
-        return Observation("CAMIBloodPresure", ts, constants.QuestionnaireID.CAMI_BP,
+        return Observation(constants.ObservationName.CAMI_BLOOD_PRESSURE, ts, constants.QuestionnaireID.CAMI_BP,
                            measurements = [systolic_meas, diastolic_meas, pulse_meas, severity_meas])
 
 
@@ -101,7 +101,7 @@ class SendWeight(SendObservation):
 
         ts = datetime.datetime.now(tz=pytz.timezone("Europe/Bucharest"))
 
-        return Observation("CAMIBloodPresure", ts, constants.QuestionnaireID.CAMI_WEIGHT,
+        return Observation(constants.ObservationName.CAMI_WEIGHT, ts, constants.QuestionnaireID.CAMI_WEIGHT,
                            measurements=[weight_meas, severity_meas])
 
 
@@ -171,6 +171,10 @@ if __name__ == "__main__":
 
     # ==== Send a weight measurement ====
     logger.info("Sending a weight measurement ...")
+    send_weight = SendWeight(credentials, 70.2)
+    res = send_weight.post()
+    logger.info("Status code: " + str(res))
+
     send_weight = SendWeight(credentials, 70.2)
     res = send_weight.post()
     logger.info("Status code: " + str(res))

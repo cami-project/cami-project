@@ -1,3 +1,7 @@
+class ObservationName(object):
+    CAMI_WEIGHT = "CAMIWeight"
+    CAMI_BLOOD_PRESSURE = "CAMIBloodPresure"
+
 class QuestionnaireID(object):
     CAMI_WEIGHT     = 55
     CAMI_SATURATION = 54
