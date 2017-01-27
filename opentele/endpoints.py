@@ -78,15 +78,23 @@ class SendBP(SendObservation):
         super(SendBP, self).__init__(credentials, obs)
 
     def _prepare_bp_observation(self, systolic, diastolic, pulse):
-        systolic_meas = Measurement(constants.MeasurementType.CAMI_BP + "#SYSTOLIC", "Int", systolic)
-        diastolic_meas = Measurement(constants.MeasurementType.CAMI_BP + "#DIASTOLIC", "Int", diastolic)
-        pulse_meas = Measurement(constants.MeasurementType.CAMI_BP + "#PULSE", "Int", pulse)
-        severity_meas = Measurement(constants.MeasurementType.CAMI_BP + "##SEVERITY", "String", "GREEN")
+        measurements = []
+
+        if systolic:
+            measurements.append(Measurement(constants.MeasurementType.CAMI_BP + "#SYSTOLIC", "Int", systolic))
+
+        if diastolic:   
+            measurements.append(Measurement(constants.MeasurementType.CAMI_BP + "#DIASTOLIC", "Int", diastolic))
+
+        if pulse:
+            measurements.append(Measurement(constants.MeasurementType.CAMI_BP + "#PULSE", "Int", pulse))
+
+        measurements.append(Measurement(constants.MeasurementType.CAMI_BP + "##SEVERITY", "String", "GREEN"))
 
         ts = datetime.datetime.now(tz = pytz.timezone("Europe/Bucharest"))
 
         return Observation(constants.ObservationName.CAMI_BLOOD_PRESSURE, ts, constants.QuestionnaireID.CAMI_BP,
-                           measurements = [systolic_meas, diastolic_meas, pulse_meas, severity_meas])
+                           measurements = measurements)
 
 
 
@@ -186,7 +194,7 @@ if __name__ == "__main__":
         print json_str
 
     # ==== Send a BP measurement ====
-    logger.info("Sending a weight measurement ...")
+    logger.info("Sending a bp measurement ...")
     send_bp = SendBP(credentials, systolic=115, diastolic=60, pulse=75)
     res = send_bp.post()
     logger.info("Status code: " + str(res))
