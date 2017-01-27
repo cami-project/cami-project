@@ -170,7 +170,14 @@ def process_measurement(measurement_json):
         logger.debug("[opentele] The result of posting %s to OpenTele: %s" % (measurement_json, str(res)))
         
         return
+    elif measurement_json['type'] == 'heartrate':
+        logger.debug("[opentele] Sending pulse measurement to OpenTele: %s" % (measurement_json))
+        send_bp_req = SendBP(get_credentials(), systolic=None, diastolic=None, pulse=measurement_json['value'])
+        res = send_weight_req.post()
+        logger.debug("[opentele] The result of posting %s to OpenTele: %s" % (measurement_json, str(res)))
 
+        return
+        
     raise Exception("Unsupported measurement type: %s" % (measurement_json['type']))
 
 if __name__ == "__main__":
