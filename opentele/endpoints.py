@@ -173,7 +173,7 @@ def process_measurement(measurement_json):
     elif measurement_json['type'] == 'heartrate':
         logger.debug("[opentele] Sending pulse measurement to OpenTele: %s" % (measurement_json))
         send_bp_req = SendBP(get_credentials(), systolic=None, diastolic=None, pulse=measurement_json['value'])
-        res = send_weight_req.post()
+        res = send_bp_req.post()
         logger.debug("[opentele] The result of posting %s to OpenTele: %s" % (measurement_json, str(res)))
 
         return
