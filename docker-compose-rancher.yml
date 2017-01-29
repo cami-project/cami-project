@@ -91,3 +91,13 @@ cami-linkwatch-worker:
     io.rancher.container.pull_image: always
   tty: true
   stdin_open: true
+cami-opentele-worker:
+  image: vitaminsoftware/cami-project:opentele
+  links:
+    - 'cami-store'
+    - 'cami-rabbitmq'
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  stdin_open: true

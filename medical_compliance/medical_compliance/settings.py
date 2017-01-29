@@ -176,7 +176,13 @@ LOGGING = {
             'handlers': ['file', 'syslog'],
             'level': 'DEBUG',
             'propagate': True,
-        }
+        },
+        'medical_compliance.google_fit': {
+            'handlers': ['file', 'syslog'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+
     },
 }
 

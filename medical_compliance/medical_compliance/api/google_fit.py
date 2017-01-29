@@ -1,12 +1,15 @@
 import sys
 import os
 
+from celery.utils.log import get_task_logger
 from django.conf import settings
 
 # Add google_fit folder to python path
 # TODO: find a cleaner way to do this
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'google_fit'))
 from GoogleFitHeartRate import GoogleFitHeartRate
+
+logger = get_task_logger('medical_compliance.google_fit')
 
 def test_transform(heart_rate):
     heart_rate['source'] = 'test'
@@ -18,6 +21,8 @@ def cinch_transform(heart_rate):
     return heart_rate
 
 def get_heart_rate_data_from_cinch(time_from, time_to):
+    logger.debug("[medical-compliance] Google Fit - get HR data from cinch: %s" % (locals()))
+    
     # Create GoogleFitHeartRate object
     google_fit = GoogleFitHeartRate(
         settings.GOOGLE_FIT_CLIENT_ID,
@@ -33,9 +38,13 @@ def get_heart_rate_data_from_cinch(time_from, time_to):
         cinch_transform
     )
 
+    logger.debug("[medical-compliance] Google Fit - HR data from cinch: %s" % (heart_rate_data))
+
     return heart_rate_data
 
 def get_heart_rate_data_from_test(time_from, time_to):
+    logger.debug("[medical-compliance] Google Fit - get HR data from test: %s" % (locals()))
+
     # Create GoogleFitHeartRate object
     google_fit = GoogleFitHeartRate(
         settings.GOOGLE_FIT_CLIENT_ID,
@@ -54,5 +63,7 @@ def get_heart_rate_data_from_test(time_from, time_to):
             time_to,
             test_transform
         )
+    
+    logger.debug("[medical-compliance] Google Fit - HR data from test (datastream_id = %s): %s" % (datastream_id, heart_rate_data))
 
     return heart_rate_data
