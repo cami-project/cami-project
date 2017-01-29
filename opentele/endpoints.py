@@ -72,12 +72,12 @@ class SendObservation(object):
 
 
 class SendBP(SendObservation):
-    def __init__(self, credentials, systolic, diastolic, pulse):
+    def __init__(self, credentials, systolic, diastolic, pulse, timestamp):
 
-        obs = self._prepare_bp_observation(systolic, diastolic, pulse)
+        obs = self._prepare_bp_observation(systolic, diastolic, pulse, timestamp)
         super(SendBP, self).__init__(credentials, obs)
 
-    def _prepare_bp_observation(self, systolic, diastolic, pulse):
+    def _prepare_bp_observation(self, systolic, diastolic, pulse, timestamp):
         measurements = []
 
         if systolic:
@@ -91,25 +91,21 @@ class SendBP(SendObservation):
 
         measurements.append(Measurement(constants.MeasurementType.CAMI_BP + "##SEVERITY", "String", "GREEN"))
 
-        ts = datetime.datetime.now(tz = pytz.timezone("Europe/Bucharest"))
-
-        return Observation(constants.ObservationName.CAMI_BLOOD_PRESSURE, ts, constants.QuestionnaireID.CAMI_BP,
+        return Observation(constants.ObservationName.CAMI_BLOOD_PRESSURE, timestamp, constants.QuestionnaireID.CAMI_BP,
                            measurements = measurements)
 
 
 
 class SendWeight(SendObservation):
-    def __init__(self, credentials, weight):
-        obs = self._prepare_weight_observation(weight)
+    def __init__(self, credentials, weight, timestamp):
+        obs = self._prepare_weight_observation(weight, timestamp)
         super(SendWeight, self).__init__(credentials, obs)
 
-    def _prepare_weight_observation(self, weight):
+    def _prepare_weight_observation(self, weight, timestamp):
         weight_meas = Measurement(constants.MeasurementType.CAMI_WEIGHT, "Float", weight)
         severity_meas = Measurement(constants.MeasurementType.CAMI_WEIGHT + "#SEVERITY", "String", "GREEN")
 
-        ts = datetime.datetime.now(tz=pytz.timezone("Europe/Bucharest"))
-
-        return Observation(constants.ObservationName.CAMI_WEIGHT, ts, constants.QuestionnaireID.CAMI_WEIGHT,
+        return Observation(constants.ObservationName.CAMI_WEIGHT, timestamp, constants.QuestionnaireID.CAMI_WEIGHT,
                            measurements=[weight_meas, severity_meas])
 
 
@@ -138,7 +134,7 @@ class Measurement(object):
 class Observation(object):
     def __init__(self, name, timestamp, questionnaire_id, measurements = None):
         self.name = name
-        self.timestamp = timestamp
+        self.timestamp = datetime.datetime.fromtimestamp(timestamp)
         self.questionnaire_id = questionnaire_id
         self.measurements = measurements
 
@@ -165,14 +161,15 @@ def process_measurement(measurement_json):
 
     if measurement_json['type'] == 'weight':
         logger.debug("[opentele] Sending weight measurement to OpenTele: %s" % (measurement_json))
-        send_weight_req = SendWeight(get_credentials(), measurement_json['value'])
+        send_weight_req = SendWeight(get_credentials(), measurement_json['value'], measurement_json['timestamp'])
         res = send_weight_req.post()
         logger.debug("[opentele] The result of posting %s to OpenTele: %s" % (measurement_json, str(res)))
         
         return
     elif measurement_json['type'] == 'heartrate':
         logger.debug("[opentele] Sending pulse measurement to OpenTele: %s" % (measurement_json))
-        send_bp_req = SendBP(get_credentials(), systolic=None, diastolic=None, pulse=measurement_json['value'])
+        send_bp_req = SendBP(get_credentials(), systolic=None, diastolic=None, pulse=measurement_json['value'], 
+                                timestamp = measurement_json['timestamp'])
         res = send_bp_req.post()
         logger.debug("[opentele] The result of posting %s to OpenTele: %s" % (measurement_json, str(res)))
 
@@ -186,11 +183,11 @@ if __name__ == "__main__":
 
     # ==== Send a weight measurement ====
     logger.info("Sending a weight measurement ...")
-    send_weight = SendWeight(credentials, 70.2)
+    send_weight = SendWeight(credentials, 70.2, 1485703734)
     res = send_weight.post()
     logger.info("Status code: " + str(res))
 
-    send_weight = SendWeight(credentials, 70.2)
+    send_weight = SendWeight(credentials, 70.2, 1485703734)
     res = send_weight.post()
     logger.info("Status code: " + str(res))
 
@@ -201,10 +198,13 @@ if __name__ == "__main__":
         print json_str
 
     # ==== Send a BP measurement ====
-    logger.info("Sending a bp measurement ...")
-    send_bp = SendBP(credentials, systolic=115, diastolic=60, pulse=75)
-    res = send_bp.post()
-    logger.info("Status code: " + str(res))
+    print("Sending a bp measurement ...")
+    send_bp1 = SendBP(credentials, systolic=None, diastolic=None, pulse=75, timestamp=1485703734)
+    send_bp2 = SendBP(credentials, systolic=None, diastolic=None, pulse=76, timestamp=1485703734)
+    res1 = send_bp1.post()
+    res2 = send_bp2.post()
+    print("Status code1: " + str(res1))
+    print("Status code2: " + str(res2))
 
     # check that it has been registered
     get_bp = GetBPObservations(credentials, params={"filter": "week"})
