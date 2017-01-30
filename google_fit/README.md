@@ -14,23 +14,37 @@ How to run the scripts
 5. You'll be redirected to http://google.ro, but the redirect url contains useful information; copy the url from the address bar and paste it in the script's console
 6. The script will write the refresh_token in a file
 
-Now you're ready to run ```get_data.py``` or ```write_data.py```.
+Now you're ready to run ```get_hr_data.py```, ```get_steps_data.py```, ```add_test_steps_value.py``` or ```add_test_hr_value.py```.
 
 ### Read data from Google Fit
-Just run get_data.py script. The script will print only the data from Cinch datastream to stdout by default.
+Just run ```get_hr_data.py``` or ```get_steps_data.py``` scripts. The scripts will print data both from mock and real data streams.
 
 ```
-python get_data.py
+python get_hr_data.py
 ```
 or 
 ```
-python get_data.py > heartrate
+python get_hr_data.py > heartrate
 ```
-if you want to get the result in ```heartrate``` file.
+to save the response in ```heartrate``` file
+
+```
+python get_steps_data.py
+```
+or 
+```
+python get_steps_data.py > steps
+```
+to save the response in ```steps``` file
 
 ### Write data to Google Fit
 Run
 ```
-python write_data.py HEART_RATE_VALUE
+python add_test_hr_value.py HEART_RATE_VALUE
 ```
 The script will write the value in ```CAMI Heart Rate Test``` datastream. CAMI cloud it's set to fetch the values from this datastream also, for easying the testing process.
+
+```
+python add_test_steps_value.py NUMBER_OF_STEPS
+```
+The script will write the value in ```CAMI Steps Test``` datastream. CAMI cloud it's set to fetch the values from this datastream also, for easying the testing process.
