@@ -2,6 +2,7 @@ from django.db import models
 from django_mysql.models import JSONField
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
+import uuid
 
 # Create your models here.
 
@@ -47,7 +48,8 @@ class UserAccount(PersonalUserInfo):
         ('doctor', 'Doctor')
     )
 
-    id = models.AutoField(primary_key=True)
+    # id = models.AutoField(primary_key=True)
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4)
     first_name = models.CharField(max_length=128)
     last_name = models.CharField(max_length=128)
     email = models.EmailField()
@@ -61,8 +63,7 @@ class UserAccount(PersonalUserInfo):
     def __str__(self):
         return "[" + self.account_role + "]" + self.first_name + " " + self.last_name + "; " + "email: " + self.email
 
-    def __unicode__(self):
-        return self.__str__()
+    __unicode__ = __str__
 
 
 class Caregiver(UserAccount):
@@ -92,7 +93,7 @@ class Device(models.Model):
         ("pedometer", "Step Counter")
     )
 
-    id = models.AutoField(primary_key=True)
+    # id = models.AutoField(primary_key=True)
     device_type = models.CharField(choices=DEVICE_TYPES, default="weight")
     manufacturer = models.CharField(null = True, blank = True)
     model = models.CharField(max_length=64, null = True, blank = True)
@@ -101,12 +102,11 @@ class Device(models.Model):
 
     used_by = models.ManyToManyRel(UserAccount, related_name="used_devices", through="DeviceUsage")
 
-    def __unicode__(self):
-        return self.__str__()
-
     def __str__(self):
         users = self.used_by.all()
         return "[" + self.device_type + "] used by: " + users.first_name + " " + users.last_name
+
+    __unicode__ = __str__
 
 
 class DeviceUsage(models.Model):
@@ -116,7 +116,7 @@ class DeviceUsage(models.Model):
 
 
 class MeasurementService(models.Model):
-    id = models.AutoField(primary_key=True)
+    # id = models.AutoField(primary_key=True)
     user = models.ForeignKey(UserAccount, related_name="used_health_services")
 
     name = models.CharField(max_length=32)
@@ -159,7 +159,7 @@ class Measurement(models.Model):
             raise ValidationError(_('%(value) is not a precision within allowed percentage levels: [0, 100]'),
                                   params={'value': value}, )
 
-    id = models.AutoField(primary_key=True)
+    # id = models.AutoField(primary_key=True)
     measurement_type = models.CharField(choices=MEASUREMENTS, default="weight")
 
     unit_type = models.CharField(choices=MEASUREMENT_UNITS, default="kg")
@@ -176,8 +176,7 @@ class Measurement(models.Model):
         return "[" + self.measurement_type + "] for user: " + self.user.first_name + " " + self.user.last_name + \
                ", taken at: " + self.timestamp
 
-    def __unicode__(self):
-        return self.__str__()
+    __unicode__ = __str__
 
 
 # ================ User Activity Information ================
@@ -196,8 +195,7 @@ class Activity(models.Model):
         ("recommendation", "recommendation")
     )
 
-
-    id = models.AutoField(primary_key=True)
+    # id = models.AutoField(primary_key=True)
     user = models.ForeignKey(UserAccount)
     activity_type = models.CharField(choices=ACTIVITY_TYPE, default="personal")
 
