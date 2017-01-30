@@ -141,7 +141,7 @@ def process_steps_measurement():
         ).total_seconds()
     )
     
-    measurements = google_fit.get_steps_data_from_google_fit(time_from_cinch, time_to)
+    measurements = google_fit.get_steps_data_from_google_fit(time_from_google_fit, time_to)
     measurements = measurements + google_fit.get_steps_data_from_test(time_from_test, time_to)
     
     for m in measurements:
