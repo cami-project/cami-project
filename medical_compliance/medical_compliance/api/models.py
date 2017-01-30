@@ -129,3 +129,24 @@ class HeartRateMeasurement(models.Model):
     def __str__(self):
         return "{ user_id: %s, input_source: %s, measurement_unit: %s, timestamp: %s, timezone: %s, value: %s}" % \
             (self.user_id, self.input_source, self.measurement_unit, self.timestamp, self.timezone, self.value)
+
+class StepsMeasurement(models.Model):
+    INPUT_SOURCES = (
+        ('google_fit', 'google_fit'),
+        ('test', 'test')
+    )
+    MEASUREMENT_UNITS = (
+        ('steps', 'steps'),
+    )
+
+    user_id = models.BigIntegerField(name='user_id')
+    input_source = models.CharField(max_length=20, choices=INPUT_SOURCES)
+    measurement_unit = models.CharField(max_length=5, choices=MEASUREMENT_UNITS)
+    start_timestamp = models.BigIntegerField()
+    end_timestamp = models.BigIntegerField()
+    timezone = models.CharField(max_length=64)
+    value = models.FloatField()
+    
+    def __str__(self):
+        return "{ user_id: %s, input_source: %s, measurement_unit: %s, start_timestamp: %s, end_timestamp: %s, timezone: %s, value: %s}" % \
+            (self.user_id, self.input_source, self.measurement_unit, self.start_timestamp, self.end_timestamp, self.value)
