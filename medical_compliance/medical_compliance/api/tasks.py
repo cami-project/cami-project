@@ -141,9 +141,22 @@ def process_steps_measurement():
         ).total_seconds()
     )
     
-    measurements = google_fit.get_steps_data_from_google_fit(time_from_google_fit, time_to)
-    measurements = measurements + google_fit.get_steps_data_from_test(time_from_test, time_to)
+    measurements = []
+    try:
+        measurements = google_fit.get_steps_data_from_google_fit(time_from_google_fit, time_to)
+    except Exception as e:
+        logger.debug("[medical-compliance] Error retrieving steps from google fit: %s." % (e))
     
+    test_measurements = []
+    try:
+        test_measurements = google_fit.get_steps_data_from_test(time_from_test, time_to)
+    except Exception as e:
+        logger.debug("[medical-compliance] Error retrieving steps from test data stream: %s." % (e))
+
+    measurements = measurements + test_measurements
+    
+    logger.debug("[medical-compliance] Merged step measurements: %s." % (measurements))
+
     for m in measurements:
         steps_measurement = StepsMeasurement(
             user_id = 11262861,
