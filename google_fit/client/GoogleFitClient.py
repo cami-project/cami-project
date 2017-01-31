@@ -175,7 +175,7 @@ class GoogleFitClient:
             activity['value'] = float(p['value'][0]['intVal'])
 
             if transform:
-                hr = transform(hr)
+                activity = transform(activity)
 
             data.append(activity)
 
