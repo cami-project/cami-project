@@ -6,6 +6,8 @@ from tastypie.paginator import Paginator
 from tastypie.utils import trailing_slash
 import numpy as np
 
+import datetime
+
 from models import MedicationPlan, WeightMeasurement, HeartRateMeasurement, StepsMeasurement
 
 
@@ -139,10 +141,15 @@ class StepsMeasurementResource(ModelResource):
         self.is_authenticated(request)
         self.throttle_check(request)
 
-        last_steps_measurements = StepsMeasurement.objects.all().order_by('-end_timestamp')[:20]
+        measurement_window_seconds = 12 * 3600
+        threshold = 3000
+
+        half_day_before_ts = self.get_past_ts(measurement_window_seconds) 
+
+        last_steps_measurements = StepsMeasurement.objects.filter(end_timestamp__gte=half_day_before_ts).order_by('-start_timestamp')
         amount = []
         data_list = []
-        
+
         for index, measurement in enumerate(last_steps_measurements):
             amount = [measurement.value] + amount
             data_entry = {}
@@ -154,6 +161,11 @@ class StepsMeasurementResource(ModelResource):
             
         status = "ok"
 
+        if len(amount) > 0:
+            steps_total = np.sum(amount)
+            if steps_total < threshold:
+                status = "warning"
+
         jsonResult = {
             "steps": {
                 "status": status,
@@ -162,3 +174,12 @@ class StepsMeasurementResource(ModelResource):
             }
         }
         return self.create_response(request, jsonResult)
+    
+    def get_past_ts(self, offset_seconds):
+        return int(
+            (
+                datetime.datetime.today() -
+                datetime.timedelta(seconds = offset_seconds) -
+                datetime.datetime(1970, 1, 1)
+            ).total_seconds()
+        )
