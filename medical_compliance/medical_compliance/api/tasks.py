@@ -123,14 +123,16 @@ def process_steps_measurement():
     
     try:
         last_google_fit_measurement = StepsMeasurement.objects.all().filter(input_source='google_fit').order_by('-start_timestamp')[0]
-        time_from_google_fit = time_from_google_fit.start_timestamp + 1
-    except:
+        time_from_google_fit = last_google_fit_measurement.start_timestamp + 1
+    except Exception as e:
+        logger.debug("[medical-compliance] Error retrieving last google fit steps measurement: %s" % (e))
         time_from_google_fit = 0
 
     try:
         last_test_measurement = StepsMeasurement.objects.all().filter(input_source='test').order_by('-start_timestamp')[0]
-        time_from_test = time_from_test.start_timestamp + 1
-    except:
+        time_from_test = last_test_measurement.start_timestamp + 1
+    except Exception as e:
+        logger.debug("[medical-compliance] Error retrieving last test steps measurement: %s" % (e))
         time_from_test = 0
 
     time_to = int(
