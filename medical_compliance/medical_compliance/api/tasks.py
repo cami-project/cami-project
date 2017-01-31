@@ -122,13 +122,13 @@ def process_steps_measurement():
     last_test_measurement = None
     
     try:
-        last_google_fit_measurement = StepsMeasurement.objects.all().filter(input_source='google_fit').order_by('-timestamp')[0]
+        last_google_fit_measurement = StepsMeasurement.objects.all().filter(input_source='google_fit').order_by('-start_timestamp')[0]
         time_from_google_fit = time_from_google_fit.start_timestamp + 1
     except:
         time_from_google_fit = 0
 
     try:
-        last_test_measurement = StepsMeasurement.objects.all().filter(input_source='test').order_by('-timestamp')[0]
+        last_test_measurement = StepsMeasurement.objects.all().filter(input_source='test').order_by('-start_timestamp')[0]
         time_from_test = time_from_test.start_timestamp + 1
     except:
         time_from_test = 0
