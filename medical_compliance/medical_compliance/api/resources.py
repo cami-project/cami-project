@@ -6,7 +6,7 @@ from tastypie.paginator import Paginator
 from tastypie.utils import trailing_slash
 import numpy as np
 
-from models import MedicationPlan, WeightMeasurement, HeartRateMeasurement
+from models import MedicationPlan, WeightMeasurement, HeartRateMeasurement, StepsMeasurement
 
 
 class MedicationPlanResource(ModelResource):
@@ -113,6 +113,49 @@ class HeartRateMeasurementResource(ModelResource):
 
         jsonResult = {
             "heart_rate": {
+                "status": status,
+                "amount": amount,
+                "data": data_list,
+                "threshold": threshold
+            }
+        }
+        return self.create_response(request, jsonResult)
+
+class StepsMeasurementResource(ModelResource):
+    class Meta:
+        queryset = StepsMeasurement.objects.all().order_by('-start_timestamp')
+        resource_name = 'steps-measurements'
+        paginator_class = Paginator
+        authentication = Authentication()
+        authorization = Authorization()
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/last_values%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_last_values'), name="api_last_values"),
+        ]
+
+    def get_last_values(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        last_steps_measurements = StepsMeasurement.objects.all().order_by('-end_timestamp')[:20]
+        amount = []
+        data_list = []
+        
+        for index, measurement in enumerate(last_steps_measurements):
+            amount = [measurement.value] + amount
+            data_entry = {}
+            data_entry['start_timestamp'] = measurement.start_timestamp
+            data_entry['end_timestamp'] = measurement.end_timestamp
+            data_entry['value'] = measurement.value
+            data_entry['status'] = "ok"
+            data_list = [data_entry] + data_list
+            
+        status = "ok"
+
+        jsonResult = {
+            "steps": {
                 "status": status,
                 "amount": amount,
                 "data": data_list,
