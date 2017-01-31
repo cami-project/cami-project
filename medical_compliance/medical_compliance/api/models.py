@@ -149,4 +149,4 @@ class StepsMeasurement(models.Model):
     
     def __str__(self):
         return "{ user_id: %s, input_source: %s, measurement_unit: %s, start_timestamp: %s, end_timestamp: %s, timezone: %s, value: %s}" % \
-            (self.user_id, self.input_source, self.measurement_unit, self.start_timestamp, self.end_timestamp, self.value)
+            (self.user_id, self.input_source, self.measurement_unit, self.start_timestamp, self.end_timestamp, self.timezone, self.value)
