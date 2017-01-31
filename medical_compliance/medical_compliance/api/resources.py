@@ -159,7 +159,6 @@ class StepsMeasurementResource(ModelResource):
                 "status": status,
                 "amount": amount,
                 "data": data_list,
-                "threshold": threshold
             }
         }
         return self.create_response(request, jsonResult)
