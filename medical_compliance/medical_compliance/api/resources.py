@@ -123,6 +123,19 @@ class HeartRateMeasurementResource(ModelResource):
         }
         return self.create_response(request, jsonResult)
 
+class MeasurementTimeResolution(object):
+    HOURS         = "hours"
+    DAYS          = "days"
+
+class MeasurementTimeFrame(object):
+    def __init__(self, start_ts, end_ts):
+        self.start_ts = start_ts
+        self.end_ts = end_ts
+    
+    def __str__(self):
+        return "{ \"start_ts\": %s, \"end_ts\": %s }" % \
+            (self.start_ts, self.end_ts)
+
 class StepsMeasurementResource(ModelResource):
     class Meta:
         queryset = StepsMeasurement.objects.all().order_by('-start_timestamp')
@@ -140,46 +153,93 @@ class StepsMeasurementResource(ModelResource):
         self.method_check(request, allowed=['get'])
         self.is_authenticated(request)
         self.throttle_check(request)
+        
+        try:
+            self.check_get_params(request)
+        except Exception as e:
+            jsonResult = {
+                "error": {
+                    "message": e
+                }
+            }
+            return self.create_response(request, jsonResult)
+        
+        resolution =  request.GET.get('resolution', None)
+        units = request.GET.get('units', None)
 
-        measurement_window_seconds = 12 * 3600
-        threshold = 3000
-
-        half_day_before_ts = self.get_past_ts(measurement_window_seconds) 
-
-        last_steps_measurements = StepsMeasurement.objects.filter(end_timestamp__gte=half_day_before_ts).order_by('-start_timestamp')
-        amount = []
+        frames = self.get_last_measurement_time_frames(resolution, int(units))
+        
+        status = "ok"
+        total_amount = 0
         data_list = []
 
-        for index, measurement in enumerate(last_steps_measurements):
-            amount = [measurement.value] + amount
-            data_entry = {}
-            data_entry['start_timestamp'] = measurement.start_timestamp
-            data_entry['end_timestamp'] = measurement.end_timestamp
-            data_entry['value'] = measurement.value
-            data_entry['status'] = "ok"
-            data_list = [data_entry] + data_list
+        if len(frames) > 0:
             
-        status = "ok"
+            last_steps_measurements = StepsMeasurement.objects.filter(start_timestamp__lte=frames[-1].end_ts).filter(start_timestamp__gte=frames[0].start_ts).order_by('-start_timestamp')
+            
+            total_amount = 0
+            for frame in frames:
+                data_entry = {}
+                data_entry['start_timestamp'] = frame.start_ts
+                data_entry['end_timestamp'] = frame.end_ts
+                
+                frame_amount = 0
+                for measurement in last_steps_measurements:
+                    if measurement.start_timestamp < frame.start_ts or measurement.start_timestamp > frame.end_ts:
+                        continue
+                    frame_amount = [measurement.value] + frame_amount    
 
-        if len(amount) > 0:
-            steps_total = np.sum(amount)
-            if steps_total < threshold:
-                status = "warning"
+                data_entry['status'] = "ok" 
+                data_entry['value'] = frame_amount
+                total_amount = total_amount + frame_amount
+                data_list = [data_entry] + data_list
 
         jsonResult = {
             "steps": {
                 "status": status,
-                "amount": amount,
+                "amount": [total_amount],
                 "data": data_list,
             }
         }
         return self.create_response(request, jsonResult)
     
-    def get_past_ts(self, offset_seconds):
+    def check_get_params(self, request):
+        resolution =  request.GET.get('resolution', None)
+        units = request.GET.get('units', None)
+
+        if units == None or resolution == None:
+            raise Exception("units and resolution are manadatory")
+        elif resolution != MeasurementTimeResolution.DAYS and resolution != MeasurementTimeResolution.HOURS:
+            raise Exception("resolution must be in: %s" % ([MeasurementTimeResolution.DAYS, MeasurementTimeResolution.HOURS]))
+    
+    def get_last_measurement_time_frames(self, resolution, no_of_units):
+        frames = []
+        now = datetime.datetime.now()
+
+        if resolution == MeasurementTimeResolution.HOURS:
+            current_hour = now.replace(minute=0, second=0)
+            
+            for hour in range(0, no_of_units):
+                start_date = current_hour - datetime.timedelta(hours=hour)
+                end_date = start_date + datetime.timedelta(minutes=59, seconds=59)
+                
+                frames.append(MeasurementTimeFrame(self.get_ts_from_date(start_date), self.get_ts_from_date(end_date)))
+
+        elif resolution == MeasurementTimeResolution.DAYS:
+            current_day = now.replace(hour = 0, minute=0, second=0)    
+
+            for day in range(0, no_of_units):
+                start_date = current_day - datetime.timedelta(days=day)
+                end_date = start_date + datetime.timedelta(hours=23, minutes=59, seconds=59)
+
+                frames.append(MeasurementTimeFrame(self.get_ts_from_date(start_date), self.get_ts_from_date(end_date)))
+
+        return frames
+
+    def get_ts_from_date(self, date):
         return int(
             (
-                datetime.datetime.today() -
-                datetime.timedelta(seconds = offset_seconds) -
+                date - 
                 datetime.datetime(1970, 1, 1)
             ).total_seconds()
         )
