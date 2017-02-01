@@ -147,9 +147,8 @@ def process_steps_measurement():
         logger.debug("[medical-compliance] Error retrieving last test steps measurement: %s" % (e))
         time_from_test = 0
 
-    time_to = int(start
-        (
-            datetime.datetime.today() + 
+    time_to = int(
+        (   datetime.datetime.today() + 
             datetime.timedelta(days=30) - 
             datetime.datetime(1970, 1, 1)
         ).total_seconds()
