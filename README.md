@@ -148,3 +148,47 @@ $ python manage.py runserver 0.0.0.0:8000 --settings=medical_compliance.settings
 If you are using [Visual Studio Code](https://code.visualstudio.com/download), the previous command can also be invoked from the IDE by running the `medical_compliance` task which also supports attachments of breakpoints (these can be set directly from the editor).
 
 Be sure to leave the celery worker always open as it needs to handle the async tasks.
+
+
+## API
+
+### steps-measurements
+endpoint: 
+http://cami.vitaminsoftware.com:8000/api/v1/steps-measurements/last_values
+
+params:
+
+resolution - days or hours
+units - the number of time units
+
+e.g. If you would like to aggregate per day the measurements in the last 10 days:
+    curl -X GET "http://cami.vitaminsoftware.com:8000/api/v1/steps-measurements/last_values?units=10&resolution=days"
+    
+    {
+        "steps":{
+            "amount":[
+                3168.0
+            ],
+            "data":[
+                {
+                    "end_timestamp":1485820799,
+                    "start_timestamp":1485734400,
+                    "status":"ok",
+                    "value":0
+                },
+                {
+                    "end_timestamp":1485907199,
+                    "start_timestamp":1485820800,
+                    "status":"ok",
+                    "value":3168.0
+                },
+                {
+                    "end_timestamp":1485993599,
+                    "start_timestamp":1485907200,
+                    "status":"ok",
+                    "value":0
+                }
+            ],
+            "status":"ok"
+        }
+    }

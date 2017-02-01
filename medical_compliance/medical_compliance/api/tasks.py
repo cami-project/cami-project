@@ -15,7 +15,7 @@ from django.conf import settings #noqa
 
 import google_fit
 
-from models import WeightMeasurement, HeartRateMeasurement
+from models import WeightMeasurement, HeartRateMeasurement, StepsMeasurement
 
 from analyzers.weight_analyzers import analyze_weights
 from analyzers.heart_rate_analyzers import analyze_heart_rates
@@ -67,6 +67,12 @@ def process_heart_rate_measurement():
     last_cinch_measurement = None
     last_test_measurement = None
     
+    cinch_heart_rate_measurements = HeartRateMeasurement.objects.all().filter(input_source='cinch').order_by('-timestamp')
+    logger.debug("[medical-compliance] All cinch_heart_rate_measurements: %s" % (cinch_heart_rate_measurements))
+
+    test_heart_rate_measurements = HeartRateMeasurement.objects.all().filter(input_source='test').order_by('-timestamp')
+    logger.debug("[medical-compliance] All test_heart_rate_measurements: %s" % (test_heart_rate_measurements))
+
     try:
         last_cinch_measurement = HeartRateMeasurement.objects.all().filter(input_source='cinch').order_by('-timestamp')[0]
         time_from_cinch = last_cinch_measurement.timestamp + 1
@@ -114,6 +120,71 @@ def process_heart_rate_measurement():
 
     return json.dumps(measurements, indent=4, sort_keys=True)
 
+@app.task(name='medical_compliance_measurements.process_steps_measurement')
+def process_steps_measurement():
+    logger.debug("[medical-compliance] Process steps measurement: %s. Retrieving test and google fit steps measurements since the last one..." % (locals()))
+
+    last_google_fit_measurement = None
+    last_test_measurement = None
+    
+    google_fit_steps_measurements = StepsMeasurement.objects.all().filter(input_source='google_fit').order_by('-end_timestamp')
+    logger.debug("[medical-compliance] All google_fit_steps_measurements: %s" % (google_fit_steps_measurements))
+
+    test_steps_measurements = StepsMeasurement.objects.all().filter(input_source='test').order_by('-end_timestamp')
+    logger.debug("[medical-compliance] All test_steps_measurements: %s" % (test_steps_measurements))
+
+    try:
+        last_google_fit_measurement = StepsMeasurement.objects.all().filter(input_source='google_fit').order_by('-end_timestamp')[0]
+        time_from_google_fit = last_google_fit_measurement.end_timestamp + 1
+    except Exception as e:
+        logger.debug("[medical-compliance] Error retrieving last google fit steps measurement: %s" % (e))
+        time_from_google_fit = 0
+
+    try:
+        last_test_measurement = StepsMeasurement.objects.all().filter(input_source='test').order_by('-end_timestamp')[0]
+        time_from_test = last_test_measurement.end_timestamp + 1
+    except Exception as e:
+        logger.debug("[medical-compliance] Error retrieving last test steps measurement: %s" % (e))
+        time_from_test = 0
+
+    time_to = int(
+        (   datetime.datetime.today() + 
+            datetime.timedelta(days=30) - 
+            datetime.datetime(1970, 1, 1)
+        ).total_seconds()
+    )
+
+    measurements = []
+    try:
+        measurements = google_fit.get_steps_data_from_google_fit(time_from_google_fit, time_to)
+    except Exception as e:
+        logger.debug("[medical-compliance] Error retrieving steps from google fit: %s." % (e))
+    
+    test_measurements = []
+    try:
+        test_measurements = google_fit.get_steps_data_from_test(time_from_test, time_to)
+    except Exception as e:
+        logger.debug("[medical-compliance] Error retrieving steps from test data stream: %s." % (e))
+
+    measurements = measurements + test_measurements
+    
+    logger.debug("[medical-compliance] Merged step measurements: %s." % (measurements))
+
+    for m in measurements:
+        steps_measurement = StepsMeasurement(
+            user_id = 11262861,
+            input_source=m['source'],
+            measurement_unit='steps',
+            start_timestamp=m['start_timestamp'],
+            end_timestamp=m['end_timestamp'],
+            timezone='Europe/Bucharest',
+            value=m['value']
+        )
+
+        logger.debug("[medical-compliance] Saving steps measurement: %s" % (steps_measurement))
+        steps_measurement.save()
+
+    return json.dumps(measurements, indent=4, sort_keys=True)
 
 def broadcast_measurement(measurement_type, measurement):
     measurement_json = {

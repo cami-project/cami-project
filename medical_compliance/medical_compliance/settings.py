@@ -269,12 +269,22 @@ WITHINGS_USERS = [
 # Google Fit API credentials
 GOOGLE_FIT_CLIENT_ID = '701996606933-17j7km8f8ce8vohhdcnur453cbn44aau.apps.googleusercontent.com'
 GOOGLE_FIT_CLIENT_SECRET = 'K-lZ7t49-Gvhtz2P-RTqBhAQ'
-GOOGLE_FIT_REFRESH_TOKEN = '1/bcaHAkmLUs6Is5pTyVhqtjw0vYIqbZcWkuTnQWNf87c'
+GOOGLE_FIT_REFRESH_TOKEN = '1/eAhtNXxq65LeyzTr4aju27wCPLDAipXdrEd8ovgO8CY'
+
+# Google Fit data streams
+GOOGLE_FIT_HR_TEST_DATASTREAM_NAME = 'CAMI Heart Rate Test'
+GOOGLE_FIT_HR_DATASTREAM_ID = 'raw:com.google.heart_rate.bpm:com.ryansteckler.perfectcinch:'
+
+GOOGLE_FIT_STEPS_TEST_DATASTREAM_NAME = 'CAMI Steps Test'
 
 # Google Fit Fetch Heart Rate Scheduled Task
 CELERYBEAT_SCHEDULE = {
     'fetch_heart_rate_data': {
         'task': 'medical_compliance_measurements.process_heart_rate_measurement',
+        'schedule': timedelta(minutes=5),
+    },
+    'fetch_steps_data': {
+        'task': 'medical_compliance_measurements.process_steps_measurement',
         'schedule': timedelta(minutes=5),
     }
 }

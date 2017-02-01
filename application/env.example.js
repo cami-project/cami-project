@@ -9,6 +9,7 @@ module.exports = {
   NOTIFICATIONS_REST_API: 'http://cami.vitaminsoftware.com:8001/api/v1/notifications/',
   WEIGHT_MEASUREMENTS_LAST_VALUES: 'http://cami.vitaminsoftware.com:8000/api/v1/weight-measurements/last_values/',
   HEARTRATE_MEASUREMENTS_LAST_VALUES: 'http://cami.vitaminsoftware.com:8000/api/v1/heartrate-measurements/last_values/',
+  STEPS_MEASUREMENTS_LAST_VALUES: 'http://cami.vitaminsoftware.com:8000/api/v1/steps-measurements/last_values/',
   NOTIFICATIONS_SUBSCRIPTION_API: 'http://cami.vitaminsoftware.com:8000/subscribe_notifications/',
   MOBILE_NOTIFICATION_KEY_API: 'http://cami.vitaminsoftware.com:8001/api/v1/mobile-notification-key/'
 };
