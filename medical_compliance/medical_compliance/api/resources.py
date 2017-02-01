@@ -7,9 +7,11 @@ from tastypie.utils import trailing_slash
 import numpy as np
 
 import datetime
+import logging
 
 from models import MedicationPlan, WeightMeasurement, HeartRateMeasurement, StepsMeasurement
 
+logger = logging.getLogger("medical_compliance")
 
 class MedicationPlanResource(ModelResource):
     class Meta:
@@ -174,17 +176,25 @@ class StepsMeasurementResource(ModelResource):
         data_list = []
 
         if len(frames) > 0:
-            
-            last_steps_measurements = StepsMeasurement.objects.filter(start_timestamp__lte=frames[-1].end_ts).filter(start_timestamp__gte=frames[0].start_ts).order_by('-start_timestamp')
-            
+            logger.debug("[medical-compliance] All steps measurements: %s" % (StepsMeasurement.objects.all()))
+
+            start_from = frames[0].start_ts
+            start_to = frames[-1].end_ts
+            last_steps_measurements = StepsMeasurement.objects.filter(start_timestamp__lte=start_to).filter(start_timestamp__gte=start_from).order_by('-start_timestamp')
+            logger.debug("[medical-compliance] Filtered steps measurements (%s, %s): %s" % (start_to, start_from, last_steps_measurements))
+
             total_amount = 0
             for frame in frames:
+                logger.debug("[medical-compliance] Aggregating frame: %s" % (frame))
+
                 data_entry = {}
                 data_entry['start_timestamp'] = frame.start_ts
                 data_entry['end_timestamp'] = frame.end_ts
                 
                 frame_amount = 0
                 for measurement in last_steps_measurements:
+                    logger.debug("[medical-compliance] Check if measurement %s should be aggregated in frame %s" % (measurement, frame))
+                    
                     if measurement.start_timestamp < frame.start_ts or measurement.start_timestamp > frame.end_ts:
                         continue
                     frame_amount = [measurement.value] + frame_amount    
