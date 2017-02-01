@@ -79,13 +79,19 @@ def get_steps_data_from_google_fit(time_from, time_to):
     # Create GoogleFitClient object
     google_fit = get_google_fit_client()
 
+    steps_data = []
+
     # Get data from Google Fit
-    steps_data = google_fit.get_step_data(
-        settings.GOOGLE_FIT_STEPS_DATASTREAM_ID, 
-        time_from,
-        time_to,
-        google_fit_transform
-    )
+    if datastream_id:
+        datastream_id = get_lg_watch_steps_datastream_id()
+        steps_data = google_fit.get_step_data(
+            datastream_id, 
+            time_from,
+            time_to,
+            google_fit_transform
+        )
+    else:
+        logger.debug("[medical-compliance] Could not retrive google_fit steps datasource")
 
     logger.debug("[medical-compliance] Google Fit - steps data from google_fit: %s" % (steps_data))
 
@@ -108,7 +114,19 @@ def get_steps_data_from_test(time_from, time_to):
             time_to,
             test_transform
         )
-    
+    else:
+        logger.debug("[medical-compliance] Could not retrive test steps datasource")
+
     logger.debug("[medical-compliance] Google Fit - Steps data from test (datastream_id = %s): %s" % (datastream_id, steps_data))
 
     return steps_data
+
+def get_lg_watch_steps_datastream_id():
+    google_fit = get_google_fit_client()
+    all_data_sources = google_fit.get_all_datastreams()
+        
+    for ds in all_data_sources['dataSource']:
+        if 'name' in ds and ds['name'].startswith('derive_step_deltas<-raw:com.google.step_count.cumulative:LGE:LG Watch Urbane:') and ds['name'].endswith(':Step Counter'):
+            return ds
+
+    return None
