@@ -47,4 +47,20 @@ The script will write the value in ```CAMI Heart Rate Test``` datastream. CAMI c
 ```
 python add_test_steps_value.py NUMBER_OF_STEPS
 ```
-The script will write the value in ```CAMI Steps Test``` datastream. CAMI cloud it's set to fetch the values from this datastream also, for easying the testing process.
+The script will write the value in ```CAMI Steps Test``` datastream. CAMI cloud it's set to fetch the values from this datastream also, tsfor easying the testing process.
+
+### GoogleFit step measurements
+
+There are multiple data sources in Google Fit that could be queried in order to retrieve step measurements:
+
+Google:
+    datastream_name: merge_step_deltas
+    datastream_id: derived:com.google.step_count.delta:com.google.android.gms:merge_step_deltas - this one aggregates step measurements from 
+
+LG Watch:
+    datastream_name: derive_step_deltas<-raw:com.google.step_count.cumulative:LGE:LG Watch Urbane:f0a4073e:Step Counter
+    datastream_id: derived:com.google.step_count.delta:com.google.android.gms:LGE:LG Watch Urbane:f0a4073e:derive_step_deltas<-raw:com.google.step_count.cumulative:LGE:LG Watch Urbane:f0a4073e:Step Counter - this one returns the measurements taken by the LG Watch
+
+    'f0a4073e' will be different for each user
+
+We will use the dedicated LG Watch datasource for the moment.
