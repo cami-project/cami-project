@@ -127,27 +127,27 @@ def process_steps_measurement():
     last_google_fit_measurement = None
     last_test_measurement = None
     
-    google_fit_steps_measurements = StepsMeasurement.objects.all().filter(input_source='google_fit').order_by('-start_timestamp')
+    google_fit_steps_measurements = StepsMeasurement.objects.all().filter(input_source='google_fit').order_by('-end_timestamp')
     logger.debug("[medical-compliance] All google_fit_steps_measurements: %s" % (google_fit_steps_measurements))
 
-    test_steps_measurements = StepsMeasurement.objects.all().filter(input_source='test').order_by('-start_timestamp')
+    test_steps_measurements = StepsMeasurement.objects.all().filter(input_source='test').order_by('-end_timestamp')
     logger.debug("[medical-compliance] All test_steps_measurements: %s" % (test_steps_measurements))
 
     try:
-        last_google_fit_measurement = StepsMeasurement.objects.all().filter(input_source='google_fit').order_by('-start_timestamp')[0]
-        time_from_google_fit = last_google_fit_measurement.start_timestamp + 1
+        last_google_fit_measurement = StepsMeasurement.objects.all().filter(input_source='google_fit').order_by('-end_timestamp')[0]
+        time_from_google_fit = last_google_fit_measurement.end_timestamp + 1
     except Exception as e:
         logger.debug("[medical-compliance] Error retrieving last google fit steps measurement: %s" % (e))
         time_from_google_fit = 0
 
     try:
-        last_test_measurement = StepsMeasurement.objects.all().filter(input_source='test').order_by('-start_timestamp')[0]
-        time_from_test = last_test_measurement.start_timestamp + 1
+        last_test_measurement = StepsMeasurement.objects.all().filter(input_source='test').order_by('-end_timestamp')[0]
+        time_from_test = last_test_measurement.end_timestamp + 1
     except Exception as e:
         logger.debug("[medical-compliance] Error retrieving last test steps measurement: %s" % (e))
         time_from_test = 0
 
-    time_to = int(
+    time_to = int(start
         (
             datetime.datetime.today() + 
             datetime.timedelta(days=30) - 
