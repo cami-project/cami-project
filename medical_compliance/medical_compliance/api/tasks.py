@@ -67,6 +67,12 @@ def process_heart_rate_measurement():
     last_cinch_measurement = None
     last_test_measurement = None
     
+    cinch_heart_rate_measurements = HeartRateMeasurement.objects.all().filter(input_source='cinch').order_by('-timestamp')
+    logger.debug("[medical-compliance] All cinch_heart_rate_measurements: " % (cinch_heart_rate_measurements))
+
+    test_heart_rate_measurements = HeartRateMeasurement.objects.all().filter(input_source='test').order_by('-timestamp')
+    logger.debug("[medical-compliance] All test_heart_rate_measurements: " % (test_heart_rate_measurements))
+
     try:
         last_cinch_measurement = HeartRateMeasurement.objects.all().filter(input_source='cinch').order_by('-timestamp')[0]
         time_from_cinch = last_cinch_measurement.timestamp + 1
@@ -121,6 +127,12 @@ def process_steps_measurement():
     last_google_fit_measurement = None
     last_test_measurement = None
     
+    google_fit_steps_measurements = StepsMeasurement.objects.all().filter(input_source='google_fit').order_by('-start_timestamp')
+    logger.debug("[medical-compliance] All google_fit_steps_measurements: " % (google_fit_steps_measurements))
+
+    test_steps_measurements = StepsMeasurement.objects.all().filter(input_source='test').order_by('-start_timestamp')
+    logger.debug("[medical-compliance] All test_steps_measurements: " % (test_steps_measurements))
+
     try:
         last_google_fit_measurement = StepsMeasurement.objects.all().filter(input_source='google_fit').order_by('-start_timestamp')[0]
         time_from_google_fit = last_google_fit_measurement.start_timestamp + 1
@@ -142,7 +154,7 @@ def process_steps_measurement():
             datetime.datetime(1970, 1, 1)
         ).total_seconds()
     )
-    
+
     measurements = []
     try:
         measurements = google_fit.get_steps_data_from_google_fit(time_from_google_fit, time_to)
