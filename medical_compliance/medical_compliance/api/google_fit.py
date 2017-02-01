@@ -82,8 +82,8 @@ def get_steps_data_from_google_fit(time_from, time_to):
     steps_data = []
 
     # Get data from Google Fit
-    if datastream_id:
-        datastream_id = get_lg_watch_steps_datastream_id()
+    datastream_id = get_lg_watch_steps_datastream_id()
+    if datastream_id:        
         steps_data = google_fit.get_step_data(
             datastream_id, 
             time_from,
