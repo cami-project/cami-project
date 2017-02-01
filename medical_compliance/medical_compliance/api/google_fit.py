@@ -124,9 +124,9 @@ def get_steps_data_from_test(time_from, time_to):
 def get_lg_watch_steps_datastream_id():
     google_fit = get_google_fit_client()
     all_data_sources = google_fit.get_all_datastreams()
-        
+    
     for ds in all_data_sources['dataSource']:
-        if 'name' in ds and ds['name'].startswith('derive_step_deltas<-raw:com.google.step_count.cumulative:LGE:LG Watch Urbane:') and ds['name'].endswith(':Step Counter'):
-            return ds
-
+        if 'dataStreamName' in ds and ds['dataStreamName'].startswith('derive_step_deltas<-raw:com.google.step_count.cumulative:LGE:LG Watch Urbane:') and ds['dataStreamName'].endswith(':Step Counter'):
+            return ds['dataStreamId']
+    
     return None
