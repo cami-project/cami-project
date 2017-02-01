@@ -178,10 +178,10 @@ class StepsMeasurementResource(ModelResource):
         if len(frames) > 0:
             logger.debug("[medical-compliance] All steps measurements: %s" % (StepsMeasurement.objects.all()))
 
-            start_from = frames[0].start_ts
-            start_to = frames[-1].end_ts
+            start_from = frames[-1].start_ts
+            start_to = frames[0].end_ts
             last_steps_measurements = StepsMeasurement.objects.filter(start_timestamp__gte=start_from, start_timestamp__lte=start_to).order_by('-start_timestamp')
-            logger.debug("[medical-compliance] Filtered steps measurements (%s, %s): %s" % (start_to, start_from, last_steps_measurements))
+            logger.debug("[medical-compliance] Filtered steps measurements (%s, %s): %s" % (start_from, start_to, last_steps_measurements))
 
             total_amount = 0
             for frame in frames:
