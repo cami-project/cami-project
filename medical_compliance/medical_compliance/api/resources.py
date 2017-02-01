@@ -197,7 +197,7 @@ class StepsMeasurementResource(ModelResource):
                     
                     if measurement.start_timestamp < frame.start_ts or measurement.start_timestamp > frame.end_ts:
                         continue
-                    frame_amount = [measurement.value] + frame_amount    
+                    frame_amount = measurement.value + frame_amount    
 
                 data_entry['status'] = "ok" 
                 data_entry['value'] = frame_amount
