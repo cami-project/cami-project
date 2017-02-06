@@ -91,7 +91,7 @@ def get_steps_data_from_google_fit(time_from, time_to):
             google_fit_transform
         )
     else:
-        logger.debug("[medical-compliance] Could not retrive google_fit steps datasource")
+        logger.debug("[medical-compliance] Could not retrieve google_fit steps datasource")
 
     logger.debug("[medical-compliance] Google Fit - steps data from google_fit: %s" % (steps_data))
 
@@ -115,7 +115,7 @@ def get_steps_data_from_test(time_from, time_to):
             test_transform
         )
     else:
-        logger.debug("[medical-compliance] Could not retrive test steps datasource")
+        logger.debug("[medical-compliance] Could not retrieve test steps datasource")
 
     logger.debug("[medical-compliance] Google Fit - Steps data from test (datastream_id = %s): %s" % (datastream_id, steps_data))
 
