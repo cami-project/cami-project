@@ -1,6 +1,6 @@
 How to run the scripts
 ======================
-### Step 0 - Download ```config.py``` from CAMI folder from VS Google Drive and put it in the same folder with the scripts
+### Step 0 - Download ```config.py``` from CAMI folder from VS Google Drive and put it in google_fit/client folder.
 ### Step 1 - Run ```pip install -r requirements.txt``` to install the required python libraries
 ### Step 2 - Go to login page to authorize our application and get a refresh token
 1. Run get_refresh_token.py

@@ -161,8 +161,8 @@ params:
 resolution - days or hours
 units - the number of time units
 
-e.g. If you would like to aggregate per day the measurements in the last 10 days:
-    curl -X GET "http://cami.vitaminsoftware.com:8000/api/v1/steps-measurements/last_values?units=10&resolution=days"
+e.g. If you would like to aggregate per day the measurements in the last 3 days:
+    curl -X GET "http://cami.vitaminsoftware.com:8000/api/v1/steps-measurements/last_values?units=3&resolution=days"
     
     {
         "steps":{
