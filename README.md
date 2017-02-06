@@ -91,7 +91,7 @@ Run a container. We need to specify the hostname since it is used by rabbitmq no
 docker run -d --hostname cami-rabbitmq --name cami-rabbitmq -P cami/rabbitmq:1.0
 ```
 
-Get the corresponding local port on which we can acces the rabbitmq management interface and the amqp protocol. 
+Get the corresponding local port on which we can acces the rabbitmq management interface and the amqp protocol.
 ```
 $ docker ps -l
 ```
@@ -153,7 +153,7 @@ Be sure to leave the celery worker always open as it needs to handle the async t
 ## API
 
 ### steps-measurements
-endpoint: 
+endpoint:
 http://cami.vitaminsoftware.com:8000/api/v1/steps-measurements/last_values
 
 params:
@@ -163,7 +163,11 @@ units - the number of time units
 
 e.g. If you would like to aggregate per day the measurements in the last 3 days:
     curl -X GET "http://cami.vitaminsoftware.com:8000/api/v1/steps-measurements/last_values?units=3&resolution=days"
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> bfcf4a33d2d925575dcadc25e8d8c7bf256c5bc9
     {
         "steps":{
             "amount":[
