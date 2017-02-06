@@ -176,8 +176,6 @@ class StepsMeasurementResource(ModelResource):
         data_list = []
 
         if len(frames) > 0:
-            logger.debug("[medical-compliance] All steps measurements: %s" % (StepsMeasurement.objects.all()))
-
             start_from = frames[-1].start_ts
             start_to = frames[0].end_ts
             last_steps_measurements = StepsMeasurement.objects.filter(start_timestamp__gte=start_from, start_timestamp__lte=start_to).order_by('-start_timestamp')
