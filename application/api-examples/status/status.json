@@ -38,40 +38,58 @@
   },
   "steps": {
     "status": "ok",
-    "threshold": 235,
+    "threshold": 150,
     "data": [{
-      "timestamp": 1468479600,
-      "value": 230,
-      "status": "ok"
-    }, {
-      "timestamp": 1468566000,
-      "value": 240,
-      "status": "ok"
-    }, {
-      "timestamp": 1468652400,
-      "value": 230,
-      "status": "ok"
-    }, {
-      "timestamp": 1468738800,
-      "value": 233,
-      "status": "ok"
-    }, {
-      "timestamp": 1468825200,
-      "value": 240,
-      "status": "ok"
-    }, {
-      "timestamp": 1468911600,
-      "value": 220,
-      "status": "ok"
-    }, {
-      "timestamp": 1468998000,
-      "value": 230,
-      "status": "ok"
-    }, {
-      "timestamp": 1469084400,
-      "value": 232,
-      "status": "ok"
-    }]
+        "end_timestamp": 1485734399,
+        "start_timestamp": 1485648000,
+        "status": "ok",
+        "value": 0
+      }, {
+        "end_timestamp": 1485820799,
+        "start_timestamp": 1485734400,
+        "status": "ok",
+        "value": 0
+      }, {
+        "end_timestamp": 1485907199,
+        "start_timestamp": 1485820800,
+        "status": "ok",
+        "value": 0
+      }, {
+        "end_timestamp": 1485993599,
+        "start_timestamp": 1485907200,
+        "status": "ok",
+        "value": 202.0
+      }, {
+        "end_timestamp": 1486079999,
+        "start_timestamp": 1485993600,
+        "status": "ok",
+        "value": 0
+      }, {
+        "end_timestamp": 1486166399,
+        "start_timestamp": 1486080000,
+        "status": "ok",
+        "value": 0
+      }, {
+        "end_timestamp": 1486252799,
+        "start_timestamp": 1486166400,
+        "status": "ok",
+        "value": 0
+      }, {
+        "end_timestamp": 1486339199,
+        "start_timestamp": 1486252800,
+        "status": "ok",
+        "value": 0
+      }, {
+        "end_timestamp": 1486425599,
+        "start_timestamp": 1486339200,
+        "status": "ok",
+        "value": 0
+      }, {
+        "end_timestamp": 1486511999,
+        "start_timestamp": 1486425600,
+        "status": "ok",
+        "value": 0
+      }]
   },
   "blood": {
     "status": "ok",
