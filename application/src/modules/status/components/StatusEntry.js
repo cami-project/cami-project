@@ -67,7 +67,8 @@ const StatusEntry = React.createClass({
     units: PropTypes.string,
     timeUnits: PropTypes.string.isRequired,
     formatValue: PropTypes.func,
-    timestampFormat: PropTypes.string.isRequired
+    timestampFormat: PropTypes.string.isRequired,
+    total: PropTypes.number
   },
 
   getDefaultProps() {
@@ -100,19 +101,34 @@ const StatusEntry = React.createClass({
     const formatValue = this.props.formatValue ? this.props.formatValue : this.formatValue;
     const chartConfig = {...config, labels: []};
     const dataSet = chartConfig.dataSets[0];
+
+    // steps json comes w/ start/end timestamps instead of just one
+    const timestampKey = this.props.type != 'steps' ? 'timestamp' : 'end_timestamp';
+
     dataSet.values = [];
     dataSet.circleColors = [];
     this.props.data.forEach(item => {
-      chartConfig.labels.push(this.formatTimestamp(item.get('timestamp')));
+      chartConfig.labels.push(this.formatTimestamp(item.get(timestampKey)));
 
       var value = formatValue(item.get('status'), item.get('value'), this.props.threshold);
-      if(this.props.type == 'weight') {
+      if(this.props.type == 'weight' || this.props.type == 'steps') {
         value = item.get('value');
       }
       dataSet.values.push(value);
       dataSet.circleColors.push(this.formatStatus(item.get('status')));
     });
-    const lastValue = this.props.data.size > 0 ? this.props.data.get(this.props.data.size - 1).get('value') : 0;
+
+    console.log('DATA SET -------------');
+    console.log(dataSet);
+
+    // for the majority of the status widgets we get the most recent value
+    var lastValue = this.props.data.size > 0 ? this.props.data.get(this.props.data.size - 1).get('value') : 0;
+
+    // for steps we're intersed in the total amount of steps
+    if(this.props.type == 'steps') {
+      lastValue = this.props.total.size > 0 ? this.props.total.get(this.props.total.size - 1) : 0;
+    }
+
     const lastStatus = this.props.data.size > 0 ? this.props.data.get(this.props.data.size - 1).get('status') : "ok";
 
     return (
