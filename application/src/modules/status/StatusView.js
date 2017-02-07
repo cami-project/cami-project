@@ -20,12 +20,12 @@ const StatusView = React.createClass({
     username: PropTypes.string.isRequired,
     status: PropTypes.instanceOf(Map).isRequired,
     weight: PropTypes.instanceOf(Map).isRequired,
-    heart_rate: PropTypes.instanceOf(Map).isRequired
+    heart_rate: PropTypes.instanceOf(Map).isRequired,
+    steps: PropTypes.instanceOf(Map).isRequired
   },
 
   getEntryByType(type) {
     switch (type) {
-      case 'steps': return StepsEntry;
       case 'sleep': return SleepEntry;
       case 'blood': return BloodPressureEntry;
     }
@@ -53,6 +53,13 @@ const StatusView = React.createClass({
             this.props.heart_rate.get('data').size > 0
             ?
               <HeartRateEntry style={styles.statusEntry} key={101} heart={this.props.heart_rate}/>
+            :
+              null
+          }
+          {
+            this.props.steps.get('data').size > 0
+            ?
+              <StepsEntry style={styles.statusEntry} key={102} steps={this.props.steps}/>
             :
               null
           }
