@@ -5,7 +5,7 @@ import StatusEntry from './StatusEntry';
 
 const StepsEntry = React.createClass({
   propTypes: {
-    statusItem: PropTypes.instanceOf(Map).isRequired
+    steps: PropTypes.instanceOf(Map).isRequired
   },
 
   render() {
@@ -13,11 +13,12 @@ const StepsEntry = React.createClass({
       <StatusEntry
         title="Steps"
         type="steps"
-        data={this.props.statusItem.get('data')}
-        threshold={this.props.statusItem.get('threshold')}
+        data={this.props.steps.get('data')}
+        threshold={this.props.steps.get('threshold')}
         units=""
         timeUnits="Day"
         timestampFormat="DD"
+        total={this.props.steps.get('amount')}
       />
     );
   }

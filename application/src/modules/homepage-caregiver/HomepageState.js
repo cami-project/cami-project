@@ -30,6 +30,12 @@ const initialState = Map({
     "amount": [],
     "data": [],
     "threshold": 80
+  }),
+  steps: fromJS({
+    "status": "ok",
+    "amount": [],
+    "data": [],
+    "threshold": 150
   })
 });
 
@@ -68,6 +74,12 @@ async function fetchPageData() {
       "data": [],
       "threshold": 80
     },
+    steps: {
+      "status": "ok",
+      "amount": [],
+      "data": [],
+      "threshold": 150
+    },
     lastEvents: []
   };
 
@@ -105,6 +117,7 @@ async function fetchPageData() {
 
       var weightApiUrl = env.WEIGHT_MEASUREMENTS_LAST_VALUES;
       var heartRateApiUrl = env.HEARTRATE_MEASUREMENTS_LAST_VALUES;
+      var stepsCountApiUrl = env.STEPS_MEASUREMENTS_LAST_VALUES;
 
       return fetch(weightApiUrl).then((response) => response.json())
         .then((weightsJson) => {
@@ -116,7 +129,17 @@ async function fetchPageData() {
 
               result.heart_rate = heartRateJson.heart_rate;
 
-              return result;
+              return fetch(stepsCountApiUrl).then((response) => response.json())
+                .then((stepsCountJson) => {
+
+                  result.steps = stepsCountJson.steps;
+
+                  return result;
+
+              }).catch((error) => {
+
+                return result;
+              });
           }).catch((error) => {
 
             return result;
@@ -150,6 +173,7 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
       var chartValuesJson = json;
       chartValuesJson['weight'] = action.payload.weight;
       chartValuesJson['heart_rate'] = action.payload.heart_rate;
+      chartValuesJson['steps'] = action.payload.steps;
 
       var isVisible = state.getIn(['actionability', 'visible']);
       if (!isVisible) {
@@ -164,6 +188,7 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
           .setIn(['status', 'values'], fromJS(chartValuesJson))
           .setIn(['weight'], fromJS(action.payload.weight))
           .setIn(['heart_rate'], fromJS(action.payload.heart_rate))
+          .setIn(['steps'], fromJS(action.payload.steps))
           .setIn(['lastEvents'], fromJS(action.payload.lastEvents)),
         Effects.promise(triggerFetchPageData)
       );
