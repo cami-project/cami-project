@@ -12,4 +12,4 @@ CAMI Cloud integrates with the [Withings](https://www.withings.com/eu/en/) API f
   * the Papertrail logging system - credentials to access it are stored inside LastPass
   * the CAMI iOS application
   * the Linkwatch website - find out more in the [Integrations document](INTEGRATIONS.md)
-  * the OpenTele website - find out more in the [Integrations document](INTEGRATIONS.md)
+  * the OpenTele dashboard - find out more in the [Integrations document](INTEGRATIONS.md)
