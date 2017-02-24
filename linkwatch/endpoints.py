@@ -228,6 +228,9 @@ def get_observation_from_measurement_json(measurement_json):
     elif measurement_json['type'] == 'heartrate':
         heartrate_measurement = Measurement(constants.MeasurementType.PULSE_RATE_NON_INV, measurement_json['value'], constants.UnitCode.BPM)
         return Observation(constants.DeviceType.BLOODPRESSURE, t, "TEST", measurements=[heartrate_measurement], comment=measurement_json['input_source'])
+    elif measurement_json['type'] == 'steps':
+        steps_measurement = Measurement(constants.MeasurementType.HF_STEPS, measurement_json['value'], constants.UnitCode.STEP)
+        return Observation(constants.DeviceType.STEP_COUNTER, t, "TEST", measurements=[steps_measurement], comment=measurement_json['input_source'])
 
     raise Exception("Unsupported measurement type: %s" % (measurement_json['type']))
 
