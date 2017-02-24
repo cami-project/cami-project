@@ -216,3 +216,12 @@ When running in development mode, you might get to the point when the Docker ins
 3. Start from scratch
     * run `$ docker-compose up` to get building again
 
+### Access individual containers
+
+You may sometimes want to check to see if a specific container is running that last bit of code, check on it's network connectivity, or anything else for that matter. If that's the case, here's what you should do:
+
+1. Get the container's hash
+    * run `$ docker ps` and copy the corresponding container's hash
+2. SSH it
+    * run `$ docker exec -ti HASH bash`
+    * you can also login as root by running `$ docker exec -ti -u root HASH bash`
