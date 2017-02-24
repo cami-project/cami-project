@@ -23,7 +23,6 @@ class EndpointResult(object):
 
         return False
 
-
     def get_error_reason(self):
         if self.is_error():
             return self.response.reason
@@ -172,7 +171,7 @@ class Measurement(object):
                     "TypeId": None,
                     "Context": None
                 }
-    
+
     def __str__(self):
         return "{ type: %s, value: %s, measurement_unit: %s, context_type: %s }" % \
             (self.type, self.value, self.measurement_unit, self.context_type)
@@ -198,7 +197,7 @@ def process_measurement(measurement_json):
         logger.error("[linkwatch] Auth token unavailable due to error in login_endpoint call. Reason: %s" % (login_res.get_error_reason()))
     else:
         logger.info("[linkwatch] Auth token value is: %s" % (token))
-    
+
     obs = None
     try:
         obs = get_observation_from_measurement_json(measurement_json)
@@ -215,13 +214,14 @@ def get_api_token():
     login_res = login_endpoint.post()
     if login_res.is_error():
         logger.error("[linkwatch] Could not log demo user in. Login result: %s" % (login_res.get_error_reason()))
-    
+
     return login_res.get_token()
 
 def get_observation_from_measurement_json(measurement_json):
     logger.debug("[linkwatch] Converting measurement %s to linkwatch observation..." % (measurement_json))
 
     t = datetime.datetime.fromtimestamp(measurement_json['timestamp'])
+
     if measurement_json['type'] == 'weight':
         weight_measurement = Measurement(constants.MeasurementType.WEIGHT, measurement_json['value'], constants.UnitCode.KILOGRAM)
         return Observation(constants.DeviceType.WEIGHTING_SCALE, t, "TEST", measurements=[weight_measurement], comment=measurement_json['input_source'])
@@ -233,6 +233,7 @@ def get_observation_from_measurement_json(measurement_json):
         return Observation(constants.DeviceType.STEP_COUNTER, t, "TEST", measurements=[steps_measurement], comment=measurement_json['input_source'])
 
     raise Exception("Unsupported measurement type: %s" % (measurement_json['type']))
+
 
 def send_observation(api_token, observation):
     obs_endpoint = SendObservationsEndpoint(api_token, [observation])
