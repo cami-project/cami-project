@@ -220,4 +220,4 @@ def broadcast_measurement(measurement_type, measurement):
         }
 
     global_app.send_task('cami.on_measurement_received', [measurement_json], queue='broadcast_measurement')
-    
+    logger.debug("[medical-compliance] Broadcast for the %s measurement has been sent successfully" % (measurement_type))
