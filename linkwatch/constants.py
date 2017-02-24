@@ -1,5 +1,7 @@
 from enum import Enum
 
+# You can find the complete list of supported device types here:
+# - https://linkwatchrestservicetest.azurewebsites.net/Help/ResourceModel?modelName=DeviceType
 class DeviceType(Enum):
     NOT_FOUND = -1
     PULSE_OXIMETER = 528388
@@ -22,7 +24,8 @@ class DeviceType(Enum):
     RESPIRATORY_RATE = 528397
     CHOLESTEROL = 528526
 
-
+# You can find the complete list of supported measurements here:
+# - https://linkwatchrestservicetest.azurewebsites.net/Help/ResourceModel?modelName=MeasurementType
 class MeasurementType(Enum):
     NOT_FOUND = -1
 
@@ -61,7 +64,8 @@ class MeasurementType(Enum):
     CHOLESTEROL = 188737
     TEMPERATURE = 150364
 
-
+# You can find the complete list of unit codes here:
+# - https://linkwatchrestservicetest.azurewebsites.net/Help/ResourceModel?modelName=UnitCode
 class UnitCode(Enum):
     NOT_FOUND = -1
     DIMLESS = 262656
@@ -69,8 +73,10 @@ class UnitCode(Enum):
     KILOGRAM = 263875
     CELCIUS = 268192
     MMHG = 266016           # mmHg
+    STEP = 268800
 
-
+# You can find the complete list of context types here:
+# - https://linkwatchrestservicetest.azurewebsites.net/Help/ResourceModel?modelName=ContextType
 class ContextType(Enum):
     EXERCISE = 29152
     CARB = 29156

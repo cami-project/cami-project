@@ -163,11 +163,8 @@ units - the number of time units
 
 e.g. If you would like to aggregate per day the measurements in the last 3 days:
     curl -X GET "http://cami.vitaminsoftware.com:8000/api/v1/steps-measurements/last_values?units=3&resolution=days"
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> bfcf4a33d2d925575dcadc25e8d8c7bf256c5bc9
+```json
     {
         "steps":{
             "amount":[
@@ -196,3 +193,35 @@ e.g. If you would like to aggregate per day the measurements in the last 3 days:
             "status":"ok"
         }
     }
+```
+
+## Troubleshooting Docker
+
+### The "Clean Slate" approach
+
+When running in development mode, you might get to the point when the Docker instances stop working correctly. It may either happen from the fact that you've made breaking changes or maybe just because some of the containers didn't update and don't run the last edits that you've just made. Either way, here's one way of starting from scratch and insuring that you don't inherit broken containers when restarting Docker.
+
+1. Insure that the Docker containers aren't running anymore
+    * run `$ docker-compose stop`
+    * run `$ docker ps` - and insure there are no lingering containers running
+2. Get rid of the current Docker images
+    * run `$ docker images` - and take note of the hash codes of the listed containers
+    * run `$ docker rmi -f HASH` - to delete the respective container images
+        * you can delte multiple container images at a time: `$ docker rmi -f HASH1 HASH2`
+        * there's no need to delete the following:
+            * `williamyeh/ansible`
+            * `rabbitmq`
+            * `mysql`
+    * run `$ docker-compose rm`
+3. Start from scratch
+    * run `$ docker-compose up` to get building again
+
+### Access individual containers
+
+You may sometimes want to check to see if a specific container is running that last bit of code, check on it's network connectivity, or anything else for that matter. If that's the case, here's what you should do:
+
+1. Get the container's hash
+    * run `$ docker ps` and copy the corresponding container's hash
+2. SSH it
+    * run `$ docker exec -ti HASH bash`
+    * you can also login as root by running `$ docker exec -ti -u root HASH bash`

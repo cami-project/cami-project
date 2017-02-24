@@ -23,7 +23,6 @@ class EndpointResult(object):
 
         return False
 
-
     def get_error_reason(self):
         if self.is_error():
             return self.response.reason
@@ -32,6 +31,9 @@ class EndpointResult(object):
 
     def get_status(self):
         return self.response.status_code
+
+    def get_text(self):
+        return self.response.text
 
 
 class LoginResult(EndpointResult):
@@ -169,7 +171,7 @@ class Measurement(object):
                     "TypeId": None,
                     "Context": None
                 }
-    
+
     def __str__(self):
         return "{ type: %s, value: %s, measurement_unit: %s, context_type: %s }" % \
             (self.type, self.value, self.measurement_unit, self.context_type)
@@ -195,12 +197,12 @@ def process_measurement(measurement_json):
         logger.error("[linkwatch] Auth token unavailable due to error in login_endpoint call. Reason: %s" % (login_res.get_error_reason()))
     else:
         logger.info("[linkwatch] Auth token value is: %s" % (token))
-    
+
     obs = None
     try:
         obs = get_observation_from_measurement_json(measurement_json)
     except Exception, e:
-        logger.error("[linkwatch] Could not convert measurement to linkwatch observation: %s" % (measurement_json))
+        logger.error("[linkwatch] Could not convert measurement -- %s -- to linkwatch observation: %s" % (measurement_json, e))
         return
 
     send_observation(token, obs)
@@ -212,33 +214,38 @@ def get_api_token():
     login_res = login_endpoint.post()
     if login_res.is_error():
         logger.error("[linkwatch] Could not log demo user in. Login result: %s" % (login_res.get_error_reason()))
-    
+
     return login_res.get_token()
 
 def get_observation_from_measurement_json(measurement_json):
     logger.debug("[linkwatch] Converting measurement %s to linkwatch observation..." % (measurement_json))
 
     t = datetime.datetime.fromtimestamp(measurement_json['timestamp'])
+
     if measurement_json['type'] == 'weight':
         weight_measurement = Measurement(constants.MeasurementType.WEIGHT, measurement_json['value'], constants.UnitCode.KILOGRAM)
         return Observation(constants.DeviceType.WEIGHTING_SCALE, t, "TEST", measurements=[weight_measurement], comment=measurement_json['input_source'])
     elif measurement_json['type'] == 'heartrate':
-        heartrate_measurement = Measurement(constants.MeasurementType.HF_HEARTRATE, measurement_json['value'], constants.UnitCode.BPM)
-        return Observation(constants.DeviceType.HEART_RATE, t, "TEST", measurements=[heartrate_measurement], comment=measurement_json['input_source'])
+        heartrate_measurement = Measurement(constants.MeasurementType.PULSE_RATE_NON_INV, measurement_json['value'], constants.UnitCode.BPM)
+        return Observation(constants.DeviceType.BLOODPRESSURE, t, "TEST", measurements=[heartrate_measurement], comment=measurement_json['input_source'])
+    elif measurement_json['type'] == 'steps':
+        steps_measurement = Measurement(constants.MeasurementType.HF_STEPS, measurement_json['value'], constants.UnitCode.STEP)
+        return Observation(constants.DeviceType.STEP_COUNTER, t, "TEST", measurements=[steps_measurement], comment=measurement_json['input_source'])
 
     raise Exception("Unsupported measurement type: %s" % (measurement_json['type']))
+
 
 def send_observation(api_token, observation):
     obs_endpoint = SendObservationsEndpoint(api_token, [observation])
     obs_res = obs_endpoint.post()
 
     if not obs_res.is_error():
-        logger.info("[linkwatch] Observation POST result for %s: %s" % (observation, obs_res.get_status()))
+        logger.info("[linkwatch] Observation POST result for %s: %s -- with HTTP STATUS: %s" % (observation, obs_res.get_text(), obs_res.get_status()))
     else:
         try:
             obs_res.response.raise_for_status()
         except Exception, e:
-            logger.error("[linkwatch] Failed to POST new weight observation: %s" % (observation))
+            logger.error("[linkwatch] Failed to POST new weight observation %s: %s" % (observation, e))
 
 if __name__ == "__main__":
     process_measurement({
