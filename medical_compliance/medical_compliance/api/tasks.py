@@ -184,18 +184,40 @@ def process_steps_measurement():
         logger.debug("[medical-compliance] Saving steps measurement: %s" % (steps_measurement))
         steps_measurement.save()
 
+        logger.debug("[medical-compliance] Broadcasting steps measurement: %s" % (steps_measurement))
+        broadcast_measurement('steps', steps_measurement)
+
     return json.dumps(measurements, indent=4, sort_keys=True)
 
 def broadcast_measurement(measurement_type, measurement):
-    measurement_json = {
-        'type': measurement_type,
-        'user_id': measurement.user_id,
-        'input_source': measurement.input_source,
-        'measurement_unit': measurement.measurement_unit,
-        'timestamp': measurement.timestamp,
-        'timezone': measurement.timezone,
-        'value': measurement.value
-    }
-    
+
+    # The steps measurements data structure differs from others
+    # - it does not contain a timestamp but rather start/end ones
+    # - we're mirroring the "end_timestamp" to the timestamp key
+    # - this ensures that 3rd party integrations work ok
+    if measurement_type != 'steps':
+        logger.debug("[medical-compliance] Assembling broadcast measurement of type %s" % (measurement_type))
+        measurement_json = {
+            'type': measurement_type,
+            'user_id': measurement.user_id,
+            'input_source': measurement.input_source,
+            'measurement_unit': measurement.measurement_unit,
+            'timestamp': measurement.timestamp,
+            'timezone': measurement.timezone,
+            'value': measurement.value,
+        }
+    else:
+        measurement_json = {
+            'type': measurement_type,
+            'user_id': measurement.user_id,
+            'input_source': measurement.input_source,
+            'measurement_unit': measurement.measurement_unit,
+            'timestamp': measurement.end_timestamp,
+            'end_timestamp': measurement.end_timestamp,
+            'start_timestamp': measurement.start_timestamp,
+            'timezone': measurement.timezone,
+            'value': measurement.value,
+        }
+
     global_app.send_task('cami.on_measurement_received', [measurement_json], queue='broadcast_measurement')
     
