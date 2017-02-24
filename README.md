@@ -194,3 +194,25 @@ e.g. If you would like to aggregate per day the measurements in the last 3 days:
         }
     }
 ```
+
+## Troubleshooting Docker
+
+### The "Clean Slate" approach
+
+When running in development mode, you might get to the point when the Docker instances stop working correctly. It may either happen from the fact that you've made breaking changes or maybe just because some of the containers didn't update and don't run the last edits that you've just made. Either way, here's one way of starting from scratch and insuring that you don't inherit broken containers when restarting Docker.
+
+1. Insure that the Docker containers aren't running anymore
+    * run `$ docker-compose stop`
+    * run `$ docker ps` - and insure there are no lingering containers running
+2. Get rid of the current Docker images
+    * run `$ docker images` - and take note of the hash codes of the listed containers
+    * run `$ docker rmi -f HASH` - to delete the respective container images
+        * you can delte multiple container images at a time: `$ docker rmi -f HASH1 HASH2`
+        * there's no need to delete the following:
+            * `williamyeh/ansible`
+            * `rabbitmq`
+            * `mysql`
+    * run `$ docker-compose rm`
+3. Start from scratch
+    * run `$ docker-compose up` to get building again
+
