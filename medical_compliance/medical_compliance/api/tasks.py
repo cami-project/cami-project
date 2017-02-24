@@ -56,6 +56,7 @@ def process_weight_measurement(user_id, input_source, measurement_unit, timestam
     logger.debug("[medical-compliance] Broadcasting weight measurement: %s" % (weight_measurement))
     broadcast_measurement('weight', weight_measurement)
 
+
 @app.task(name='medical_compliance_measurements.process_heart_rate_measurement')
 def process_heart_rate_measurement():
     """
@@ -66,7 +67,7 @@ def process_heart_rate_measurement():
 
     last_cinch_measurement = None
     last_test_measurement = None
-    
+
     cinch_heart_rate_measurements = HeartRateMeasurement.objects.all().filter(input_source='cinch').order_by('-timestamp')
     logger.debug("[medical-compliance] All cinch_heart_rate_measurements: %s" % (cinch_heart_rate_measurements))
 
@@ -87,15 +88,15 @@ def process_heart_rate_measurement():
 
     time_to = int(
         (
-            datetime.datetime.today() + 
-            datetime.timedelta(days=30) - 
+            datetime.datetime.today() +
+            datetime.timedelta(days=30) -
             datetime.datetime(1970, 1, 1)
         ).total_seconds()
     )
-    
+
     measurements = google_fit.get_heart_rate_data_from_cinch(time_from_cinch, time_to)
     measurements = measurements + google_fit.get_heart_rate_data_from_test(time_from_test, time_to)
-    
+
     for m in measurements:
         heart_rate_measurement = HeartRateMeasurement(
             user_id = 11262861,
@@ -111,7 +112,7 @@ def process_heart_rate_measurement():
 
         logger.debug("[medical-compliance] Broadcasting heart rate measurement: %s" % (heart_rate_measurement))
         broadcast_measurement('heartrate', heart_rate_measurement)
-    
+
     logger.debug("[medical-compliance] Sending the last cinch heart rate measurement for analysis: %s" % (last_cinch_measurement))
     analyze_heart_rates.delay(last_cinch_measurement, 'cinch')
 
@@ -120,13 +121,14 @@ def process_heart_rate_measurement():
 
     return json.dumps(measurements, indent=4, sort_keys=True)
 
+
 @app.task(name='medical_compliance_measurements.process_steps_measurement')
 def process_steps_measurement():
     logger.debug("[medical-compliance] Process steps measurement: %s. Retrieving test and google fit steps measurements since the last one..." % (locals()))
 
     last_google_fit_measurement = None
     last_test_measurement = None
-    
+
     google_fit_steps_measurements = StepsMeasurement.objects.all().filter(input_source='google_fit').order_by('-end_timestamp')
     logger.debug("[medical-compliance] All google_fit_steps_measurements: %s" % (google_fit_steps_measurements))
 
@@ -148,8 +150,8 @@ def process_steps_measurement():
         time_from_test = 0
 
     time_to = int(
-        (   datetime.datetime.today() + 
-            datetime.timedelta(days=30) - 
+        (   datetime.datetime.today() +
+            datetime.timedelta(days=30) -
             datetime.datetime(1970, 1, 1)
         ).total_seconds()
     )
@@ -159,7 +161,7 @@ def process_steps_measurement():
         measurements = google_fit.get_steps_data_from_google_fit(time_from_google_fit, time_to)
     except Exception as e:
         logger.debug("[medical-compliance] Error retrieving steps from google fit: %s." % (e))
-    
+
     test_measurements = []
     try:
         test_measurements = google_fit.get_steps_data_from_test(time_from_test, time_to)
@@ -167,7 +169,7 @@ def process_steps_measurement():
         logger.debug("[medical-compliance] Error retrieving steps from test data stream: %s." % (e))
 
     measurements = measurements + test_measurements
-    
+
     logger.debug("[medical-compliance] Merged step measurements: %s." % (measurements))
 
     for m in measurements:
@@ -188,6 +190,7 @@ def process_steps_measurement():
         broadcast_measurement('steps', steps_measurement)
 
     return json.dumps(measurements, indent=4, sort_keys=True)
+
 
 def broadcast_measurement(measurement_type, measurement):
 
