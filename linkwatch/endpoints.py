@@ -33,6 +33,9 @@ class EndpointResult(object):
     def get_status(self):
         return self.response.status_code
 
+    def get_text(self):
+        return self.response.text
+
 
 class LoginResult(EndpointResult):
     def get_token(self):
@@ -200,7 +203,7 @@ def process_measurement(measurement_json):
     try:
         obs = get_observation_from_measurement_json(measurement_json)
     except Exception, e:
-        logger.error("[linkwatch] Could not convert measurement to linkwatch observation: %s" % (measurement_json))
+        logger.error("[linkwatch] Could not convert measurement -- %s -- to linkwatch observation: %s" % (measurement_json, e))
         return
 
     send_observation(token, obs)
@@ -233,12 +236,12 @@ def send_observation(api_token, observation):
     obs_res = obs_endpoint.post()
 
     if not obs_res.is_error():
-        logger.info("[linkwatch] Observation POST result for %s: %s" % (observation, obs_res.get_status()))
+        logger.info("[linkwatch] Observation POST result for %s: %s -- with HTTP STATUS: %s" % (observation, obs_res.get_text(), obs_res.get_status()))
     else:
         try:
             obs_res.response.raise_for_status()
         except Exception, e:
-            logger.error("[linkwatch] Failed to POST new weight observation: %s" % (observation))
+            logger.error("[linkwatch] Failed to POST new weight observation %s: %s" % (observation, e))
 
 if __name__ == "__main__":
     process_measurement({
