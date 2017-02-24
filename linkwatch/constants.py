@@ -69,6 +69,7 @@ class UnitCode(Enum):
     KILOGRAM = 263875
     CELCIUS = 268192
     MMHG = 266016           # mmHg
+    STEP = 268800
 
 
 class ContextType(Enum):
