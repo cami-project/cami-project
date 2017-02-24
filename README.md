@@ -163,11 +163,8 @@ units - the number of time units
 
 e.g. If you would like to aggregate per day the measurements in the last 3 days:
     curl -X GET "http://cami.vitaminsoftware.com:8000/api/v1/steps-measurements/last_values?units=3&resolution=days"
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> bfcf4a33d2d925575dcadc25e8d8c7bf256c5bc9
+```json
     {
         "steps":{
             "amount":[
@@ -196,3 +193,4 @@ e.g. If you would like to aggregate per day the measurements in the last 3 days:
             "status":"ok"
         }
     }
+```
