@@ -65,10 +65,13 @@ class SendObservation(object):
         self.observation = observation
 
     def post(self):
+
+        logger.debug("[opentele] Attempting to post to OpenTele: %s" % (json.dumps(self.observation.get_payload())))
+
         response = requests.post(self.url,
                                  auth=HTTPBasicAuth(self.credentials['user'], self.credentials['pass']),
                                  data=json.dumps(self.observation.get_payload()))
-        return response.status_code
+        return response
 
 
 class SendBP(SendObservation):
@@ -83,7 +86,7 @@ class SendBP(SendObservation):
         if systolic:
             measurements.append(Measurement(constants.MeasurementType.CAMI_BP + "#SYSTOLIC", "Int", systolic))
 
-        if diastolic:   
+        if diastolic:
             measurements.append(Measurement(constants.MeasurementType.CAMI_BP + "#DIASTOLIC", "Int", diastolic))
 
         if pulse:
@@ -157,24 +160,31 @@ def get_credentials():
     }
 
 def process_measurement(measurement_json):
-    logger.debug("[opentele] Processing measurement: %s" % (measurement_json))
+    logger.debug("[opentele] Processing %s measurement: %s" % (measurement_json['type'], measurement_json))
 
     if measurement_json['type'] == 'weight':
-        logger.debug("[opentele] Sending weight measurement to OpenTele: %s" % (measurement_json))
         send_weight_req = SendWeight(get_credentials(), measurement_json['value'], measurement_json['timestamp'])
         res = send_weight_req.post()
-        logger.debug("[opentele] The result of posting %s to OpenTele: %s" % (measurement_json, str(res)))
-        
-        return
-    elif measurement_json['type'] == 'heartrate':
-        logger.debug("[opentele] Sending pulse measurement to OpenTele: %s" % (measurement_json))
-        send_bp_req = SendBP(get_credentials(), systolic=None, diastolic=None, pulse=measurement_json['value'], 
-                                timestamp = measurement_json['timestamp'])
-        res = send_bp_req.post()
-        logger.debug("[opentele] The result of posting %s to OpenTele: %s" % (measurement_json, str(res)))
+
+        if (res.status_code < 400 ):
+            logger.debug("[opentele] The result of posting %s to OpenTele: %s -- with HTTP STATUS: %s" % (measurement_json, str(res.text), str(res.status_code)))
+        else:
+            logger.error("[opentele] The result of posting %s to OpenTele: %s -- with HTTP STATUS: %s" % (measurement_json, str(res.text), str(res.status_code)))
 
         return
-        
+
+    elif measurement_json['type'] == 'heartrate':
+        send_bp_req = SendBP(get_credentials(), systolic=None, diastolic=None, pulse=measurement_json['value'],
+                                timestamp = measurement_json['timestamp'])
+        res = send_bp_req.post()
+
+        if (res.status_code < 400 ):
+            logger.debug("[opentele] The result of posting %s to OpenTele: %s -- with HTTP STATUS: %s" % (measurement_json, str(res.text), str(res.status_code)))
+        else:
+            logger.error("[opentele] The result of posting %s to OpenTele: %s -- with HTTP STATUS: %s" % (measurement_json, str(res.text), str(res.status_code)))
+
+        return
+
     raise Exception("Unsupported measurement type: %s" % (measurement_json['type']))
 
 if __name__ == "__main__":
