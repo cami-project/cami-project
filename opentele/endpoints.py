@@ -83,11 +83,18 @@ class SendBP(SendObservation):
     def _prepare_bp_observation(self, systolic, diastolic, pulse, timestamp):
         measurements = []
 
+        # OpenTele doesn't allow for posting just the Pulse measurement
+        # - for the time being we'll be sending the value 0 for systolic/diastolic
+
         if systolic:
             measurements.append(Measurement(constants.MeasurementType.CAMI_BP + "#SYSTOLIC", "Int", systolic))
+        else:
+            measurements.append(Measurement(constants.MeasurementType.CAMI_BP + "#SYSTOLIC", "Int", 0))
 
         if diastolic:
             measurements.append(Measurement(constants.MeasurementType.CAMI_BP + "#DIASTOLIC", "Int", diastolic))
+        else:
+            measurements.append(Measurement(constants.MeasurementType.CAMI_BP + "#DIASTOLIC", "Int", 0))
 
         if pulse:
             measurements.append(Measurement(constants.MeasurementType.CAMI_BP + "#PULSE", "Int", pulse))
