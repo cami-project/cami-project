@@ -30,18 +30,15 @@ class PersonalUserInfo(models.Model):
     )
 
     gender = models.CharField(max_length=1, choices=GENDER, default='M', null=True, blank = True)
-    marital_status = models.CharField(choices=MARITAL_STATUS, default='married', null=True, blank=True)
+    marital_status = models.CharField(max_length=16, choices=MARITAL_STATUS, default='married', null=True, blank=True)
     phone = models.CharField(max_length=16, null = True, blank = True)
     address = models.CharField(max_length=256, null = True, blank=True)
-    language = models.CharField(choices=LANG, default="en", null = True, blank = True)
-    age = models.PositiveIntegerField(max_length=3, null = True, blank = True)
-    height = models.PositiveIntegerField(max_length=3, null = True, blank=True)
+    language = models.CharField(max_length=2, choices=LANG, default="en", null = True, blank = True)
+    age = models.PositiveIntegerField(null = True, blank = True)
+    height = models.PositiveIntegerField(null = True, blank=True)
 
 
 class UserAccount(PersonalUserInfo):
-    class Meta:
-        db_table = 'UserAccount'
-
     ACCOUNT_ROLES = (
         ('end_user', 'End User'),
         ('caregiver', 'Caregiver'),
@@ -54,11 +51,12 @@ class UserAccount(PersonalUserInfo):
     last_name = models.CharField(max_length=128)
     email = models.EmailField()
     verified = models.BooleanField(default=False)
-    verified_date = models.DateField()
+    verified_date = models.DateField\
+        (auto_now=True)
     valid_from = models.DateField(auto_now=True)
-    valid_to = models.DateField()
+    valid_to = models.DateField(auto_now=True)
     # status = models.CharField
-    account_role = models.CharField(choices=ACCOUNT_ROLES, default='end_user')
+    account_role = models.CharField(max_length=16, choices=ACCOUNT_ROLES, default='end_user')
 
     def __str__(self):
         return "[" + self.account_role + "]" + self.first_name + " " + self.last_name + "; " + "email: " + self.email
@@ -74,7 +72,7 @@ class HealthProfessional(UserAccount):
     title = models.CharField(max_length=32)
     affiliation = models.CharField(max_length=128)
     specialty = models.CharField(max_length=64)
-    patients = models.ManyToManyRel(UserAccount, related_name="doctors")
+    patients = models.ManyToManyField(UserAccount, related_name="doctors")
 
 
 # We skip defining a model for the UserSession, because this will most likely be in the form of a Django Middleware or
@@ -94,13 +92,13 @@ class Device(models.Model):
     )
 
     # id = models.AutoField(primary_key=True)
-    device_type = models.CharField(choices=DEVICE_TYPES, default="weight")
-    manufacturer = models.CharField(null = True, blank = True)
+    device_type = models.CharField(max_length = 32, choices=DEVICE_TYPES, default="weight")
+    manufacturer = models.CharField(max_length = 128, null = True, blank = True)
     model = models.CharField(max_length=64, null = True, blank = True)
     serial_number = models.CharField(max_length=64)
     activation_date = models.DateTimeField(auto_now=True)
 
-    used_by = models.ManyToManyRel(UserAccount, related_name="used_devices", through="DeviceUsage")
+    used_by = models.ManyToManyField(UserAccount, related_name="used_devices", through="DeviceUsage")
 
     def __str__(self):
         users = self.used_by.all()
@@ -134,8 +132,18 @@ class InterfaceService(models.Model):
 
     connection_info = JSONField()
 
+    def __str__(self):
+        return "[InterfaceService] " + self.name + " for user: " + self.user.email
+
 
 # ================ Measurement Information ================
+
+def validate_precision_range(value):
+    if value < 0 or value > 100:
+        raise ValidationError(_('%(value) is not a precision within allowed percentage levels: [0, 100]'),
+                                  params={'value': value}, )
+
+
 class Measurement(models.Model):
     MEASUREMENTS = (
         ("weight", "Weight Measurement"),
@@ -153,18 +161,12 @@ class Measurement(models.Model):
         ("mmhg", "Pressure in mm Hg")
     )
 
-    @staticmethod
-    def validate_precision_range(value):
-        if value < 0 or value > 100:
-            raise ValidationError(_('%(value) is not a precision within allowed percentage levels: [0, 100]'),
-                                  params={'value': value}, )
-
     # id = models.AutoField(primary_key=True)
-    measurement_type = models.CharField(choices=MEASUREMENTS, default="weight")
+    measurement_type = models.CharField(max_length = 32, choices=MEASUREMENTS, default="weight")
+    unit_type = models.CharField(max_length = 8, choices=MEASUREMENT_UNITS, default="kg")
 
-    unit_type = models.CharField(choices=MEASUREMENT_UNITS, default="kg")
     timestamp = models.DateTimeField(auto_now=True)
-    precision = models.PositiveIntegerField(max_length=100, default=100, null = True, blank=True,
+    precision = models.PositiveIntegerField(default=100, null = True, blank=True,
                                             validators=[validate_precision_range])
     value_info = JSONField()
     user = models.ForeignKey(UserAccount, related_name="health_measurements")
@@ -196,16 +198,20 @@ class Activity(models.Model):
     )
 
     # id = models.AutoField(primary_key=True)
+    backend_id = models.CharField(unique=True, max_length=64, null=True, blank = True)
     user = models.ForeignKey(UserAccount)
-    activity_type = models.CharField(choices=ACTIVITY_TYPE, default="personal")
+
+    name = models.CharField(max_length=64, null=True, blank=True)
+    activity_type = models.CharField(max_length=16, choices=ACTIVITY_TYPE, default="personal")
+    activity_source = models.CharField(max_length=16, choices=ACTIVITY_SOURCE, default="self")
 
     is_event = models.BooleanField(default=False)
     starts_at = models.DateTimeField(auto_now=True)
     ends_at = models.DateTimeField(null=True, blank=True)
 
-    activity_source = models.CharField(choices=ACTIVITY_SOURCE, default="self")
-
     times_postponed = models.PositiveSmallIntegerField(default=0)
     last_postponed_time = models.DateTimeField(null=True, blank=True)
 
     is_recursive = models.BooleanField(default=False)
+
+    is_synced = models.BooleanField(default=False)

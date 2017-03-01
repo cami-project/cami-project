@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 import raven
 
+from kombu import Exchange, Queue
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -38,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'store'
+    'django_mysql',
+    'djcelery',
+    'store',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -136,6 +140,11 @@ LOGGING = {
             'level': 'DEBUG',
             'handlers': ['console'],
             'propagate': False,
+        },
+        'store.activity_sync': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'file'],
+            'propagate': False
         }
     }
 }
@@ -181,7 +190,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Bucharest'
 
 USE_I18N = True
 
@@ -195,6 +204,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
+## CELERY settings
+BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
+
+CELERY_DEFAULT_QUEUE = 'store_activity_sync_local'
+CELERY_QUEUES = (
+    Queue('store_activity_sync_remote', Exchange('store_activity_sync_remote'), routing_key='store_activity_sync_remote'),
+    Queue('store_activity_sync_local', Exchange('store_activity_sync_local'), routing_key='store_activity_sync_local'),
+    # Queue('store_activity_insert_local', Exchange('store_activity_insert_local'), routing_key='store_activity_insert_local'),
+)
 
 try:
     from settings_local import *
