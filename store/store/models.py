@@ -2,6 +2,7 @@ from django.db import models
 from django_mysql.models import JSONField
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 import uuid
 
 # Create your models here.
@@ -45,16 +46,18 @@ class UserAccount(PersonalUserInfo):
         ('doctor', 'Doctor')
     )
 
-    # id = models.AutoField(primary_key=True)
     uuid = models.UUIDField(unique=True, default=uuid.uuid4)
     first_name = models.CharField(max_length=128)
     last_name = models.CharField(max_length=128)
     email = models.EmailField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     verified = models.BooleanField(default=False)
-    verified_date = models.DateField\
-        (auto_now=True)
-    valid_from = models.DateField(auto_now=True)
-    valid_to = models.DateField(auto_now=True)
+    verified_date = models.DateField(default=timezone.now)
+    valid_from = models.DateField(default=timezone.now)
+    valid_to = models.DateField(default=timezone.now)
     # status = models.CharField
     account_role = models.CharField(max_length=16, choices=ACCOUNT_ROLES, default='end_user')
 
@@ -91,12 +94,15 @@ class Device(models.Model):
         ("pedometer", "Step Counter")
     )
 
-    # id = models.AutoField(primary_key=True)
     device_type = models.CharField(max_length = 32, choices=DEVICE_TYPES, default="weight")
     manufacturer = models.CharField(max_length = 128, null = True, blank = True)
     model = models.CharField(max_length=64, null = True, blank = True)
     serial_number = models.CharField(max_length=64)
-    activation_date = models.DateTimeField(auto_now=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now = True)
+
+    activation_date = models.DateTimeField(default = timezone.now())
 
     used_by = models.ManyToManyField(UserAccount, related_name="used_devices", through="DeviceUsage")
 
@@ -111,29 +117,31 @@ class DeviceUsage(models.Model):
     user_account = models.ForeignKey(UserAccount)
     device = models.ForeignKey(Device)
     uses_since = models.DateField(auto_now=True)
+    access_info = JSONField()
 
 
-class MeasurementService(models.Model):
-    # id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(UserAccount, related_name="used_health_services")
+# class MeasurementService(models.Model):
+#     user = models.ForeignKey(UserAccount, related_name="used_health_services")
+#
+#     name = models.CharField(max_length=32)
+#     service_url = models.URLField()
+#
+#     connection_info = JSONField()
+
+
+class ExternalMonitoringService(models.Model):
+    user = models.ForeignKey(UserAccount, related_name="used_monitoring_services")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     name = models.CharField(max_length=32)
     service_url = models.URLField()
 
-    connection_info = JSONField()
-
-
-class InterfaceService(models.Model):
-    id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(UserAccount, related_name="used_interface_services")
-
-    name = models.CharField(max_length=32)
-    service_url = models.URLField()
-
-    connection_info = JSONField()
+    access_info = JSONField()
 
     def __str__(self):
-        return "[InterfaceService] " + self.name + " for user: " + self.user.email
+        return "[ExternalMonitoringService] " + self.name + " for user: " + self.user.email
 
 
 # ================ Measurement Information ================
@@ -205,8 +213,11 @@ class Activity(models.Model):
     activity_type = models.CharField(max_length=16, choices=ACTIVITY_TYPE, default="personal")
     activity_source = models.CharField(max_length=16, choices=ACTIVITY_SOURCE, default="self")
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     is_event = models.BooleanField(default=False)
-    starts_at = models.DateTimeField(auto_now=True)
+    starts_at = models.DateTimeField(default=timezone.now)
     ends_at = models.DateTimeField(null=True, blank=True)
 
     times_postponed = models.PositiveSmallIntegerField(default=0)
