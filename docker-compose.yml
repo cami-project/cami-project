@@ -7,6 +7,30 @@ services:
     ports:
       # Make the store MySQL available on the host so VMs can access it
       - "3307:3306"
+  
+  cami-store-management:
+    build:
+      context: .
+      dockerfile: Dockerfile-store-management
+    links:
+      - cami-store
+      - cami-rabbitmq
+    ports:
+      - "8008:8008"
+    volumes:
+      - .:/cami-project
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-entrypoint.sh
+
+  cami-store-management-migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile-store-management
+    links:
+      - cami-store
+    volumes:
+      - .:/cami-project
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-migration-entrypoint.sh
+
   cami-rabbitmq:
     build:
       context: .
