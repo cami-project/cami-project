@@ -8,7 +8,7 @@ python /cami-project/store/manage.py loaddata initialize.yaml
 
 # Create Django superuser account if not exists
 USER="cami"
-PASS="CamiAdmin123$"
+PASS="CamiAdmin4321"
 MAIL="proiect.cami@gmail.com"
 script="
 from django.contrib.auth.models import User;
@@ -23,4 +23,4 @@ if User.objects.filter(username=username).count()==0:
 else:
     print('Superuser creation skipped.');
 "
-printf "$script" | python manage.py shell
+echo "$script" | python /cami-project/store/manage.py shell
