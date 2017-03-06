@@ -141,11 +141,17 @@ LOGGING = {
             'handlers': ['console'],
             'propagate': False,
         },
-        'store.activity_sync': {
+        'store.gcal_activity_backend': {
             'level': 'DEBUG',
-            'handlers': ['console', 'file'],
+            'handlers': ['sentry', 'console', 'syslog'],
             'propagate': False
-        }
+        },
+        'store.activity_sync_tasks': {
+            'level': 'DEBUG',
+            'handlers': ['sentry', 'console', 'syslog'],
+            'propagate': False
+        },
+
     }
 }
 
