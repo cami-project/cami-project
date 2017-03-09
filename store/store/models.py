@@ -105,8 +105,7 @@ class Device(models.Model):
     used_by = models.ManyToManyField(User, related_name="used_devices", through="DeviceUsage")
 
     def __str__(self):
-        users = self.used_by.all()
-        return "[" + self.device_type + "] used by: " + users.first_name + " " + users.last_name
+        return "Device of type " + self.device_type + ": " + self.manufacturer + " " + self.model
 
     __unicode__ = __str__
 
@@ -116,6 +115,12 @@ class DeviceUsage(models.Model):
     device = models.ForeignKey(Device)
     uses_since = models.DateField(auto_now=True)
     access_info = JSONField()
+
+
+    def __str__(self):
+        return str(self.device) + " USED BY " + str(self.user)
+
+    __unicode__ = __str__
 
 
 # class MeasurementService(models.Model):
@@ -139,7 +144,7 @@ class ExternalMonitoringService(models.Model):
     access_info = JSONField()
 
     def __str__(self):
-        return "[ExternalMonitoringService] " + self.name + " for user: " + self.user.email
+        return "ExternalMonitoringService " + self.name + " for user: " + self.user.email
 
 
 # ================ Measurement Information ================
