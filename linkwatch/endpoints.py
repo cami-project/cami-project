@@ -191,7 +191,8 @@ class Observation(object):
             (self.device_type, self.timestamp, self.input_type, self.equipment_id, self.measurements, self.comment)
 
 def process_measurement(measurement_json):
-    token = get_api_token()
+    login_res = perform_login()
+    token = login_res.get_token()
 
     if not token:
         logger.error("[linkwatch] Auth token unavailable due to error in login_endpoint call. Reason: %s" % (login_res.get_error_reason()))
@@ -201,13 +202,13 @@ def process_measurement(measurement_json):
     obs = None
     try:
         obs = get_observation_from_measurement_json(measurement_json)
-    except Exception, e:
+    except Exception as e:
         logger.error("[linkwatch] Could not convert measurement -- %s -- to linkwatch observation: %s" % (measurement_json, e))
         return
 
     send_observation(token, obs)
 
-def get_api_token():
+def perform_login():
     logger.debug("[linkwatch] Getting auth token...")
 
     login_endpoint = LoginEndpoint(LINKWATCH_USER, LINKWATCH_PASSWORD)
@@ -215,12 +216,13 @@ def get_api_token():
     if login_res.is_error():
         logger.error("[linkwatch] Could not log demo user in. Login result: %s" % (login_res.get_error_reason()))
 
-    return login_res.get_token()
+    return login_res
 
 def get_observation_from_measurement_json(measurement_json):
     logger.debug("[linkwatch] Converting measurement %s to linkwatch observation..." % (measurement_json))
 
-    t = datetime.datetime.fromtimestamp(measurement_json['timestamp'])
+    #t = datetime.datetime.fromtimestamp(measurement_json['timestamp'])
+    t = datetime.datetime.utcfromtimestamp(measurement_json['timestamp'])
 
     if measurement_json['type'] == 'weight':
         weight_measurement = Measurement(constants.MeasurementType.WEIGHT, measurement_json['value'], constants.UnitCode.KILOGRAM)
