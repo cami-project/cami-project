@@ -6,12 +6,15 @@ need to have the same module structure in the worker and the client.
 """
 
 import json
-import datetime
+import datetime, pytz
 
 from celery import Celery
 from celery.utils.log import get_task_logger
 from kombu import Queue, Exchange
 from django.conf import settings #noqa
+
+from django.contrib.auth.models import User
+from store.store.models import Measurement, Device
 
 import google_fit
 
@@ -35,23 +38,45 @@ app.conf.update(
 
 
 @app.task(name='medical_compliance_measurements.process_weight_measurement')
-def process_weight_measurement(user_id, input_source, measurement_unit, timestamp, timezone, value):
+def process_weight_measurement(cami_user_id, device_id,
+                               measurement_type, measurement_unit, timestamp, timezone, value):
     logger.debug("[medical-compliance] Process weight measurement: %s" % (locals()))
 
-    weight_measurement = WeightMeasurement(
-        user_id = int(user_id),
-        input_source=input_source,
-        measurement_unit=measurement_unit,
-        timestamp=timestamp,
-        timezone=timezone,
-        value=value
+    ## retrieve user, device pair corresponding to the measurement
+    cami_user = User.objects.get(pk = cami_user_id)
+    device = Device.objects.get(pk = device_id)
+
+    ## Using UTC timestamp here as this is the best bet.
+    ## We carry timezone around for display purposes in client.
+    ## TODO: test that this is correct
+    meas_timestamp = datetime.datetime.utcfromtimestamp(timestamp)
+
+    weight_measurement = Measurement(
+        user = cami_user,
+        device = device,
+        measurement_type = measurement_type,
+        unit_type = measurement_unit,
+        timestamp = meas_timestamp,
+        timezone = timezone,
+        value_info = {
+            'value': value
+        }
     )
+
+    # weight_measurement = WeightMeasurement(
+    #     user_id = int(user_id),
+    #     input_source=input_source,
+    #     measurement_unit=measurement_unit,
+    #     timestamp=timestamp,
+    #     timezone=timezone,
+    #     value=value
+    # )
 
     logger.debug("[medical-compliance] Saving weight measurement: %s" % (weight_measurement))
     weight_measurement.save()
 
     logger.debug("[medical-compliance] Sending the weight measurement with id %s for analysis." % (weight_measurement.id))
-    analyze_weights.delay(weight_measurement.id)
+    analyze_weights.delay(weight_measurement.id, cami_user.id, device.id)
 
     logger.debug("[medical-compliance] Broadcasting weight measurement: %s" % (weight_measurement))
     broadcast_measurement('weight', weight_measurement)
@@ -194,6 +219,9 @@ def process_steps_measurement():
 
 def broadcast_measurement(measurement_type, measurement):
 
+    # Extract UNIX timestamp info from measurement datetime field
+    meas_timestamp = (measurement.timestamp - datetime.datetime(1970, 1, 1, tzinfo=pytz.timezone("UTC"))).total_seconds()
+
     # The steps measurements data structure differs from others
     # - it does not contain a timestamp but rather start/end ones
     # - we're mirroring the "end_timestamp" to the timestamp key
@@ -202,24 +230,27 @@ def broadcast_measurement(measurement_type, measurement):
         logger.debug("[medical-compliance] Assembling broadcast measurement of type %s" % (measurement_type))
         measurement_json = {
             'type': measurement_type,
-            'user_id': measurement.user_id,
-            'input_source': measurement.input_source,
-            'measurement_unit': measurement.measurement_unit,
-            'timestamp': measurement.timestamp,
+            'user_id': measurement.user.id,
+            'device_id': measurement.device.id,
+            'input_source': measurement.device.manufacturer + " " + measurement.device.model,
+            'measurement_unit': measurement.unit_type,
+            'timestamp': meas_timestamp,
             'timezone': measurement.timezone,
-            'value': measurement.value,
+            'value': measurement.value_info['value']
         }
     else:
         measurement_json = {
             'type': measurement_type,
             'user_id': measurement.user_id,
-            'input_source': measurement.input_source,
+            'device_id': measurement.device.id,
+            'input_source': measurement.device.manufacturer + " " + measurement.device.model,
             'measurement_unit': measurement.measurement_unit,
-            'timestamp': measurement.end_timestamp,
-            'end_timestamp': measurement.end_timestamp,
-            'start_timestamp': measurement.start_timestamp,
+            'timestamp': meas_timestamp,
             'timezone': measurement.timezone,
-            'value': measurement.value,
+
+            'end_timestamp': measurement.value_info['end_timestamp'],
+            'start_timestamp': measurement.value_info['start_timestamp'],
+            'value': measurement.value_info['value']
         }
 
     global_app.send_task('cami.on_measurement_received', [measurement_json], queue='broadcast_measurement')

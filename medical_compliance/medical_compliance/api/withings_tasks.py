@@ -5,8 +5,6 @@ need to have the same module structure in the worker and the client.
 [1] http://docs.celeryproject.org/en/latest/userguide/tasks.html#task-naming-relative-imports
 """
 
-import celery
-
 from celery import Celery
 from celery.utils.log import get_task_logger
 from kombu import Queue, Exchange
@@ -16,7 +14,7 @@ from models import WithingsMeasurement
 from withings import WithingsCredentials, WithingsApi, WithingsMeasures
 
 from tasks import process_weight_measurement
-from withings_utils import get_withings_user
+from store.store.models import DeviceUsage
 
 logger = get_task_logger("withings_controller.retrieve_and_save_withings_measurements")
 
@@ -34,18 +32,26 @@ app.conf.update(
 def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measurement_type_id):
     logger.debug("[medical-compliance] Query Withings API to retrieve measurement: %s" % (locals()))
 
-    withings_user = None
-    try:
-        withings_user = get_withings_user(userid)
-    except Exception as e:
-        logger.error("[medical-compliance] Unable to retrieve withings user by userid in the settings file: %s" % (e))
+    ## retrieve the DeviceUsage instance associated with the Withings `userid` and `measurement_type_id`
+    device_usage = DeviceUsage.objects.filter(
+        access_info__contains = {'withings_userid' : userid,
+                                 'withings_measurement_type_id' : measurement_type_id})
+
+    if not device_usage:
+        logger.error("[medical-compliance] Cannot find any user - device combination with access config for "
+                     "withings_userid : %s and withings_measurement_type_id : %s" % (str(userid), str(measurement_type_id)) )
         return
-    
-    credentials = WithingsCredentials(access_token=withings_user.oauth_token,
-                                      access_token_secret=withings_user.oauth_token_secret,
-                                      consumer_key=settings.WITHINGS_CONSUMER_KEY,
-                                      consumer_secret=settings.WITHINGS_CONSUMER_SECRET,
-                                      user_id=withings_user.userid)
+
+    ## get access_info, user and device information from device_usage object
+    access_info = device_usage.access_info
+    cami_user = device_usage.user
+    device = device_usage.device
+
+    credentials = WithingsCredentials(access_token=access_info['withings_oauth_token'],
+                                      access_token_secret=access_info['withings_oauth_token_secret'],
+                                      consumer_key=access_info['withings_consumer_key'],
+                                      consumer_secret=access_info['withings_consumer_secret'],
+                                      user_id=access_info['withings_userid'])
 
     client = WithingsApi(credentials)
     req_params = {
@@ -65,6 +71,7 @@ def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measuremen
     measurement_type = WithingsMeasurement.get_measure_type_by_id(int(measurement_type_id))
 
     for m in measures:
+        ## Store WithingsMeasurement for error inspection
         meas = WithingsMeasurement(
             withings_user_id = int(userid),
             type=measurement_type_id,
@@ -78,4 +85,10 @@ def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measuremen
         meas.save()
 
         logger.debug("[medical-compliance] Sending Withings weight measurement for processing: %s" % (meas))
-        process_weight_measurement.delay(userid, "withings", meas.measurement_unit, meas.timestamp, meas.timezone, meas.value)
+        process_weight_measurement.delay(cami_user.id,              # end user id
+                                         device.id,                 # device id
+                                         "weight",                  # measurement_type
+                                         meas.measurement_unit,
+                                         meas.timestamp,
+                                         meas.timezone,
+                                         meas.value)

@@ -3,7 +3,7 @@
 import json, logging, pprint
 
 from django.shortcuts import render
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpRequest, HttpResponseServerError
 from django.conf import settings #noqa
 from django.views.decorators.csrf import csrf_exempt
 
