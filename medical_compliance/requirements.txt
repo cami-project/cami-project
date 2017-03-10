@@ -1,4 +1,5 @@
 Django==1.9.5
+django-mysql==1.1.0
 django-cors-headers==1.1.0
 django-tastypie==0.13.3
 django-tastypie-swagger==0.1.4
