@@ -11,9 +11,11 @@ from celery import Celery
 from celery.utils.log import get_task_logger
 from kombu import Queue, Exchange
 from django.conf import settings #noqa
+from django.core.exceptions import ObjectDoesNotExist
 from notifications_adapter import NotificationsAdapter
 
-from ..models import WeightMeasurement
+from store.store.models import Measurement, DeviceUsage
+from store.store.constants import MeasurementType
 
 DELTA_WEIGHT = 2
 
@@ -28,46 +30,68 @@ app.conf.update(
 )
 
 @app.task(name='medical_compliance_weight_analyzers.analyze_weights')
-def analyze_weights(weight_measurement_id):
-    analyze_last_two_weights(weight_measurement_id)
+def analyze_weights(weight_measurement_id, user_id, device_id):
+    analyze_last_two_weights(weight_measurement_id, user_id, device_id)
+
+
+def get_previous_weight_measures(reference_id, user_id, weights_count):
+    try:
+        retrieved_measurement = Measurement.objects.get(id=reference_id)
+        last_weight_measurements = Measurement.objects.filter(
+            timestamp__lte = retrieved_measurement.timestamp,
+            measurement_type = MeasurementType.WEIGHT,
+            user__id = user_id
+        ).order_by('-timestamp')[:weights_count]
+        return last_weight_measurements
+    except ObjectDoesNotExist:
+        return []
+
 
 # TODO: this is a dummy module and should be generalized at least with a task structure
 # all the tasks should listen on the same weight queue and all of them should compute some metrics (broadcast?)
-def analyze_last_two_weights(weight_measurement_id):
+def analyze_last_two_weights(weight_measurement_id, user_id, device_id):
     logger.debug("[medical-compliance] Analyze weights request: %s. Trying to retrieve the last two weights..." % (locals()))
-    measurement_list = WeightMeasurement.get_previous_weight_measures(weight_measurement_id, 2)
+
+    measurement_list = get_previous_weight_measures(weight_measurement_id, user_id, device_id, 2)
     logger.debug("[medical-compliance] The last two weights: %s" % (measurement_list))
-    
+
+
     if len(measurement_list) == 2:
         current_measurement= measurement_list[0]
         previous_measurement = measurement_list[1]
         
         logger.debug("[medical-compliance] Checking if the difference between the last two weight measurements is > %s" % (DELTA_WEIGHT))
 
-        delta_value = current_measurement.value - previous_measurement.value
+        delta_value = current_measurement.value_info['value'] - previous_measurement.value_info['value']
         notifications_adapter = NotificationsAdapter()
+
+        withings_user_id = DeviceUsage.objects.get(user__id = user_id, devide__id = device_id).access_info['withings_userid']
 
         if delta_value <= -1 * DELTA_WEIGHT:
             logger.debug("[medical-compliance] New weight measurement < last one. Difference: %s. Sending notifications..." % (delta_value))
 
             message = u"Jim lost %s kg" % (abs(delta_value))
             description = "You can contact him and see what's wrong."
-            notifications_adapter.send_caregiver_notification(current_measurement.user_id, "weight", "medium", message, description)
+            # notifications_adapter.send_caregiver_notification(withings_user_id, "weight", "medium", message, description)
+            notifications_adapter.send_caregiver_notification(user_id, "weight", "medium", message, description)
 
             message = u"There's a decrease of %s kg in your weight." % (abs(delta_value))
             description = "Please take your meals regularly."
-            notifications_adapter.send_elderly_notification(current_measurement.user_id, "weight", "medium", message, description)
+            # notifications_adapter.send_elderly_notification(withings_user_id, "weight", "medium", message, description)
+            notifications_adapter.send_elderly_notification(user_id, "weight", "medium", message, description)
 
         elif delta_value >= DELTA_WEIGHT:
             logger.debug("[medical-compliance] New weight measurement > last one. Difference: %s. Sending notifications..." % (delta_value))
 
             message = u"Jim gained %s kg" % (abs(delta_value))
             description = "Please check if this has to do with his diet."
-            notifications_adapter.send_caregiver_notification(current_measurement.user_id, "weight", "medium", message, description)
+            # notifications_adapter.send_caregiver_notification(withings_user_id, "weight", "medium", message, description)
+            notifications_adapter.send_caregiver_notification(user_id, "weight", "medium", message, description)
 
             message = u"There's an increase of %s kg in your weight." % (abs(delta_value))
             description = "Please be careful with your meals."
-            notifications_adapter.send_elderly_notification(current_measurement.user_id, "weight", "medium", message, description)
+            # notifications_adapter.send_elderly_notification(withings_user_id, "weight", "medium", message, description)
+            notifications_adapter.send_elderly_notification(user_id, "weight", "medium", message, description)
         
         else:
             logger.debug("[medical-compliance] Weight difference < delta_weight (%s kg). Not sending notifications." % (delta_value))
