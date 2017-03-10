@@ -9,11 +9,12 @@ STORE_DIR   = os.path.join(BASE_DIR, "store")
 
 ## WITHINGS ACCESS INFO
 WITHINGS_ACCESS_CONFIG = {
-    "userid": 11115034,
-    "consumer_key": "5b1f8cbeb36cffe108fd8fdd666c51cb5d6eee9f2e2940983958b836451",
-    "consumer_secret": "2e75dfb7f1088f398b4cfc5ebed6d5909c48918ee637417e3b0de001b3b",
-    "oauth_token": "59dd58ccbd19bfbd8b3522ce50d31c4cb6e530742d22234f4cb4bee11673084",
-    "oauth_token_secret": "cf31bc8e405d96b975b8014d93c722830bd55f44b437f27c7e6d5964b3"
+    "withings_userid": 11115034,
+    "withings_consumer_key": "5b1f8cbeb36cffe108fd8fdd666c51cb5d6eee9f2e2940983958b836451",
+    "withings_consumer_secret": "2e75dfb7f1088f398b4cfc5ebed6d5909c48918ee637417e3b0de001b3b",
+    "withings_oauth_token": "59dd58ccbd19bfbd8b3522ce50d31c4cb6e530742d22234f4cb4bee11673084",
+    "withings_oauth_token_secret": "cf31bc8e405d96b975b8014d93c722830bd55f44b437f27c7e6d5964b3",
+    "withings_measurement_type_id" : 1
 }
 
 ## GOOGLE FIT ACCESS INFO
