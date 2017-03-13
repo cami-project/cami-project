@@ -14,6 +14,9 @@ import datetime, dateutil.tz
 import dateutil.rrule as recrule
 import dateutil.parser
 
+import logging
+logger = logging.getLogger("store.gcal_activity_backend")
+
 # try:
 #     import argparse
 #     flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
@@ -57,7 +60,7 @@ def get_credentials():
             credentials = tools.run_flow(flow, store, flags)
         else: # Needed only for compatibility with Python 2.6
             credentials = tools.run(flow, store)
-        print('Storing credentials to ' + credential_path)
+        logger.info('Storing GCal acccess credentials to ' + credential_path)
     return credentials
 
 
@@ -135,8 +138,11 @@ def create_activity(calendar_service, calendar_id,
         res = req.execute()
         return res, 200
     except errors.HttpError as e:
-        print(e)
-        return None, e.resp.status
+        logger.exception("Failed to insert activity %s from %s to %s, into calendar %s!" % (title,
+                                                                                            start_date.isoformat(),
+                                                                                            end_date.isoformat,
+                                                                                            calendar_id))
+        raise e
 
 
 def create_single_activity(calendar_service, calendar_id,
@@ -160,7 +166,7 @@ def create_weekly_activity(calendar_service, calendar_id,
 
     ## prepare recurrence rule
     if not nr_instances and not until_date:
-        return ValueError("create_weekly_activity method must specify either `nr_instances` or `until_date` parameters.")
+        raise ValueError("create_weekly_activity method must specify either `nr_instances` or `until_date` parameters.")
 
     recurrence = recrule.rrule(recrule.WEEKLY, interval=interval)
 
@@ -178,9 +184,7 @@ def create_weekly_activity(calendar_service, calendar_id,
     # TODO do this more nicely
     # hack to disable inclusion of DTSART output in string format of recurrence rule
     recurrence._dtstart = None
-
     rec_str = "RRULE:" + str(recurrence)
-    # print(rec_str)
 
     return create_activity(calendar_service, calendar_id, title, description=description,
                            start_date=start_date, end_date=end_date, timezone_spec=timezone_spec,
@@ -197,7 +201,7 @@ def create_daily_activity(calendar_service, calendar_id,
 
     ## prepare recurrence rule
     if not nr_instances and not until_date:
-        return ValueError(
+        raise ValueError(
             "create_daily_activity method must specify either `nr_instances` or `until_date` parameters.")
 
     recurrence = recrule.rrule(recrule.DAILY, interval=interval)
@@ -216,9 +220,7 @@ def create_daily_activity(calendar_service, calendar_id,
     # TODO do this more nicely
     # hack to disable inclusion of DTSART output in string format of recurrence rule
     recurrence._dtstart = None
-
     rec_str = "RRULE:" + str(recurrence)
-    # print(rec_str)
 
     return create_activity(calendar_service, calendar_id, title, description=description,
                            start_date=start_date, end_date=end_date, timezone_spec=timezone_spec,
@@ -262,10 +264,8 @@ def list_activities(calendar_service, calendar_id, start_date = None, end_date =
                                          timeMin=time_min_str, timeMax=time_max_str,
                                          singleEvents=True,
                                          orderBy="startTime")
-    # print(req.uri)
 
     event_results = consume_event_results(calendar_service, req)
-
     return event_results
 
 
@@ -276,7 +276,7 @@ def consume_event_results(calendar_service, api_req):
         try:
             current_res = api_req.execute()
         except errors.HttpError as e:
-            print(e)
+            logger.exception("Cannot consume all results from api_req %s." % (api_req))
             break
 
         if current_res['items']:
@@ -304,8 +304,8 @@ def get_activity(calendar_service, calendar_id, activity_id):
         res = req.execute()
         return res, 200
     except errors.HttpError as e:
-        print(e)
-        return None, e.resp.status
+        logger.exception("Cannot retrieve remote activity with remote ID: %s from calendar: %s" % (activity_id, calendar_id))
+        raise e
 
 
 
@@ -318,14 +318,14 @@ def postpone_activity(calendar_service, calendar_id, activity_data = None, new_s
     :param activity_data:
     :param new_start_date:
     :param new_end_date:
-    :param timezone:
+    :param timezone_spec:
     :return:
     """
     if not activity_data:
-        return ValueError("`activity_data` parameter must be provided for postpone_activity function.")
+        raise ValueError("`activity_data` parameter must be provided for postpone_activity function.")
 
     if not new_start_date or not new_end_date:
-        return ValueError("`new_start_date` and `new_end_date` parameters must be provided for postpone_activity functions.")
+        raise ValueError("`new_start_date` and `new_end_date` parameters must be provided for postpone_activity functions.")
 
     # update activity_data
     new_data = activity_data.copy()
@@ -346,8 +346,10 @@ def postpone_activity(calendar_service, calendar_id, activity_data = None, new_s
         res = req.execute()
         return res, 200
     except errors.HttpError as e:
-        print(e)
-        return None, e.resp.status
+        logger.exception("Failed to update activity with remote ID %s to new time interval (%s, %s)" % (activity_data['summary'],
+                                                                                         new_start_date.isoformat(),
+                                                                                         new_end_date.isoformat()))
+        raise e
 
 
 def cancel_activity(calendar_service, calendar_id, activity_id):
@@ -364,5 +366,6 @@ def cancel_activity(calendar_service, calendar_id, activity_id):
         res = req.execute()
         return res, 200
     except errors.HttpError as e:
-        print(e)
-        return None, e.resp.status
+        logger.exception("Failed to cancel activity with remote ID %s from calendar with id: %s" % (activity_id,
+                                                                                                  calendar_id))
+        raise e

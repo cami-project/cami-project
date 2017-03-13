@@ -8,7 +8,7 @@ from celery.utils.log import get_task_logger
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'store.settings')
 from django.conf import settings #noqa
 
-logger = get_task_logger('store.activity_sync')
+logger = get_task_logger('store.activity_sync_tasks')
 
 app = Celery('store', broker=settings.BROKER_URL)
 app.config_from_object('django.conf:settings')
@@ -16,7 +16,7 @@ app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 from kombu import Queue, Exchange
 from .gcal_activity_backend import *
-from .models import UserAccount, Activity
+from .models import EndUserProfile, Activity
 from .constants import ACTIVITY_TYPE, ACTIVITY_SOURCE, ACTIVITY_LOCAL_ID, CALENDAR_BACKEND_SERVICE
 import dateutil.parser
 import pytz
@@ -44,7 +44,7 @@ def sync_locally(user_account_uuid, activities, insert = True, sync_after_local_
         created_activities = []
 
         # get the UserAccount object for the specified id
-        user_account = UserAccount.objects.get(uuid=user_account_uuid)
+        user = EndUserProfile.objects.get(uuid=user_account_uuid).user
 
         for activity in activities:
             # setup start and end times of the activity
@@ -66,7 +66,7 @@ def sync_locally(user_account_uuid, activities, insert = True, sync_after_local_
             activity_obj = Activity(
                 name = activity['summary'],
                 backend_id = activity['id'],
-                user = user_account,
+                user = user,
                 activity_type = activity['extendedProperties']['private'][ACTIVITY_TYPE],
                 activity_source = activity['extendedProperties']['private'][ACTIVITY_SOURCE],
 
@@ -119,7 +119,7 @@ def sync_remote(user_account_uuid, local_activity, insert = True):
                  "Performing INSERT = %s: %s" % (locals(), str(insert)))
 
     ## first retrieve the `calendar_id` required to synchronize to the correct user schedule
-    user = UserAccount.objects.get(uuid = user_account_uuid)
+    user = EndUserProfile.objects.get(uuid = user_account_uuid).user
     user_calendar = user.used_interface_services.get(name=CALENDAR_BACKEND_SERVICE)
 
     ## TODO: here we must ensure we actually have such an GCal configuration object
