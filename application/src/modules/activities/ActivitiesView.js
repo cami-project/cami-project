@@ -93,12 +93,12 @@ const ActivitiesView = React.createClass({
               </View>
             </View>
             {
-              this.props.events.length > 0 && this.props.events.get(0).get('summary')
+              this.props.events.get(0).get('summary')
                 ? <Text style={styles.nextTitle}>{this.props.events.get(0).get('summary')}</Text>
                 : <Text style={styles.nextTitle}>No pending events</Text>
             }
             {
-              this.props.events.length > 0 && this.props.events.get(0).get('description')
+              this.props.events.get(0).get('description')
                 ? <Text style={styles.nextDescription}>{this.props.events.get(0).get('description')}</Text>
                 : <Text style={styles.nextDescription}>Add using Google Calendar</Text>
             }
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingBottom: 10,
     width: variables.dimensions.width,
-    paddingLeft: 102,
+    paddingLeft: 112,
     paddingRight: 10,
     paddingBottom: 10,
     flexDirection: 'column',
