@@ -8,6 +8,7 @@ import HomepageStateReducer from '../modules/homepage/HomepageState';
 import HomepageStateReducerCaregiver from '../modules/homepage-caregiver/HomepageState';
 import JournalStateReducer from '../modules/journal/JournalState';
 import StatusStateReducer from '../modules/status/StatusState';
+import ActivitiesStateReducer from '../modules/activities/ActivitiesState';
 import LoginStateReducer from '../modules/login/LoginState';
 import OnboardingStateReducer from '../modules/onboarding/OnboardingState';
 import PushNotificationsStateReducer from '../modules/push-notifications/PushNotificationsState';
@@ -32,6 +33,8 @@ const reducers = {
   journal: JournalStateReducer,
 
   status: StatusStateReducer,
+
+  activities: ActivitiesStateReducer,
 
   login: LoginStateReducer,
 
