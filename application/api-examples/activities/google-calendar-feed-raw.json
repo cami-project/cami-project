@@ -1,0 +1,821 @@
+{
+ "kind": "calendar#events",
+ "etag": "\"p32gf1befvvat40g\"",
+ "summary": "calendar-caretaker-1",
+ "description": "Calendar for caretaker with ID 1",
+ "updated": "2017-03-14T12:29:16.244Z",
+ "timeZone": "Europe/Bucharest",
+ "accessRole": "owner",
+ "defaultReminders": [
+ ],
+ "nextSyncToken": "CKDwrc__1dICEKDwrc__1dICGAU=",
+ "items": [
+  {
+   "kind": "calendar#event",
+   "etag": "\"2963610034350000\"",
+   "id": "2phqnl5b9jr9a074v9v40u58a0",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=MnBocW5sNWI5anI5YTA3NHY5djQwdTU4YTBfMjAxNjEyMDFUMDcwMDAwWiBnODIycmwxNG9zamM3NW1mODhsb3ZjaTZrZ0Bn",
+   "created": "2016-12-15T12:28:06.000Z",
+   "updated": "2016-12-15T12:30:17.175Z",
+   "summary": "Calcium Supplement",
+   "description": "Take Calcium Supplement",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2016-12-01T09:00:00+02:00",
+    "timeZone": "Europe/Bucharest"
+   },
+   "end": {
+    "dateTime": "2016-12-01T10:00:00+02:00",
+    "timeZone": "Europe/Bucharest"
+   },
+   "recurrence": [
+    "RRULE:FREQ=DAILY;COUNT=30"
+   ],
+   "visibility": "private",
+   "iCalUID": "2phqnl5b9jr9a074v9v40u58a0@google.com",
+   "sequence": 0,
+   "extendedProperties": {
+    "private": {
+     "event_type": "medication"
+    }
+   },
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2963610834812000\"",
+   "id": "e3lreqr57al029rfa1t3g766g0",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=ZTNscmVxcjU3YWwwMjlyZmExdDNnNzY2ZzAgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2016-12-15T12:36:57.000Z",
+   "updated": "2016-12-15T12:36:57.406Z",
+   "summary": "Physical Exercise 1",
+   "description": "Execute planned physical exercise of type 1",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2016-12-15T16:00:00+02:00",
+    "timeZone": "Europe/Bucharest"
+   },
+   "end": {
+    "dateTime": "2016-12-15T17:00:00+02:00",
+    "timeZone": "Europe/Bucharest"
+   },
+   "visibility": "public",
+   "iCalUID": "e3lreqr57al029rfa1t3g766g0@google.com",
+   "sequence": 0,
+   "extendedProperties": {
+    "private": {
+     "event_type": "exercise"
+    }
+   },
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2963610893044000\"",
+   "id": "1e3dduppbhrvhcmsf50ukckt04",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=MWUzZGR1cHBiaHJ2aGNtc2Y1MHVrY2t0MDQgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2016-12-15T12:37:26.000Z",
+   "updated": "2016-12-15T12:37:26.522Z",
+   "summary": "Physical Exercise 2",
+   "description": "Execute planned physical exercise of type 2",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2016-12-16T12:00:00+02:00",
+    "timeZone": "Europe/Bucharest"
+   },
+   "end": {
+    "dateTime": "2016-12-16T13:00:00+02:00",
+    "timeZone": "Europe/Bucharest"
+   },
+   "visibility": "public",
+   "iCalUID": "1e3dduppbhrvhcmsf50ukckt04@google.com",
+   "sequence": 0,
+   "extendedProperties": {
+    "private": {
+     "event_type": "exercise"
+    }
+   },
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2970376535062000\"",
+   "id": "jifk6v9mhahs1qht9fb3hbg48c",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=amlmazZ2OW1oYWhzMXFodDlmYjNoYmc0OGMgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-01-23T16:17:47.000Z",
+   "updated": "2017-01-23T16:17:47.531Z",
+   "summary": "Exercise 1",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-01-24T15:00:00+02:00"
+   },
+   "end": {
+    "dateTime": "2017-01-24T16:00:00+02:00"
+   },
+   "iCalUID": "jifk6v9mhahs1qht9fb3hbg48c@google.com",
+   "sequence": 0,
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2970376568038000\"",
+   "id": "5ei4mmnc81rkou9v5e0s7smdms",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=NWVpNG1tbmM4MXJrb3U5djVlMHM3c21kbXMgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-01-23T16:18:03.000Z",
+   "updated": "2017-01-23T16:18:04.019Z",
+   "summary": "Exercise 2",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-01-26T15:00:00+02:00"
+   },
+   "end": {
+    "dateTime": "2017-01-26T16:00:00+02:00"
+   },
+   "iCalUID": "5ei4mmnc81rkou9v5e0s7smdms@google.com",
+   "sequence": 0,
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2970511031280000\"",
+   "id": "u5g34elumqmm5df2ctf8a541q8",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=dTVnMzRlbHVtcW1tNWRmMmN0ZjhhNTQxcTggZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-01-24T10:58:35.000Z",
+   "updated": "2017-01-24T10:58:35.640Z",
+   "summary": "Exercise 01",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-01-25T08:00:00+02:00"
+   },
+   "end": {
+    "dateTime": "2017-01-25T09:00:00+02:00"
+   },
+   "iCalUID": "u5g34elumqmm5df2ctf8a541q8@google.com",
+   "sequence": 0,
+   "extendedProperties": {
+    "private": {
+     "activity_source": "doctor",
+     "activity_type": "exercise"
+    }
+   },
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2970511176114000\"",
+   "id": "6qrhubefud8r1ml449sihkqibs",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=NnFyaHViZWZ1ZDhyMW1sNDQ5c2loa3FpYnMgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-01-24T10:59:48.000Z",
+   "updated": "2017-01-24T10:59:48.057Z",
+   "summary": "Exercise 02",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-01-25T09:00:00+02:00"
+   },
+   "end": {
+    "dateTime": "2017-01-25T10:00:00+02:00"
+   },
+   "iCalUID": "6qrhubefud8r1ml449sihkqibs@google.com",
+   "sequence": 0,
+   "extendedProperties": {
+    "private": {
+     "activity_source": "doctor",
+     "activity_type": "exercise"
+    }
+   },
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2970511216190000\"",
+   "id": "f4po9icp6fh7390gm9jpgjc6b0",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=ZjRwbzlpY3A2Zmg3MzkwZ205anBnamM2YjAgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-01-24T11:00:08.000Z",
+   "updated": "2017-01-24T11:00:08.095Z",
+   "summary": "Exercise 03",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-01-25T10:00:00+02:00"
+   },
+   "end": {
+    "dateTime": "2017-01-25T11:00:00+02:00"
+   },
+   "iCalUID": "f4po9icp6fh7390gm9jpgjc6b0@google.com",
+   "sequence": 0,
+   "extendedProperties": {
+    "private": {
+     "activity_source": "doctor",
+     "activity_type": "exercise"
+    }
+   },
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2970511265094000\"",
+   "id": "l9m3fslabctcgnbhh1fol95pek",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=bDltM2ZzbGFiY3RjZ25iaGgxZm9sOTVwZWsgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-01-24T11:00:32.000Z",
+   "updated": "2017-01-24T11:00:32.547Z",
+   "summary": "Exercise 04",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-01-26T08:00:00+02:00"
+   },
+   "end": {
+    "dateTime": "2017-01-26T09:00:00+02:00"
+   },
+   "iCalUID": "l9m3fslabctcgnbhh1fol95pek@google.com",
+   "sequence": 0,
+   "extendedProperties": {
+    "private": {
+     "activity_source": "doctor",
+     "activity_type": "exercise"
+    }
+   },
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2970511317152000\"",
+   "id": "i16j45gsg81t7occ34k3gost4o",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=aTE2ajQ1Z3NnODF0N29jYzM0azNnb3N0NG8gZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-01-24T11:00:58.000Z",
+   "updated": "2017-01-24T11:00:58.576Z",
+   "summary": "Exercise 06",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-01-26T10:00:00+02:00"
+   },
+   "end": {
+    "dateTime": "2017-01-26T11:00:00+02:00"
+   },
+   "iCalUID": "i16j45gsg81t7occ34k3gost4o@google.com",
+   "sequence": 0,
+   "extendedProperties": {
+    "private": {
+     "activity_source": "doctor",
+     "activity_type": "exercise"
+    }
+   },
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2970511356644000\"",
+   "id": "et7c4tga7r29jqo2iei4mokj98",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=ZXQ3YzR0Z2E3cjI5anFvMmllaTRtb2tqOTggZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-01-24T11:00:43.000Z",
+   "updated": "2017-01-24T11:01:18.322Z",
+   "summary": "Exercise 05",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-01-26T09:00:00+02:00"
+   },
+   "end": {
+    "dateTime": "2017-01-26T10:00:00+02:00"
+   },
+   "iCalUID": "et7c4tga7r29jqo2iei4mokj98@google.com",
+   "sequence": 0,
+   "extendedProperties": {
+    "private": {
+     "activity_source": "doctor",
+     "activity_type": "exercise"
+    }
+   },
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2970891597972000\"",
+   "id": "c270ddu9fd15308plfpnj3lum0",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=YzI3MGRkdTlmZDE1MzA4cGxmcG5qM2x1bTAgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-01-26T15:49:58.000Z",
+   "updated": "2017-01-26T15:49:58.986Z",
+   "summary": "X-Body Workout",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-01-27T11:00:00+02:00"
+   },
+   "end": {
+    "dateTime": "2017-01-27T12:00:00+02:00"
+   },
+   "visibility": "private",
+   "iCalUID": "c270ddu9fd15308plfpnj3lum0@google.com",
+   "sequence": 0,
+   "extendedProperties": {
+    "private": {
+     "activity_source": "self",
+     "activity_type": "exercise"
+    }
+   },
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2970891598508000\"",
+   "id": "ol70a9f17snb29p2a2jnhb50s0",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=b2w3MGE5ZjE3c25iMjlwMmEyam5oYjUwczAgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-01-26T15:49:59.000Z",
+   "updated": "2017-01-26T15:49:59.254Z",
+   "summary": "Take Muscle Pills",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-01-27T10:30:00+02:00"
+   },
+   "end": {
+    "dateTime": "2017-01-27T11:00:00+02:00"
+   },
+   "visibility": "private",
+   "iCalUID": "ol70a9f17snb29p2a2jnhb50s0@google.com",
+   "sequence": 0,
+   "extendedProperties": {
+    "private": {
+     "activity_source": "self",
+     "activity_type": "medication"
+    }
+   },
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2970909668146000\"",
+   "id": "s1b7cki3bqlp2967hn8lu6f7nc",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=czFiN2NraTNicWxwMjk2N2huOGx1NmY3bmMgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-01-26T18:20:34.000Z",
+   "updated": "2017-01-26T18:20:34.073Z",
+   "summary": "X-Body Workout",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-01-27T13:00:00+02:00",
+    "timeZone": "UTC"
+   },
+   "end": {
+    "dateTime": "2017-01-27T14:00:00+02:00",
+    "timeZone": "UTC"
+   },
+   "visibility": "private",
+   "iCalUID": "s1b7cki3bqlp2967hn8lu6f7nc@google.com",
+   "sequence": 0,
+   "extendedProperties": {
+    "private": {
+     "activity_source": "self",
+     "activity_type": "medication"
+    }
+   },
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2971536815074000\"",
+   "id": "3ahieehjnmps8apsnsq968e9ms",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=M2FoaWVlaGpubXBzOGFwc25zcTk2OGU5bXNfMjAxNzAxMjdUMDkwMDAwWiBnODIycmwxNG9zamM3NW1mODhsb3ZjaTZrZ0Bn",
+   "created": "2017-01-30T09:26:47.000Z",
+   "updated": "2017-01-30T09:26:47.537Z",
+   "summary": "X-Body Workout",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-01-27T11:00:00+02:00",
+    "timeZone": "Europe/Bucharest"
+   },
+   "end": {
+    "dateTime": "2017-01-27T12:00:00+02:00",
+    "timeZone": "Europe/Bucharest"
+   },
+   "recurrence": [
+    "RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=MO,TH"
+   ],
+   "visibility": "private",
+   "iCalUID": "3ahieehjnmps8apsnsq968e9ms@google.com",
+   "sequence": 0,
+   "extendedProperties": {
+    "private": {
+     "activity_source": "self",
+     "activity_type": "medication"
+    }
+   },
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2971546247076000\"",
+   "id": "3ahieehjnmps8apsnsq968e9ms_20170202T090000Z",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=M2FoaWVlaGpubXBzOGFwc25zcTk2OGU5bXNfMjAxNzAyMDJUMDkwMDAwWiBnODIycmwxNG9zamM3NW1mODhsb3ZjaTZrZ0Bn",
+   "created": "2017-01-30T09:26:47.000Z",
+   "updated": "2017-01-30T10:45:23.538Z",
+   "summary": "X-Body Workout",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-02-02T17:00:00+02:00",
+    "timeZone": "Europe/Bucharest"
+   },
+   "end": {
+    "dateTime": "2017-02-02T18:00:00+02:00",
+    "timeZone": "Europe/Bucharest"
+   },
+   "recurringEventId": "3ahieehjnmps8apsnsq968e9ms",
+   "originalStartTime": {
+    "dateTime": "2017-02-02T11:00:00+02:00",
+    "timeZone": "Europe/Bucharest"
+   },
+   "visibility": "private",
+   "iCalUID": "3ahieehjnmps8apsnsq968e9ms@google.com",
+   "sequence": 1,
+   "extendedProperties": {
+    "private": {
+     "activity_source": "self",
+     "activity_type": "medication"
+    }
+   },
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2978988437728000\"",
+   "id": "6mjooth4ue5cd82o1sdntc79tk",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=Nm1qb290aDR1ZTVjZDgybzFzZG50Yzc5dGsgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-03-14T12:23:38.000Z",
+   "updated": "2017-03-14T12:23:38.864Z",
+   "summary": "Checkup with Dr. Forrester",
+   "description": "Get blood work done.",
+   "location": "Mills Heights Clinic",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-04-24T14:15:00+03:00"
+   },
+   "end": {
+    "dateTime": "2017-04-24T17:15:00+03:00"
+   },
+   "iCalUID": "6mjooth4ue5cd82o1sdntc79tk@google.com",
+   "sequence": 0,
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2978988561220000\"",
+   "id": "dj0eob3t7ap2pcihl8jjshvl60",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=ZGowZW9iM3Q3YXAycGNpaGw4ampzaHZsNjAgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-03-14T12:24:40.000Z",
+   "updated": "2017-03-14T12:24:40.610Z",
+   "summary": "Grandchildren visiting",
+   "description": "Take little Nancy for ice-cream.",
+   "location": "Home",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-04-27T11:00:00+03:00"
+   },
+   "end": {
+    "dateTime": "2017-04-27T18:00:00+03:00"
+   },
+   "iCalUID": "dj0eob3t7ap2pcihl8jjshvl60@google.com",
+   "sequence": 0,
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2978988770602000\"",
+   "id": "h6it6k5aeire1kbreu0e57dv14",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=aDZpdDZrNWFlaXJlMWticmV1MGU1N2R2MTQgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-03-14T12:26:25.000Z",
+   "updated": "2017-03-14T12:26:25.301Z",
+   "summary": "Chess night with Steven",
+   "description": "Don't worry, you've got this!",
+   "location": "Home",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-05-03T20:00:00+03:00"
+   },
+   "end": {
+    "dateTime": "2017-05-03T22:30:00+03:00"
+   },
+   "iCalUID": "h6it6k5aeire1kbreu0e57dv14@google.com",
+   "sequence": 0,
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2978988898354000\"",
+   "id": "do756cgtb5pitpmd8cb2mk0el4",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=ZG83NTZjZ3RiNXBpdHBtZDhjYjJtazBlbDQgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-03-14T12:27:29.000Z",
+   "updated": "2017-03-14T12:27:29.177Z",
+   "summary": "Visiting the Allens",
+   "description": "Don't forget to buy flowers!",
+   "location": "56 Flower Road",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-05-04T10:00:00+03:00"
+   },
+   "end": {
+    "dateTime": "2017-05-04T14:30:00+03:00"
+   },
+   "iCalUID": "do756cgtb5pitpmd8cb2mk0el4@google.com",
+   "sequence": 0,
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2978989033378000\"",
+   "id": "27uieel2459rd4oeu4f6c8njds",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=Mjd1aWVlbDI0NTlyZDRvZXU0ZjZjOG5qZHMgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-03-14T12:28:36.000Z",
+   "updated": "2017-03-14T12:28:36.689Z",
+   "summary": "Checkup with Dr. Forrester",
+   "description": "Find out how your blood work tests went.",
+   "location": "Mills Heights Clinic",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-05-17T11:30:00+03:00"
+   },
+   "end": {
+    "dateTime": "2017-05-17T12:00:00+03:00"
+   },
+   "iCalUID": "27uieel2459rd4oeu4f6c8njds@google.com",
+   "sequence": 0,
+   "reminders": {
+    "useDefault": true
+   }
+  },
+  {
+
+
+   "kind": "calendar#event",
+   "etag": "\"2978989112288000\"",
+   "id": "l0qjggsh5te486cqlo603ied20",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=bDBxamdnc2g1dGU0ODZjcWxvNjAzaWVkMjAgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+   "created": "2017-03-14T12:22:21.000Z",
+   "updated": "2017-03-14T12:29:16.144Z",
+   "summary": "Meet with Jonas",
+   "description": "Don't forget to ask about the fishing trip.",
+   "location": "Ridgeway Park",
+   "creator": {
+    "email": "proiect.cami@gmail.com"
+   },
+   "organizer": {
+    "email": "g822rl14osjc75mf88lovci6kg@group.calendar.google.com",
+    "displayName": "calendar-caretaker-1",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2017-04-21T22:00:00+03:00"
+   },
+   "end": {
+    "dateTime": "2017-04-21T23:00:00+03:00"
+   },
+   "iCalUID": "l0qjggsh5te486cqlo603ied20@google.com",
+   "sequence": 0,
+   "reminders": {
+    "useDefault": true
+   }
+  }
+ ]
+}

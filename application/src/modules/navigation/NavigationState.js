@@ -61,6 +61,7 @@ const initialState = fromJS(
     createNavigationState('HomepageCaregiver', 'Home', 'ios-home', [{key: 'HomepageCaregiver', title: 'Home'}], true),
     createNavigationState('Status', 'Status', 'ios-pulse', [{key: 'Status', title: 'Status'}], true),
     createNavigationState('Journal', 'Journal', 'ios-paper', [{key: 'Journal', title: 'Journal'}], true),
+    createNavigationState('Activities', 'Activities', 'ios-calendar', [{key: 'Activities', title: 'Activities'}], true),
     createNavigationState('HomepageTab', 'Settings', 'ios-cog', [{key: 'Homepage', title: 'Homepage'}], false),
     createNavigationState('Onboarding', 'Onboard', 'ios-help-buoy', [{key: 'Onboarding', title: 'Onboard'}], false),
     createNavigationState('Logout', 'Logout', 'ios-log-out', [{key: 'Logout', title: 'Logout'}], true)

@@ -1,0 +1,99 @@
+{
+  "events": [{
+    "id": "l0qjggsh5te486cqlo603ied20",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=bDBxamdnc2g1dGU0ODZjcWxvNjAzaWVkMjAgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+    "created": 1489494141,
+    "updated": 1489494556,
+    "summary": "Meet with Jonas",
+    "description": "Don't forget to ask about the fishing trip.",
+    "location": "Ridgeway Park",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1492801200,
+    "end": 1492804800,
+    "sequence": 0,
+    "reminders": {
+     "useDefault": true
+    }
+  }, {
+    "id": "6mjooth4ue5cd82o1sdntc79tk",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=Nm1qb290aDR1ZTVjZDgybzFzZG50Yzc5dGsgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+    "created": 1489494218,
+    "updated": 1489494218,
+    "summary": "Checkup with Dr. Forrester",
+    "description": "Get blood work done.",
+    "location": "Mills Heights Clinic",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1493032500,
+    "end": 1493043300,
+    "sequence": 0,
+    "reminders": {
+     "useDefault": true
+    }
+  }, {
+    "id": "dj0eob3t7ap2pcihl8jjshvl60",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=ZGowZW9iM3Q3YXAycGNpaGw4ampzaHZsNjAgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+    "created": 1489494280,
+    "updated": 1489494280,
+    "summary": "Grandchildren visiting",
+    "description": "Take little Nancy for ice-cream.",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1493280000,
+    "end": 1493305200,
+    "sequence": 0,
+    "reminders": {
+     "useDefault": true
+    }
+  }, {
+    "id": "h6it6k5aeire1kbreu0e57dv14",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=aDZpdDZrNWFlaXJlMWticmV1MGU1N2R2MTQgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+    "created": 1489494385,
+    "updated": 1489494385,
+    "summary": "Chess night with Steven",
+    "description": "Don't worry, you've got this!",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1493830800,
+    "end": 1493839800,
+    "sequence": 0,
+    "reminders": {
+     "useDefault": true
+    }
+  }, {
+    "id": "do756cgtb5pitpmd8cb2mk0el4",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=ZG83NTZjZ3RiNXBpdHBtZDhjYjJtazBlbDQgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+    "created": 1489494449,
+    "updated": 1489494449,
+    "summary": "Visiting the Allens",
+    "description": "Don't forget to buy flowers!",
+    "location": "56 Flower Road",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1493881200,
+    "end": 1493897400,
+    "sequence": 0,
+    "reminders": {
+     "useDefault": true
+    }
+  }, {
+    "id": "27uieel2459rd4oeu4f6c8njds",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=Mjd1aWVlbDI0NTlyZDRvZXU0ZjZjOG5qZHMgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+    "created": 1489494516,
+    "updated": 1489494516,
+    "summary": "Checkup with Dr. Forrester",
+    "description": "Find out how your blood work tests went.",
+    "location": "Mills Heights Clinic",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1495009800,
+    "end": 1495011600,
+    "sequence": 0,
+    "reminders": {
+     "useDefault": true
+    }
+  }]
+}

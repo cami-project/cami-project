@@ -29,7 +29,7 @@ const JournalView = React.createClass({
     dispatch: PropTypes.func.isRequired
   },
   componentDidMount() {
-    this.onRefresh();  
+    this.onRefresh();
   },
 
   onRefresh() {
@@ -79,7 +79,7 @@ const JournalView = React.createClass({
 
         <View style={styles.timeline}></View>
 
-        <ScrollView 
+        <ScrollView
             style={styles.journalContainer}
             refreshControl={
               <RefreshControl

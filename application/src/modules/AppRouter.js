@@ -7,6 +7,7 @@ import HomepageViewContainer from './homepage/HomepageViewContainer';
 import HomepageViewContainerCaregiver from './homepage-caregiver/HomepageViewContainer';
 import JournalViewContainer from './journal/JournalViewContainer';
 import StatusViewContainer from './status/StatusViewContainer';
+import ActivitiesViewContainer from './activities/ActivitiesViewContainer';
 import LoginViewContainer from './login/LoginViewContainer';
 import OnboardingViewContainer from './onboarding/OnboardingViewContainer';
 
@@ -22,6 +23,8 @@ export default function AppRouter(props) {
       return <StatusViewContainer />;
     case 'Journal':
       return <JournalViewContainer />;
+    case 'Activities':
+      return <ActivitiesViewContainer />;
     case 'Homepage':
       return <HomepageViewContainer />;
     case 'Login':
