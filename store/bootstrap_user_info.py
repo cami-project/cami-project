@@ -9,12 +9,12 @@ STORE_DIR   = os.path.join(BASE_DIR, "store")
 
 ## WITHINGS ACCESS INFO
 WITHINGS_ACCESS_CONFIG = {
-    "withings_userid": 11115034,
+    "withings_userid": "11115034",
     "withings_consumer_key": "5b1f8cbeb36cffe108fd8fdd666c51cb5d6eee9f2e2940983958b836451",
     "withings_consumer_secret": "2e75dfb7f1088f398b4cfc5ebed6d5909c48918ee637417e3b0de001b3b",
     "withings_oauth_token": "59dd58ccbd19bfbd8b3522ce50d31c4cb6e530742d22234f4cb4bee11673084",
     "withings_oauth_token_secret": "cf31bc8e405d96b975b8014d93c722830bd55f44b437f27c7e6d5964b3",
-    "withings_measurement_type_id" : 1
+    "withings_measurement_type_id" : "1"
 }
 
 ## GOOGLE FIT ACCESS INFO
@@ -49,10 +49,11 @@ def run_bootstrap():
     """ ==== CREATE USER ACCOUNTS - CARETAKER + CAREGIVER ==== """
     cami_enduser, created = User.objects.get_or_create(username = "camidemo",
                                                        email="cami.demo@cami.com",
-                                                       password = "CamiDemo123$",
                                                        first_name = "Cami",
                                                        last_name = "EndUser")
     if created:
+        cami_enduser.set_password("CamiDemo123$")
+        cami_enduser.save()
         logger.info("[store.bootstrap_user_info] User %s created." % str(cami_enduser))
     else:
         logger.info("[store.bootstrap_user_info] User %s already exists." % str(cami_enduser))
@@ -60,10 +61,11 @@ def run_bootstrap():
 
     cami_caregiver, created = User.objects.get_or_create(username = "camicare",
                                                 email="cami.care@cami.com",
-                                                password="CamiCare123$",
                                                 first_name="Cami",
                                                 last_name="Caregiver")
     if created:
+        cami_caregiver.set_password("CamiCare123$")
+        cami_caregiver.save()
         logger.info("[store.bootstrap_user_info] User %s created." % str(cami_caregiver))
     else:
         logger.info("[store.bootstrap_user_info] User %s already exists." % str(cami_caregiver))
