@@ -43,7 +43,7 @@ const ActivityEntry = React.createClass({
               {
                 this.props.description
                   ? <Text style={styles.description}>{this.props.description}</Text>
-                  : false
+                  : ''
               }
             </View>
             <View style={[styles.metaContainer, {flexWrap: 'wrap'}]}>

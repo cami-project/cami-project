@@ -68,14 +68,18 @@ const ActivitiesView = React.createClass({
         <View style={styles.headerContainer}>
           <View style={styles.nextEventDate}>
             <View>
-              <Text style={styles.day}>
-                {firstEventDate.format('DD')}
-              </Text>
+              {
+                firstEventDate
+                  ? <Text style={styles.day}>{firstEventDate.format('DD').toUpperCase()}</Text>
+                  : <Text style={styles.day}>--</Text>
+              }
             </View>
             <View>
-              <Text style={styles.month}>
-                {firstEventDate.format('MMM').toUpperCase()}
-              </Text>
+              {
+                firstEventDate
+                  ? <Text style={styles.month}>{firstEventDate.format('MMM').toUpperCase()}</Text>
+                  : <Text style={styles.month}>---</Text>
+              }
             </View>
           </View>
 
@@ -85,17 +89,19 @@ const ActivitiesView = React.createClass({
                 <Text style={styles.nextText}>Next</Text>
               </View>
               <View>
-                <Text style={styles.todayText}>
-                  {'Today ' + today.format('DD MMM')}
-                </Text>
+                <Text style={styles.todayText}>{'Today ' + today.format('DD MMM')}</Text>
               </View>
             </View>
-            <Text style={styles.nextTitle}>
-              {this.props.events.get(0).get('summary')}
-            </Text>
-            <Text style={styles.nextDescription}>
-              {this.props.events.get(0).get('description')}
-            </Text>
+            {
+              this.props.events.length > 0 && this.props.events.get(0).get('summary')
+                ? <Text style={styles.nextTitle}>{this.props.events.get(0).get('summary')}</Text>
+                : <Text style={styles.nextTitle}>No pending events</Text>
+            }
+            {
+              this.props.events.length > 0 && this.props.events.get(0).get('description')
+                ? <Text style={styles.nextDescription}>{this.props.events.get(0).get('description')}</Text>
+                : <Text style={styles.nextDescription}>Add using Google Calendar</Text>
+            }
             <View style={styles.nextMeta}>
               <Icon
                 name={icons.time}
@@ -104,9 +110,11 @@ const ActivitiesView = React.createClass({
                 style={{paddingRight: 5}}
               />
               <View style={styles.nextTime}>
-                <Text style={styles.metaText}>
-                  {firstEventDate.format('hh:mm')}
-                </Text>
+                {
+                  firstEventDate
+                    ? <Text style={styles.metaText}>{firstEventDate.format('hh:mm')}</Text>
+                    : <Text style={styles.metaText}>--:--</Text>
+                }
               </View>
               <Icon
                 name={icons.location}
@@ -115,9 +123,11 @@ const ActivitiesView = React.createClass({
                 style={{paddingRight: 5, marginLeft: 10}}
               />
               <View style={styles.nextLocation}>
-                <Text style={styles.metaText}>
-                  {this.props.events.get(0).get('location')}
-                </Text>
+                {
+                  this.props.events.get(0).get('location')
+                    ? <Text style={styles.metaText}>{this.props.events.get(0).get('location')}</Text>
+                    : <Text style={styles.metaText}>----</Text>
+                }
               </View>
             </View>
           </View>
