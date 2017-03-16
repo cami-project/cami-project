@@ -189,7 +189,7 @@ class Measurement(models.Model):
 
     def __str__(self):
         return "[" + self.measurement_type + "] for user: " + self.user.first_name + " " + self.user.last_name + \
-               ", taken at: " + self.timestamp + ", value: " + str(self.value_info)
+               ", taken at: " + self.timestamp.isoformat() + ", value: " + str(self.value_info)
 
     __unicode__ = __str__
 
