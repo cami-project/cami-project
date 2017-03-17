@@ -1,8 +1,8 @@
 # Create your views here.
 
 import json, logging, pprint
+import store_utils
 
-from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest, HttpResponseServerError
 from django.conf import settings #noqa
 from django.views.decorators.csrf import csrf_exempt
@@ -12,12 +12,25 @@ from withings_tasks import retrieve_and_save_withings_measurements
 from tasks import process_heart_rate_measurement
 
 from withings_utils import get_withings_user
+from store_utils import get_id_from_uri_path
 
 logger = logging.getLogger("medical_compliance.measurement_callback")
 
-
 def get_full_callback_url(request):
-    return request.build_absolute_uri("/measurements_notification/")
+    ## For now, it remains hardcoded that the weight measurements are taken using the Withings WS 30 weight scale
+    ## TODO: figure out a way to get hold of the corresponding device data automatically
+
+    hostname = request.META['SERVER_NAME']
+    port = request.META['SERVER_PORT']
+
+    endpoint_host_uri = "http://" + hostname + ":" + port
+
+    device_data = store_utils.get_device(endpoint_host_uri, manufacturer ="Withings", model ="WS 30")
+    device_id = device_data['id']
+
+    withings_measurement_notification_path = "/measurements_notification" + "/" + str(device_id) + "/"
+    return request.build_absolute_uri(withings_measurement_notification_path)
+
 
 def subscribe_notifications(request):
     logger.debug("[medical-compliance] Notifications subscribe was called.")
@@ -67,16 +80,18 @@ def test_heart_rate_fetch(request):
 @csrf_exempt
 def measurements_notification_received(request):
     logger.debug("[medical-compliance] Measurements hook was called: %s" % (request.POST))
-    
+
+    device_id = get_id_from_uri_path(request.path)
+
     if request.POST.has_key("userid"):
-        userid = request.POST['userid']
+        withings_userid = request.POST['userid']
         startdate = request.POST['startdate']
         enddate = request.POST['enddate']
         appli = request.POST['appli']
 
-        logger.debug("[medical-compliance] Passing data to the retrieve_and_save_withings_measurements task: { userid: %s, startdate: %s, enddate: %s, appli: %s }" %
-            (userid, startdate, enddate, appli))
-        retrieve_and_save_withings_measurements.delay(userid, startdate, enddate, appli)
+        logger.debug("[medical-compliance] Passing data to the retrieve_and_save_withings_measurements task: { withings_userid: %s, device_id: %s, startdate: %s, enddate: %s, appli: %s }" %
+            (withings_userid, device_id, startdate, enddate, appli))
+        retrieve_and_save_withings_measurements.delay(withings_userid, device_id, startdate, enddate, appli)
     else:
         logger.debug("[medical-compliance] Received invalid POST data in measurements hook - possibly related to a subscribe call")
 
