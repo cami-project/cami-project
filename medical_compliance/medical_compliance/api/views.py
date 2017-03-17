@@ -20,10 +20,9 @@ def get_full_callback_url(request):
     ## For now, it remains hardcoded that the weight measurements are taken using the Withings WS 30 weight scale
     ## TODO: figure out a way to get hold of the corresponding device data automatically
 
-    hostname = request.META['SERVER_NAME']
-    port = request.META['SERVER_PORT']
-
-    endpoint_host_uri = "http://" + hostname + ":" + port
+    # hostname = request.META['SERVER_NAME']
+    # port = request.META['SERVER_PORT']
+    endpoint_host_uri = "http://" + request.META['HTTP_HOST']
 
     device_data = store_utils.get_device(endpoint_host_uri, manufacturer ="Withings", model ="WS 30")
     device_id = device_data['id']
