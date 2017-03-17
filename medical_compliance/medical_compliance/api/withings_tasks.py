@@ -14,7 +14,7 @@ from models import WithingsMeasurement
 from withings import WithingsCredentials, WithingsApi, WithingsMeasures
 
 from tasks import process_weight_measurement
-from store.store.models import DeviceUsage
+import store_utils
 
 logger = get_task_logger("withings_controller.retrieve_and_save_withings_measurements")
 
@@ -29,29 +29,29 @@ app.conf.update(
 
 
 @app.task(name='withings_controller.retrieve_and_save_withings_measurements')
-def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measurement_type_id):
+def retrieve_and_save_withings_measurements(withings_userid, device_id, start_ts, end_ts, measurement_type_id):
     logger.debug("[medical-compliance] Query Withings API to retrieve measurement: %s" % (locals()))
 
-    ## retrieve the DeviceUsage instance associated with the Withings `userid` and `measurement_type_id`
-    device_usage = DeviceUsage.objects.filter(
-        access_info__contains = {'withings_userid' : userid,
-                                 'withings_measurement_type_id' : measurement_type_id})
+    ## retrieve the DeviceUsage instance associated with the Withings `withings_userid` and `device_id`
+    device_usage_data = store_utils.get_device_usage(store_utils.STORE_ENDPOINT_URI, device = device_id,
+                                                     access_info = {"withings_userid" : str(withings_userid)})
 
-    if not device_usage:
+
+
+    if not device_usage_data:
         logger.error("[medical-compliance] Cannot find any user - device combination with access config for "
-                     "withings_userid : %s and withings_measurement_type_id : %s" % (str(userid), str(measurement_type_id)) )
+                     "withings_userid : %s and device_id : %s" % (str(withings_userid), str(device_id)))
         return
 
     ## get access_info, user and device information from device_usage object
-    access_info = device_usage.access_info
-    cami_user = device_usage.user
-    device = device_usage.device
+    access_info = device_usage_data['access_info']
+    cami_user_id = device_usage_data['user_id']
 
     credentials = WithingsCredentials(access_token=access_info['withings_oauth_token'],
                                       access_token_secret=access_info['withings_oauth_token_secret'],
                                       consumer_key=access_info['withings_consumer_key'],
                                       consumer_secret=access_info['withings_consumer_secret'],
-                                      user_id=access_info['withings_userid'])
+                                      user_id=int(access_info['withings_userid']))
 
     client = WithingsApi(credentials)
     req_params = {
@@ -63,7 +63,7 @@ def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measuremen
 
     logger.debug(
         "[medical-compliance] Got the following Withings response for user_id %s and req params %s: %s" %
-        (userid, req_params, response)
+        (withings_userid, req_params, response)
     )
 
     measures = WithingsMeasures(response)
@@ -73,7 +73,7 @@ def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measuremen
     for m in measures:
         ## Store WithingsMeasurement for error inspection
         meas = WithingsMeasurement(
-            withings_user_id = int(userid),
+            withings_user_id = int(withings_userid),
             type=measurement_type_id,
             retrieval_type=m.attrib,
             measurement_unit=WithingsMeasurement.MEASUREMENT_SI_UNIT[measurement_type],
@@ -85,8 +85,8 @@ def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measuremen
         meas.save()
 
         logger.debug("[medical-compliance] Sending Withings weight measurement for processing: %s" % (meas))
-        process_weight_measurement.delay(cami_user.id,              # end user id
-                                         device.id,                 # device id
+        process_weight_measurement.delay(cami_user_id,              # end user id
+                                         device_id,                 # device id
                                          "weight",                  # measurement_type
                                          meas.measurement_unit,
                                          meas.timestamp,

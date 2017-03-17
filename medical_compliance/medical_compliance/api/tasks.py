@@ -13,15 +13,16 @@ from celery.utils.log import get_task_logger
 from kombu import Queue, Exchange
 from django.conf import settings #noqa
 
-from django.contrib.auth.models import User
-from store.store.models import Measurement, Device
-
 import google_fit
 
 from models import WeightMeasurement, HeartRateMeasurement, StepsMeasurement
 
 from analyzers.weight_analyzers import analyze_weights
 from analyzers.heart_rate_analyzers import analyze_heart_rates
+
+import store_utils
+
+
 
 logger = get_task_logger('medical_compliance_measurements.process_measurement')
 
@@ -42,26 +43,19 @@ def process_weight_measurement(cami_user_id, device_id,
                                measurement_type, measurement_unit, timestamp, timezone, value):
     logger.debug("[medical-compliance] Process weight measurement: %s" % (locals()))
 
-    ## retrieve user, device pair corresponding to the measurement
-    cami_user = User.objects.get(pk = cami_user_id)
-    device = Device.objects.get(pk = device_id)
-
     ## Using UTC timestamp here as this is the best bet.
     ## We carry timezone around for display purposes in client.
     ## TODO: test that this is correct
     meas_timestamp = datetime.datetime.utcfromtimestamp(timestamp)
 
-    weight_measurement = Measurement(
-        user = cami_user,
-        device = device,
-        measurement_type = measurement_type,
-        unit_type = measurement_unit,
-        timestamp = meas_timestamp,
-        timezone = timezone,
-        value_info = {
-            'value': value
-        }
-    )
+    endpoint_uri = store_utils.STORE_ENDPOINT_URI
+    status, weight_meas_res = store_utils.insert_measurement(endpoint_uri,
+                                                             cami_user_id, device_id,
+                                                             measurement_type, measurement_unit,
+                                                             meas_timestamp.isoformat(), timezone,
+                                                             {"value" : value}
+                                                             )
+
 
     # weight_measurement = WeightMeasurement(
     #     user_id = int(user_id),
@@ -72,14 +66,13 @@ def process_weight_measurement(cami_user_id, device_id,
     #     value=value
     # )
 
-    logger.debug("[medical-compliance] Saving weight measurement: %s" % (weight_measurement))
-    weight_measurement.save()
+    logger.debug("[medical-compliance] Saving weight measurement: %s" % (str(weight_meas_res)))
 
-    logger.debug("[medical-compliance] Sending the weight measurement with id %s for analysis." % (weight_measurement.id))
-    analyze_weights.delay(weight_measurement.id, cami_user.id, device.id)
+    logger.debug("[medical-compliance] Sending the weight measurement with id %s for analysis." % (weight_meas_res['id']))
+    analyze_weights.delay(weight_meas_res['id'], cami_user_id, device_id)
 
-    logger.debug("[medical-compliance] Broadcasting weight measurement: %s" % (weight_measurement))
-    broadcast_measurement('weight', weight_measurement)
+    logger.debug("[medical-compliance] Broadcasting weight measurement: %s" % (weight_meas_res))
+    broadcast_measurement('weight', weight_meas_res)
 
 
 @app.task(name='medical_compliance_measurements.process_heart_rate_measurement')

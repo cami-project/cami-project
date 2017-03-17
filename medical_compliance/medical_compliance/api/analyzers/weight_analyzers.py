@@ -14,8 +14,7 @@ from django.conf import settings #noqa
 from django.core.exceptions import ObjectDoesNotExist
 from notifications_adapter import NotificationsAdapter
 
-from store.store.models import Measurement, DeviceUsage
-from store.store.constants import MeasurementType
+from .. import store_utils
 
 DELTA_WEIGHT = 2
 
@@ -35,15 +34,25 @@ def analyze_weights(weight_measurement_id, user_id, device_id):
 
 
 def get_previous_weight_measures(reference_id, user_id, weights_count):
-    try:
-        retrieved_measurement = Measurement.objects.get(id=reference_id)
-        last_weight_measurements = Measurement.objects.filter(
-            timestamp__lte = retrieved_measurement.timestamp,
-            measurement_type = MeasurementType.WEIGHT,
-            user__id = user_id
-        ).order_by('-timestamp')[:weights_count]
+    ## first get measurement by reference_id
+    endpoint_host_uri = "http://" + store_utils.STORE_HOST + ":" + store_utils.STORE_PORT
+    retrieved_measurement= store_utils.get_measurements(endpoint_host_uri, id=reference_id, limit=1)
+
+    if retrieved_measurement:
+        ## retrieve previous `weights_count` measurements, if they exist
+        last_weight_measurements = store_utils.get_measurements(endpoint_host_uri,
+                                                                timestamp__lte = retrieved_measurement['timestamp'],
+                                                                measurement_type = retrieved_measurement['measurement_type'],
+                                                                user = user_id,
+                                                                order_by = "-timestamp",
+                                                                limit = weights_count)
+
+        if not last_weight_measurements:
+            return []
+
         return last_weight_measurements
-    except ObjectDoesNotExist:
+    else:
+        logger.debug("[medical-compliance] No measurement with id=%s found in CAMI Store." % reference_id)
         return []
 
 
@@ -53,7 +62,7 @@ def analyze_last_two_weights(weight_measurement_id, user_id, device_id):
     logger.debug("[medical-compliance] Analyze weights request: %s. Trying to retrieve the last two weights..." % (locals()))
 
     measurement_list = get_previous_weight_measures(weight_measurement_id, user_id, device_id, 2)
-    logger.debug("[medical-compliance] The last two weights: %s" % (measurement_list))
+    logger.debug("[medical-compliance] The last two weights: %s" % str(measurement_list))
 
 
     if len(measurement_list) == 2:
@@ -62,10 +71,8 @@ def analyze_last_two_weights(weight_measurement_id, user_id, device_id):
         
         logger.debug("[medical-compliance] Checking if the difference between the last two weight measurements is > %s" % (DELTA_WEIGHT))
 
-        delta_value = current_measurement.value_info['value'] - previous_measurement.value_info['value']
+        delta_value = current_measurement['value_info']['value'] - previous_measurement['value_info']['value']
         notifications_adapter = NotificationsAdapter()
-
-        withings_user_id = DeviceUsage.objects.get(user__id = user_id, devide__id = device_id).access_info['withings_userid']
 
         if delta_value <= -1 * DELTA_WEIGHT:
             logger.debug("[medical-compliance] New weight measurement < last one. Difference: %s. Sending notifications..." % (delta_value))
