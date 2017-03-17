@@ -12,7 +12,7 @@ from withings_tasks import retrieve_and_save_withings_measurements
 from tasks import process_heart_rate_measurement
 
 from withings_utils import get_withings_user
-from store_utils import get_id_from_uri_path
+import store_utils
 
 logger = logging.getLogger("medical_compliance.measurement_callback")
 
@@ -22,7 +22,7 @@ def get_full_callback_url(request):
 
     # hostname = request.META['SERVER_NAME']
     # port = request.META['SERVER_PORT']
-    endpoint_host_uri = "http://" + request.META['HTTP_HOST']
+    endpoint_host_uri = "http://" + store_utils.STORE_HOST + ":" + store_utils.STORE_PORT
 
     device_data = store_utils.get_device(endpoint_host_uri, manufacturer ="Withings", model ="WS 30")
     device_id = device_data['id']
@@ -80,7 +80,7 @@ def test_heart_rate_fetch(request):
 def measurements_notification_received(request):
     logger.debug("[medical-compliance] Measurements hook was called: %s" % (request.POST))
 
-    device_id = get_id_from_uri_path(request.path)
+    device_id = store_utils.get_id_from_uri_path(request.path)
 
     if request.POST.has_key("userid"):
         withings_userid = request.POST['userid']
