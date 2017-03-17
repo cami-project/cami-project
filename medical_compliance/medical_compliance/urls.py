@@ -31,6 +31,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^subscribe_notifications/', views.subscribe_notifications, name="subscribe_notifications"),
     url(r'^unsubscribe_notifications/', views.unsubscribe_notifications, name="unsubscribe_notifications"),
-    url(r'^measurements_notification/$', views.measurements_notification_received, name="measurements_notification_received"),
+    url(r'^measurements_notification/(?P<device_id>\d+)/$', views.measurements_notification_received, name="measurements_notification_received"),
     url(r'^test/$', views.test_heart_rate_fetch, name="test_heart_rate_fetch"),
 ]

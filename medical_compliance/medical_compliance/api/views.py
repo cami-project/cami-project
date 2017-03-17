@@ -47,7 +47,12 @@ def subscribe_notifications(request):
                                       consumer_secret=settings.WITHINGS_CONSUMER_SECRET,
                                       user_id=withings_user.userid)
     client = WithingsApi(credentials)
-    response_data = client.subscribe(get_full_callback_url(request), "Subscribe for weight measurement notifications.", appli=1)
+
+    callback_uri = get_full_callback_url(request)
+    logger.debug("[medical-compliance] Subscribing to Withings notifications for user_id=%s with URI: %s." % (
+        withings_user.userid, callback_uri))
+
+    response_data = client.subscribe(callback_uri, "Subscribe for weight measurement notifications.", appli=1)
     logger.debug("[medical-compliance] Notifications subscribe response: %s." % (response_data))
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
@@ -77,10 +82,10 @@ def test_heart_rate_fetch(request):
     return HttpResponse(process_heart_rate_measurement(), content_type="text/html")
 
 @csrf_exempt
-def measurements_notification_received(request):
+def measurements_notification_received(request, device_id):
     logger.debug("[medical-compliance] Measurements hook was called: %s" % (request.POST))
 
-    device_id = store_utils.get_id_from_uri_path(request.path)
+    #device_id = store_utils.get_id_from_uri_path(request.path)
 
     if request.POST.has_key("userid"):
         withings_userid = request.POST['userid']
