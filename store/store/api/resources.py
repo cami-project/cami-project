@@ -27,12 +27,14 @@ class DeviceResource(ModelResource):
         collection_name = "devices"
 
         filtering = {
-            'id' : ('exact', )
+            'id' : ('exact', ),
+            'model': ('exact',),
+            'manufacturer': ('exact',),
+            'serial_number': ('exact',)
         }
 
 
 class DeviceUsageResource(ModelResource):
-    ACCESS_INFO_FILTER_NAME = 'access_q'
     ACCESS_INFO_FIELD_NAME = 'access_info'
 
     user = fields.ToOneField(UserResource, 'user')
@@ -42,6 +44,7 @@ class DeviceUsageResource(ModelResource):
         queryset = DeviceUsage.objects.all()
         allowed_methods = ['get']
         filtering = {
+            "user": ALL_WITH_RELATIONS,
             "device" : ALL_WITH_RELATIONS,
             "access_info": ALL
         }
@@ -91,6 +94,7 @@ class MeasurementResource(ModelResource):
 
         ordering = ["timestamp"]
         filtering = {
+            "id": ALL,
             "measurement_type": ('exact', 'iexact', 'in'),
             "user": ALL_WITH_RELATIONS,
             "device": ALL_WITH_RELATIONS,
