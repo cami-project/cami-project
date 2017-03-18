@@ -19,6 +19,7 @@ WITHINGS_ACCESS_CONFIG = {
 
 ## GOOGLE FIT ACCESS INFO
 GOOGLE_FIT_ACCESS_CONFIG = {
+    "google_fit_userid" : "11262861",
     "google_fit_client_id" : '701996606933-17j7km8f8ce8vohhdcnur453cbn44aau.apps.googleusercontent.com',
     "google_fit_client_secret": 'K-lZ7t49-Gvhtz2P-RTqBhAQ',
     "google_fit_refresh_token": '1/eAhtNXxq65LeyzTr4aju27wCPLDAipXdrEd8ovgO8CY',
