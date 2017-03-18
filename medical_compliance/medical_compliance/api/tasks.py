@@ -43,16 +43,11 @@ def process_weight_measurement(cami_user_id, device_id,
                                measurement_type, measurement_unit, timestamp, timezone, value):
     logger.debug("[medical-compliance] Process weight measurement: %s" % (locals()))
 
-    ## Using UTC timestamp here as this is the best bet.
-    ## We carry timezone around for display purposes in client.
-    ## TODO: test that this is correct
-    meas_timestamp = datetime.datetime.utcfromtimestamp(timestamp)
-
     endpoint_uri = store_utils.STORE_ENDPOINT_URI
     status, weight_meas_res = store_utils.insert_measurement(endpoint_uri,
                                                              cami_user_id, device_id,
                                                              measurement_type, measurement_unit,
-                                                             meas_timestamp.isoformat(), timezone,
+                                                             timestamp, timezone,
                                                              {"value" : value}
                                                              )
 
