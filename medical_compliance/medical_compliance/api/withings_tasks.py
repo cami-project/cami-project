@@ -43,6 +43,8 @@ def retrieve_and_save_withings_measurements(withings_userid, device_id, start_ts
                      "withings_userid : %s and device_id : %s" % (str(withings_userid), str(device_id)))
         return
 
+    logger.debug("[medical-compliance] DeviceUsage data for Withings weight measurement: %s" % str(device_usage_data))
+
     ## get access_info, user and device information from device_usage object
     access_info = device_usage_data['access_info']
     cami_user_id = device_usage_data['user_id']

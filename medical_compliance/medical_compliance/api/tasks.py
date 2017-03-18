@@ -56,7 +56,6 @@ def process_weight_measurement(cami_user_id, device_id,
                                                              {"value" : value}
                                                              )
 
-
     # weight_measurement = WeightMeasurement(
     #     user_id = int(user_id),
     #     input_source=input_source,
@@ -211,39 +210,50 @@ def process_steps_measurement():
 
 
 def broadcast_measurement(measurement_type, measurement):
-
-    # Extract UNIX timestamp info from measurement datetime field
-    meas_timestamp = (measurement.timestamp - datetime.datetime(1970, 1, 1, tzinfo=pytz.timezone("UTC"))).total_seconds()
+    logger.debug("[medical-compliance] Assembling broadcast measurement of type %s" % (measurement_type))
 
     # The steps measurements data structure differs from others
     # - it does not contain a timestamp but rather start/end ones
     # - we're mirroring the "end_timestamp" to the timestamp key
     # - this ensures that 3rd party integrations work ok
-    if measurement_type != 'steps':
-        logger.debug("[medical-compliance] Assembling broadcast measurement of type %s" % (measurement_type))
+    if measurement_type == 'weight':
+        user_id = store_utils.get_id_from_uri_path(measurement['user'])
+        device_id = store_utils.get_id_from_uri_path(measurement['device'])
+
         measurement_json = {
             'type': measurement_type,
-            'user_id': measurement.user.id,
-            'device_id': measurement.device.id,
-            'input_source': measurement.device.manufacturer + " " + measurement.device.model,
-            'measurement_unit': measurement.unit_type,
-            'timestamp': meas_timestamp,
+            'user_id': user_id,
+            'device_id': device_id,
+            'input_source': "Device with ID: " + measurement['device'],
+            'measurement_unit': measurement['unit_type'],
+            'timestamp': int(measurement['timestamp']),
+            'timezone': measurement['timezone'],
+            'value': measurement["value_info"]['value']
+        }
+    elif measurement_type != 'steps':
+        measurement_json = {
+            'type': measurement_type,
+            'user_id': measurement.user_id,
+            # 'device_id': measurement.device.id,
+            'input_source': measurement.input_source,
+            'measurement_unit': measurement.measurement_unit,
+            'timestamp': measurement.timestamp,
             'timezone': measurement.timezone,
-            'value': measurement.value_info['value']
+            'value': measurement.value
         }
     else:
         measurement_json = {
             'type': measurement_type,
             'user_id': measurement.user_id,
-            'device_id': measurement.device.id,
-            'input_source': measurement.device.manufacturer + " " + measurement.device.model,
+            # 'device_id': measurement.device.id,
+            'input_source': measurement.input_source,
             'measurement_unit': measurement.measurement_unit,
-            'timestamp': meas_timestamp,
+            'timestamp': measurement.end_timestamp,
             'timezone': measurement.timezone,
 
-            'end_timestamp': measurement.value_info['end_timestamp'],
-            'start_timestamp': measurement.value_info['start_timestamp'],
-            'value': measurement.value_info['value']
+            'end_timestamp': measurement.end_timestamp,
+            'start_timestamp': measurement.start_timestamp,
+            'value': measurement.value
         }
 
     global_app.send_task('cami.on_measurement_received', [measurement_json], queue='broadcast_measurement')

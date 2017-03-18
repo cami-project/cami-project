@@ -33,7 +33,7 @@ def analyze_weights(weight_measurement_id, user_id, device_id):
     analyze_last_two_weights(weight_measurement_id, user_id, device_id)
 
 
-def get_previous_weight_measures(reference_id, user_id, weights_count):
+def get_previous_weight_measures(reference_id, user_id, device_id, weights_count):
     ## first get measurement by reference_id
     endpoint_host_uri = "http://" + store_utils.STORE_HOST + ":" + store_utils.STORE_PORT
     retrieved_measurement= store_utils.get_measurements(endpoint_host_uri, id=reference_id, limit=1)
