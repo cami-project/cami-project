@@ -36,13 +36,15 @@ def analyze_weights(weight_measurement_id, user_id, device_id):
 def get_previous_weight_measures(reference_id, user_id, device_id, weights_count):
     ## first get measurement by reference_id
     endpoint_host_uri = "http://" + store_utils.STORE_HOST + ":" + store_utils.STORE_PORT
-    retrieved_measurement= store_utils.get_measurements(endpoint_host_uri, id=reference_id, limit=1)
+    retrieved_measurements = store_utils.get_measurements(endpoint_host_uri, id=reference_id, limit=1)
 
-    if retrieved_measurement:
+    if retrieved_measurements:
+        reference_meas = retrieved_measurements[0]
+
         ## retrieve previous `weights_count` measurements, if they exist
         last_weight_measurements = store_utils.get_measurements(endpoint_host_uri,
-                                                                timestamp__lte = retrieved_measurement['timestamp'],
-                                                                measurement_type = retrieved_measurement['measurement_type'],
+                                                                timestamp__lte = int(reference_meas['timestamp']),
+                                                                measurement_type = reference_meas['measurement_type'],
                                                                 user = user_id,
                                                                 order_by = "-timestamp",
                                                                 limit = weights_count)
