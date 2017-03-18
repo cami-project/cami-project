@@ -173,8 +173,9 @@ class Measurement(object):
                 }
 
     def __str__(self):
-        return "{ type: %s, value: %s, measurement_unit: %s, context_type: %s }" % \
-            (self.type, self.value, self.measurement_unit, self.context_type)
+        return "{ type: %s, value: %s, measurement_unit: %s, context_type: %s }" % (self.type, self.value, self.measurement_unit, self.context_type)
+
+    __unicode__ = __str__
 
 
 class Observation(object):
@@ -188,7 +189,7 @@ class Observation(object):
 
     def __str__(self):
         return "{ device_type: %s, timestamp: %s, input_type: %s, equipment_id: %s, measurements: %s, comment: %s}" % \
-            (self.device_type, self.timestamp, self.input_type, self.equipment_id, self.measurements, self.comment)
+            (self.device_type, self.timestamp, self.input_type, self.equipment_id, str(self.measurements), self.comment)
 
 def process_measurement(measurement_json):
     login_res = perform_login()
