@@ -223,8 +223,8 @@ def perform_login():
 def get_observation_from_measurement_json(measurement_json):
     logger.debug("[linkwatch] Converting measurement %s to linkwatch observation..." % (measurement_json))
 
-    #t = datetime.datetime.fromtimestamp(measurement_json['timestamp'])
-    t = datetime.datetime.utcfromtimestamp(measurement_json['timestamp'])
+    t = datetime.datetime.fromtimestamp(measurement_json['timestamp'])
+    #t = datetime.datetime.utcfromtimestamp(measurement_json['timestamp'])
 
     if measurement_json['type'] == 'weight':
         weight_measurement = Measurement(constants.MeasurementType.WEIGHT, measurement_json['value'], constants.UnitCode.KILOGRAM)
