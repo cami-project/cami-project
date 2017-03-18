@@ -189,7 +189,8 @@ class Observation(object):
 
     def __str__(self):
         return "{ device_type: %s, timestamp: %s, input_type: %s, equipment_id: %s, measurements: %s, comment: %s}" % \
-            (self.device_type, self.timestamp, self.input_type, self.equipment_id, str(self.measurements), self.comment)
+            (self.device_type, self.timestamp, self.input_type, self.equipment_id,
+                "[" + ', '.join(str(m) for m in self.measurements) + "]", self.comment)
 
 def process_measurement(measurement_json):
     login_res = perform_login()
