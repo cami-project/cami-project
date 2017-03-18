@@ -192,61 +192,16 @@ Example output:
     {
       "context_info": {},
       "device": "/api/v1/device/1/",
-      "id": 4,
+      "id": 7,
       "measurement_type": "weight",
       "precision": 100,
-      "resource_uri": "/api/v1/measurement/4/",
-      "timestamp": "2017-03-16T10:30:22",
-      "timezone": "UTC",
+      "resource_uri": "/api/v1/measurement/7/",
+      "timestamp": "1489836002",
+      "timezone": "GMT",
       "unit_type": "kg",
       "user": "/api/v1/user/14/",
       "value_info": {
         "value": 71.5
-      }
-    },
-    {
-      "context_info": {},
-      "device": "/api/v1/device/1/",
-      "id": 2,
-      "measurement_type": "weight",
-      "precision": 100,
-      "resource_uri": "/api/v1/measurement/2/",
-      "timestamp": "2017-03-16T09:49:22",
-      "timezone": "UTC",
-      "unit_type": "kg",
-      "user": "/api/v1/user/14/",
-      "value_info": {
-        "value": 70
-      }
-    },
-    {
-      "context_info": {},
-      "device": "/api/v1/device/1/",
-      "id": 5,
-      "measurement_type": "weight",
-      "precision": 100,
-      "resource_uri": "/api/v1/measurement/5/",
-      "timestamp": "2017-03-16T09:30:22",
-      "timezone": "UTC",
-      "unit_type": "kg",
-      "user": "/api/v1/user/14/",
-      "value_info": {
-        "value": 71.5
-      }
-    },
-    {
-      "context_info": {},
-      "device": "/api/v1/device/1/",
-      "id": 3,
-      "measurement_type": "weight",
-      "precision": 100,
-      "resource_uri": "/api/v1/measurement/3/",
-      "timestamp": "2017-03-16T08:30:22",
-      "timezone": "UTC",
-      "unit_type": "kg",
-      "user": "/api/v1/user/14/",
-      "value_info": {
-        "value": 70.5
       }
     }
   ],
@@ -255,7 +210,7 @@ Example output:
     "next": null,
     "offset": 0,
     "previous": null,
-    "total_count": 4
+    "total_count": 1
   }
 }
 ```
@@ -276,7 +231,7 @@ __Pulse__:
     "measurement_type": "pulse",
     "unit_type" : "bpm",
 
-    "timestamp": "2017-03-16T011:24:22",
+    "timestamp": 1489836002,
     "timezone": "UTC",
 
     "user": "/api/v1/user/14/",
@@ -293,7 +248,7 @@ __Heart rate__:
     "measurement_type": "blood_pressure",
     "unit_type" : "mmhg",
 
-    "timestamp": "2017-03-16T011:24:22",
+    "timestamp": 1489836002,
     "timezone": "UTC",
 
     "user": "/api/v1/user/14/",
@@ -311,7 +266,7 @@ __Weight__:
     "measurement_type": "weight",
     "unit_type" : "kg",
 
-    "timestamp": "2017-03-16T011:24:22",
+    "timestamp": 1489836002,
     "timezone": "UTC",
 
     "user": "/api/v1/user/14/",

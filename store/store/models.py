@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 import uuid
+import datetime
 
 # Create your models here.
 
@@ -176,7 +177,8 @@ class Measurement(models.Model):
     measurement_type = models.CharField(max_length = 32, choices=MEASUREMENTS, default="weight")
     unit_type = models.CharField(max_length = 8, choices=MEASUREMENT_UNITS, default="kg")
 
-    timestamp = models.DateTimeField()
+    timestamp = models.BigIntegerField()
+    # timestamp = models.DateTimeField()
     timezone = models.CharField(max_length = 32, default="UTC")     # the timezone in which the user took the measurement
 
     precision = models.PositiveIntegerField(default=100, null = True, blank=True,
@@ -189,7 +191,9 @@ class Measurement(models.Model):
 
     def __str__(self):
         return "[" + self.measurement_type + "] for user: " + self.user.first_name + " " + self.user.last_name + \
-               ", taken at: " + self.timestamp.isoformat() + ", value: " + str(self.value_info)
+               ", taken at: " + datetime.datetime.utcfromtimestamp(self.timestamp).isoformat() + ", value: " + str(self.value_info)
+        # return "[" + self.measurement_type + "] for user: " + self.user.first_name + " " + self.user.last_name + \
+        #        ", taken at: " + self.timestamp.isoformat() + ", value: " + str(self.value_info)
 
     __unicode__ = __str__
 
