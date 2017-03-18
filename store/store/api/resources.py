@@ -104,7 +104,7 @@ class MeasurementResource(ModelResource):
         }
 
     def dehydrate_timestamp(self, bundle):
-        return int(bundle['timestamp'])
+        return int(bundle.data['timestamp'])
 
 
     def dehydrate(self, bundle):
