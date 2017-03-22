@@ -6,7 +6,6 @@ FROM williamyeh/ansible:ubuntu16.04
 # `docker build -f docker/cami-store/Dockerfile .`
 
 COPY . /cami-project
-VOLUME ["/cami-project"]
 WORKDIR /cami-project
 
 # Run Ansible to configure the Docker image
