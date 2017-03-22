@@ -20,3 +20,17 @@ class ActivitySource(object):
     DOCTOR = "doctor"
     CAREGIVERR = "caregiver"
     RECOMMENDATION = "recommendation"
+
+class MeasurementType(object):
+    WEIGHT = "weight",
+    BLOOD_PRESSURE = "blood_pressure",
+    PULSE = "pulse",
+    SATURATION = "saturation",
+    STEPS = "steps"
+
+class DeviceType(object):
+    WEIGHT = "weight",
+    BLOOD_PRESSURE = "blood_pressure",
+    PULSE = "pulse",
+    OXYMETER = "oxymeter",
+    PEDOMETER = "pedometer"

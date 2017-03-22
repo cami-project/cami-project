@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_mysql',
     'djcelery',
+    'tastypie',
     'store',
 ]
 
@@ -151,7 +152,11 @@ LOGGING = {
             'handlers': ['sentry', 'console', 'syslog'],
             'propagate': False
         },
-
+        'store.bootstrap_user_info': {
+            'level': 'DEBUG',
+            'handlers': ['sentry', 'console', 'syslog'],
+            'propagate': False
+        },
     }
 }
 
@@ -220,6 +225,9 @@ CELERY_QUEUES = (
     Queue('store_activity_sync_local', Exchange('store_activity_sync_local'), routing_key='store_activity_sync_local'),
     # Queue('store_activity_insert_local', Exchange('store_activity_insert_local'), routing_key='store_activity_insert_local'),
 )
+
+## TASTYPIE settings
+TASTYPIE_DEFAULT_FORMATS = ['json']
 
 try:
     from settings_local import *

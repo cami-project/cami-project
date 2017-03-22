@@ -6,7 +6,7 @@ need to have the same module structure in the worker and the client.
 """
 
 import json
-import datetime
+import datetime, pytz
 
 from celery import Celery
 from celery.utils.log import get_task_logger
@@ -19,6 +19,10 @@ from models import WeightMeasurement, HeartRateMeasurement, StepsMeasurement
 
 from analyzers.weight_analyzers import analyze_weights
 from analyzers.heart_rate_analyzers import analyze_heart_rates
+
+import store_utils
+
+
 
 logger = get_task_logger('medical_compliance_measurements.process_measurement')
 
@@ -35,35 +39,53 @@ app.conf.update(
 
 
 @app.task(name='medical_compliance_measurements.process_weight_measurement')
-def process_weight_measurement(user_id, input_source, measurement_unit, timestamp, timezone, value):
+def process_weight_measurement(cami_user_id, device_id,
+                               measurement_type, measurement_unit, timestamp, timezone, value):
     logger.debug("[medical-compliance] Process weight measurement: %s" % (locals()))
 
-    weight_measurement = WeightMeasurement(
-        user_id = int(user_id),
-        input_source=input_source,
-        measurement_unit=measurement_unit,
-        timestamp=timestamp,
-        timezone=timezone,
-        value=value
-    )
+    endpoint_uri = store_utils.STORE_ENDPOINT_URI
+    status, weight_meas_res = store_utils.insert_measurement(endpoint_uri,
+                                                             cami_user_id, device_id,
+                                                             measurement_type, measurement_unit,
+                                                             timestamp, timezone,
+                                                             {"value" : value}
+                                                             )
 
-    logger.debug("[medical-compliance] Saving weight measurement: %s" % (weight_measurement))
-    weight_measurement.save()
+    # weight_measurement = WeightMeasurement(
+    #     user_id = int(user_id),
+    #     input_source=input_source,
+    #     measurement_unit=measurement_unit,
+    #     timestamp=timestamp,
+    #     timezone=timezone,
+    #     value=value
+    # )
 
-    logger.debug("[medical-compliance] Sending the weight measurement with id %s for analysis." % (weight_measurement.id))
-    analyze_weights.delay(weight_measurement.id)
+    logger.debug("[medical-compliance] Saving weight measurement: %s" % (str(weight_meas_res)))
 
-    logger.debug("[medical-compliance] Broadcasting weight measurement: %s" % (weight_measurement))
-    broadcast_measurement('weight', weight_measurement)
+    logger.debug("[medical-compliance] Sending the weight measurement with id %s for analysis." % (weight_meas_res['id']))
+    analyze_weights.delay(weight_meas_res['id'], cami_user_id, device_id)
+
+    logger.debug("[medical-compliance] Broadcasting weight measurement: %s" % (weight_meas_res))
+    broadcast_measurement('weight', weight_meas_res)
 
 
 @app.task(name='medical_compliance_measurements.process_heart_rate_measurement')
 def process_heart_rate_measurement():
     """
+        TODO:
         It's very ugly what I did here, only for demo purpose
         We MUST clean this
     """
     logger.debug("[medical-compliance] Process heart measurement: %s. Retrieving test and cinch heart rate measurements since the last one..." % (locals()))
+
+    ## TODO: device model must include a capabilities field, such that retrieval of heartrate device is not hardcoded
+    ## For now we now it is done using the LG Urbane smartwatch, and that there is only one such device
+    store_endpoint_uri = store_utils.STORE_ENDPOINT_URI
+    heartrate_device = store_utils.get_device(store_endpoint_uri, manufacturer = "LG", model = "Urbane")
+
+    if not heartrate_device:
+        logger.error("[medical-compliance] Cannot retrieve heart rate measurement device from CAMI Store. Using manufacturer = %s, model = %s." % ("LG", "Urbane"))
+        return
 
     last_cinch_measurement = None
     last_test_measurement = None
@@ -97,6 +119,24 @@ def process_heart_rate_measurement():
     measurements = google_fit.get_heart_rate_data_from_cinch(time_from_cinch, time_to)
     measurements = measurements + google_fit.get_heart_rate_data_from_test(time_from_test, time_to)
 
+    ## Since we have hardcoded the user for which Google Fit data is retrieved, we can get the
+    ## Google fit user_id from the first measurement in the update
+    device_id = heartrate_device['id']
+    measurement_type = "pulse"
+    measurement_unit = "bpm"
+    google_fit_userid = None
+    cami_user_id = None
+
+    if measurements:
+        google_fit_userid = measurements[0].user_id
+        device_usage_data = store_utils.get_device_usage(store_endpoint_uri, device = heartrate_device['id'],
+                                                         access_info={"google_fit_userid" : google_fit_userid})
+        if not device_usage_data:
+            logger.error("[medical-compliance] Cannot find any user - device combination with access config for "
+                         "google_fit_userid : %s and device_id : %s" % (str(google_fit_userid), str(heartrate_device['id'])))
+
+        cami_user_id = device_usage_data['user_id']
+
     for m in measurements:
         heart_rate_measurement = HeartRateMeasurement(
             user_id = 11262861,
@@ -107,11 +147,20 @@ def process_heart_rate_measurement():
             value=m['value']
         )
 
+        if cami_user_id:
+            status, pulse_meas_res = \
+                store_utils.insert_measurement(store_endpoint_uri,
+                                               cami_user_id, device_id,
+                                               measurement_type, measurement_unit,
+                                               m['timestamp'], 'Europe/Bucharest',
+                                               {"value": m['value']})
+            logger.debug("[medical-compliance] Inserted pulse measurement in CAMI Store: %s" % (str(pulse_meas_res)))
+
         logger.debug("[medical-compliance] Saving heart rate measurement: %s" % (heart_rate_measurement))
         heart_rate_measurement.save()
 
         logger.debug("[medical-compliance] Broadcasting heart rate measurement: %s" % (heart_rate_measurement))
-        broadcast_measurement('heartrate', heart_rate_measurement)
+        broadcast_measurement('heartrate', pulse_meas_res)
 
     logger.debug("[medical-compliance] Sending the last cinch heart rate measurement for analysis: %s" % (last_cinch_measurement))
     analyze_heart_rates.delay(last_cinch_measurement, 'cinch')
@@ -125,6 +174,17 @@ def process_heart_rate_measurement():
 @app.task(name='medical_compliance_measurements.process_steps_measurement')
 def process_steps_measurement():
     logger.debug("[medical-compliance] Process steps measurement: %s. Retrieving test and google fit steps measurements since the last one..." % (locals()))
+
+    ## TODO: device model must include a capabilities field, such that retrieval of heartrate device is not hardcoded
+    ## For now we now it is done using the LG Urbane smartwatch, and that there is only one such device
+    store_endpoint_uri = store_utils.STORE_ENDPOINT_URI
+    steps_device = store_utils.get_device(store_endpoint_uri, manufacturer="LG", model="Urbane")
+
+    if not steps_device:
+        logger.error(
+            "[medical-compliance] Cannot retrieve heart rate measurement device from CAMI Store. Using manufacturer = %s, model = %s." % (
+            "LG", "Urbane"))
+        return
 
     last_google_fit_measurement = None
     last_test_measurement = None
@@ -172,6 +232,24 @@ def process_steps_measurement():
 
     logger.debug("[medical-compliance] Merged step measurements: %s." % (measurements))
 
+    ## Since we have hardcoded the user for which Google Fit data is retrieved, we can get the
+    ## Google fit user_id from the first measurement in the update
+    device_id = steps_device['id']
+    measurement_type = "steps"
+    measurement_unit = "no_dim"
+    google_fit_userid = None
+    cami_user_id = None
+
+    if measurements:
+        google_fit_userid = measurements[0].user_id
+        device_usage_data = store_utils.get_device_usage(store_endpoint_uri, device = steps_device['id'],
+                                                         access_info={"google_fit_userid" : google_fit_userid})
+        if not device_usage_data:
+            logger.error("[medical-compliance] Cannot find any user - device combination with access config for "
+                         "google_fit_userid : %s and device_id : %s" % (str(google_fit_userid), str(steps_device['id'])))
+
+        cami_user_id = device_usage_data['user_id']
+
     for m in measurements:
         steps_measurement = StepsMeasurement(
             user_id = 11262861,
@@ -183,44 +261,76 @@ def process_steps_measurement():
             value=m['value']
         )
 
+        if cami_user_id:
+            status, steps_meas_res = \
+                store_utils.insert_measurement(store_endpoint_uri,
+                                               cami_user_id, device_id,
+                                               measurement_type, measurement_unit,
+                                               m['end_timestamp'], 'Europe/Bucharest',
+                                               {"value": m['value'],
+                                                "start_timestamp": m['start_timestamp'],
+                                                "end_timestamp": m['end_timestamp']
+                                                })
+            logger.debug("[medical-compliance] Inserted pulse measurement in CAMI Store: %s" % (str(steps_meas_res)))
+
         logger.debug("[medical-compliance] Saving steps measurement: %s" % (steps_measurement))
         steps_measurement.save()
 
         logger.debug("[medical-compliance] Broadcasting steps measurement: %s" % (steps_measurement))
-        broadcast_measurement('steps', steps_measurement)
+        broadcast_measurement('steps', steps_meas_res)
 
     return json.dumps(measurements, indent=4, sort_keys=True)
 
 
 def broadcast_measurement(measurement_type, measurement):
+    logger.debug("[medical-compliance] Assembling broadcast measurement of type %s" % (measurement_type))
 
     # The steps measurements data structure differs from others
     # - it does not contain a timestamp but rather start/end ones
     # - we're mirroring the "end_timestamp" to the timestamp key
     # - this ensures that 3rd party integrations work ok
+    user_id = store_utils.get_id_from_uri_path(measurement['user'])
+    device_id = store_utils.get_id_from_uri_path(measurement['device'])
+
     if measurement_type != 'steps':
-        logger.debug("[medical-compliance] Assembling broadcast measurement of type %s" % (measurement_type))
         measurement_json = {
             'type': measurement_type,
-            'user_id': measurement.user_id,
-            'input_source': measurement.input_source,
-            'measurement_unit': measurement.measurement_unit,
-            'timestamp': measurement.timestamp,
-            'timezone': measurement.timezone,
-            'value': measurement.value,
+            'user_id': user_id,
+            'device_id': device_id,
+            'input_source': "Device with ID: " + measurement['device'],
+            'measurement_unit': measurement['unit_type'],
+            'timestamp': int(measurement['timestamp']),
+            'timezone': measurement['timezone'],
+            'value': measurement["value_info"]['value']
         }
     else:
         measurement_json = {
             'type': measurement_type,
-            'user_id': measurement.user_id,
-            'input_source': measurement.input_source,
-            'measurement_unit': measurement.measurement_unit,
-            'timestamp': measurement.end_timestamp,
-            'end_timestamp': measurement.end_timestamp,
-            'start_timestamp': measurement.start_timestamp,
-            'timezone': measurement.timezone,
-            'value': measurement.value,
+            'user_id': user_id,
+            'device_id': device_id,
+            'input_source': "Device with ID: " + measurement['device'],
+            'measurement_unit': measurement['unit_type'],
+            'timestamp': int(measurement['timestamp']),
+            'timezone': measurement['timezone'],
+
+            'end_timestamp': measurement["value_info"]['end_timestamp'],
+            'start_timestamp': measurement["value_info"]['start_timestamp'],
+            'value': measurement["value_info"]['value']
         }
+
+        # measurement_json = {
+        #     'type': measurement_type,
+        #     'user_id': measurement.user_id,
+        #     # 'device_id': measurement.device.id,
+        #     'input_source': measurement.input_source,
+        #     'measurement_unit': measurement.measurement_unit,
+        #     'timestamp': measurement.end_timestamp,
+        #     'timezone': measurement.timezone,
+        #
+        #     'end_timestamp': measurement.end_timestamp,
+        #     'start_timestamp': measurement.start_timestamp,
+        #     'value': measurement.value
+        # }
 
     global_app.send_task('cami.on_measurement_received', [measurement_json], queue='broadcast_measurement')
     logger.debug("[medical-compliance] Broadcast for the %s measurement has been sent successfully" % (measurement_type))

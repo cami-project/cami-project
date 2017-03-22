@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 import uuid
+import datetime
 
 # Create your models here.
 
@@ -105,8 +106,7 @@ class Device(models.Model):
     used_by = models.ManyToManyField(User, related_name="used_devices", through="DeviceUsage")
 
     def __str__(self):
-        users = self.used_by.all()
-        return "[" + self.device_type + "] used by: " + users.first_name + " " + users.last_name
+        return "Device of type " + self.device_type + ": " + self.manufacturer + " " + self.model
 
     __unicode__ = __str__
 
@@ -116,6 +116,12 @@ class DeviceUsage(models.Model):
     device = models.ForeignKey(Device)
     uses_since = models.DateField(auto_now=True)
     access_info = JSONField()
+
+
+    def __str__(self):
+        return str(self.device) + " USED BY " + str(self.user)
+
+    __unicode__ = __str__
 
 
 # class MeasurementService(models.Model):
@@ -139,7 +145,7 @@ class ExternalMonitoringService(models.Model):
     access_info = JSONField()
 
     def __str__(self):
-        return "[ExternalMonitoringService] " + self.name + " for user: " + self.user.email
+        return "ExternalMonitoringService " + self.name + " for user: " + self.user.email
 
 
 # ================ Measurement Information ================
@@ -171,7 +177,10 @@ class Measurement(models.Model):
     measurement_type = models.CharField(max_length = 32, choices=MEASUREMENTS, default="weight")
     unit_type = models.CharField(max_length = 8, choices=MEASUREMENT_UNITS, default="kg")
 
-    timestamp = models.DateTimeField(auto_now=True)
+    timestamp = models.BigIntegerField()
+    # timestamp = models.DateTimeField()
+    timezone = models.CharField(max_length = 32, default="UTC")     # the timezone in which the user took the measurement
+
     precision = models.PositiveIntegerField(default=100, null = True, blank=True,
                                             validators=[validate_precision_range])
     value_info = JSONField()
@@ -182,7 +191,9 @@ class Measurement(models.Model):
 
     def __str__(self):
         return "[" + self.measurement_type + "] for user: " + self.user.first_name + " " + self.user.last_name + \
-               ", taken at: " + self.timestamp
+               ", taken at: " + datetime.datetime.utcfromtimestamp(self.timestamp).isoformat() + ", value: " + str(self.value_info)
+        # return "[" + self.measurement_type + "] for user: " + self.user.first_name + " " + self.user.last_name + \
+        #        ", taken at: " + self.timestamp.isoformat() + ", value: " + str(self.value_info)
 
     __unicode__ = __str__
 

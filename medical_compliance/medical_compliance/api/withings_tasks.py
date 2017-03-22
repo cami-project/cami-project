@@ -5,8 +5,6 @@ need to have the same module structure in the worker and the client.
 [1] http://docs.celeryproject.org/en/latest/userguide/tasks.html#task-naming-relative-imports
 """
 
-import celery
-
 from celery import Celery
 from celery.utils.log import get_task_logger
 from kombu import Queue, Exchange
@@ -16,7 +14,7 @@ from models import WithingsMeasurement
 from withings import WithingsCredentials, WithingsApi, WithingsMeasures
 
 from tasks import process_weight_measurement
-from withings_utils import get_withings_user
+import store_utils
 
 logger = get_task_logger("withings_controller.retrieve_and_save_withings_measurements")
 
@@ -31,21 +29,31 @@ app.conf.update(
 
 
 @app.task(name='withings_controller.retrieve_and_save_withings_measurements')
-def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measurement_type_id):
+def retrieve_and_save_withings_measurements(withings_userid, device_id, start_ts, end_ts, measurement_type_id):
     logger.debug("[medical-compliance] Query Withings API to retrieve measurement: %s" % (locals()))
 
-    withings_user = None
-    try:
-        withings_user = get_withings_user(userid)
-    except Exception as e:
-        logger.error("[medical-compliance] Unable to retrieve withings user by userid in the settings file: %s" % (e))
+    ## retrieve the DeviceUsage instance associated with the Withings `withings_userid` and `device_id`
+    device_usage_data = store_utils.get_device_usage(store_utils.STORE_ENDPOINT_URI, device = device_id,
+                                                     access_info = {"withings_userid" : str(withings_userid)})
+
+
+
+    if not device_usage_data:
+        logger.error("[medical-compliance] Cannot find any user - device combination with access config for "
+                     "withings_userid : %s and device_id : %s" % (str(withings_userid), str(device_id)))
         return
-    
-    credentials = WithingsCredentials(access_token=withings_user.oauth_token,
-                                      access_token_secret=withings_user.oauth_token_secret,
-                                      consumer_key=settings.WITHINGS_CONSUMER_KEY,
-                                      consumer_secret=settings.WITHINGS_CONSUMER_SECRET,
-                                      user_id=withings_user.userid)
+
+    logger.debug("[medical-compliance] DeviceUsage data for Withings weight measurement: %s" % str(device_usage_data))
+
+    ## get access_info, user and device information from device_usage object
+    access_info = device_usage_data['access_info']
+    cami_user_id = device_usage_data['user_id']
+
+    credentials = WithingsCredentials(access_token=access_info['withings_oauth_token'],
+                                      access_token_secret=access_info['withings_oauth_token_secret'],
+                                      consumer_key=access_info['withings_consumer_key'],
+                                      consumer_secret=access_info['withings_consumer_secret'],
+                                      user_id=int(access_info['withings_userid']))
 
     client = WithingsApi(credentials)
     req_params = {
@@ -57,7 +65,7 @@ def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measuremen
 
     logger.debug(
         "[medical-compliance] Got the following Withings response for user_id %s and req params %s: %s" %
-        (userid, req_params, response)
+        (withings_userid, req_params, response)
     )
 
     measures = WithingsMeasures(response)
@@ -65,8 +73,9 @@ def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measuremen
     measurement_type = WithingsMeasurement.get_measure_type_by_id(int(measurement_type_id))
 
     for m in measures:
+        ## Store WithingsMeasurement for error inspection
         meas = WithingsMeasurement(
-            withings_user_id = int(userid),
+            withings_user_id = int(withings_userid),
             type=measurement_type_id,
             retrieval_type=m.attrib,
             measurement_unit=WithingsMeasurement.MEASUREMENT_SI_UNIT[measurement_type],
@@ -78,4 +87,10 @@ def retrieve_and_save_withings_measurements(userid, start_ts, end_ts, measuremen
         meas.save()
 
         logger.debug("[medical-compliance] Sending Withings weight measurement for processing: %s" % (meas))
-        process_weight_measurement.delay(userid, "withings", meas.measurement_unit, meas.timestamp, meas.timezone, meas.value)
+        process_weight_measurement.delay(cami_user_id,              # end user id
+                                         device_id,                 # device id
+                                         "weight",                  # measurement_type
+                                         meas.measurement_unit,
+                                         meas.timestamp,
+                                         meas.timezone,
+                                         meas.value)

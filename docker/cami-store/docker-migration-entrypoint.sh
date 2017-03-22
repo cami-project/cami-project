@@ -24,3 +24,6 @@ else:
     print('Superuser creation skipped.');
 "
 echo "$script" | python /cami-project/store/manage.py shell
+
+# Run bootstrapping script
+python /cami-project/store/bootstrap_user_info.py

@@ -182,7 +182,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
-
+        'medical_compliance.store_utils': {
+            'handlers': ['file', 'syslog'],
+            'level': 'DEBUG',
+            'propagate': True,
+        }
     },
 }
 
