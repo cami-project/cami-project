@@ -2,7 +2,7 @@ import requests
 import logging
 
 STORE_HOST = "localhost"
-STORE_PORT = "8000"
+STORE_PORT = "8008"
 STORE_ENDPOINT_URI = "http://" + STORE_HOST + ":" + STORE_PORT
 
 logger = logging.getLogger("medical_compliance.store_utils")
