@@ -169,7 +169,7 @@ DATABASES = {
             'sql_mode': 'TRADITIONAL',
             'charset': 'utf8',
             'init_command': 'SET '
-                'storage_engine=INNODB,'
+                'default_storage_engine=INNODB,'
                 'character_set_connection=utf8'
         }
     }
