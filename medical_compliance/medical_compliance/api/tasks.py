@@ -86,6 +86,8 @@ def process_heart_rate_measurement():
     if not heartrate_device:
         logger.error("[medical-compliance] Cannot retrieve heart rate measurement device from CAMI Store. Using manufacturer = %s, model = %s." % ("LG", "Urbane"))
         return
+    else:
+        logger.debug("[medical-compliance] Using heartrate_device with info %s for processing HR data." % (str(heartrate_device)))
 
     last_cinch_measurement = None
     last_test_measurement = None
@@ -99,13 +101,14 @@ def process_heart_rate_measurement():
     try:
         last_cinch_measurement = HeartRateMeasurement.objects.all().filter(input_source='cinch').order_by('-timestamp')[0]
         time_from_cinch = last_cinch_measurement.timestamp + 1
-    except:
+    except Exception as e:
         time_from_cinch = 0
 
     try:
         last_test_measurement = HeartRateMeasurement.objects.all().filter(input_source='test').order_by('-timestamp')[0]
         time_from_test = last_test_measurement.timestamp + 1
-    except:
+    except Exception as e:
+        logger.exception("[medical-compliance] No history of test HR measurements or other error. Reverting to time_from_test = 0!")
         time_from_test = 0
 
     time_to = int(
@@ -119,6 +122,8 @@ def process_heart_rate_measurement():
     measurements = google_fit.get_heart_rate_data_from_cinch(time_from_cinch, time_to)
     measurements = measurements + google_fit.get_heart_rate_data_from_test(time_from_test, time_to)
 
+    logger.debug("[medical-compliance] Merged HR measurements: %s." % (measurements))
+
     ## Since we have hardcoded the user for which Google Fit data is retrieved, we can get the
     ## Google fit user_id from the first measurement in the update
     device_id = heartrate_device['id']
@@ -128,12 +133,15 @@ def process_heart_rate_measurement():
     cami_user_id = None
 
     if measurements:
-        google_fit_userid = measurements[0].user_id
+        google_fit_userid = 11262861
         device_usage_data = store_utils.get_device_usage(store_endpoint_uri, device = heartrate_device['id'],
                                                          access_info={"google_fit_userid" : google_fit_userid})
         if not device_usage_data:
             logger.error("[medical-compliance] Cannot find any user - device combination with access config for "
                          "google_fit_userid : %s and device_id : %s" % (str(google_fit_userid), str(heartrate_device['id'])))
+        else:
+            logger.error("[medical-compliance] Found user - device combination %s, for pulse measurements" % (
+                         str(device_usage_data)))
 
         cami_user_id = device_usage_data['user_id']
 
@@ -185,6 +193,8 @@ def process_steps_measurement():
             "[medical-compliance] Cannot retrieve heart rate measurement device from CAMI Store. Using manufacturer = %s, model = %s." % (
             "LG", "Urbane"))
         return
+    else:
+        logger.debug("[medical-compliance] Using steps_device with info %s for processing HR data." % (str(steps_device)))
 
     last_google_fit_measurement = None
     last_test_measurement = None
@@ -241,12 +251,15 @@ def process_steps_measurement():
     cami_user_id = None
 
     if measurements:
-        google_fit_userid = measurements[0].user_id
+        google_fit_userid = 11262861
         device_usage_data = store_utils.get_device_usage(store_endpoint_uri, device = steps_device['id'],
                                                          access_info={"google_fit_userid" : google_fit_userid})
         if not device_usage_data:
             logger.error("[medical-compliance] Cannot find any user - device combination with access config for "
                          "google_fit_userid : %s and device_id : %s" % (str(google_fit_userid), str(steps_device['id'])))
+        else:
+            logger.error("[medical-compliance] Found user - device combination %s, for step measurements" % (
+                str(device_usage_data)))
 
         cami_user_id = device_usage_data['user_id']
 
