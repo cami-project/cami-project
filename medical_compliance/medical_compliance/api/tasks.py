@@ -51,14 +51,14 @@ def process_weight_measurement(cami_user_id, device_id,
                                                              {"value" : value}
                                                              )
 
-    # weight_measurement = WeightMeasurement(
-    #     user_id = int(user_id),
-    #     input_source=input_source,
-    #     measurement_unit=measurement_unit,
-    #     timestamp=timestamp,
-    #     timezone=timezone,
-    #     value=value
-    # )
+    weight_measurement = WeightMeasurement(
+        user_id = int(cami_user_id),
+        input_source='withings',
+        measurement_unit=measurement_unit,
+        timestamp=timestamp,
+        timezone=timezone,
+        value=value
+    )
 
     logger.debug("[medical-compliance] Saving weight measurement: %s" % (str(weight_meas_res)))
 
