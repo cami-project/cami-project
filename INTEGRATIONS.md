@@ -34,6 +34,6 @@ We're currently sharing the following information w/ OpenTele via their API, as 
 
 #### Testing
 * Use the information provided inside the [TESTING](TESTING.md) document to populate the CAMI Cloud with new measurements
-* Vist [OpenTele's dashboard](https://opentele.aliviate.dk:4287/opentele-server/) and login using the credentials from LastPass
-* If all went well, the updated measurements should be visible on the [CAMI measurements page](https://opentele.aliviate.dk:4287/opentele-server/patient/questionnaires/13)
+* Vist [OpenTele's dashboard](https://opentele.aliviate.dk:4387/opentele-server/) and login using the credentials from LastPass
+* If all went well, the updated measurements should be visible on the [CAMI measurements page](https://opentele.aliviate.dk:4387/opentele-server/patient/questionnaires/13)
   * Take in consideration that the interface isn't translated to English yet
