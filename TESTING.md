@@ -96,6 +96,19 @@ We will be using the dedicated LG Watch datasource for the moment.
 
 ## Testing APIs
 Check - with cURL, from command line - the following API endpoints to be up and running.
+Example:
+```
+$ curl -i http://cami.vitaminsoftware.com:8001/api/v1/healthcheck/
+HTTP/1.0 200 OK
+Date: Fri, 24 Mar 2017 17:17:41 GMT
+Server: WSGIServer/0.1 Python/2.7.12
+Vary: Accept
+X-Frame-Options: ALLOW-FROM *
+Content-Type: application/json
+Cache-Control: no-cache
+
+{"healthcheck": [{"message_queue": "ok", "mysql": "ok", "status": "ok"}]}
+```
 
 ### Medical compliance API
 * [Steps Measurements](http://cami.vitaminsoftware.com:8000/api/v1/steps-measurements/)
