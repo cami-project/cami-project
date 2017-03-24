@@ -32,12 +32,16 @@ export function navigationCompleted() {
   return {type: NAVIGATION_COMPLETED};
 }
 
-// TODO: find a better way to navigate to the page than hardcoding the indexes from the routes
+// TODO(@parsaschiv.ionut): find a better way to navigate to the page
+//  than hardcoding the indexes from the routes
+// - (@rtud): in the meantime, see that when making changes to the
+//  initialState, like when you add a new screen for example, the index
+//  numbers reflect the order set below
 const LoginPageIndex = 0;
 const CaregiverPageIndex = 1;
-const ElderlyPageIndex = 4;
-const OnboardingPageIndex = 5;
-const LogoutPageIndex = 6;
+const ElderlyPageIndex = 5;
+const OnboardingPageIndex = 6;
+const LogoutPageIndex = 7;
 
 export function isLogoutPageIndex(index) {
   return index == LogoutPageIndex;
