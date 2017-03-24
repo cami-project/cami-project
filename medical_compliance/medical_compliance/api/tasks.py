@@ -61,6 +61,7 @@ def process_weight_measurement(cami_user_id, device_id,
     )
 
     logger.debug("[medical-compliance] Saving weight measurement: %s" % (str(weight_meas_res)))
+    weight_measurement.save()
 
     logger.debug("[medical-compliance] Sending the weight measurement with id %s for analysis." % (weight_meas_res['id']))
     analyze_weights.delay(weight_meas_res['id'], cami_user_id, device_id)
