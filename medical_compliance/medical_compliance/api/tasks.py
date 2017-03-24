@@ -140,7 +140,7 @@ def process_heart_rate_measurement():
             logger.error("[medical-compliance] Cannot find any user - device combination with access config for "
                          "google_fit_userid : %s and device_id : %s" % (str(google_fit_userid), str(heartrate_device['id'])))
         else:
-            logger.error("[medical-compliance] Found user - device combination %s, for pulse measurements" % (
+            logger.debug("[medical-compliance] Found user - device combination %s, for pulse measurements" % (
                          str(device_usage_data)))
 
         cami_user_id = device_usage_data['user_id']
@@ -258,7 +258,7 @@ def process_steps_measurement():
             logger.error("[medical-compliance] Cannot find any user - device combination with access config for "
                          "google_fit_userid : %s and device_id : %s" % (str(google_fit_userid), str(steps_device['id'])))
         else:
-            logger.error("[medical-compliance] Found user - device combination %s, for step measurements" % (
+            logger.debug("[medical-compliance] Found user - device combination %s, for step measurements" % (
                 str(device_usage_data)))
 
         cami_user_id = device_usage_data['user_id']
@@ -284,7 +284,7 @@ def process_steps_measurement():
                                                 "start_timestamp": m['start_timestamp'],
                                                 "end_timestamp": m['end_timestamp']
                                                 })
-            logger.debug("[medical-compliance] Inserted pulse measurement in CAMI Store: %s" % (str(steps_meas_res)))
+            logger.debug("[medical-compliance] Inserted steps measurement in CAMI Store: %s" % (str(steps_meas_res)))
 
         logger.debug("[medical-compliance] Saving steps measurement: %s" % (steps_measurement))
         steps_measurement.save()
