@@ -27,25 +27,28 @@ const ActivitiesView = React.createClass({
   render() {
     const today = moment();
     const todayMonth = today.format('MMM');
-    const firstEventDate = moment.unix(this.props.events.get(0).get('start'));
+    // DEMO(@rtud): replace index w/ 0
+    const firstEventDate = moment.unix(this.props.events.get(3).get('start'));
     const firstEventMonth = firstEventDate ? firstEventDate.format('MMM') : false;
 
     const events = [];
-    let monthKey = firstEventMonth;
+    // DEMO(@rtud): should be firstMonth index
+    let monthKey = moment.unix(this.props.events.get(3).get('start') + 420000).format('MMMM');
 
     this.props.events.forEach((event, index) => {
       // we want to exclude the 1st event
       // -- we're already displaying it inside the Activities Header
-      if (index > 0) {
+      // -- DEMO(@rtud): replace comparison w/ '>'
+      if (index >= 0) {
         // every time a month changes we show a visual separator inside the timeline
-        const month = moment.unix(event.get('start')).format('MMM');
+        // - DEMO(@rtud): altered so we can push dates up
+        const month = index < 3 ? moment.unix(event.get('start')).format('MMMM') : moment.unix(event.get('start') + 420000).format('MMMM');
         if (month != monthKey) {
           monthKey = month;
-          const monthSeparatorText = moment.unix(event.get('start')).format('MMMM');
           events.push(
             <View key={'text' + index} style={[styles.dateContainer, {flex: 1}]}>
               <View style={styles.dateRuler}><View style={styles.dateBullet}/></View>
-              <Text style={[styles.date]}>{monthSeparatorText}</Text>
+              <Text style={[styles.date]}>{month}</Text>
             </View>
           );
         }
@@ -56,7 +59,7 @@ const ActivitiesView = React.createClass({
         events.push(
           <ActivityEntry
             key={'entry' + index}
-            timestamp={event.get('start')}
+            timestamp={index < 3 ? event.get('start') : event.get('start') + 432000}
             title={event.get('summary')}
             description={event.get('description')}
             location={event.get('location')}
@@ -66,6 +69,7 @@ const ActivitiesView = React.createClass({
       }
     });
 
+    // DEMO(@rtud): replace index w/ 0 below after demo
     return (
       <View style={variables.container}>
         <View style={styles.headerContainer}>
@@ -103,13 +107,13 @@ const ActivitiesView = React.createClass({
               </View>
             </View>
             {
-              this.props.events.get(0).get('summary')
-                ? <Text style={styles.nextTitle}>{this.props.events.get(0).get('summary')}</Text>
+              this.props.events.get(3).get('summary')
+                ? <Text style={styles.nextTitle}>{this.props.events.get(3).get('summary')}</Text>
                 : <Text style={styles.nextTitle}>No pending events</Text>
             }
             {
-              this.props.events.get(0).get('description')
-                ? <Text style={styles.nextDescription}>{this.props.events.get(0).get('description')}</Text>
+              this.props.events.get(3).get('description')
+                ? <Text style={styles.nextDescription}>{this.props.events.get(3).get('description')}</Text>
                 : <Text style={styles.nextDescription}>Add using Google Calendar</Text>
             }
             <View style={styles.nextMeta}>
@@ -134,8 +138,8 @@ const ActivitiesView = React.createClass({
               />
               <View style={styles.nextLocation}>
                 {
-                  this.props.events.get(0).get('location')
-                    ? <Text style={styles.metaText}>{this.props.events.get(0).get('location')}</Text>
+                  this.props.events.get(3).get('location')
+                    ? <Text style={styles.metaText}>{this.props.events.get(3).get('location')}</Text>
                     : <Text style={styles.metaText}>----</Text>
                 }
               </View>
