@@ -13,7 +13,16 @@
     "end": 1492804800,
     "sequence": 0,
     "reminders": {
-     "useDefault": true
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+      "name": "Appointments",
+      "color": {
+        "id": "16",
+        "background": "#4986e7",
+        "foreground": "#000000"
+      }
     }
   }, {
     "id": "6mjooth4ue5cd82o1sdntc79tk",
@@ -29,7 +38,16 @@
     "end": 1493043300,
     "sequence": 0,
     "reminders": {
-     "useDefault": true
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+      "name": "Appointments",
+      "color": {
+        "id": "16",
+        "background": "#4986e7",
+        "foreground": "#000000"
+      }
     }
   }, {
     "id": "dj0eob3t7ap2pcihl8jjshvl60",
@@ -45,7 +63,16 @@
     "end": 1493305200,
     "sequence": 0,
     "reminders": {
-     "useDefault": true
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+      "name": "Appointments",
+      "color": {
+        "id": "16",
+        "background": "#4986e7",
+        "foreground": "#000000"
+      }
     }
   }, {
     "id": "h6it6k5aeire1kbreu0e57dv14",
@@ -61,7 +88,16 @@
     "end": 1493839800,
     "sequence": 0,
     "reminders": {
-     "useDefault": true
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+      "name": "Appointments",
+      "color": {
+        "id": "16",
+        "background": "#4986e7",
+        "foreground": "#000000"
+      }
     }
   }, {
     "id": "do756cgtb5pitpmd8cb2mk0el4",
@@ -77,7 +113,16 @@
     "end": 1493897400,
     "sequence": 0,
     "reminders": {
-     "useDefault": true
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+      "name": "Appointments",
+      "color": {
+        "id": "16",
+        "background": "#4986e7",
+        "foreground": "#000000"
+      }
     }
   }, {
     "id": "27uieel2459rd4oeu4f6c8njds",
@@ -93,7 +138,16 @@
     "end": 1495011600,
     "sequence": 0,
     "reminders": {
-     "useDefault": true
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+      "name": "Appointments",
+      "color": {
+        "id": "16",
+        "background": "#4986e7",
+        "foreground": "#000000"
+      }
     }
   }]
 }
