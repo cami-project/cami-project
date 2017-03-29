@@ -122,7 +122,7 @@ const ActivitiesView = React.createClass({
               <View style={styles.nextTime}>
                 {
                   firstEventDate
-                    ? <Text style={styles.metaText}>{firstEventDate.format('hh:mm')}</Text>
+                    ? <Text style={styles.metaText}>{firstEventDate.format('HH:mm')}</Text>
                     : <Text style={styles.metaText}>--:--</Text>
                 }
               </View>

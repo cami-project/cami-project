@@ -58,7 +58,7 @@ const ActivityEntry = React.createClass({
                 style={{paddingRight: 5}}
               />
               <View>
-                <Text style={styles.metaText}>{eventTime.format('hh:mm')}</Text>
+                <Text style={styles.metaText}>{eventTime.format('HH:mm')}</Text>
               </View>
               <Icon
                 name={icons.location}
