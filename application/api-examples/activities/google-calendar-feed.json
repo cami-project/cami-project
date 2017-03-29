@@ -1,16 +1,116 @@
 {
   "events": [{
+    "id": "06iibf5vv06qvqk8bmn61cldr0_20170329T053000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MDZpaWJmNXZ2MDZxdnFrOGJtbjYxY2xkcjBfMjAxNzAzMjlUMDUzMDAwWiA4cHVhcjBzYzRlN2VmbnM1cjg0OXJuMGx1c0Bn",
+    "created": 1490638350,
+    "updated": 1490780880,
+    "summary": "Time to exercise: Crunches",
+    "description": "3 sets of 10 crunches",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1490765400,
+    "end": 1490767200,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
+      "name": "Exercise",
+      "color": {
+        "id": "9",
+        "background": "#7bd148",
+        "foreground": "#000000"
+      }
+    }
+  }, {
+    "id": "1s1ojcm0ie1c7jepvslkrm742o_20170330T060000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MDZpaWJmNXZ2MDZxdnFrOGJtbjYxY2xkcjBfMjAxNzAzMjlUMDUzMDAwWiA4cHVhcjBzYzRlN2VmbnM1cjg0OXJuMGx1c0Bn",
+    "created": 1490637918,
+    "updated": 1490780809,
+    "summary": "Time to take your morning medicine",
+    "description": "Blue box, on the kitchen counter.",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1490853600,
+    "end": 1490854200,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+      "name": "Medication",
+      "color": {
+        "id": "4",
+        "background": "#fa573c",
+        "foreground": "#000000"
+      }
+    }
+  }, {
+    "id": "06iibf5vv06qvqk8bmn61cldr0_20170331T053000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MDZpaWJmNXZ2MDZxdnFrOGJtbjYxY2xkcjBfMjAxNzAzMzFUMDUzMDAwWiA4cHVhcjBzYzRlN2VmbnM1cjg0OXJuMGx1c0Bn",
+    "created": 1490638350,
+    "updated": 1490780880,
+    "summary": "Time to exercise: Pushups",
+    "description": "2 sets of 10 pushups",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1490938200,
+    "end": 1490940000,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
+      "name": "Exercise",
+      "color": {
+        "id": "9",
+        "background": "#7bd148",
+        "foreground": "#000000"
+      }
+    }
+  }, {
+    "id": "1s1ojcm0ie1c7jepvslkrm742o_20170331T060000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MXMxb2pjbTBpZTFjN2plcHZzbGtybTc0Mm9fMjAxNzAzMzFUMDYwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "created": 1490637918,
+    "updated": 1490780809,
+    "summary": "Time to take your morning medicine",
+    "description": "Blue box, on the kitchen counter.",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1490940000,
+    "end": 1490940600,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+      "name": "Medication",
+      "color": {
+        "id": "4",
+        "background": "#fa573c",
+        "foreground": "#000000"
+      }
+    }
+  }, {
     "id": "l0qjggsh5te486cqlo603ied20",
     "status": "confirmed",
     "htmlLink": "https://www.google.com/calendar/event?eid=bDBxamdnc2g1dGU0ODZjcWxvNjAzaWVkMjAgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
     "created": 1489494141,
-    "updated": 1489494556,
+    "updated": 1490780968,
     "summary": "Meet with Jonas",
     "description": "Don't forget to ask about the fishing trip.",
     "location": "Ridgeway Park",
     "creator": "proiect.cami@gmail.com",
-    "start": 1492801200,
-    "end": 1492804800,
+    "start": 1490986800,
+    "end": 1490990400,
     "sequence": 0,
     "reminders": {
       "useDefault": true
@@ -25,77 +125,27 @@
       }
     }
   }, {
-    "id": "6mjooth4ue5cd82o1sdntc79tk",
+    "id": "1s1ojcm0ie1c7jepvslkrm742o_20170401T060000Z",
     "status": "confirmed",
-    "htmlLink": "https://www.google.com/calendar/event?eid=Nm1qb290aDR1ZTVjZDgybzFzZG50Yzc5dGsgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
-    "created": 1489494218,
-    "updated": 1489494218,
-    "summary": "Checkup with Dr. Forrester",
-    "description": "Get blood work done.",
-    "location": "Mills Heights Clinic",
-    "creator": "proiect.cami@gmail.com",
-    "start": 1493032500,
-    "end": 1493043300,
-    "sequence": 0,
-    "reminders": {
-      "useDefault": true
-    },
-    "calendar": {
-      "id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
-      "name": "Appointments",
-      "color": {
-        "id": "16",
-        "background": "#4986e7",
-        "foreground": "#000000"
-      }
-    }
-  }, {
-    "id": "dj0eob3t7ap2pcihl8jjshvl60",
-    "status": "confirmed",
-    "htmlLink": "https://www.google.com/calendar/event?eid=ZGowZW9iM3Q3YXAycGNpaGw4ampzaHZsNjAgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
-    "created": 1489494280,
-    "updated": 1489494280,
-    "summary": "Grandchildren visiting",
-    "description": "Take little Nancy for ice-cream.",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MXMxb2pjbTBpZTFjN2plcHZzbGtybTc0Mm9fMjAxNzA0MDFUMDYwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "created": 1490637918,
+    "updated": 1490780809,
+    "summary": "Time to take your morning medicine",
+    "description": "Blue box, on the kitchen counter.",
     "location": "Home",
     "creator": "proiect.cami@gmail.com",
-    "start": 1493280000,
-    "end": 1493305200,
+    "start": 1491026400,
+    "end": 1491027000,
     "sequence": 0,
     "reminders": {
       "useDefault": true
     },
     "calendar": {
-      "id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
-      "name": "Appointments",
+      "id": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+      "name": "Medication",
       "color": {
-        "id": "16",
-        "background": "#4986e7",
-        "foreground": "#000000"
-      }
-    }
-  }, {
-    "id": "h6it6k5aeire1kbreu0e57dv14",
-    "status": "confirmed",
-    "htmlLink": "https://www.google.com/calendar/event?eid=aDZpdDZrNWFlaXJlMWticmV1MGU1N2R2MTQgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
-    "created": 1489494385,
-    "updated": 1489494385,
-    "summary": "Chess night with Steven",
-    "description": "Don't worry, you've got this!",
-    "location": "Home",
-    "creator": "proiect.cami@gmail.com",
-    "start": 1493830800,
-    "end": 1493839800,
-    "sequence": 0,
-    "reminders": {
-      "useDefault": true
-    },
-    "calendar": {
-      "id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
-      "name": "Appointments",
-      "color": {
-        "id": "16",
-        "background": "#4986e7",
+        "id": "4",
+        "background": "#fa573c",
         "foreground": "#000000"
       }
     }
@@ -104,13 +154,13 @@
     "status": "confirmed",
     "htmlLink": "https://www.google.com/calendar/event?eid=ZG83NTZjZ3RiNXBpdHBtZDhjYjJtazBlbDQgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
     "created": 1489494449,
-    "updated": 1489494449,
+    "updated": 1490781163,
     "summary": "Visiting the Allens",
     "description": "Don't forget to buy flowers!",
     "location": "56 Flower Road",
     "creator": "proiect.cami@gmail.com",
-    "start": 1493881200,
-    "end": 1493897400,
+    "start": 1491030000,
+    "end": 1491046200,
     "sequence": 0,
     "reminders": {
       "useDefault": true
@@ -125,17 +175,317 @@
       }
     }
   }, {
+    "id": "1s1ojcm0ie1c7jepvslkrm742o_20170402T060000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MXMxb2pjbTBpZTFjN2plcHZzbGtybTc0Mm9fMjAxNzA0MDJUMDYwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "created": 1490637918,
+    "updated": 1490780809,
+    "summary": "Time to take your morning medicine",
+    "description": "Blue box, on the kitchen counter.",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1491112800,
+    "end": 1491113400,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+      "name": "Medication",
+      "color": {
+        "id": "4",
+        "background": "#fa573c",
+        "foreground": "#000000"
+      }
+    }
+  }, {
+    "id": "06iibf5vv06qvqk8bmn61cldr0_20170403T053000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MDZpaWJmNXZ2MDZxdnFrOGJtbjYxY2xkcjBfMjAxNzA0MDNUMDUzMDAwWiA4cHVhcjBzYzRlN2VmbnM1cjg0OXJuMGx1c0Bn",
+    "created": 1490638350,
+    "updated": 1490780880,
+    "summary": "Time to exercise: Crunches",
+    "description": "3 sets of 10 crunches",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1491197400,
+    "end": 1491199200,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
+      "name": "Exercise",
+      "color": {
+        "id": "9",
+        "background": "#7bd148",
+        "foreground": "#000000"
+      }
+    }
+  }, {
+    "id": "1s1ojcm0ie1c7jepvslkrm742o_20170403T060000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MXMxb2pjbTBpZTFjN2plcHZzbGtybTc0Mm9fMjAxNzA0MDNUMDYwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "created": 1490637918,
+    "updated": 1490780809,
+    "summary": "Time to take your morning medicine",
+    "description": "Blue box, on the kitchen counter.",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1491199200,
+    "end": 1491199800,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+      "name": "Medication",
+      "color": {
+        "id": "4",
+        "background": "#fa573c",
+        "foreground": "#000000"
+      }
+    }
+  }, {
+    "id": "6mjooth4ue5cd82o1sdntc79tk",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=Nm1qb290aDR1ZTVjZDgybzFzZG50Yzc5dGsgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+    "created": 1489494218,
+    "updated": 1490781078,
+    "summary": "Checkup with Dr. Forrester",
+    "description": "Get blood work done.",
+    "location": "Mills Heights Clinic",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1491218100,
+    "end": 1491228900,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+      "name": "Appointments",
+      "color": {
+        "id": "16",
+        "background": "#4986e7",
+        "foreground": "#000000"
+      }
+    }
+  }, {
+    "id": "1s1ojcm0ie1c7jepvslkrm742o_20170404T060000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MXMxb2pjbTBpZTFjN2plcHZzbGtybTc0Mm9fMjAxNzA0MDRUMDYwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "created": 1490637918,
+    "updated": 1490780809,
+    "summary": "Time to take your morning medicine",
+    "description": "Blue box, on the kitchen counter.",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1491285600,
+    "end": 1491286200,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+      "name": "Medication",
+      "color": {
+        "id": "4",
+        "background": "#fa573c",
+        "foreground": "#000000"
+      }
+    }
+  }, {
+    "id": "dj0eob3t7ap2pcihl8jjshvl60",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=ZGowZW9iM3Q3YXAycGNpaGw4ampzaHZsNjAgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+    "created": 1489494280,
+    "updated": 1490781099,
+    "summary": "Grandchildren visiting",
+    "description": "Take little Nancy for ice-cream.",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1491292800,
+    "end": 1491318000,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+      "name": "Appointments",
+      "color": {
+        "id": "16",
+        "background": "#4986e7",
+        "foreground": "#000000"
+      }
+    }
+  }, {
+    "id": "06iibf5vv06qvqk8bmn61cldr0_20170405T053000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MDZpaWJmNXZ2MDZxdnFrOGJtbjYxY2xkcjBfMjAxNzA0MDVUMDUzMDAwWiA4cHVhcjBzYzRlN2VmbnM1cjg0OXJuMGx1c0Bn",
+    "created": 1490638350,
+    "updated": 1490780880,
+    "summary": "Time to exercise: Pushups",
+    "description": "2 sets of 10 pushups",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1491370200,
+    "end": 1491372000,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
+      "name": "Exercise",
+      "color": {
+        "id": "9",
+        "background": "#7bd148",
+        "foreground": "#000000"
+      }
+    }
+  }, {
+    "id": "1s1ojcm0ie1c7jepvslkrm742o_20170405T060000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MXMxb2pjbTBpZTFjN2plcHZzbGtybTc0Mm9fMjAxNzA0MDVUMDYwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "created": 1490637918,
+    "updated": 1490780809,
+    "summary": "Time to take your morning medicine",
+    "description": "Blue box, on the kitchen counter.",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1491372000,
+    "end": 1491372600,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+      "name": "Medication",
+      "color": {
+        "id": "4",
+        "background": "#fa573c",
+        "foreground": "#000000"
+      }
+    }
+  }, {
+    "id": "h6it6k5aeire1kbreu0e57dv14",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=aDZpdDZrNWFlaXJlMWticmV1MGU1N2R2MTQgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
+    "created": 1489494385,
+    "updated": 1490781127,
+    "summary": "Chess night with Steven",
+    "description": "Don't worry, you've got this!",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1491411600,
+    "end": 1491420600,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+      "name": "Appointments",
+      "color": {
+        "id": "16",
+        "background": "#4986e7",
+        "foreground": "#000000"
+      }
+    }
+  }, {
+    "id": "1s1ojcm0ie1c7jepvslkrm742o_20170406T060000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MXMxb2pjbTBpZTFjN2plcHZzbGtybTc0Mm9fMjAxNzA0MDZUMDYwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "created": 1490637918,
+    "updated": 1490780809,
+    "summary": "Time to take your morning medicine",
+    "description": "Blue box, on the kitchen counter.",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1491458400,
+    "end": 1491459000,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+      "name": "Medication",
+      "color": {
+        "id": "4",
+        "background": "#fa573c",
+        "foreground": "#000000"
+      }
+    }
+  }, {
+    "id": "06iibf5vv06qvqk8bmn61cldr0_20170407T053000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MDZpaWJmNXZ2MDZxdnFrOGJtbjYxY2xkcjBfMjAxNzA0MDdUMDUzMDAwWiA4cHVhcjBzYzRlN2VmbnM1cjg0OXJuMGx1c0Bn",
+    "created": 1490638350,
+    "updated": 1490780880,
+    "summary": "Time to exercise: Crunches",
+    "description": "3 sets of 10 crunches",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1491543000,
+    "end": 1491544800,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
+      "name": "Exercise",
+      "color": {
+        "id": "9",
+        "background": "#7bd148",
+        "foreground": "#000000"
+      }
+    }
+  }, {
+    "id": "1s1ojcm0ie1c7jepvslkrm742o_20170407T060000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MXMxb2pjbTBpZTFjN2plcHZzbGtybTc0Mm9fMjAxNzA0MDdUMDYwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "created": 1490637918,
+    "updated": 1490780809,
+    "summary": "Time to take your morning medicine",
+    "description": "Blue box, on the kitchen counter.",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1491544800,
+    "end": 1491545400,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+      "name": "Medication",
+      "color": {
+        "id": "4",
+        "background": "#fa573c",
+        "foreground": "#000000"
+      }
+    }
+  }, {
     "id": "27uieel2459rd4oeu4f6c8njds",
     "status": "confirmed",
     "htmlLink": "https://www.google.com/calendar/event?eid=Mjd1aWVlbDI0NTlyZDRvZXU0ZjZjOG5qZHMgZzgyMnJsMTRvc2pjNzVtZjg4bG92Y2k2a2dAZw",
     "created": 1489494516,
-    "updated": 1489494516,
+    "updated": 1490781198,
     "summary": "Checkup with Dr. Forrester",
     "description": "Find out how your blood work tests went.",
     "location": "Mills Heights Clinic",
     "creator": "proiect.cami@gmail.com",
-    "start": 1495009800,
-    "end": 1495011600,
+    "start": 1491553800,
+    "end": 1491555600,
     "sequence": 0,
     "reminders": {
       "useDefault": true
