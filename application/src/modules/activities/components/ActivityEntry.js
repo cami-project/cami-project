@@ -16,6 +16,7 @@ const ActivityEntry = React.createClass({
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired,
   },
 
   render() {
@@ -35,7 +36,7 @@ const ActivityEntry = React.createClass({
         <View style={{
           flex: 7,
           borderLeftWidth: 2,
-          borderColor: variables.colors.gray.neutral
+          borderColor: this.props.color
         }}>
           <View style={styles.textContainer}>
             <View style={{flexWrap: 'wrap'}}>

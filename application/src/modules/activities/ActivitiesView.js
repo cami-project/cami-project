@@ -51,6 +51,8 @@ const ActivitiesView = React.createClass({
         }
 
         // and now let's build that event list
+        // - TODO(@rtud): color gets passed as hex value for now
+        //   - we should create a local mappging of gCal registered colors
         events.push(
           <ActivityEntry
             key={'entry' + index}
@@ -58,6 +60,7 @@ const ActivitiesView = React.createClass({
             title={event.get('summary')}
             description={event.get('description')}
             location={event.get('location')}
+            color={event.get('calendar').get('color').get('background')}
           />
         );
       }
