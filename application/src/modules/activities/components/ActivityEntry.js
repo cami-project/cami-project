@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 
 import moment from 'moment';
+import Color from 'color';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import icons from 'Cami/src/icons-fa';
 import variables from '../../variables/CaregiverGlobalVariables';
@@ -17,29 +18,38 @@ const ActivityEntry = React.createClass({
     description: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
     color: PropTypes.string.isRequired,
+    archived: PropTypes.bool.isRequired,
+    today: PropTypes.bool.isRequired,
   },
 
   render() {
     const eventTime = moment.unix(this.props.timestamp);
 
     return (
-      <View style={styles.activityEntry}>
+      <View style={[
+        styles.activityEntry,
+        {
+          opacity: this.props.archived ? 0.5 : 1,
+          backgroundColor: !this.props.today ? 'white' : Color(variables.colors.status.ok).clearer(.25).rgbaString()
+        }
+      ]}>
         <View style={styles.dateContainer}>
           <View>
-            <Text style={styles.dayName}>{eventTime.format('ddd')}</Text>
+            <Text style={[styles.dayName, {color: !this.props.today ? variables.colors.gray.dark : 'white'}]}>{eventTime.format('ddd')}</Text>
           </View>
           <View>
-            <Text style={styles.day}>{eventTime.format('DD')}</Text>
+            <Text style={[styles.day, {color: !this.props.today ? variables.colors.gray.dark : 'white'}]}>{eventTime.format('DD')}</Text>
           </View>
           <View>
-            <Text style={styles.month}>{eventTime.format('MMM').toUpperCase()}</Text>
+            <Text style={[styles.month, {color: !this.props.today ? variables.colors.gray.dark : 'white'}]}>{eventTime.format('MMM').toUpperCase()}</Text>
           </View>
         </View>
 
         <View style={{
           flex: 7,
           borderLeftWidth: 2,
-          borderColor: this.props.color
+          borderColor: !this.props.archived ? this.props.color : variables.colors.gray.neutral,
+          backgroundColor: 'white'
         }}>
           <View style={styles.textContainer}>
             <View style={{flexWrap: 'wrap'}}>
@@ -84,6 +94,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
+  },
+  archived: {
+    opacity: 0.75
   },
   dateContainer: {
     width: 80,

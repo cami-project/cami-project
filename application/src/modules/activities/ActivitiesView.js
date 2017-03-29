@@ -71,6 +71,8 @@ const ActivitiesView = React.createClass({
             description={event.get('description')}
             location={event.get('location')}
             color={event.get('calendar').get('color').get('background')}
+            archived={index < 3 ? true : false}
+            today={index === 3 ? true : false}
           />
         );
       }
