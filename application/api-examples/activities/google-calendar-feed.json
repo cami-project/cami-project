@@ -1,5 +1,55 @@
 {
   "events": [{
+    "id": "06iibf5vv06qvqk8bmn61cldr0_20170327T053000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MDZpaWJmNXZ2MDZxdnFrOGJtbjYxY2xkcjBfMjAxNzAzMjdUMDUzMDAwWiA4cHVhcjBzYzRlN2VmbnM1cjg0OXJuMGx1c0Bn",
+    "created": 1490638350,
+    "updated": 1490780880,
+    "summary": "Time to exercise: Pushups",
+    "description": "2 sets of 10 pushups",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1490592600,
+    "end": 1490594400,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
+      "name": "Exercise",
+      "color": {
+        "id": "9",
+        "background": "#7bd148",
+        "foreground": "#000000"
+      }
+    }
+  }, {
+    "id": "1s1ojcm0ie1c7jepvslkrm742o_20170329T060000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MXMxb2pjbTBpZTFjN2plcHZzbGtybTc0Mm9fMjAxNzAzMjlUMDYwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "created": 1490637918,
+    "updated": 1490780809,
+    "summary": "Time to take your morning medicine",
+    "description": "Blue box, on the kitchen counter.",
+    "location": "Home",
+    "creator": "proiect.cami@gmail.com",
+    "start": 1490767200,
+    "end": 1490767800,
+    "sequence": 0,
+    "reminders": {
+      "useDefault": true
+    },
+    "calendar": {
+      "id": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+      "name": "Medication",
+      "color": {
+        "id": "4",
+        "background": "#fa573c",
+        "foreground": "#000000"
+      }
+    }
+  }, {
     "id": "06iibf5vv06qvqk8bmn61cldr0_20170329T053000Z",
     "status": "confirmed",
     "htmlLink": "https://www.google.com/calendar/event?eid=MDZpaWJmNXZ2MDZxdnFrOGJtbjYxY2xkcjBfMjAxNzAzMjlUMDUzMDAwWiA4cHVhcjBzYzRlN2VmbnM1cjg0OXJuMGx1c0Bn",
