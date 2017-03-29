@@ -183,7 +183,7 @@ class GoogleFitClient:
 
     def write_hr_value(self, value, datastream_id):
         timestamp = str(int(
-            (datetime.now() - datetime(1970,1,1)).total_seconds()
+            (datetime.utcnow() - datetime(1970,1,1)).total_seconds()
         )) + '000000000'
         dataset_id = timestamp + "-" + timestamp
 
@@ -219,7 +219,7 @@ class GoogleFitClient:
         return json.loads(r.text)
     
     def write_steps_value(self, value, datastream_id):
-        now_ts = int((datetime.now() - datetime(1970,1,1)).total_seconds())
+        now_ts = int((datetime.utcnow() - datetime(1970,1,1)).total_seconds())
         
         end_ts = str(now_ts) + '000000000'
         start_ts = str(now_ts - 5 * 60) + '000000000'
