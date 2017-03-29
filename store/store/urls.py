@@ -17,16 +17,19 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from tastypie.api import Api
-from store.api.resources import UserResource, DeviceResource, DeviceUsageResource, MeasurementResource
+from store.api.resources import UserResource, DeviceResource, DeviceUsageResource, MeasurementResource, ActivityResource
+import views
 
 v1_api = Api(api_name='v1')
 v1_api.register(UserResource())
 v1_api.register(DeviceResource())
 v1_api.register(DeviceUsageResource())
 v1_api.register(MeasurementResource())
+v1_api.register(ActivityResource())
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(v1_api.urls)),
+    url(r'^test/$', views.test, name="test"),
 ]
