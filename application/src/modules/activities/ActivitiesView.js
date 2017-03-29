@@ -24,6 +24,13 @@ const ActivitiesView = React.createClass({
     username: PropTypes.string.isRequired,
   },
 
+  componentDidMount() {
+    const _scrollView = this.scrollView;
+    // TODO(@rtud): scrollTo shouldn't hard coded value
+    // - we should grab one of the Entry's height
+    _scrollView.scrollTo({x:0, y: 578, animated: true});
+  },
+
   render() {
     const today = moment();
     const todayMonth = today.format('MMM');
@@ -149,7 +156,10 @@ const ActivitiesView = React.createClass({
 
         <View style={styles.timeline}></View>
 
-        <ScrollView style={styles.eventsContainer}>
+        <ScrollView
+          style={styles.eventsContainer}
+          ref={scrollView => this.scrollView = scrollView}
+        >
           {/*
             Later on we'll be adding Pull to Refresh behaviour
             -- just like we're doing for the Journal screen
