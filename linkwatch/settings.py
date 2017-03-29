@@ -4,7 +4,7 @@ BROKER_QUEUE = 'broadcast_measurement'
 BROKER_TASK = 'cami.on_measurement_received'
 
 LINKWATCH_URL_BASE = "https://linkwatchrestservicetest.azurewebsites.net/"
-LINKWATCH_USER = 'CNetDemo'
+LINKWATCH_USER = 'CamiDemo'
 LINKWATCH_PASSWORD = 'password'
 
 PAPERTRAILS_LOGGING_HOSTNAME = 'logs4.papertrailapp.com'
