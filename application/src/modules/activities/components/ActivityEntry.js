@@ -26,6 +26,9 @@ const ActivityEntry = React.createClass({
       <View style={styles.activityEntry}>
         <View style={styles.dateContainer}>
           <View>
+            <Text style={styles.dayName}>{eventTime.format('ddd')}</Text>
+          </View>
+          <View>
             <Text style={styles.day}>{eventTime.format('DD')}</Text>
           </View>
           <View>
@@ -92,6 +95,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     zIndex: 7,
+  },
+  dayName: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: variables.colors.gray.dark,
+    marginBottom: 5
   },
   day: {
     fontSize: 26,

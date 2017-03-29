@@ -73,7 +73,14 @@ const ActivitiesView = React.createClass({
             <View>
               {
                 firstEventDate
-                  ? <Text style={styles.day}>{firstEventDate.format('DD').toUpperCase()}</Text>
+                  ? <Text style={styles.dayName}>{firstEventDate.format('ddd')}</Text>
+                  : <Text style={styles.dayName}>--</Text>
+              }
+            </View>
+            <View>
+              {
+                firstEventDate
+                  ? <Text style={styles.day}>{firstEventDate.format('DD')}</Text>
                   : <Text style={styles.day}>--</Text>
               }
             </View>
@@ -171,6 +178,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: variables.colors.status.ok
+  },
+  dayName: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
+    lineHeight: 18,
+    marginBottom: 5
   },
   day: {
     color: 'white',
