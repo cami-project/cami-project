@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 
 import moment from 'moment';
+import Color from 'color';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import icons from 'Cami/src/icons-fa';
 import variables from '../../variables/CaregiverGlobalVariables';
@@ -16,26 +17,39 @@ const ActivityEntry = React.createClass({
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired,
+    archived: PropTypes.bool.isRequired,
+    today: PropTypes.bool.isRequired,
   },
 
   render() {
     const eventTime = moment.unix(this.props.timestamp);
 
     return (
-      <View style={styles.activityEntry}>
+      <View style={[
+        styles.activityEntry,
+        {
+          opacity: this.props.archived ? 0.5 : 1,
+          backgroundColor: !this.props.today ? 'white' : Color(variables.colors.status.ok).clearer(.25).rgbaString()
+        }
+      ]}>
         <View style={styles.dateContainer}>
           <View>
-            <Text style={styles.day}>{eventTime.format('DD')}</Text>
+            <Text style={[styles.dayName, {color: !this.props.today ? variables.colors.gray.dark : 'white'}]}>{eventTime.format('ddd')}</Text>
           </View>
           <View>
-            <Text style={styles.month}>{eventTime.format('MMM').toUpperCase()}</Text>
+            <Text style={[styles.day, {color: !this.props.today ? variables.colors.gray.dark : 'white'}]}>{eventTime.format('DD')}</Text>
+          </View>
+          <View>
+            <Text style={[styles.month, {color: !this.props.today ? variables.colors.gray.dark : 'white'}]}>{eventTime.format('MMM').toUpperCase()}</Text>
           </View>
         </View>
 
         <View style={{
           flex: 7,
           borderLeftWidth: 2,
-          borderColor: variables.colors.gray.neutral
+          borderColor: !this.props.archived ? this.props.color : variables.colors.gray.neutral,
+          backgroundColor: 'white'
         }}>
           <View style={styles.textContainer}>
             <View style={{flexWrap: 'wrap'}}>
@@ -54,7 +68,7 @@ const ActivityEntry = React.createClass({
                 style={{paddingRight: 5}}
               />
               <View>
-                <Text style={styles.metaText}>{eventTime.format('hh:mm')}</Text>
+                <Text style={styles.metaText}>{eventTime.format('HH:mm')}</Text>
               </View>
               <Icon
                 name={icons.location}
@@ -81,6 +95,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
+  archived: {
+    opacity: 0.75
+  },
   dateContainer: {
     width: 80,
     paddingTop: 20,
@@ -91,6 +108,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     zIndex: 7,
+  },
+  dayName: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: variables.colors.gray.dark,
+    marginBottom: 5
   },
   day: {
     fontSize: 26,
