@@ -2,12 +2,16 @@ from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
 from tastypie import fields
 from django.contrib.auth.models import User
+from django.conf.urls import url
 from tastypie.exceptions import NotFound
+from tastypie.utils import trailing_slash
 from django.core.urlresolvers import resolve, get_script_prefix, Resolver404
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
-import json, ast
+from django.core import serializers
+import datetime
+import json, ast, time
 
-from store.models import EndUserProfile, Device, DeviceUsage, Measurement
+from store.models import EndUserProfile, Device, DeviceUsage, Measurement, Activity
 
 
 class UserResource(ModelResource):
@@ -148,6 +152,42 @@ class MeasurementResource(ModelResource):
 
         return orm_filters
 
+
+class ActivityResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user')
+
+    class Meta:
+        queryset = Activity.objects.all()
+        allowed_methods = ['get']
+        collection_name = "activities"
+
+        authorization = Authorization()
+        always_return_data = True
+
+        ordering = ["start"]
+        filtering = {
+            "user": ALL_WITH_RELATIONS,
+            "start": ALL,
+            "end": ALL,
+            "activity_type": ALL
+        }
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/last_activities%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_last_activities'), name="api_last_activities"),
+        ]
+
+    def get_last_activities(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        last_activities = Activity.objects.all().filter(
+            start__gte=datetime.datetime.now(),
+            end__lte=datetime.datetime.now() + datetime.timedelta(days=14)
+        ).order_by('start')
+
+        return self.create_response(request, list(last_activities.values()))
 
 
 def get_pk_from_uri(uri):
