@@ -1,0 +1,14 @@
+{
+  "events":[
+    {"timestamp":"2016-11-24 17:30:55.100","address":"ab:cd:ef:01:23:45"},
+    {"timestamp":"2016-11-24 17:32:35.200","address":"01:23:45:67:89:ab"},
+    {"timestamp":"2016-11-25 10:15:09.100","address":"98:76:54:32:10:ab"},
+    {"timestamp":"2016-11-25 14:25:19.100","address":"fe:dc:ab:01:23:45"},
+    {"timestamp":"2016-11-25 17:09:20.150","address":"ab:cd:ef:01:23:45"}],
+  "bloodpressure":[
+    {"timestamp":"2016-11-24 17:40:01.300","address":"ab:cd:ef:01:23:45","systolic":{"value":120,"unit":"mmHg"},"diastolic":{"value":80,"unit":"mmHg"},"meanarterialpressure":{"value":93.33,"unit":"mmHg"},"pulserate":{"value":64,"unit":"bpm"}},
+    {"timestamp":"2016-11-26 16:49:30.250","address":"98:76:54:32:10:ab","systolic":{"value":115,"unit":"mmHg"},"diastolic":{"value":87,"unit":"mmHg"},"meanarterialpressure":{"value":96.33,"unit":"mmHg"},"pulserate":{"value":70,"unit":"bpm"}}],
+  "weight":[
+    {"timestamp":"2016-11-25 10:16:36.120","address":"01:23:45:67:89:ab","weight":{"value":75.5,"unit":"Kg"}},
+    {"timestamp":"2016-11-26 16:52:30.250","address":"fe:dc:ab:01:23:45","weight":{"value":75.800003,"unit":"Kg"}}]
+}

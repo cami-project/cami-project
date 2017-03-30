@@ -1,0 +1,12 @@
+[Unit]
+Description=AdCAMI daemon
+Requires=bluetooth.service
+
+[Service]
+Type=simple
+ExecStart=/etc/init.d/adcamid start
+ExecStop=/etc/init.d/adcamid stop
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
