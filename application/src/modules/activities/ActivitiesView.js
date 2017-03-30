@@ -35,12 +35,12 @@ const ActivitiesView = React.createClass({
     const today = moment();
     const todayMonth = today.format('MMM');
     // DEMO(@rtud): replace index w/ 0
-    const firstEventDate = moment.unix(this.props.events.get(3).get('start'));
+    const firstEventDate = moment.unix(this.props.events.get(3).get('start') + 86400);
     const firstEventMonth = firstEventDate ? firstEventDate.format('MMM') : false;
 
     const events = [];
     // DEMO(@rtud): should be firstMonth index
-    let monthKey = moment.unix(this.props.events.get(3).get('start') + 420000).format('MMMM');
+    let monthKey = moment.unix(this.props.events.get(3).get('start') + 432000).format('MMMM');
 
     this.props.events.forEach((event, index) => {
       // we want to exclude the 1st event
@@ -49,7 +49,7 @@ const ActivitiesView = React.createClass({
       if (index >= 0) {
         // every time a month changes we show a visual separator inside the timeline
         // - DEMO(@rtud): altered so we can push dates up
-        const month = index < 3 ? moment.unix(event.get('start')).format('MMMM') : moment.unix(event.get('start') + 420000).format('MMMM');
+        const month = index <= 3 ? moment.unix(event.get('start') + 86400).format('MMMM') : moment.unix(event.get('start') + 432000).format('MMMM');
         if (month != monthKey) {
           monthKey = month;
           events.push(
@@ -66,13 +66,13 @@ const ActivitiesView = React.createClass({
         events.push(
           <ActivityEntry
             key={'entry' + index}
-            timestamp={index < 3 ? event.get('start') : event.get('start') + 432000}
+            timestamp={index <= 3 ? event.get('start') + 86400 : event.get('start') + 432000}
             title={event.get('summary')}
             description={event.get('description')}
             location={event.get('location')}
             color={event.get('calendar').get('color').get('background')}
             archived={index < 3 ? true : false}
-            today={index === 3 ? true : false}
+            today={index == 3 ? true : false}
           />
         );
       }
