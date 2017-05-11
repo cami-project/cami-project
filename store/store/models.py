@@ -210,20 +210,20 @@ class Activity(models.Model):
         ("measurement", "measurement")
     )
 
-    id = models.CharField(primary_key=True, unique=True, max_length=64)
+    event_id = models.CharField(max_length=64)
     user = models.ForeignKey(User)
     status = models.CharField(max_length=16, null=True, blank=True)
     html_link = models.CharField(max_length=256, null=True, blank=True)
-    created = models.DateTimeField()
-    updated = models.DateTimeField()
+    created = models.BigIntegerField()
+    updated = models.BigIntegerField()
     title = models.CharField(max_length=64)
-    description = models.CharField(max_length=64, null=True, blank=True)
+    description = models.CharField(max_length=256, null=True, blank=True)
     creator = JSONField(null=True, blank=True)
     calendar_id = models.CharField(max_length=64)
     calendar_name = models.CharField(max_length=64)
     color = JSONField()
-    start = models.DateTimeField()
-    end = models.DateTimeField()
+    start = models.BigIntegerField()
+    end = models.BigIntegerField()
     recurrence = models.CharField(max_length=64, null=True, blank=True)
     iCalUID = models.CharField(max_length=64, null=True, blank=True)
     reminders = JSONField()
@@ -232,8 +232,8 @@ class Activity(models.Model):
     def __str__(self):
         return "[Activity] User: %s, Created: %s, Start: %s, Type: %s, Calendar Name: %s, Title: %s" % (
             self.user.first_name + " " + self.user.last_name,
-            self.created.isoformat(),
-            self.start.isoformat(),
+            datetime.datetime.fromtimestamp(self.created).strftime('%Y-%m-%d %H:%M:%S'),
+            datetime.datetime.fromtimestamp(self.start).strftime('%Y-%m-%d %H:%M:%S'),
             self.activity_type,
             self.calendar_name,
             self.title

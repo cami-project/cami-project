@@ -24,7 +24,7 @@ import datetime
 def test_model():
     user = User.objects.get(username="camidemo")
     x = Activity(
-        id = "test1",
+        event_id = "test1",
         user = user,
         status = "test",
         html_link = "http://test",
@@ -32,9 +32,9 @@ def test_model():
         description = "Test description",
         calendar_id = "test calendar id",
         calendar_name = "test calendar name",
-        start = datetime.datetime.now() + datetime.timedelta(days=1),
-        end = datetime.datetime.now() + datetime.timedelta(days=1),
-        created = datetime.datetime.now(),
-        updated = datetime.datetime.now()
+        start = int("1494496959"),
+        end = 1494496959,
+        created = 1494496959,
+        updated = 1494496959
     )
     return x.save()
