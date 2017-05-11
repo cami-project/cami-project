@@ -4,6 +4,8 @@ import activities
 
 from django.http import HttpResponse, HttpRequest, HttpResponseServerError
 
+from .models import User
 
-def test(request):
-    return HttpResponse(activities.sync_for_user(None), content_type="text/html")
+
+def sync_activities(request):
+    return HttpResponse(activities.sync_for_user(User.objects.get(username="camidemo")), content_type="text/html")
