@@ -3,7 +3,7 @@ import time
 import datetime
 import dateutil.parser
 
-from .gcal_activity_backend import *
+from .google_calendar_backend import *
 from .models import User, Activity
 
 

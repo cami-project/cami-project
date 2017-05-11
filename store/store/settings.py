@@ -142,11 +142,6 @@ LOGGING = {
             'handlers': ['console'],
             'propagate': False,
         },
-        'store.bootstrap_user_info': {
-            'level': 'DEBUG',
-            'handlers': ['sentry', 'console', 'syslog'],
-            'propagate': False
-        },
     }
 }
 

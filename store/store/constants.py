@@ -2,10 +2,6 @@
 Holds definitions for CAMI device, activity and measurement data
 """
 
-ACTIVITY_TYPE       = "activity_type"
-ACTIVITY_SOURCE     = "activity_source"
-ACTIVITY_LOCAL_ID   = "activity_local_id"
-
 CALENDAR_BACKEND_SERVICE    = "Google Calendar Backend"
 CALENDAR_BACKEND_URI        = "https://www.googleapis.com/calendar/v3/calendars"
 
