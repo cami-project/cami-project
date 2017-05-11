@@ -31,5 +31,5 @@ v1_api.register(ActivityResource())
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(v1_api.urls)),
-    url(r'^test/$', views.test, name="test"),
+    url(r'^sync_activities/$', views.sync_activities, name="sync_activities"),
 ]

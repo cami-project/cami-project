@@ -1,40 +1,29 @@
-from __future__ import absolute_import
+import logging
 
-import os
+from kombu import Queue, Exchange
 from celery import Celery
-from celery.utils.log import get_task_logger
 
-# set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'store.settings')
-from django.conf import settings #noqa
+from django.conf import settings
 
-logger = get_task_logger('store.activity_sync_tasks')
+import activities
+from .models import User
+
+logger = logging.getLogger("store")
 
 app = Celery('store', broker=settings.BROKER_URL)
 app.config_from_object('django.conf:settings')
-app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
-from kombu import Queue, Exchange
-from .gcal_activity_backend import *
-from .models import EndUserProfile, Activity, User
-import dateutil.parser
-import pytz
-import datetime
 
-def test_model():
+@app.task(name='store.sync_activities')
+def sync_activities():
+    logger.debug("[sync-activities] Synchronizing all users activities with Google Calendar. Number of users: %d" % 1)
+
+    # Hardcode user for demo
     user = User.objects.get(username="camidemo")
-    x = Activity(
-        event_id = "test1",
-        user = user,
-        status = "test",
-        html_link = "http://test",
-        title = "test title",
-        description = "Test description",
-        calendar_id = "test calendar id",
-        calendar_name = "test calendar name",
-        start = 1494490000,
-        end = 1494496959,
-        created = 1494496959,
-        updated = 1494496959
-    )
-    return x.save()
+    app.send_task('store.sync_activities_for_user', [user])
+
+    logger.debug("[sync-activities] Finished synchronizing all users activities with Google Calendar!")
+
+@app.task(name='store.sync_activities_for_user')
+def sync_activities_for_user(user):
+    activities.sync_for_user(user)
