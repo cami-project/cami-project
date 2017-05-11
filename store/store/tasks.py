@@ -10,7 +10,7 @@ from .models import User
 
 logger = logging.getLogger("store")
 
-app = Celery('store.tasks', broker=settings.BROKER_URL)
+app = Celery('store', broker=settings.BROKER_URL)
 app.config_from_object('django.conf:settings')
 
 
@@ -26,4 +26,4 @@ def sync_activities():
 
 @app.task(name='store.sync_activities_for_user')
 def sync_activities_for_user(user):
-    activities.sync_activities_for_user(user)
+    activities.sync_for_user(user)

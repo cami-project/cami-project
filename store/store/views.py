@@ -1,11 +1,9 @@
 # Create your views here.
 
-import activities
+import tasks
 
 from django.http import HttpResponse, HttpRequest, HttpResponseServerError
 
-from .models import User
-
 
 def sync_activities(request):
-    return HttpResponse(activities.sync_for_user(User.objects.get(username="camidemo")), content_type="text/html")
+    return HttpResponse(tasks.sync_activities(), content_type="text/html")
