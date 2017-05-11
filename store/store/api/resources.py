@@ -1,3 +1,8 @@
+import ast
+import json
+import time
+import datetime
+
 from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
 from tastypie import fields
@@ -8,8 +13,6 @@ from tastypie.utils import trailing_slash
 from django.core.urlresolvers import resolve, get_script_prefix, Resolver404
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from django.core import serializers
-import datetime
-import json, ast, time
 
 from store.models import EndUserProfile, Device, DeviceUsage, Measurement, Activity
 
@@ -182,9 +185,12 @@ class ActivityResource(ModelResource):
         self.is_authenticated(request)
         self.throttle_check(request)
 
+        date_start = datetime.datetime.now() - datetime.timedelta(days=7)
+        date_end = datetime.datetime.now() + datetime.timedelta(days=7)
+
         last_activities = Activity.objects.all().filter(
-            start__gte=datetime.datetime.now(),
-            end__lte=datetime.datetime.now() + datetime.timedelta(days=14)
+            start__gte=time.mktime(date_start.timetuple()),
+            end__lte=time.mktime(date_end.timetuple())
         ).order_by('start')
 
         return self.create_response(request, list(last_activities.values()))

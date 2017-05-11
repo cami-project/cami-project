@@ -32,7 +32,7 @@ def test_model():
         description = "Test description",
         calendar_id = "test calendar id",
         calendar_name = "test calendar name",
-        start = int("1494496959"),
+        start = 1494490000,
         end = 1494496959,
         created = 1494496959,
         updated = 1494496959
