@@ -202,6 +202,7 @@ class Measurement(models.Model):
 class Activity(models.Model):
     class Meta:
         verbose_name_plural = "activities"
+        unique_together = ('user', 'calendar_id', 'event_id')
 
     ACTIVITY_TYPE = (
         ("personal", "personal"),
