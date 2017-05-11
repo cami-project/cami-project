@@ -100,7 +100,7 @@ def get_calendar(calendar_service, calendar_id):
         res = req.execute()
         return res, 200
     except errors.HttpError as e:
-        logger.exception("Cannot retrieve remote calendar: %s" % calendar_id)
+        logger.exception("[google_calendar_backend] Cannot retrieve remote calendar: %s" % calendar_id)
         raise e
 
 def consume_event_results(calendar_service, api_req):
@@ -110,7 +110,7 @@ def consume_event_results(calendar_service, api_req):
         try:
             current_res = api_req.execute()
         except errors.HttpError as e:
-            logger.exception("Cannot consume all results from api_req %s." % (api_req))
+            logger.exception("[google_calendar_backend] Cannot consume all results from api_req %s." % (api_req))
             break
 
         if current_res['items']:

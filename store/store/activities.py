@@ -42,7 +42,7 @@ def sync_for_user(user):
         if res_code == 200:
             logger.debug("[sync-activities] Successfully got calendar: %s" % str(calendar))
         else:
-            logger.debug("[sync-activities] Failed to get calendar! Response code: %s" % str(res_code))
+            logger.error("[sync-activities] Failed to get calendar! Response code: %s" % str(res_code))
             continue
 
         # Calculate timeframe for fetching events
