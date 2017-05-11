@@ -8,8 +8,6 @@ from .models import User, Activity
 
 
 def sync_for_user(user):
-    user = User.objects.get(username="camidemo")
-
     # Hardcode calendars for demo
     calendars = {
         "personal": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
@@ -34,48 +32,102 @@ def sync_for_user(user):
         date_from = datetime.datetime.now(tz) - datetime.timedelta(days=7)
         date_to = datetime.datetime.now(tz) + datetime.timedelta(days=7)
 
-        # Compose the color object
-        calendar_colors = {
-            'foreground': calendar['foregroundColor'],
-            'background': calendar['backgroundColor'],
-            'id': calendar['colorId']
-        }
-
         # Get events for the current calendar
         events = list_activities(calendar_service, calendar_id, date_from, date_to)
 
-        # Process the events
-        for event in events:
-            start = dateutil.parser.parse(event['start']['dateTime'])
-            end = dateutil.parser.parse(event['end']['dateTime'])
-            created = dateutil.parser.parse(event['created'])
-            updated = dateutil.parser.parse(event['updated'])
+        # Add the activity type to the calendar object
+        calendar['activity_type'] = calendar_type
 
-            description = ""
-            if 'description' in event:
-                description = event['description']
+        # Process the collected events
+        process_events(user, calendar, events, date_from, date_to)
 
-            recurring_event_id = ""
-            if 'recurringEventId' in event:
-                recurring_event_id = event['recurringEventId']
+def process_events(user, calendar, events, date_from, date_to):
+    # Compose the color object
+    calendar_colors = {
+        'foreground': calendar['foregroundColor'],
+        'background': calendar['backgroundColor'],
+        'id': calendar['colorId']
+    }
 
-            activity = Activity(
-                event_id = event['id'],
-                user = user,
-                status = event['status'],
-                html_link = event['htmlLink'],
-                title = event['summary'],
-                description = description,
-                calendar_id = calendar_id,
-                calendar_name = calendar['summary'],
-                start = time.mktime(start.timetuple()),
-                end = time.mktime(end.timetuple()),
-                created = time.mktime(created.timetuple()),
-                updated = time.mktime(updated.timetuple()),
-                recurring_event_id = recurring_event_id,
-                iCalUID = event['iCalUID'],
-                reminders = event['reminders'],
-                activity_type = calendar_type,
-                color = calendar_colors,
-                creator = event['creator']
-            ).save()
+    # Get the events from DB to compare them with the fetched ones
+    db_events = Activity.objects.all().filter(
+        start__gte=time.mktime(date_from.timetuple()),
+        end__lte=time.mktime(date_to.timetuple()),
+        user=user,
+        calendar_id=calendar['id']
+    )
+
+    # Compute a hash of update times by event id
+    db_events_hash = {}
+    for db_event in db_events:
+        event_id = db_event.event_id
+        db_events_hash[event_id] = {
+            'id': db_event.id,
+            'updated': db_event.updated,
+            'color': db_event.color
+        }
+
+    # Process the events
+    for event in events:
+        activity_data = compose_activity_data(
+            event,
+            calendar,
+            calendar_colors,
+            user
+        )
+
+        if event['id'] in db_events_hash:
+            db_event = db_events_hash[event['id']]
+
+            # If the event differs from the already stored activity
+            # then add the DB id to data so the entry is updated
+            if event_equals_activity(event, db_event) != True:
+                activity_data['id'] = db_event['id']
+
+            # Remove the DB event from the hash because it is valid
+            db_events_hash.pop(event['id'], None)
+
+        Activity(**activity_data).save()
+
+    # Delete the cancelled DB events (the ones remaining in the hash)
+    activities_to_delete = map(
+        lambda x: x['id'],
+        db_events_hash.values()
+    )
+    Activity.objects.filter(id__in=activities_to_delete).delete()
+
+def compose_activity_data(event, calendar, calendar_colors, user):
+    activity_data = {
+        'event_id': event['id'],
+        'user': user,
+        'status': event['status'],
+        'html_link': event['htmlLink'],
+        'title': event['summary'],
+        'calendar_id': calendar['id'],
+        'calendar_name': calendar['summary'],
+        'start': timestamp_from_event_date(event['start']['dateTime']),
+        'end': timestamp_from_event_date(event['end']['dateTime']),
+        'created': timestamp_from_event_date(event['created']),
+        'updated': timestamp_from_event_date(event['updated']),
+        'activity_type': calendar['activity_type'],
+        'color': calendar_colors,
+        'creator': event['creator'],
+        'iCalUID': event['iCalUID']
+    }
+
+    if 'description' in event:
+        activity_data['description'] = event['description']
+
+    if 'recurringEventId' in event:
+        activity_data['recurring_event_id'] = event['recurringEventId']
+
+    return activity_data
+
+def event_equals_activity(event, activity):
+    return False
+
+def timestamp_from_event_date(date):
+    return time.mktime(
+        dateutil.parser.parse(date).timetuple()
+    )
+
