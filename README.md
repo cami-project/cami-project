@@ -225,3 +225,14 @@ You may sometimes want to check to see if a specific container is running that l
 2. SSH it
     * run `$ docker exec -ti HASH bash`
     * you can also login as root by running `$ docker exec -ti -u root HASH bash`
+
+### Low disk space on Rancher setup
+
+One issue that's bound to happen when you're running a Docker setup is that you run out of space, due to unused images piling up and hogging up the space. This is a known issue and altough we're looking for a more permanent solution, here's a quick fix until then:
+
+* SSH into the **Rancher Slave** machine using the instructions and key inside LastPass
+* delete all dangling Docker images by running: `docker rmi $(docker images -qf dangling=true)`
+* delete all dangling Docker volumes by running: `docker volume rm $(docker volume ls -qf dangling=true)`
+* restart the slave machine
+* SSH into the **Rancher Master** machine and restart
+* follow the procedure in the [TESTING](https://github.com/cami-project/cami-project/blob/master/TESTING.md) document to insure that everything works accordingly
