@@ -17,14 +17,7 @@ import dateutil.parser
 import logging
 logger = logging.getLogger("store.gcal_activity_backend")
 
-# try:
-#     import argparse
-#     flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
-# except ImportError:
-#     flags = None
 
-# If modifying these scopes, delete your previously saved credentials
-# at ~/.credentials/cami-calendar-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'CAMI Google Calendar API'
@@ -41,8 +34,9 @@ def get_credentials():
     Returns:
         Credentials, the obtained credential.
     """
-    home_dir = os.path.expanduser('~')
-    credential_dir = os.path.join(home_dir, '.credentials')
+
+    project_dir = os.path.dirname(os.path.realpath(__file__)) + "/../"
+    credential_dir = project_dir
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     credential_path = os.path.join(credential_dir, 'cami-calendar-quickstart.json')
@@ -50,16 +44,14 @@ def get_credentials():
     store = Storage(credential_path)
     credentials = store.get()
 
-    flags = None
-
     if not credentials or credentials.invalid:
-        flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
+        client_secret_file_path = os.path.join(project_dir, CLIENT_SECRET_FILE)
+        flow = client.flow_from_clientsecrets(client_secret_file_path, SCOPES)
         flow.user_agent = APPLICATION_NAME
 
-        if flags:
-            credentials = tools.run_flow(flow, store, flags)
-        else: # Needed only for compatibility with Python 2.6
-            credentials = tools.run(flow, store)
+        flags = tools.argparser.parse_args(args=[])
+        credentials = tools.run_flow(flow, store, flags)
+
         logger.info('Storing GCal acccess credentials to ' + credential_path)
     return credentials
 
@@ -368,4 +360,22 @@ def cancel_activity(calendar_service, calendar_id, activity_id):
     except errors.HttpError as e:
         logger.exception("Failed to cancel activity with remote ID %s from calendar with id: %s" % (activity_id,
                                                                                                   calendar_id))
+        raise e
+
+
+""" =============================== GET CALENDARS =============================== """
+def get_calendar(calendar_service, calendar_id):
+    """
+    Returns a python dict corresponding to the JSON description of a GCal
+    :param calendar_service:
+    :param calendar_id:
+    :return:
+    """
+    req = calendar_service.calendarList().get(calendarId=calendar_id)
+
+    try:
+        res = req.execute()
+        return res, 200
+    except errors.HttpError as e:
+        logger.exception("Cannot retrieve remote calendar: %s" % calendar_id)
         raise e

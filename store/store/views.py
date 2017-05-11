@@ -1,9 +1,9 @@
 # Create your views here.
 
-import json, logging, pprint
-import tasks
+import activities
 
 from django.http import HttpResponse, HttpRequest, HttpResponseServerError
 
+
 def test(request):
-    return HttpResponse(tasks.test_model(), content_type="text/html")
+    return HttpResponse(activities.sync_for_user(None), content_type="text/html")

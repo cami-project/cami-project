@@ -121,7 +121,7 @@ LOGGING = {
     'loggers': {
         'store': {
             'level': 'DEBUG',
-            'handlers': ['sentry', 'console', 'syslog'],
+            'handlers': ['sentry', 'console', 'syslog', 'file'],
         },
         'django': {
             'level': 'DEBUG',
@@ -141,16 +141,6 @@ LOGGING = {
             'level': 'DEBUG',
             'handlers': ['console'],
             'propagate': False,
-        },
-        'store.gcal_activity_backend': {
-            'level': 'DEBUG',
-            'handlers': ['sentry', 'console', 'syslog'],
-            'propagate': False
-        },
-        'store.activity_sync_tasks': {
-            'level': 'DEBUG',
-            'handlers': ['sentry', 'console', 'syslog'],
-            'propagate': False
         },
         'store.bootstrap_user_info': {
             'level': 'DEBUG',
@@ -219,12 +209,11 @@ STATIC_URL = '/static/'
 ## CELERY settings
 BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
 
-CELERY_DEFAULT_QUEUE = 'store_activity_sync_local'
+CELERY_DEFAULT_QUEUE = 'store'
 CELERY_QUEUES = (
-    Queue('store_activity_sync_remote', Exchange('store_activity_sync_remote'), routing_key='store_activity_sync_remote'),
-    Queue('store_activity_sync_local', Exchange('store_activity_sync_local'), routing_key='store_activity_sync_local'),
-    # Queue('store_activity_insert_local', Exchange('store_activity_insert_local'), routing_key='store_activity_insert_local'),
+    Queue('store', Exchange('store'), routing_key='store'),
 )
+
 
 ## TASTYPIE settings
 TASTYPIE_DEFAULT_FORMATS = ['json']

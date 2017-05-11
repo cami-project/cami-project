@@ -224,7 +224,7 @@ class Activity(models.Model):
     color = JSONField()
     start = models.BigIntegerField()
     end = models.BigIntegerField()
-    recurrence = models.CharField(max_length=64, null=True, blank=True)
+    recurring_event_id = models.CharField(max_length=64, null=True, blank=True)
     iCalUID = models.CharField(max_length=64, null=True, blank=True)
     reminders = JSONField()
     activity_type = models.CharField(max_length=16, choices=ACTIVITY_TYPE, default="personal")
