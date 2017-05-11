@@ -17,8 +17,8 @@ We're currently sharing the following information w/ Linkwatch via their API, as
 
 #### Testing
 * Use the information provided inside the [TESTING](TESTING.md) document to populate the CAMI Cloud with new measurements
-* Vist [Linkwatch's website](http://www.mylinkwatch.se/) and login using the credentials from LastPass
-* If all went well, the updated measurements should be visible on the [My Measurements page](http://www.mylinkwatch.se/my-measurements/)
+* Vist [Linkwatch's website](http://cami.linkwatch.se/) and login using the credentials from LastPass
+* If all went well, the updated measurements should be visible on the [My Measurements page](http://cami.linkwatch.se/en_GB/dashboard/)
 
 
 ## 2. OpenTele
