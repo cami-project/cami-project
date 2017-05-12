@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 import raven
 
+from datetime import timedelta
 from kombu import Exchange, Queue
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -200,6 +201,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+## Sync Google Calendar Events Scheduled Task
+CELERYBEAT_SCHEDULE = {
+    'sync_activities': {
+        'task': 'store.sync_activities',
+        'schedule': timedelta(minutes=5),
+    },
+}
 
 ## CELERY settings
 BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'

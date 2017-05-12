@@ -44,6 +44,19 @@ services:
       - .:/cami-project
     entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint-dev.sh
 
+  # Runs the Celery task scheduler for store-management
+  cami-store-management-task-scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile-store-management
+    links:
+      # Needs the store to interact with the DB
+      - cami-store
+      - cami-rabbitmq
+    volumes:
+      - .:/cami-project
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-task-scheduler-entrypoint-dev.sh
+
   cami-rabbitmq:
     build:
       context: .
