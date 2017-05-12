@@ -6,6 +6,7 @@ import icons from 'Cami/src/icons-fa';
 import * as env from '../../../env';
 
 var json = require('../../../api-examples/homepage-caregiver/eldery-status.json');
+var activitiesInitialJson = require('../../../api-examples/activities/google-calendar-feed-from-api.json');
 var previousNotificationId = "";
 
 // Initial state
@@ -19,6 +20,7 @@ const initialState = Map({
     params: fromJS({})
   }),
   lastEvents: fromJS([]),
+  lastActivities: fromJS(activitiesInitialJson),
   weight: fromJS({
     "status": "ok",
     "amount": [],
@@ -80,7 +82,8 @@ async function fetchPageData() {
       "data": [],
       "threshold": 150
     },
-    lastEvents: []
+    lastEvents: [],
+    lastActivities: []
   };
 
   return fetch(notificationsUrl)
@@ -118,24 +121,34 @@ async function fetchPageData() {
       var weightApiUrl = env.WEIGHT_MEASUREMENTS_LAST_VALUES;
       var heartRateApiUrl = env.HEARTRATE_MEASUREMENTS_LAST_VALUES;
       var stepsCountApiUrl = env.STEPS_MEASUREMENTS_LAST_VALUES;
+      var activitiesApiUrl = env.ACTIVITIES_LAST_EVENTS;
 
-      return fetch(weightApiUrl).then((response) => response.json())
-        .then((weightsJson) => {
+      return fetch(activitiesApiUrl).then((response) => response.json())
+        .then((activitiesJson) => {
 
-          result.weight = weightsJson.weight;
+          result.lastActivities = activitiesJson;
 
-          return fetch(heartRateApiUrl).then((response) => response.json())
-            .then((heartRateJson) => {
+          return fetch(weightApiUrl).then((response) => response.json())
+            .then((weightsJson) => {
 
-              result.heart_rate = heartRateJson.heart_rate;
+              result.weight = weightsJson.weight;
 
-              return fetch(stepsCountApiUrl).then((response) => response.json())
-                .then((stepsCountJson) => {
+              return fetch(heartRateApiUrl).then((response) => response.json())
+                .then((heartRateJson) => {
 
-                  result.steps = stepsCountJson.steps;
+                  result.heart_rate = heartRateJson.heart_rate;
 
-                  return result;
+                  return fetch(stepsCountApiUrl).then((response) => response.json())
+                    .then((stepsCountJson) => {
 
+                      result.steps = stepsCountJson.steps;
+
+                      return result;
+
+                  }).catch((error) => {
+
+                    return result;
+                  });
               }).catch((error) => {
 
                 return result;
@@ -189,7 +202,8 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
           .setIn(['weight'], fromJS(action.payload.weight))
           .setIn(['heart_rate'], fromJS(action.payload.heart_rate))
           .setIn(['steps'], fromJS(action.payload.steps))
-          .setIn(['lastEvents'], fromJS(action.payload.lastEvents)),
+          .setIn(['lastEvents'], fromJS(action.payload.lastEvents))
+          .setIn(['lastActivities'], fromJS(action.payload.lastActivities)),
         Effects.promise(triggerFetchPageData)
       );
 
