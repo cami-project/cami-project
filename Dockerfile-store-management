@@ -15,11 +15,15 @@ COPY docker/cami-store/docker-entrypoint.sh /usr/local/bin/
 COPY docker/cami-store/docker-migration-entrypoint.sh /usr/local/bin/
 COPY docker/cami-store/docker-message-worker-entrypoint.sh /usr/local/bin/
 COPY docker/cami-store/docker-message-worker-entrypoint-dev.sh /usr/local/bin/
+COPY docker/cami-store/docker-task-scheduler-entrypoint.sh /usr/local/bin/
+COPY docker/cami-store/docker-task-scheduler-entrypoint-dev.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-migration-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-message-worker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-message-worker-entrypoint-dev.sh
+RUN chmod +x /usr/local/bin/docker-task-scheduler-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-task-scheduler-entrypoint-dev.sh
 
 RUN adduser --disabled-password --gecos '' storemgr
 RUN chown -R storemgr /cami-project

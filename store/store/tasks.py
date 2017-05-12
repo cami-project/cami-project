@@ -22,8 +22,6 @@ def sync_activities():
     user = User.objects.get(username="camidemo")
     app.send_task('store.sync_activities_for_user', [user])
 
-    logger.debug("[sync-activities] Finished synchronizing all users activities with Google Calendar!")
-
 @app.task(name='store.sync_activities_for_user')
 def sync_activities_for_user(user):
     activities.sync_for_user(user)

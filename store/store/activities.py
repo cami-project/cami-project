@@ -1,6 +1,7 @@
 import pytz
 import time
 import datetime
+import calendar
 import dateutil.parser
 
 from .google_calendar_backend import *
@@ -110,9 +111,14 @@ def process_events(user, calendar, events, date_from, date_to):
             # Remove the DB event from the hash because it is valid
             db_events_hash.pop(event['id'], None)
 
+            # The calendar color might have changed, add it to the event
+            # in order to be compared with the activity color
+            event['color'] = calendar_colors
+
             # If the event does not differ from the already stored
             # activity then continue with the next event
             if event_equals_activity(event, db_event) == True:
+                logger.debug("[sync-activities] Events are equal")
                 continue
 
             # The event differs from the already stored activity so add
@@ -164,10 +170,19 @@ def compose_activity_data(event, calendar, calendar_colors, user):
     return activity_data
 
 def event_equals_activity(event, activity):
-    return False
+    # Compare color
+    if event['color'] != activity['color']:
+        return False
+
+    # Compare update time
+    event_updated_timestamp = timestamp_from_event_date(event['updated'])
+    if event_updated_timestamp != activity['updated']:
+        return False
+
+    return True
 
 def timestamp_from_event_date(date):
-    return time.mktime(
-        dateutil.parser.parse(date).timetuple()
+    return calendar.timegm(
+        dateutil.parser.parse(date).utctimetuple()
     )
 
