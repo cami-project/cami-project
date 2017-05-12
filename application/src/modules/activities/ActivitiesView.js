@@ -32,47 +32,56 @@ const ActivitiesView = React.createClass({
     // _scrollView.scrollTo({x:0, y: 558, animated: true});
   },
 
+  findNextEventId(events, today) {
+    const futureEvents = [];
+    events.forEach((event, index) => {
+        if(moment(event.get('start')).isSameOrAfter(today.unix())) {
+          futureEvents.push(index);
+        }
+    });
+    return futureEvents[0];
+  },
+
   render() {
     const today = moment();
-    const todayMonth = today.format('MMM');
-    const firstEventDate = moment.unix(this.props.events.get(0).get('start'));
-    const firstEventMonth = firstEventDate ? firstEventDate.format('MMM') : false;
-
+    // placeholder for the events to be itterated upon
     const events = [];
-    let monthKey = firstEventMonth;
+    // id of next event from the list of events received form the API
+    // - also used to decide which events are to be displayed as archived
+    const nextEventId = this.findNextEventId(this.props.events, today);
+    // moment of next event, used for header dates formatting
+    const nextEventDate = moment.unix(this.props.events.get(nextEventId).get('start'));
+    // month name of 1st event that will be used to selectively display month separators
+    let monthKey = moment.unix(this.props.events.get(0).get('start')).format('MMMM');
 
     this.props.events.forEach((event, index) => {
-      // we want to exclude the 1st event
-      // -- we're already displaying it inside the Activities Header
-      if (index > 0) {
-        // every time a month changes we show a visual separator inside the timeline
-        const month = moment.unix(event.get('start')).format('MMMM');
-        if (month != monthKey) {
-          monthKey = month;
-          events.push(
-            <View key={'text' + index} style={[styles.dateContainer, {flex: 1}]}>
-              <View style={styles.dateRuler}><View style={styles.dateBullet}/></View>
-              <Text style={[styles.date]}>{month}</Text>
-            </View>
-          );
-        }
-
-        // and now let's build that event list
-        // - TODO(@rtud): color gets passed as hex value for now
-        //   - we should create a local mappging of gCal registered colors
+      // every time a month changes we show a visual separator inside the timeline
+      const month = moment.unix(event.get('start')).format('MMMM');
+      if (month !== monthKey) {
+        monthKey = month;
         events.push(
-          <ActivityEntry
-            key={'entry' + index}
-            timestamp={event.get('start')}
-            title={event.get('title')}
-            description={event.get('description') !== null ? event.get('description') : 'No description'}
-            location={'No location set'}
-            color={event.get('color').get('background')}
-            archived={false}
-            today={false}
-          />
+          <View key={'text' + index} style={[styles.dateContainer, {flex: 1}]}>
+            <View style={styles.dateRuler}><View style={styles.dateBullet}/></View>
+            <Text style={[styles.date]}>{month}</Text>
+          </View>
         );
       }
+
+      // and now let's build that event list
+      // - TODO(@rtud): color gets passed as hex value for now
+      //   - we should create a local mappging of gCal registered colors
+      events.push(
+        <ActivityEntry
+          key={'entry' + index}
+          timestamp={event.get('start')}
+          title={event.get('title')}
+          description={event.get('description') !== null ? event.get('description') : '----'}
+          location={'----'}
+          color={event.get('color').get('background')}
+          archived={index < nextEventId ? true : false}
+          today={index !== nextEventId ? false : true}
+        />
+      );
     });
 
     return (
@@ -81,22 +90,22 @@ const ActivitiesView = React.createClass({
           <View style={styles.nextEventDate}>
             <View>
               {
-                firstEventDate
-                  ? <Text style={styles.dayName}>{firstEventDate.format('ddd')}</Text>
+                nextEventDate
+                  ? <Text style={styles.dayName}>{nextEventDate.format('ddd')}</Text>
                   : <Text style={styles.dayName}>--</Text>
               }
             </View>
             <View>
               {
-                firstEventDate
-                  ? <Text style={styles.day}>{firstEventDate.format('DD')}</Text>
+                nextEventDate
+                  ? <Text style={styles.day}>{nextEventDate.format('DD')}</Text>
                   : <Text style={styles.day}>--</Text>
               }
             </View>
             <View>
               {
-                firstEventDate
-                  ? <Text style={styles.month}>{firstEventDate.format('MMM').toUpperCase()}</Text>
+                nextEventDate
+                  ? <Text style={styles.month}>{nextEventDate.format('MMM').toUpperCase()}</Text>
                   : <Text style={styles.month}>---</Text>
               }
             </View>
@@ -112,13 +121,13 @@ const ActivitiesView = React.createClass({
               </View>
             </View>
             {
-              this.props.events.get(0).get('title') !== null
-                ? <Text style={styles.nextTitle}>{this.props.events.get(0).get('title')}</Text>
+              this.props.events.get(nextEventId).get('title') !== null
+                ? <Text style={styles.nextTitle}>{this.props.events.get(nextEventId).get('title')}</Text>
                 : <Text style={styles.nextTitle}>No pending events</Text>
             }
             {
-              this.props.events.get(0).get('description') !== null
-                ? <Text style={styles.nextDescription}>{this.props.events.get(0).get('description')}</Text>
+              this.props.events.get(nextEventId).get('description') !== null
+                ? <Text style={styles.nextDescription}>{this.props.events.get(nextEventId).get('description')}</Text>
                 : <Text style={styles.nextDescription}>Add using Google Calendar</Text>
             }
             <View style={styles.nextMeta}>
@@ -130,8 +139,8 @@ const ActivitiesView = React.createClass({
               />
               <View style={styles.nextTime}>
                 {
-                  firstEventDate
-                    ? <Text style={styles.metaText}>{firstEventDate.format('HH:mm')}</Text>
+                  nextEventDate
+                    ? <Text style={styles.metaText}>{nextEventDate.format('HH:mm')}</Text>
                     : <Text style={styles.metaText}>--:--</Text>
                 }
               </View>
