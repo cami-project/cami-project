@@ -1,6 +1,7 @@
 import pytz
 import time
 import datetime
+import calendar
 import dateutil.parser
 
 from .google_calendar_backend import *
@@ -181,7 +182,7 @@ def event_equals_activity(event, activity):
     return True
 
 def timestamp_from_event_date(date):
-    return time.mktime(
-        dateutil.parser.parse(date).timetuple()
+    return calendar.timegm(
+        dateutil.parser.parse(date).utctimetuple()
     )
 
