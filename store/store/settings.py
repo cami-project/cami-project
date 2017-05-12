@@ -204,9 +204,9 @@ STATIC_URL = '/static/'
 ## CELERY settings
 BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
 
-CELERY_DEFAULT_QUEUE = 'store'
+CELERY_DEFAULT_QUEUE = 'store_activities_sync'
 CELERY_QUEUES = (
-    Queue('store', Exchange('store'), routing_key='store'),
+    Queue('store_activities_sync', Exchange('store_activities_sync'), routing_key='store_activities_sync'),
 )
 
 
