@@ -1,0 +1,137 @@
+[
+  {
+    "activity_type": "medication",
+    "calendar_id": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+    "calendar_name": "Medication",
+    "color": {
+      "background": "#fa573c",
+      "foreground": "#000000",
+      "id": "4"
+    },
+    "created": 1494413636,
+    "creator": {
+      "email": "proiect.cami@gmail.com"
+    },
+    "description": null,
+    "end": 1494504000,
+    "event_id": "h5bk4mchboa9od1uroe93nthi8_20170511T110000Z",
+    "html_link": "https://www.google.com/calendar/event?eid=aDViazRtY2hib2E5b2QxdXJvZTkzbnRoaThfMjAxNzA1MTFUMTEwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "iCalUID": "h5bk4mchboa9od1uroe93nthi8@google.com",
+    "id": 7,
+    "recurring_event_id": "h5bk4mchboa9od1uroe93nthi8",
+    "reminders": {},
+    "start": 1494500400,
+    "status": "confirmed",
+    "title": "Analgezics",
+    "updated": 1494413636,
+    "user_id": 2
+  },
+  {
+    "activity_type": "exercise",
+    "calendar_id": "8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
+    "calendar_name": "Exercise",
+    "color": {
+      "background": "#7bd148",
+      "foreground": "#000000",
+      "id": "9"
+    },
+    "created": 1494535962,
+    "creator": {
+      "email": "proiect.cami@gmail.com"
+    },
+    "description": null,
+    "end": 1494511200,
+    "event_id": "19c584tf0u6r1iprrkggrq6il4",
+    "html_link": "https://www.google.com/calendar/event?eid=MTljNTg0dGYwdTZyMWlwcnJrZ2dycTZpbDQgOHB1YXIwc2M0ZTdlZm5zNXI4NDlybjBsdXNAZw",
+    "iCalUID": "19c584tf0u6r1iprrkggrq6il4@google.com",
+    "id": 9,
+    "recurring_event_id": null,
+    "reminders": {},
+    "start": 1494507600,
+    "status": "confirmed",
+    "title": "Crunches",
+    "updated": 1494537052,
+    "user_id": 2
+  },
+  {
+    "activity_type": "personal",
+    "calendar_id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+    "calendar_name": "Appointments",
+    "color": {
+      "background": "#fbe983",
+      "foreground": "#000000",
+      "id": "11"
+    },
+    "created": 1494544314,
+    "creator": {
+      "email": "proiect.cami@gmail.com"
+    },
+    "description": null,
+    "end": 1494603000,
+    "event_id": "pjm35ld41grfhrfh93472j1g24",
+    "html_link": "https://www.google.com/calendar/event?eid=cGptMzVsZDQxZ3JmaHJmaDkzNDcyajFnMjQgN2VoNnFuaXZpZDY0MzBkbDc5ZWk4OWsyNmdAZw",
+    "iCalUID": "pjm35ld41grfhrfh93472j1g24@google.com",
+    "id": 5,
+    "recurring_event_id": null,
+    "reminders": {},
+    "start": 1494599400,
+    "status": "confirmed",
+    "title": "Tennis w/ Joel",
+    "updated": 1494552610,
+    "user_id": 2
+  },
+  {
+    "activity_type": "personal",
+    "calendar_id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+    "calendar_name": "Appointments",
+    "color": {
+      "background": "#fbe983",
+      "foreground": "#000000",
+      "id": "11"
+    },
+    "created": 1494556425,
+    "creator": {
+      "email": "proiect.cami@gmail.com"
+    },
+    "description": null,
+    "end": 1494689400,
+    "event_id": "nd044tjlq84a3cl0hpcgu4ck6g",
+    "html_link": "https://www.google.com/calendar/event?eid=bmQwNDR0amxxODRhM2NsMGhwY2d1NGNrNmcgN2VoNnFuaXZpZDY0MzBkbDc5ZWk4OWsyNmdAZw",
+    "iCalUID": "nd044tjlq84a3cl0hpcgu4ck6g@google.com",
+    "id": 6,
+    "recurring_event_id": null,
+    "reminders": {},
+    "start": 1494685800,
+    "status": "confirmed",
+    "title": "Footbal Game",
+    "updated": 1494556425,
+    "user_id": 2
+  },
+  {
+    "activity_type": "medication",
+    "calendar_id": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+    "calendar_name": "Medication",
+    "color": {
+      "background": "#fa573c",
+      "foreground": "#000000",
+      "id": "4"
+    },
+    "created": 1494413636,
+    "creator": {
+      "email": "proiect.cami@gmail.com"
+    },
+    "description": null,
+    "end": 1495108800,
+    "event_id": "h5bk4mchboa9od1uroe93nthi8_20170518T110000Z",
+    "html_link": "https://www.google.com/calendar/event?eid=aDViazRtY2hib2E5b2QxdXJvZTkzbnRoaThfMjAxNzA1MThUMTEwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "iCalUID": "h5bk4mchboa9od1uroe93nthi8@google.com",
+    "id": 8,
+    "recurring_event_id": "h5bk4mchboa9od1uroe93nthi8",
+    "reminders": {},
+    "start": 1495105200,
+    "status": "confirmed",
+    "title": "Analgezics",
+    "updated": 1494413636,
+    "user_id": 2
+  }
+]
