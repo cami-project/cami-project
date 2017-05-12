@@ -118,7 +118,6 @@ def process_events(user, calendar, events, date_from, date_to):
             # If the event does not differ from the already stored
             # activity then continue with the next event
             if event_equals_activity(event, db_event) == True:
-                logger.debug("[sync-activities] Events are equal")
                 continue
 
             # The event differs from the already stored activity so add
