@@ -143,9 +143,11 @@ const ActivitiesView = React.createClass({
               />
               <View style={styles.nextLocation}>
                 {
+                  <Text style={styles.metaText}>----</Text>
+                  /* TODO (@rtud): uncomment after inclusion of event location data in API response
                   this.props.events.get(0).get('location')
                     ? <Text style={styles.metaText}>{this.props.events.get(0).get('location')}</Text>
-                    : <Text style={styles.metaText}>----</Text>
+                    : <Text style={styles.metaText}>----</Text> */
                 }
               </View>
             </View>
