@@ -14,10 +14,10 @@ import variables from '../../variables/CaregiverGlobalVariables';
 const ActivityEntry = React.createClass({
   propTypes: {
     timestamp: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    location: PropTypes.string.isRequired,
-    color: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    location: PropTypes.string,
+    color: PropTypes.string,
     archived: PropTypes.bool.isRequired,
     today: PropTypes.bool.isRequired,
   },
