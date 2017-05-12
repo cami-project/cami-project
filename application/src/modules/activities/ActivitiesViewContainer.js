@@ -5,6 +5,6 @@ import ActivitiesView from './ActivitiesView';
 export default connect(
   state => ({
     username: state.getIn(['auth', 'currentUser', 'name']),
-    events: state.getIn(['activities', 'events'])
+    events: state.getIn(['homepageCaregiver', 'lastActivities'])
   })
 )(ActivitiesView);

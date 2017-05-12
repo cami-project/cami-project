@@ -1,6 +1,6 @@
 import {fromJS} from 'immutable';
 
-var json = require('../../../api-examples/activities/google-calendar-feed.json');
+var json = require('../../../api-examples/activities/google-calendar-feed-from-api.json');
 
 // Initial State
 const initialState = fromJS(json);
