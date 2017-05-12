@@ -28,7 +28,8 @@ const ActivitiesView = React.createClass({
     const _scrollView = this.scrollView;
     // TODO(@rtud): scrollTo shouldn't hard coded value
     // - we should grab one of the Entry's height
-    _scrollView.scrollTo({x:0, y: 558, animated: true});
+    // - uncomment and reuse in #215
+    // _scrollView.scrollTo({x:0, y: 558, animated: true});
   },
 
   render() {
