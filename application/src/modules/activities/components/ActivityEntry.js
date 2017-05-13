@@ -55,9 +55,9 @@ const ActivityEntry = React.createClass({
             <View style={{flexWrap: 'wrap'}}>
               <Text style={styles.title}>{this.props.title}</Text>
               {
-                this.props.description
+                this.props.description !== 'No description set'
                   ? <Text style={styles.description}>{this.props.description}</Text>
-                  : ''
+                  : <Text style={[styles.description, {color: variables.colors.gray.neutral}]}>{this.props.description}</Text>
               }
             </View>
             <View style={[styles.metaContainer, {flexWrap: 'wrap'}]}>

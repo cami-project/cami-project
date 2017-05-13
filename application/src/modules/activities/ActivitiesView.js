@@ -25,11 +25,23 @@ const ActivitiesView = React.createClass({
   },
 
   componentDidMount() {
-    const _scrollView = this.scrollView;
-    // TODO(@rtud): scrollTo shouldn't hard coded value
-    // - we should grab one of the Entry's height
-    // - uncomment and reuse in #215
-    // _scrollView.scrollTo({x:0, y: 558, animated: true});
+    if(this.props.events.size > 0) {
+      const _scrollView = this.scrollView;
+      // we need the nextEventId to calculate scrolling distance
+      const nextEventId = this.findNextEventId(this.props.events, moment());
+      // scroll offset to get last event in view
+      // - used when there aren't enough future events to justify nextEvent hidden under header
+      const scrollToEndOffset = ((this.props.events.size * 127) - (variables.dimensions.height - 140 - 49 - 20));
+      // scroll offset to get next event hidden under header
+      // - only applies if there are a sufficient amount of future events (~4)
+      const scrollToEventOffset = (127 * (nextEventId + 1));
+
+      _scrollView.scrollTo({
+        x: 0,
+        y: (this.props.events.size - (nextEventId + 1)) < 4 ? scrollToEndOffset : scrollToEventOffset,
+        animated: true
+      });
+    }
   },
 
   findNextEventId(events, today) {
@@ -75,7 +87,7 @@ const ActivitiesView = React.createClass({
           key={'entry' + index}
           timestamp={event.get('start')}
           title={event.get('title')}
-          description={event.get('description') !== null ? event.get('description') : '----'}
+          description={event.get('description') !== null ? event.get('description') : 'No description set'}
           location={'----'}
           color={event.get('color').get('background')}
           archived={index < nextEventId ? true : false}
@@ -123,12 +135,12 @@ const ActivitiesView = React.createClass({
             {
               this.props.events.get(nextEventId).get('title') !== null
                 ? <Text style={styles.nextTitle}>{this.props.events.get(nextEventId).get('title')}</Text>
-                : <Text style={styles.nextTitle}>No pending events</Text>
+                : <Text style={[styles.nextTitle, {color: variables.colors.gray.neutral}]}>No title set</Text>
             }
             {
               this.props.events.get(nextEventId).get('description') !== null
                 ? <Text style={styles.nextDescription}>{this.props.events.get(nextEventId).get('description')}</Text>
-                : <Text style={styles.nextDescription}>Add using Google Calendar</Text>
+                : <Text style={[styles.nextDescription, {color: variables.colors.gray.neutral}]}>No description set</Text>
             }
             <View style={styles.nextMeta}>
               <Icon
@@ -173,7 +185,11 @@ const ActivitiesView = React.createClass({
             Later on we'll be adding Pull to Refresh behaviour
             -- just like we're doing for the Journal screen
           */}
-          {events}
+          {
+            events.length > 0
+              ? events
+              : <View style={styles.noEvents}><Text style={styles.noEventsText}>No events setup in Google Calendar</Text></View>
+          }
         </ScrollView>
       </View>
     );
@@ -311,6 +327,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 90,
     zIndex: 2
+  },
+  noEvents: {
+    backgroundColor: variables.colors.gray.light,
+    padding: 10,
+    width: variables.dimensions.width-20
+  },
+  noEventsText: {
+    color: variables.colors.gray.dark,
+    fontSize: 12,
+    fontWeight: 'bold'
   }
 });
 
