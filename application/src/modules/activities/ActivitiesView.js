@@ -25,21 +25,23 @@ const ActivitiesView = React.createClass({
   },
 
   componentDidMount() {
-    const _scrollView = this.scrollView;
-    // we need the nextEventId to calculate scrolling distance
-    const nextEventId = this.findNextEventId(this.props.events, moment());
-    // scroll offset to get last event in view
-    // - used when there aren't enough future events to justify nextEvent hidden under header
-    const scrollToEndOffset = ((this.props.events.size * 127) - (variables.dimensions.height - 140 - 49 - 20));
-    // scroll offset to get next event hidden under header
-    // - only applies if there are a sufficient amount of future events (~4)
-    const scrollToEventOffset = (127 * (nextEventId + 1));
+    if(this.props.events.size > 0) {
+      const _scrollView = this.scrollView;
+      // we need the nextEventId to calculate scrolling distance
+      const nextEventId = this.findNextEventId(this.props.events, moment());
+      // scroll offset to get last event in view
+      // - used when there aren't enough future events to justify nextEvent hidden under header
+      const scrollToEndOffset = ((this.props.events.size * 127) - (variables.dimensions.height - 140 - 49 - 20));
+      // scroll offset to get next event hidden under header
+      // - only applies if there are a sufficient amount of future events (~4)
+      const scrollToEventOffset = (127 * (nextEventId + 1));
 
-    _scrollView.scrollTo({
-      x: 0,
-      y: (this.props.events.size - (nextEventId + 1)) < 4 ? scrollToEndOffset : scrollToEventOffset,
-      animated: true
-    });
+      _scrollView.scrollTo({
+        x: 0,
+        y: (this.props.events.size - (nextEventId + 1)) < 4 ? scrollToEndOffset : scrollToEventOffset,
+        animated: true
+      });
+    }
   },
 
   findNextEventId(events, today) {
@@ -183,7 +185,11 @@ const ActivitiesView = React.createClass({
             Later on we'll be adding Pull to Refresh behaviour
             -- just like we're doing for the Journal screen
           */}
-          {events}
+          {
+            events.length > 0
+              ? events
+              : <View style={styles.noEvents}><Text style={styles.noEventsText}>No events setup in Google Calendar</Text></View>
+          }
         </ScrollView>
       </View>
     );
@@ -321,6 +327,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 90,
     zIndex: 2
+  },
+  noEvents: {
+    backgroundColor: variables.colors.gray.light,
+    padding: 10,
+    width: variables.dimensions.width-20
+  },
+  noEventsText: {
+    color: variables.colors.gray.dark,
+    fontSize: 12,
+    fontWeight: 'bold'
   }
 });
 
