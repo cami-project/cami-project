@@ -26,10 +26,20 @@ const ActivitiesView = React.createClass({
 
   componentDidMount() {
     const _scrollView = this.scrollView;
-    // TODO(@rtud): scrollTo shouldn't hard coded value
-    // - we should grab one of the Entry's height
-    // - uncomment and reuse in #215
-    // _scrollView.scrollTo({x:0, y: 558, animated: true});
+    // we need the nextEventId to calculate scrolling distance
+    const nextEventId = this.findNextEventId(this.props.events, moment());
+    // scroll offset to get last event in view
+    // - used when there aren't enough future events to justify nextEvent hidden under header
+    const scrollToEndOffset = ((this.props.events.size * 127) - (variables.dimensions.height - 140 - 49 - 20));
+    // scroll offset to get next event hidden under header
+    // - only applies if there are a sufficient amount of future events (~4)
+    const scrollToEventOffset = (127 * (nextEventId + 1));
+
+    _scrollView.scrollTo({
+      x: 0,
+      y: (this.props.events.size - (nextEventId + 1)) < 4 ? scrollToEndOffset : scrollToEventOffset,
+      animated: true
+    });
   },
 
   findNextEventId(events, today) {
