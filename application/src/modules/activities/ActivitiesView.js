@@ -85,7 +85,7 @@ const ActivitiesView = React.createClass({
           key={'entry' + index}
           timestamp={event.get('start')}
           title={event.get('title')}
-          description={event.get('description') !== null ? event.get('description') : '----'}
+          description={event.get('description') !== null ? event.get('description') : 'No description set'}
           location={'----'}
           color={event.get('color').get('background')}
           archived={index < nextEventId ? true : false}
@@ -133,12 +133,12 @@ const ActivitiesView = React.createClass({
             {
               this.props.events.get(nextEventId).get('title') !== null
                 ? <Text style={styles.nextTitle}>{this.props.events.get(nextEventId).get('title')}</Text>
-                : <Text style={styles.nextTitle}>No pending events</Text>
+                : <Text style={[styles.nextTitle, {color: variables.colors.gray.neutral}]}>No title set</Text>
             }
             {
               this.props.events.get(nextEventId).get('description') !== null
                 ? <Text style={styles.nextDescription}>{this.props.events.get(nextEventId).get('description')}</Text>
-                : <Text style={styles.nextDescription}>Add using Google Calendar</Text>
+                : <Text style={[styles.nextDescription, {color: variables.colors.gray.neutral}]}>No description set</Text>
             }
             <View style={styles.nextMeta}>
               <Icon
