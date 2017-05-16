@@ -88,7 +88,7 @@ const ActivitiesView = React.createClass({
           timestamp={event.get('start')}
           title={event.get('title')}
           description={event.get('description') !== null ? event.get('description') : 'No description set'}
-          location={'----'}
+          location={event.get('location') !== null ? event.get('location') : 'No location set'}
           color={event.get('color').get('background')}
           archived={index < nextEventId ? true : false}
           today={index !== nextEventId ? false : true}
@@ -164,11 +164,9 @@ const ActivitiesView = React.createClass({
               />
               <View style={styles.nextLocation}>
                 {
-                  <Text style={styles.metaText}>----</Text>
-                  /* TODO (@rtud): uncomment after inclusion of event location data in API response
-                  this.props.events.get(0).get('location')
-                    ? <Text style={styles.metaText}>{this.props.events.get(0).get('location')}</Text>
-                    : <Text style={styles.metaText}>----</Text> */
+                  this.props.events.get(nextEventId).get('location') !== null
+                    ? <Text style={styles.metaText}>{this.props.events.get(nextEventId).get('location')}</Text>
+                    : <Text style={styles.metaText}>No location set</Text>
                 }
               </View>
             </View>

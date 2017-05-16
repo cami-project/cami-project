@@ -77,7 +77,11 @@ const ActivityEntry = React.createClass({
                 style={{paddingRight: 5, marginLeft: 10}}
               />
               <View>
-                <Text style={styles.metaText}>{this.props.location}</Text>
+                {
+                  this.props.location !== 'No location set'
+                    ? <Text style={styles.metaText}>{this.props.location}</Text>
+                    : <Text style={[styles.metaText, {color: variables.colors.gray.neutral}]}>{this.props.location}</Text>
+                }
               </View>
             </View>
           </View>
