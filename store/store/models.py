@@ -219,6 +219,7 @@ class Activity(models.Model):
     updated = models.BigIntegerField()
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=256, null=True, blank=True)
+    location = models.CharField(max_length=256, null=True, blank=True)
     creator = JSONField(null=True, blank=True)
     calendar_id = models.CharField(max_length=64)
     calendar_name = models.CharField(max_length=64)

@@ -163,6 +163,9 @@ def compose_activity_data(event, calendar, calendar_colors, user):
     if 'description' in event:
         activity_data['description'] = event['description']
 
+    if 'location' in event:
+        activity_data['location'] = event['location']
+
     if 'recurringEventId' in event:
         activity_data['recurring_event_id'] = event['recurringEventId']
 

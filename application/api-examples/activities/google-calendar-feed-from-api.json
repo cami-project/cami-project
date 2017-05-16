@@ -1,137 +1,362 @@
 [
   {
-    "activity_type": "medication",
-    "calendar_id": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
-    "calendar_name": "Medication",
-    "color": {
-      "background": "#fa573c",
-      "foreground": "#000000",
-      "id": "4"
+    "activity_type":"medication",
+    "calendar_id":"us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+    "calendar_name":"Medication",
+    "color":{
+      "background":"#fa573c",
+      "foreground":"#000000",
+      "id":"4"
     },
-    "created": 1494413636,
-    "creator": {
-      "email": "proiect.cami@gmail.com"
+    "created":1494413636,
+    "creator":{
+      "email":"proiect.cami@gmail.com"
     },
-    "description": null,
-    "end": 1494504000,
-    "event_id": "h5bk4mchboa9od1uroe93nthi8_20170511T110000Z",
-    "html_link": "https://www.google.com/calendar/event?eid=aDViazRtY2hib2E5b2QxdXJvZTkzbnRoaThfMjAxNzA1MTFUMTEwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
-    "iCalUID": "h5bk4mchboa9od1uroe93nthi8@google.com",
-    "id": 7,
-    "recurring_event_id": "h5bk4mchboa9od1uroe93nthi8",
-    "reminders": {},
-    "start": 1494500400,
-    "status": "confirmed",
-    "title": "Analgezics",
-    "updated": 1494413636,
-    "user_id": 2
+    "description":null,
+    "end":1494504000,
+    "event_id":"h5bk4mchboa9od1uroe93nthi8_20170511T110000Z",
+    "html_link":"https://www.google.com/calendar/event?eid=aDViazRtY2hib2E5b2QxdXJvZTkzbnRoaThfMjAxNzA1MTFUMTEwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "iCalUID":"h5bk4mchboa9od1uroe93nthi8@google.com",
+    "id":6,
+    "location":null,
+    "recurring_event_id":"h5bk4mchboa9od1uroe93nthi8",
+    "reminders":{
+
+    },
+    "start":1494500400,
+    "status":"confirmed",
+    "title":"Analgezics",
+    "updated":1494413636,
+    "user_id":2
   },
   {
-    "activity_type": "exercise",
-    "calendar_id": "8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
-    "calendar_name": "Exercise",
-    "color": {
-      "background": "#7bd148",
-      "foreground": "#000000",
-      "id": "9"
+    "activity_type":"exercise",
+    "calendar_id":"8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
+    "calendar_name":"Exercise",
+    "color":{
+      "background":"#7bd148",
+      "foreground":"#000000",
+      "id":"9"
     },
-    "created": 1494535962,
-    "creator": {
-      "email": "proiect.cami@gmail.com"
+    "created":1494535962,
+    "creator":{
+      "email":"proiect.cami@gmail.com"
     },
-    "description": null,
-    "end": 1494511200,
-    "event_id": "19c584tf0u6r1iprrkggrq6il4",
-    "html_link": "https://www.google.com/calendar/event?eid=MTljNTg0dGYwdTZyMWlwcnJrZ2dycTZpbDQgOHB1YXIwc2M0ZTdlZm5zNXI4NDlybjBsdXNAZw",
-    "iCalUID": "19c584tf0u6r1iprrkggrq6il4@google.com",
-    "id": 9,
-    "recurring_event_id": null,
-    "reminders": {},
-    "start": 1494507600,
-    "status": "confirmed",
-    "title": "Crunches",
-    "updated": 1494537052,
-    "user_id": 2
+    "description":null,
+    "end":1494511200,
+    "event_id":"19c584tf0u6r1iprrkggrq6il4",
+    "html_link":"https://www.google.com/calendar/event?eid=MTljNTg0dGYwdTZyMWlwcnJrZ2dycTZpbDQgOHB1YXIwc2M0ZTdlZm5zNXI4NDlybjBsdXNAZw",
+    "iCalUID":"19c584tf0u6r1iprrkggrq6il4@google.com",
+    "id":10,
+    "location":null,
+    "recurring_event_id":null,
+    "reminders":{
+
+    },
+    "start":1494507600,
+    "status":"confirmed",
+    "title":"Crunches",
+    "updated":1494537052,
+    "user_id":2
   },
   {
-    "activity_type": "personal",
-    "calendar_id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
-    "calendar_name": "Appointments",
-    "color": {
-      "background": "#fbe983",
-      "foreground": "#000000",
-      "id": "11"
+    "activity_type":"personal",
+    "calendar_id":"7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+    "calendar_name":"Appointments",
+    "color":{
+      "background":"#4986e7",
+      "foreground":"#000000",
+      "id":"16"
     },
-    "created": 1494544314,
-    "creator": {
-      "email": "proiect.cami@gmail.com"
+    "created":1494544314,
+    "creator":{
+      "email":"proiect.cami@gmail.com"
     },
-    "description": null,
-    "end": 1494603000,
-    "event_id": "pjm35ld41grfhrfh93472j1g24",
-    "html_link": "https://www.google.com/calendar/event?eid=cGptMzVsZDQxZ3JmaHJmaDkzNDcyajFnMjQgN2VoNnFuaXZpZDY0MzBkbDc5ZWk4OWsyNmdAZw",
-    "iCalUID": "pjm35ld41grfhrfh93472j1g24@google.com",
-    "id": 5,
-    "recurring_event_id": null,
-    "reminders": {},
-    "start": 1494599400,
-    "status": "confirmed",
-    "title": "Tennis w/ Joel",
-    "updated": 1494552610,
-    "user_id": 2
+    "description":null,
+    "end":1494603000,
+    "event_id":"pjm35ld41grfhrfh93472j1g24",
+    "html_link":"https://www.google.com/calendar/event?eid=cGptMzVsZDQxZ3JmaHJmaDkzNDcyajFnMjQgN2VoNnFuaXZpZDY0MzBkbDc5ZWk4OWsyNmdAZw",
+    "iCalUID":"pjm35ld41grfhrfh93472j1g24@google.com",
+    "id":1,
+    "location":null,
+    "recurring_event_id":null,
+    "reminders":{
+
+    },
+    "start":1494599400,
+    "status":"confirmed",
+    "title":"Tennis w/ Joel",
+    "updated":1494552610,
+    "user_id":2
   },
   {
-    "activity_type": "personal",
-    "calendar_id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
-    "calendar_name": "Appointments",
-    "color": {
-      "background": "#fbe983",
-      "foreground": "#000000",
-      "id": "11"
+    "activity_type":"personal",
+    "calendar_id":"7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+    "calendar_name":"Appointments",
+    "color":{
+      "background":"#4986e7",
+      "foreground":"#000000",
+      "id":"16"
     },
-    "created": 1494556425,
-    "creator": {
-      "email": "proiect.cami@gmail.com"
+    "created":1494556425,
+    "creator":{
+      "email":"proiect.cami@gmail.com"
     },
-    "description": null,
-    "end": 1494689400,
-    "event_id": "nd044tjlq84a3cl0hpcgu4ck6g",
-    "html_link": "https://www.google.com/calendar/event?eid=bmQwNDR0amxxODRhM2NsMGhwY2d1NGNrNmcgN2VoNnFuaXZpZDY0MzBkbDc5ZWk4OWsyNmdAZw",
-    "iCalUID": "nd044tjlq84a3cl0hpcgu4ck6g@google.com",
-    "id": 6,
-    "recurring_event_id": null,
-    "reminders": {},
-    "start": 1494685800,
-    "status": "confirmed",
-    "title": "Footbal Game",
-    "updated": 1494556425,
-    "user_id": 2
+    "description":null,
+    "end":1494689400,
+    "event_id":"nd044tjlq84a3cl0hpcgu4ck6g",
+    "html_link":"https://www.google.com/calendar/event?eid=bmQwNDR0amxxODRhM2NsMGhwY2d1NGNrNmcgN2VoNnFuaXZpZDY0MzBkbDc5ZWk4OWsyNmdAZw",
+    "iCalUID":"nd044tjlq84a3cl0hpcgu4ck6g@google.com",
+    "id":2,
+    "location":null,
+    "recurring_event_id":null,
+    "reminders":{
+
+    },
+    "start":1494685800,
+    "status":"confirmed",
+    "title":"Footbal Game",
+    "updated":1494556425,
+    "user_id":2
   },
   {
-    "activity_type": "medication",
-    "calendar_id": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
-    "calendar_name": "Medication",
-    "color": {
-      "background": "#fa573c",
-      "foreground": "#000000",
-      "id": "4"
+    "activity_type":"medication",
+    "calendar_id":"us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+    "calendar_name":"Medication",
+    "color":{
+      "background":"#fa573c",
+      "foreground":"#000000",
+      "id":"4"
     },
-    "created": 1494413636,
-    "creator": {
-      "email": "proiect.cami@gmail.com"
+    "created":1494673490,
+    "creator":{
+      "email":"proiect.cami@gmail.com"
     },
-    "description": null,
-    "end": 1495108800,
-    "event_id": "h5bk4mchboa9od1uroe93nthi8_20170518T110000Z",
-    "html_link": "https://www.google.com/calendar/event?eid=aDViazRtY2hib2E5b2QxdXJvZTkzbnRoaThfMjAxNzA1MThUMTEwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
-    "iCalUID": "h5bk4mchboa9od1uroe93nthi8@google.com",
-    "id": 8,
-    "recurring_event_id": "h5bk4mchboa9od1uroe93nthi8",
-    "reminders": {},
-    "start": 1495105200,
-    "status": "confirmed",
-    "title": "Analgezics",
-    "updated": 1494413636,
-    "user_id": 2
+    "description":"Blue box, on the kitchen counter.",
+    "end":1494749700,
+    "event_id":"nbdcsdo995h3rr9l3sgk4dlnjc_20170514T080000Z",
+    "html_link":"https://www.google.com/calendar/event?eid=bmJkY3Nkbzk5NWgzcnI5bDNzZ2s0ZGxuamNfMjAxNzA1MTRUMDgwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "iCalUID":"nbdcsdo995h3rr9l3sgk4dlnjc@google.com",
+    "id":7,
+    "location":"Home",
+    "recurring_event_id":"nbdcsdo995h3rr9l3sgk4dlnjc",
+    "reminders":{
+
+    },
+    "start":1494748800,
+    "status":"confirmed",
+    "title":"Time to take your morning medicine",
+    "updated":1494673490,
+    "user_id":2
+  },
+  {
+    "activity_type":"personal",
+    "calendar_id":"7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+    "calendar_name":"Appointments",
+    "color":{
+      "background":"#4986e7",
+      "foreground":"#000000",
+      "id":"16"
+    },
+    "created":1494666870,
+    "creator":{
+      "email":"proiect.cami@gmail.com"
+    },
+    "description":"Don't forget to ask about the fishing trip.",
+    "end":1494862200,
+    "event_id":"7bfg5aj8lqbhg66hecga0d727g",
+    "html_link":"https://www.google.com/calendar/event?eid=N2JmZzVhajhscWJoZzY2aGVjZ2EwZDcyN2cgN2VoNnFuaXZpZDY0MzBkbDc5ZWk4OWsyNmdAZw",
+    "iCalUID":"7bfg5aj8lqbhg66hecga0d727g@google.com",
+    "id":3,
+    "location":"Ridgeway Park",
+    "recurring_event_id":null,
+    "reminders":{
+
+    },
+    "start":1494853200,
+    "status":"confirmed",
+    "title":"Meet with Jonas",
+    "updated":1494666871,
+    "user_id":2
+  },
+  {
+    "activity_type":"exercise",
+    "calendar_id":"8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
+    "calendar_name":"Exercise",
+    "color":{
+      "background":"#7bd148",
+      "foreground":"#000000",
+      "id":"9"
+    },
+    "created":1494666748,
+    "creator":{
+      "email":"proiect.cami@gmail.com"
+    },
+    "description":"2 sets of 10 pushups",
+    "end":1494918000,
+    "event_id":"ovtk6fndefbsbqr6g4i38gf79o_20170516T063000Z",
+    "html_link":"https://www.google.com/calendar/event?eid=b3Z0azZmbmRlZmJzYnFyNmc0aTM4Z2Y3OW9fMjAxNzA1MTZUMDYzMDAwWiA4cHVhcjBzYzRlN2VmbnM1cjg0OXJuMGx1c0Bn",
+    "iCalUID":"ovtk6fndefbsbqr6g4i38gf79o@google.com",
+    "id":11,
+    "location":"Home",
+    "recurring_event_id":"ovtk6fndefbsbqr6g4i38gf79o",
+    "reminders":{
+
+    },
+    "start":1494916200,
+    "status":"confirmed",
+    "title":"Time to exercise: Pushups",
+    "updated":1494666748,
+    "user_id":2
+  },
+  {
+    "activity_type":"personal",
+    "calendar_id":"7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+    "calendar_name":"Appointments",
+    "color":{
+      "background":"#4986e7",
+      "foreground":"#000000",
+      "id":"16"
+    },
+    "created":1494673776,
+    "creator":{
+      "email":"proiect.cami@gmail.com"
+    },
+    "description":"Get blood work done.",
+    "end":1494943200,
+    "event_id":"88qq4d7o58u3fk7qkmf6pmbt80",
+    "html_link":"https://www.google.com/calendar/event?eid=ODhxcTRkN281OHUzZms3cWttZjZwbWJ0ODAgN2VoNnFuaXZpZDY0MzBkbDc5ZWk4OWsyNmdAZw",
+    "iCalUID":"88qq4d7o58u3fk7qkmf6pmbt80@google.com",
+    "id":4,
+    "location":"Mills Heights Clinic",
+    "recurring_event_id":null,
+    "reminders":{
+
+    },
+    "start":1494937800,
+    "status":"confirmed",
+    "title":"Checkup with Dr. Foster",
+    "updated":1494673777,
+    "user_id":2
+  },
+  {
+    "activity_type":"personal",
+    "calendar_id":"7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+    "calendar_name":"Appointments",
+    "color":{
+      "background":"#4986e7",
+      "foreground":"#000000",
+      "id":"16"
+    },
+    "created":1494917788,
+    "creator":{
+      "email":"proiect.cami@gmail.com"
+    },
+    "description":"Stroll down memory lane.",
+    "end":1495008000,
+    "event_id":"h2sa8a3d1mdsa3d898lr0j5rb0_20170517T070000Z",
+    "html_link":"https://www.google.com/calendar/event?eid=aDJzYThhM2QxbWRzYTNkODk4bHIwajVyYjBfMjAxNzA1MTdUMDcwMDAwWiA3ZWg2cW5pdmlkNjQzMGRsNzllaTg5azI2Z0Bn",
+    "iCalUID":"h2sa8a3d1mdsa3d898lr0j5rb0@google.com",
+    "id":5,
+    "location":"Central Park, New York, NY 10024, USA",
+    "recurring_event_id":"h2sa8a3d1mdsa3d898lr0j5rb0",
+    "reminders":{
+
+    },
+    "start":1495004400,
+    "status":"confirmed",
+    "title":"Meet with Phoebe for coffee",
+    "updated":1494917788,
+    "user_id":2
+  },
+  {
+    "activity_type":"medication",
+    "calendar_id":"us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+    "calendar_name":"Medication",
+    "color":{
+      "background":"#fa573c",
+      "foreground":"#000000",
+      "id":"4"
+    },
+    "created":1494413636,
+    "creator":{
+      "email":"proiect.cami@gmail.com"
+    },
+    "description":null,
+    "end":1495108800,
+    "event_id":"h5bk4mchboa9od1uroe93nthi8_20170518T110000Z",
+    "html_link":"https://www.google.com/calendar/event?eid=aDViazRtY2hib2E5b2QxdXJvZTkzbnRoaThfMjAxNzA1MThUMTEwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "iCalUID":"h5bk4mchboa9od1uroe93nthi8@google.com",
+    "id":8,
+    "location":null,
+    "recurring_event_id":"h5bk4mchboa9od1uroe93nthi8",
+    "reminders":{
+
+    },
+    "start":1495105200,
+    "status":"confirmed",
+    "title":"Analgezics",
+    "updated":1494413636,
+    "user_id":2
+  },
+  {
+    "activity_type":"medication",
+    "calendar_id":"us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+    "calendar_name":"Medication",
+    "color":{
+      "background":"#fa573c",
+      "foreground":"#000000",
+      "id":"4"
+    },
+    "created":1494673490,
+    "creator":{
+      "email":"proiect.cami@gmail.com"
+    },
+    "description":"Blue box, on the kitchen counter.",
+    "end":1495354500,
+    "event_id":"nbdcsdo995h3rr9l3sgk4dlnjc_20170521T080000Z",
+    "html_link":"https://www.google.com/calendar/event?eid=bmJkY3Nkbzk5NWgzcnI5bDNzZ2s0ZGxuamNfMjAxNzA1MjFUMDgwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "iCalUID":"nbdcsdo995h3rr9l3sgk4dlnjc@google.com",
+    "id":9,
+    "location":"Home",
+    "recurring_event_id":"nbdcsdo995h3rr9l3sgk4dlnjc",
+    "reminders":{
+
+    },
+    "start":1495353600,
+    "status":"confirmed",
+    "title":"Time to take your morning medicine",
+    "updated":1494673490,
+    "user_id":2
+  },
+  {
+    "activity_type":"exercise",
+    "calendar_id":"8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
+    "calendar_name":"Exercise",
+    "color":{
+      "background":"#7bd148",
+      "foreground":"#000000",
+      "id":"9"
+    },
+    "created":1494666748,
+    "creator":{
+      "email":"proiect.cami@gmail.com"
+    },
+    "description":"2 sets of 10 pushups",
+    "end":1495522800,
+    "event_id":"ovtk6fndefbsbqr6g4i38gf79o_20170523T063000Z",
+    "html_link":"https://www.google.com/calendar/event?eid=b3Z0azZmbmRlZmJzYnFyNmc0aTM4Z2Y3OW9fMjAxNzA1MjNUMDYzMDAwWiA4cHVhcjBzYzRlN2VmbnM1cjg0OXJuMGx1c0Bn",
+    "iCalUID":"ovtk6fndefbsbqr6g4i38gf79o@google.com",
+    "id":12,
+    "location":"Home",
+    "recurring_event_id":"ovtk6fndefbsbqr6g4i38gf79o",
+    "reminders":{
+
+    },
+    "start":1495521000,
+    "status":"confirmed",
+    "title":"Time to exercise: Pushups",
+    "updated":1494666748,
+    "user_id":2
   }
 ]
