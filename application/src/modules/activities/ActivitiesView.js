@@ -165,7 +165,7 @@ const ActivitiesView = React.createClass({
               <View style={styles.nextLocation}>
                 {
                   this.props.events.get(nextEventId).get('location') !== null
-                    ? <Text style={styles.metaText}>{this.props.events.get(nextEventId).get('location')}</Text>
+                    ? <Text numberOfLines={1} ellipsizeMode='clip' style={[styles.metaText, {width: 170}]}>{this.props.events.get(nextEventId).get('location')}</Text>
                     : <Text style={styles.metaText}>No location set</Text>
                 }
               </View>

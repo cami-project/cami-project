@@ -60,26 +60,26 @@ const ActivityEntry = React.createClass({
                   : <Text style={[styles.description, {color: variables.colors.gray.neutral}]}>{this.props.description}</Text>
               }
             </View>
-            <View style={[styles.metaContainer, {flexWrap: 'wrap'}]}>
-              <Icon
-                name={icons.time}
-                size={12}
-                color={variables.colors.gray.neutral}
-                style={{paddingRight: 5}}
-              />
-              <View>
+            <View style={[styles.metaContainer, {flexDirection: 'row', flex: 1}]}>
+              <View style={{flexDirection: 'row'}}>
+                <Icon
+                  name={icons.time}
+                  size={12}
+                  color={variables.colors.gray.neutral}
+                  style={{paddingRight: 5}}
+                />
                 <Text style={styles.metaText}>{eventTime.format('HH:mm')}</Text>
               </View>
-              <Icon
-                name={icons.location}
-                size={12}
-                color={variables.colors.gray.neutral}
-                style={{paddingRight: 5, marginLeft: 10}}
-              />
-              <View>
+              <View style={{flexDirection: 'row'}}>
+                <Icon
+                  name={icons.location}
+                  size={12}
+                  color={variables.colors.gray.neutral}
+                  style={{paddingRight: 5, marginLeft: 10}}
+                />
                 {
                   this.props.location !== 'No location set'
-                    ? <Text style={styles.metaText}>{this.props.location}</Text>
+                    ? <Text numberOfLines={1} ellipsizeMode='clip' style={[styles.metaText, {width: 170}]}>{this.props.location}</Text>
                     : <Text style={[styles.metaText, {color: variables.colors.gray.neutral}]}>{this.props.location}</Text>
                 }
               </View>
