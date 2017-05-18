@@ -278,6 +278,7 @@ __Weight__:
 ```
 
 #### Activities:
+Activities are synchronized with Google Calendar only on a limited timeframe. Currently, the timeframe is 7 days in the past and 7 days in the future, totally 14 days. If an event older than 7 days is modified in Google Calendar, it will not be updated in the CAMI Store.
 
 - full endpoint
 ```
