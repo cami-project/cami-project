@@ -276,3 +276,105 @@ __Weight__:
     }
 }
 ```
+
+### Activities:
+
+- full endpoint:
+```
+http://cami.vitaminsoftware.com:8008/api/v1/activity/
+
+{
+  "activities": [
+    {
+      "activity_type": "personal",
+      "calendar_id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+      "calendar_name": "Appointments",
+      "color": "{u'foreground': u'#000000', u'id': u'16', u'background': u'#4986e7'}",
+      "created": "1494544314",
+      "creator": "{u'email': u'proiect.cami@gmail.com'}",
+      "description": null,
+      "end": "1494603000",
+      "event_id": "pjm35ld41grfhrfh93472j1g24",
+      "html_link": "https://www.google.com/calendar/event?eid=cGptMzVsZDQxZ3JmaHJmaDkzNDcyajFnMjQgN2VoNnFuaXZpZDY0MzBkbDc5ZWk4OWsyNmdAZw",
+      "iCalUID": "pjm35ld41grfhrfh93472j1g24@google.com",
+      "id": 1,
+      "location": null,
+      "recurring_event_id": null,
+      "reminders": "{}",
+      "resource_uri": "/api/v1/activity/1/",
+      "start": "1494599400",
+      "status": "confirmed",
+      "title": "Tennis w/ Joel",
+      "updated": "1494552610",
+      "user": "/api/v1/user/2/"
+    },
+    {
+      "activity_type": "personal",
+      "calendar_id": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+      "calendar_name": "Appointments",
+      "color": "{u'foreground': u'#000000', u'id': u'16', u'background': u'#4986e7'}",
+      "created": "1494556425",
+      "creator": "{u'email': u'proiect.cami@gmail.com'}",
+      "description": null,
+      "end": "1494689400",
+      "event_id": "nd044tjlq84a3cl0hpcgu4ck6g",
+      "html_link": "https://www.google.com/calendar/event?eid=bmQwNDR0amxxODRhM2NsMGhwY2d1NGNrNmcgN2VoNnFuaXZpZDY0MzBkbDc5ZWk4OWsyNmdAZw",
+      "iCalUID": "nd044tjlq84a3cl0hpcgu4ck6g@google.com",
+      "id": 2,
+      "location": null,
+      "recurring_event_id": null,
+      "reminders": "{}",
+      "resource_uri": "/api/v1/activity/2/",
+      "start": "1494685800",
+      "status": "confirmed",
+      "title": "Footbal Game",
+      "updated": "1494556425",
+      "user": "/api/v1/user/2/"
+    }
+  ]
+}
+```
+
+- last activities endpoint:
+Currently, this retrieves the activities from 7 days in the past and 7 days in the future from the current time(14 days totally), for ALL the users. There is information only for one hardcoded user, though. This will have to be modified to accept a user parameter, in order to be able to retrieve information only for one user.
+
+This is how it looks like:
+```
+http://cami.vitaminsoftware.com:8008/api/v1/activity/last_activities
+
+[
+  {
+    "activity_type": "medication",
+    "calendar_id": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
+    "calendar_name": "Medication",
+    "color": {
+      "background": "#fa573c",
+      "foreground": "#000000",
+      "id": "4"
+    },
+    "created": 1494413636,
+    "creator": {
+      "email": "proiect.cami@gmail.com"
+    },
+    "description": null,
+    "end": 1494504000,
+    "event_id": "h5bk4mchboa9od1uroe93nthi8_20170511T110000Z",
+    "html_link": "https://www.google.com/calendar/event?eid=aDViazRtY2hib2E5b2QxdXJvZTkzbnRoaThfMjAxNzA1MTFUMTEwMDAwWiB1czh2NWo2dHRwODg1NTQycTlvMmFsanJob0Bn",
+    "iCalUID": "h5bk4mchboa9od1uroe93nthi8@google.com",
+    "id": 6,
+    "location": null,
+    "recurring_event_id": "h5bk4mchboa9od1uroe93nthi8",
+    "reminders": {},
+    "start": 1494500400,
+    "status": "confirmed",
+    "title": "Analgezics",
+    "updated": 1494413636,
+    "user_id": 2
+  }
+]
+```
+
+- endpoint for manual synchronization of the events from GCal:
+A simple GET request from the browser address bar or CURL will trigger the syncronization.
+
+`http://cami.vitaminsoftware.com:8008/sync_activities/`
