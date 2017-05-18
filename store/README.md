@@ -277,7 +277,7 @@ __Weight__:
 }
 ```
 
-### Activities:
+#### Activities:
 
 - full endpoint:
 ```
@@ -336,6 +336,7 @@ http://cami.vitaminsoftware.com:8008/api/v1/activity/
 ```
 
 - last activities endpoint:
+
 Currently, this retrieves the activities from 7 days in the past and 7 days in the future from the current time(14 days totally), for ALL the users. There is information only for one hardcoded user, though. This will have to be modified to accept a user parameter, in order to be able to retrieve information only for one user.
 
 This is how it looks like:
