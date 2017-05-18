@@ -14,6 +14,7 @@ The set of currently implemented endpoints allows to:
   * filter the list of Measurements by: device_id, user_id, measurement type, timestamp,
   value and context information
   * insert a new measurement
+  * get the list of Activities for a user
 
 ## Endpoint details
 
