@@ -118,7 +118,7 @@ Example:
 $ curl -i http://cami.vitaminsoftware.com:8001/api/v1/healthcheck/
 HTTP/1.0 200 OK
 Date: Fri, 24 Mar 2017 17:17:41 GMT
-Server: WSGIServer/0.1CAMI Cloud integrates with the Google Fit API for gathering steps & hear rate measurements. Here's what's needed to test if measurements are processed accordingly throughout the CAMI Cloud system: Python/2.7.12
+Server: WSGIServer/0.1 Python/2.7.12
 Vary: Accept
 X-Frame-Options: ALLOW-FROM *
 Content-Type: application/json
