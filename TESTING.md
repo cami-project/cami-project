@@ -94,6 +94,23 @@ datastream_id: derived:com.google.step_count.delta:com.google.android.gms:LGE:LG
 
 We will be using the dedicated LG Watch datasource for the moment.
 
+
+## Testing Google Calendar activities
+CAMI Cloud integrates with the Google Calendar API for gathering events from some predefined calendars. Here's what's needed to test if calendar events are processed accordingly throughout the CAMI Cloud system:
+
+- Visit Google Calendar and login using the credentials stored in LastPass
+- There are 3 calendars that are synchronized with CAMI:
+	- Appointments
+	- Exercise
+	- Medication
+- Add events in the calendars described above, on a maximum timeframe of 7 days in the past and 7 days in the future. Any event that will be older than 7 days or more than 7 days away from now will not be sync-ed in the system.
+- Manually synchronize the activities from Google Calendar (described [here](https://github.com/cami-project/cami-project/blob/master/store/README.md#activities))
+- The newly entered event will now be fetched and processed by the CAMI Cloud and show up on the various systems connected to it, like:
+	- the Papertrail logging system - credentials to access it are stored inside LastPass
+	- the CAMI iOS application
+	- the activities endpoints (described [here](https://github.com/cami-project/cami-project/blob/master/store/README.md#activities))
+
+
 ## Testing APIs
 Check - with cURL, from command line - the following API endpoints to be up and running.
 Example:
