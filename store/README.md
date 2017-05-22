@@ -20,7 +20,7 @@ The set of currently implemented endpoints allows to:
 
 #### List all Users:
 ```
-http://<hostname_or_ip>:8000/api/v1/user/
+http://<hostname_or_ip>:8008/api/v1/user/
 
 Example output:
 {
@@ -67,7 +67,7 @@ Example output:
 
 #### List all Devices:
 ```
-http://<hostname_or_ip>:8000/api/v1/device/
+http://<hostname_or_ip>:8008/api/v1/device/
 
 Example output:
 {
@@ -108,7 +108,7 @@ Example output:
 
 #### List all DeviceUsage entries:
 ```
-http://<hostname_or_ip>:8000/api/v1/deviceusage/
+http://<hostname_or_ip>:8008/api/v1/deviceusage/
 
 Example output:
 {
@@ -172,7 +172,7 @@ Example output:
 
 #### Filter DeviceUsage by device_id and access_info related elements:
 ```
-http://<hostname_or_ip>:8000/api/v1/deviceusage/?device=1&access_info__withings_userid=11115034
+http://<hostname_or_ip>:8008/api/v1/deviceusage/?device=1&access_info__withings_userid=11115034
 ```
 The `device` filter takes the integer ID value of the device resource, i.e. from a DeviceResource
 URI such as `/api/v1/device/1/`, the ID is the last integer number `1`.
@@ -185,7 +185,7 @@ the userid value for the Withings account.
 
 #### List and fitler Measurements:
 ```
-http://<hostname_or_ip>:8000/api/v1/measurement/?order_by=-timestamp&device=1
+http://<hostname_or_ip>:8008/api/v1/measurement/?order_by=-timestamp&device=1
 
 Example output:
 {
@@ -218,7 +218,7 @@ Example output:
 
 
 #### Create Measurement:
-For measurement creation you have to send a POST request using a JSON payload to the `http://<hostname_or_ip>:8000/api/v1/measurement/` endpoint.
+For measurement creation you have to send a POST request using a JSON payload to the `http://<hostname_or_ip>:8008/api/v1/measurement/` endpoint.
 If successful, the endpoint will respond with a 201 (CREATED) status code and the JSON serialization of the newly created measurement.
 
 Note that in the example payloads shown below, the foreign key elements (i.e. user and device for which
