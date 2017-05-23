@@ -1,0 +1,35 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.RMQ", "DSS.RMQ\DSS.RMQ.csproj", "{728CCD8D-9438-4500-8407-8D86D20B5AA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.ExpertSystem", "DSS.ExpertSystem\DSS.ExpertSystem.csproj", "{7218D734-B4B4-4BEC-8DC7-006DA6FEDF9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.Delegate", "DSS.Delegate\DSS.Delegate.csproj", "{1E221878-FB21-409A-A2DE-9318BF4710FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.Playground.Delegate", "DSS.Playground.Delegate\DSS.Playground.Delegate.csproj", "{4377543C-4AD9-45DC-80D3-B446DE798845}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{728CCD8D-9438-4500-8407-8D86D20B5AA7}.Debug|x86.ActiveCfg = Debug|x86
+		{728CCD8D-9438-4500-8407-8D86D20B5AA7}.Debug|x86.Build.0 = Debug|x86
+		{728CCD8D-9438-4500-8407-8D86D20B5AA7}.Release|x86.ActiveCfg = Release|x86
+		{728CCD8D-9438-4500-8407-8D86D20B5AA7}.Release|x86.Build.0 = Release|x86
+		{7218D734-B4B4-4BEC-8DC7-006DA6FEDF9F}.Debug|x86.ActiveCfg = Debug|x86
+		{7218D734-B4B4-4BEC-8DC7-006DA6FEDF9F}.Debug|x86.Build.0 = Debug|x86
+		{7218D734-B4B4-4BEC-8DC7-006DA6FEDF9F}.Release|x86.ActiveCfg = Release|x86
+		{7218D734-B4B4-4BEC-8DC7-006DA6FEDF9F}.Release|x86.Build.0 = Release|x86
+		{1E221878-FB21-409A-A2DE-9318BF4710FC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1E221878-FB21-409A-A2DE-9318BF4710FC}.Debug|x86.Build.0 = Debug|Any CPU
+		{1E221878-FB21-409A-A2DE-9318BF4710FC}.Release|x86.ActiveCfg = Release|Any CPU
+		{1E221878-FB21-409A-A2DE-9318BF4710FC}.Release|x86.Build.0 = Release|Any CPU
+		{4377543C-4AD9-45DC-80D3-B446DE798845}.Debug|x86.ActiveCfg = Debug|x86
+		{4377543C-4AD9-45DC-80D3-B446DE798845}.Debug|x86.Build.0 = Debug|x86
+		{4377543C-4AD9-45DC-80D3-B446DE798845}.Release|x86.ActiveCfg = Release|x86
+		{4377543C-4AD9-45DC-80D3-B446DE798845}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+EndGlobal
