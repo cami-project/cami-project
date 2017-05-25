@@ -15,7 +15,7 @@ Let's assume that you just pushed some commits in the `master` branch. The steps
 * You'll be redirected to a new page. Scroll down to it's bottom and click Upgrade
 * Wait for the upgrade spinner to stop and then click the **Finish Upgrade** button(check icon). That should be all
 
-**NOTES**: It's **strongly recommended** to **not** touch the `cami-store` container, as this contains the MySQL instance and can lead to total data loss.
+**NOTES**: It's **strongly recommended** to **not** touch the `cami-mysql` container, as this contains the MySQL instance and can lead to total data loss.
 
 ## Advanced actions
 ### Adding a new container image in Docker Hub

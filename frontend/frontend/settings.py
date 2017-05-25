@@ -163,7 +163,7 @@ DATABASES = {
         'NAME': 'frontend',
         'USER': 'cami',
         'PASSWORD': 'cami',
-        'HOST': 'cami-store',   # Or an IP Address that your DB is hosted on
+        'HOST': 'cami-mysql',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
         'OPTIONS': {
             'sql_mode': 'TRADITIONAL',

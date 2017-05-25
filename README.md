@@ -55,7 +55,7 @@ The next sections are optional and they can be used if you want to run all the c
 
 ## Components
 
-### cami-store
+### cami-mysql
 This instance hosts the MySQL database that will be used as a local store by all **cami** components.
 
 The provisioning script installs a safe MySQL instance, creates a `cami` database and imports a basic schema for the database. It also creates a user with name `cami` and password `cami` that has full privileges and can connect from any host.
@@ -64,11 +64,11 @@ The MySQL image available on DockerHub uses MySQL's recommended configs for prod
 
 Building the image
 ```
-docker build -t cami/store:1.0 -f docker/cami-store/Dockerfile .
+docker build -t cami/mysql:1.0 -f docker/cami-mysql/Dockerfile .
 ```
-Run the store container:
+Run the mysql container:
 ```
-docker run -d --hostname cami-store --name cami-store -P cami/store:1.0
+docker run -d --hostname cami-mysql --name cami-mysql -P cami/mysql:1.0
 ```
 You need to obtain the local port that redirects to the docker container's `3306` (default mysql port). To obtain it run the command:
 ```
@@ -101,14 +101,14 @@ In this case we search for the entries `0.0.0.0:32781->5672/tcp` (5672 is the de
 * replace 32781 and 32779 with the actual local ports redirecting to 5672 and 15672
 
 ### cami-medical-compliance
-This instance hosts the medical compliance module that exposes a REST API through Tastypie over Django. It connects to and uses the `cami` database on the `cami-store` instance and also the RabbitMQ instance from cami-rabbitmq.
+This instance hosts the medical compliance module that exposes a REST API through Tastypie over Django. It connects to and uses the `cami` database on the `cami-mysql` instance and also the RabbitMQ instance from cami-rabbitmq.
 
 Build the image with docker (**not needed for dev environment**):
 ```
 docker build -t cami/medical-compliance:1.0 -f docker/cami-medical-compliance/Dockerfile .
 ```
 
-To run the container you first need to have a running `cami-store` container for the mysql dependency and a running `cami-rabbitmq` container for the mq server (see prev 2 sections) (**not needed for dev environment**).
+To run the container you first need to have a running `cami-mysql` container for the mysql dependency and a running `cami-rabbitmq` container for the mq server (see prev 2 sections) (**not needed for dev environment**).
 ```
 docker run -d --hostname cami-medical-compliance --name cami-medical-compliance -P cami/medical-compliance:1.0
 ```
