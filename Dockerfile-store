@@ -1,18 +1,33 @@
-FROM mysql:5.7
+# Use a base image that has ansible set up.
+FROM williamyeh/ansible:ubuntu16.04
 
-# Add the store schema to the container to be run when the first container is
-# run. This requires that the build context is the project root folder. Run
-# build like:
-# `docker build -f docker/cami-store/Dockerfile .`
-ADD store/* /docker-entrypoint-initdb.d/
+# Add playbooks to the Docker image. This requires that the build context is the
+# project root folder.
 
-# Hardcode passwors until we learn a better way to do this.
-ENV MYSQL_ALLOW_EMPTY_PASSWORD=yes
-ENV MYSQL_ROOT_PASSWORD=""
-ENV MYSQL_DATABASE=cami
-ENV MYSQL_USER=cami
-ENV MYSQL_PASSWORD=cami
+COPY . /cami-project
+WORKDIR /cami-project
 
-EXPOSE 3306
+# Run Ansible to configure the Docker image
+RUN ansible-playbook ansible/store.yml -c local
 
+COPY docker/cami-store/docker-entrypoint.sh /usr/local/bin/
+COPY docker/cami-store/docker-migration-entrypoint.sh /usr/local/bin/
+COPY docker/cami-store/docker-message-worker-entrypoint.sh /usr/local/bin/
+COPY docker/cami-store/docker-message-worker-entrypoint-dev.sh /usr/local/bin/
+COPY docker/cami-store/docker-task-scheduler-entrypoint.sh /usr/local/bin/
+COPY docker/cami-store/docker-task-scheduler-entrypoint-dev.sh /usr/local/bin/
 
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-migration-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-message-worker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-message-worker-entrypoint-dev.sh
+RUN chmod +x /usr/local/bin/docker-task-scheduler-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-task-scheduler-entrypoint-dev.sh
+
+RUN adduser --disabled-password --gecos '' store
+RUN chown -R store /cami-project
+
+USER store
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+EXPOSE 8008
