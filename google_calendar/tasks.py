@@ -6,7 +6,6 @@ from celery import Celery
 from django.conf import settings
 
 import activities
-from .models import User
 
 logger = logging.getLogger("store")
 

@@ -376,8 +376,3 @@ http://cami.vitaminsoftware.com:8008/api/v1/activity/last_activities
   }
 ]
 ```
-
-- endpoint for manual synchronization of the events from GCal:
-A simple GET request from the browser address bar or CURL will trigger the syncronization.
-
-`http://cami.vitaminsoftware.com:8008/sync_activities/`

@@ -161,7 +161,7 @@ class ActivityResource(ModelResource):
 
     class Meta:
         queryset = Activity.objects.all()
-        allowed_methods = ['get']
+        allowed_methods = ['get', 'post', 'put']
         collection_name = "activities"
 
         authorization = Authorization()

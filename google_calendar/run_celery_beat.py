@@ -13,7 +13,7 @@ import threading
 import inotify.adapters
 
 
-CELERY_CMD = tuple("celery -A store worker -l info --autoreload".split())
+CELERY_CMD = tuple("celery -A google_calendar beat -l info".split())
 CHANGE_EVENTS = ("IN_MODIFY", "IN_ATTRIB", "IN_DELETE")
 WATCH_EXTENSIONS = (".py",)
 
