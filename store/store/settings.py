@@ -158,7 +158,7 @@ DATABASES = {
         'NAME': 'cami',
         'USER': 'cami',
         'PASSWORD': 'cami',
-        'HOST': 'cami-store',
+        'HOST': 'cami-mysql',
         'PORT': '3306'
     }
 }

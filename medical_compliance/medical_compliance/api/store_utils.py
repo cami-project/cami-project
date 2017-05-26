@@ -1,7 +1,7 @@
 import requests
 import logging
 
-STORE_HOST = "cami-store-management"
+STORE_HOST = "cami-store"
 STORE_PORT = "8008"
 STORE_ENDPOINT_URI = "http://" + STORE_HOST + ":" + STORE_PORT
 

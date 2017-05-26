@@ -15,6 +15,6 @@ rabbitmq_user: cami
 rabbitmq_password: cami
 rabbitmq_vhost: cami
 
-store_ip: cami-store
+store_ip: cami-mysql
 medical_compliance_ip: 192.168.73.12
 rabbitmq_server_ip: 192.168.73.13

@@ -1,5 +1,5 @@
 ---
-- name: Provision CAMI Store management microservice
+- name: Provision CAMI Store microservice
   hosts: all
 
   roles:
