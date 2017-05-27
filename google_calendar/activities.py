@@ -4,12 +4,16 @@ import datetime
 import calendar
 import dateutil.parser
 
-from .google_calendar_backend import *
-from .models import User, Activity
+# Local imports
+import store_utils
+from google_calendar_backend import *
 
+
+logging.config.dictConfig(settings.LOGGING)
+logger = logging.getLogger("google_calendar")
 
 def sync_for_user(user):
-    logger.debug("[sync-activities] Synchronizing activities for user '%s' ... " % user.username)
+    logger.debug("[google_calendar] Synchronizing activities for user '%s' ... " % user['username'])
 
     # Hardcode calendars for demo
     calendars = {
@@ -19,20 +23,20 @@ def sync_for_user(user):
         "measurement": ""
     }
 
-    logger.debug("[sync-activities] Getting the Google Calendar service... ")
+    logger.debug("[google_calendar] Getting the Google Calendar service... ")
 
     # Get calendar service
     calendar_credentials = get_credentials()
     calendar_service = get_calendar_service(calendar_credentials)
 
-    logger.debug("[sync-activities] Successfully got Google Calendar service!")
+    logger.debug("[google_calendar] Successfully got Google Calendar service!")
 
     for calendar_type, calendar_id in calendars.iteritems():
         if not calendar_id:
-            logger.debug("[sync-activities] Calendar id for the '%s' activity type is empty!" % calendar_type)
+            logger.debug("[google_calendar] Calendar id for the '%s' activity type is empty!" % calendar_type)
             continue
 
-        logger.debug("[sync-activities] Getting the calendar with id '%s' for '%s' activity type ..." % (
+        logger.debug("[google_calendar] Getting the calendar with id '%s' for '%s' activity type ..." % (
             calendar_id,
             calendar_type
         ))
@@ -41,9 +45,9 @@ def sync_for_user(user):
         calendar, res_code = get_calendar(calendar_service, calendar_id)
 
         if res_code == 200:
-            logger.debug("[sync-activities] Successfully got calendar: %s" % str(calendar))
+            logger.debug("[google_calendar] Successfully got calendar: %s" % str(calendar))
         else:
-            logger.error("[sync-activities] Failed to get calendar! Response code: %s" % str(res_code))
+            logger.error("[google_calendar] Failed to get calendar! Response code: %s" % str(res_code))
             continue
 
         # Calculate timeframe for fetching events
@@ -51,7 +55,7 @@ def sync_for_user(user):
         date_from = datetime.datetime.now(tz) - datetime.timedelta(days=7)
         date_to = datetime.datetime.now(tz) + datetime.timedelta(days=7)
 
-        logger.debug("[sync-activities] Getting events starting from %s to %s ..." % (
+        logger.debug("[google_calendar] Getting events starting from %s to %s ..." % (
             str(date_from),
             str(date_to)
         ))
@@ -59,16 +63,16 @@ def sync_for_user(user):
         # Get events for the current calendar
         events = list_activities(calendar_service, calendar_id, date_from, date_to)
 
-        logger.debug("[sync-activities] Got %d events from the calendar!" % len(events))
+        logger.debug("[google_calendar] Got %d events from the calendar!" % len(events))
 
         # Add the activity type to the calendar object
         calendar['activity_type'] = calendar_type
 
         # Process the collected events
-        logger.debug("[sync-activities] Processing the collected events ...")
+        logger.debug("[google_calendar] Processing the collected events ...")
         process_events(user, calendar, events, date_from, date_to)
 
-    logger.debug("[sync-activities] Finished synchronizing activities for user '%s'!" % user.username)
+    logger.debug("[google_calendar] Finished synchronizing activities for user '%s'!" % user['username'])
 
 def process_events(user, calendar, events, date_from, date_to):
     # Compose the color object
@@ -79,21 +83,21 @@ def process_events(user, calendar, events, date_from, date_to):
     }
 
     # Get the events from DB to compare them with the fetched ones
-    db_events = Activity.objects.all().filter(
-        start__gte=time.mktime(date_from.timetuple()),
-        end__lte=time.mktime(date_to.timetuple()),
-        user=user,
+    db_events = store_utils.activity_get(
+        start__gte=int(time.mktime(date_from.timetuple())),
+        end__lte=int(time.mktime(date_to.timetuple())),
+        user=user['id'],
         calendar_id=calendar['id']
     )
 
     # Compute a hash of update times by event id
     db_events_hash = {}
     for db_event in db_events:
-        event_id = db_event.event_id
+        event_id = db_event['event_id']
         db_events_hash[event_id] = {
-            'id': db_event.id,
-            'updated': db_event.updated,
-            'color': db_event.color
+            'id': db_event['id'],
+            'updated': db_event['updated'],
+            'color': db_event['color']
         }
 
     # Process the events
@@ -125,11 +129,11 @@ def process_events(user, calendar, events, date_from, date_to):
             activity_data['id'] = db_event['id']
 
         if 'id' in activity_data:
-            logger.debug("[sync-activities] Updating activity from event: %s" % str(event))
+            logger.debug("[google_calendar] Updating activity from event: %s" % str(event))
         else:
-            logger.debug("[sync-activities] Inserting new activity from event: %s" % str(event))
+            logger.debug("[google_calendar] Inserting new activity from event: %s" % str(event))
 
-        Activity(**activity_data).save()
+        store_utils.activity_save(**activity_data)
 
     # Delete the cancelled DB events (the ones remaining in the hash)
     activities_to_delete = map(
@@ -137,14 +141,15 @@ def process_events(user, calendar, events, date_from, date_to):
         db_events_hash.values()
     )
 
-    logger.debug("[sync-activities] Deleting activities that do not exist anymore in Google Calendar: %s" % str(activities_to_delete))
+    logger.debug("[google_calendar] Deleting activities that do not exist anymore in Google Calendar: %s" % str(activities_to_delete))
 
-    Activity.objects.filter(id__in=activities_to_delete).delete()
+    if activities_to_delete:
+        store_utils.activity_delete(id__in=activities_to_delete)
 
 def compose_activity_data(event, calendar, calendar_colors, user):
     activity_data = {
         'event_id': event['id'],
-        'user': user,
+        'user': user['resource_uri'],
         'status': event['status'],
         'html_link': event['htmlLink'],
         'title': event['summary'],

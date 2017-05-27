@@ -86,6 +86,3 @@ application/images/Thumbs.db
 # Google Fit credentials and auth
 google_fit/refresh_token
 google_fit/client/config.py
-
-# Google Calendar auth
-store/cami-calendar-quickstart.json

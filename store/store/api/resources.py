@@ -161,7 +161,7 @@ class ActivityResource(ModelResource):
 
     class Meta:
         queryset = Activity.objects.all()
-        allowed_methods = ['get', 'post', 'put']
+        allowed_methods = ['get', 'post', 'put', 'delete']
         collection_name = "activities"
 
         authorization = Authorization()
@@ -169,10 +169,12 @@ class ActivityResource(ModelResource):
 
         ordering = ["start"]
         filtering = {
+            "id": ALL,
             "user": ALL_WITH_RELATIONS,
             "start": ALL,
             "end": ALL,
-            "activity_type": ALL
+            "activity_type": ALL,
+            "calendar_id": ALL,
         }
 
     def prepend_urls(self):

@@ -7,7 +7,8 @@ from apiclient import errors, discovery
 from oauth2client import tools, client
 from oauth2client.file import Storage
 
-from .constants import ActivityType, ActivitySource
+# Local imports
+import settings
 
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
@@ -15,8 +16,8 @@ CLIENT_SECRET_FILE = 'client_secret.json'
 CREDENTIALS_FILE = 'cami-calendar-quickstart.json'
 APPLICATION_NAME = 'CAMI Google Calendar API'
 
-
-logger = logging.getLogger("store")
+logging.config.dictConfig(settings.LOGGING)
+logger = logging.getLogger("google_calendar")
 
 def get_credentials():
     """Gets valid user credentials from storage.
@@ -28,7 +29,7 @@ def get_credentials():
         Credentials, the obtained credential.
     """
 
-    project_dir = os.path.dirname(os.path.realpath(__file__)) + "/../"
+    project_dir = os.path.dirname(os.path.realpath(__file__))
     credential_dir = project_dir
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)

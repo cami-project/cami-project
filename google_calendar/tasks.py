@@ -2,25 +2,27 @@ import logging
 
 from kombu import Queue, Exchange
 from celery import Celery
+from logging import config
 
-from django.conf import settings
-
+import settings
 import activities
-
-logger = logging.getLogger("store")
-
-app = Celery('store', broker=settings.BROKER_URL)
-app.config_from_object('django.conf:settings')
+import store_utils
 
 
-@app.task(name='store.sync_activities')
+logging.config.dictConfig(settings.LOGGING)
+logger = logging.getLogger("google_calendar")
+
+app = Celery('tasks', broker=settings.BROKER_URL)
+app.config_from_object(settings)
+
+@app.task(name='google_calendar.sync_activities')
 def sync_activities():
-    logger.debug("[sync-activities] Synchronizing all users activities with Google Calendar. Number of users: %d" % 1)
+    logger.debug("[google_calendar] Synchronizing all users activities with Google Calendar. Number of users: %d" % 1)
 
     # Hardcode user for demo
-    user = User.objects.get(username="camidemo")
-    app.send_task('store.sync_activities_for_user', [user])
+    user = store_utils.user_get(2)
+    app.send_task('google_calendar.sync_activities_for_user', [user])
 
-@app.task(name='store.sync_activities_for_user')
+@app.task(name='google_calendar.sync_activities_for_user')
 def sync_activities_for_user(user):
     activities.sync_for_user(user)
