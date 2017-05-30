@@ -3,8 +3,8 @@
   "port": "12123",
   "channels": [
     {
-      "name": "example chanlen",
-      "events": [ "one", "two", "thahdshhs" ]
+      "name": "CONSOLE",
+      "events": [ "Fall" ]
     }
   ]
 }

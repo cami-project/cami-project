@@ -1,25 +1,27 @@
 ﻿using System;
 using DSS.Delegate;
+using System.Linq;
+using DSS.RMQ;
 
 namespace DSS.Playground
 {
-    class MainClass
+    class Program
     {
         public static void Main(string[] args)
         {
 
+
             var router = new Router<Event>();
 
-            router.RegisterChannel("Console", new ConsolePrintHandler<Event>());
+            IRouterHandler<Event> [] handlers = 
+            { 
+                new ConsolePrintHandler<Event>(), 
+                new PushNotificationHandler<Event>(new RmqWriter<Event>("", "", "", "")) 
+            };
+			
+            var config = new Config("default.config", router, handlers);
 
-            var e = new Event("Fall", "Fall", "High");
-
-            router.RegisterEvent("Console", e);
-
-            router.Handle(e);
-
-
-
+            router.Handle(new Event("Fall", "Fall", "5"));
 
         }
     }

@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.ExpertSystem", "DSS.Exp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.Delegate", "DSS.Delegate\DSS.Delegate.csproj", "{1E221878-FB21-409A-A2DE-9318BF4710FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.Playground.Delegate", "DSS.Playground.Delegate\DSS.Playground.Delegate.csproj", "{4377543C-4AD9-45DC-80D3-B446DE798845}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.Main", "DSS.Main\DSS.Main.csproj", "{9BE56BF2-4117-4250-8D4F-F958088CF8D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,9 +27,9 @@ Global
 		{1E221878-FB21-409A-A2DE-9318BF4710FC}.Debug|x86.Build.0 = Debug|Any CPU
 		{1E221878-FB21-409A-A2DE-9318BF4710FC}.Release|x86.ActiveCfg = Release|Any CPU
 		{1E221878-FB21-409A-A2DE-9318BF4710FC}.Release|x86.Build.0 = Release|Any CPU
-		{4377543C-4AD9-45DC-80D3-B446DE798845}.Debug|x86.ActiveCfg = Debug|x86
-		{4377543C-4AD9-45DC-80D3-B446DE798845}.Debug|x86.Build.0 = Debug|x86
-		{4377543C-4AD9-45DC-80D3-B446DE798845}.Release|x86.ActiveCfg = Release|x86
-		{4377543C-4AD9-45DC-80D3-B446DE798845}.Release|x86.Build.0 = Release|x86
+		{9BE56BF2-4117-4250-8D4F-F958088CF8D1}.Debug|x86.ActiveCfg = Debug|x86
+		{9BE56BF2-4117-4250-8D4F-F958088CF8D1}.Debug|x86.Build.0 = Debug|x86
+		{9BE56BF2-4117-4250-8D4F-F958088CF8D1}.Release|x86.ActiveCfg = Release|x86
+		{9BE56BF2-4117-4250-8D4F-F958088CF8D1}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 EndGlobal

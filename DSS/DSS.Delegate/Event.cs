@@ -1,4 +1,6 @@
 ﻿using System;
+using Newtonsoft.Json;
+
 namespace DSS.Delegate
 {
     public class Event
@@ -6,14 +8,15 @@ namespace DSS.Delegate
 
         public string Name { get; private set; }
         public string Type { get; private set; }
-        public string Value { get; private set; }
+        public string Val { get; private set; }
 
         public Event(string name, string type, string val)
         {
             this.Name = name;
             this.Type = type;
-            this.Value = val;
+            this.Val = val;
         }
+
 
         public bool Equals(Event obj)
         {
@@ -41,8 +44,13 @@ namespace DSS.Delegate
 
         public override string ToString()
         {
-            return string.Format("[Event: Name={0}, Type={1}, Value={2}]", Name, Type, Value);
+            return string.Format("[Event: Name={0}, Type={1}, Val={2}]", Name, Type, Val);
         }
 
+
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

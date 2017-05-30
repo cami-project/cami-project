@@ -3,10 +3,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{4377543C-4AD9-45DC-80D3-B446DE798845}</ProjectGuid>
+    <ProjectGuid>{9BE56BF2-4117-4250-8D4F-F958088CF8D1}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>DSS.Playground.Delegate</RootNamespace>
-    <AssemblyName>DSS.Playground.Delegate</AssemblyName>
+    <RootNamespace>DSS.Main</RootNamespace>
+    <AssemblyName>DSS.Main</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -30,6 +30,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -44,6 +47,12 @@
       <Project>{728CCD8D-9438-4500-8407-8D86D20B5AA7}</Project>
       <Name>DSS.RMQ</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="default.config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
