@@ -5,11 +5,11 @@ System architecture
 -------------
 Current implementation of the system. 
 
-![Current implementation](https://photos-2.dropbox.com/t/2/AABF1-2wsqeE4haSZJU5pB9Cim6u9QOGwx3_ENVWJ0wqoA/12/642852589/png/32x32/1/_/1/2/CAMI%20-%20Current%20implementation%20diagram.png/EI_vjZwFGBQgAigC/ePZru_AIbKywtcoiGVRhr8KUuO0_ujB1NUgsOd9sVrA?size=2048x1536&size_mode=3)
+![current state of the system](https://github.com/cami-project/cami-project/blob/196-DSS-implementation/DSS/Readme%20Assets/Current%20state.png?raw=true)
 
 The diagram below represents how final architecture should look like.
 
-![enter image description here](https://photos-1.dropbox.com/t/2/AADX56m8fTTC5HF6S3lDssU2c3amnSHyiJAO-1uEKFRUkQ/12/642852589/png/32x32/1/_/1/2/Message%20router%20DSS-3.png/EI_vjZwFGBUgAigC/9ADFdhOjrQ0kZpSXu6-f4MjA130tbFDqjQt7X3n6GJY?size=2048x1536&size_mode=3)
+![final product](https://github.com/cami-project/cami-project/blob/196-DSS-implementation/DSS/Readme%20Assets/Message%20router.png?raw=true)
 
 How to run
 -------------
@@ -21,10 +21,13 @@ Make sure **Mono** is installed on the system. (http://www.mono-project.com)
 How it works
 -------------
 
-![enter image description here](https://photos-5.dropbox.com/t/2/AAC0ysbZOBsgxV5Zw3sEU-bm-jm4uhgQzUhOa-QjPKNqxA/12/642852589/png/32x32/1/_/1/2/Screen%20Shot%202017-05-30%20at%2018.26.14.png/EI_vjZwFGAsgAigC/WhuroQlQetcAZYKJGBi9e5RruMAIC2JCchiEQweXz_s?size=2048x1536&size_mode=3)
+![console interface](https://github.com/cami-project/cami-project/blob/196-DSS-implementation/DSS/Readme%20Assets/Console%20interface.png?raw=true)
 
 
-For now,  the mockup manager creates a fake fall event, pushes it to the RabbitMQ broker,  read it from there and handle it by two channels (CONSOLE and NOTIFICATION). The **PushNotificationHandler** is responsible for taking the message and pushing it back to the RabbitMQ inside of the **frontend_notifications** queue.
+In case option number one is selected mockup manager creates a fake fall event, pushes it to the RabbitMQ broker,  read it from there and handle it by two channels (CONSOLE and NOTIFICATION). The **PushNotificationHandler** is responsible for taking the message and pushing it back to the RabbitMQ inside of the **frontend_notifications** queue.
+
+The option number two gives the interface for inputing custom the event properties. 
+
 
 Message format
 -------------
@@ -64,7 +67,7 @@ All the event/messages types have to be registered and assigned to a specific ch
 
 Download
 -------------
-Last updated: 30, May. 2017
+Last updated: 31, May. 2017
 
 https://www.dropbox.com/sh/w2ots7t45nf1n0s/AAD59UFT_2yk98UWe2IFx4xga?dl=0 
 
