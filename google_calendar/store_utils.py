@@ -39,7 +39,7 @@ def activity_save(**kwargs):
         json=data
     )
 
-    if r.status_code == 200:
+    if r.status_code in [200, 201]:
         return True
 
     logger.debug(
