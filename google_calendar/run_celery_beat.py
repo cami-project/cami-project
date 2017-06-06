@@ -13,7 +13,7 @@ import threading
 import inotify.adapters
 
 
-CELERY_CMD = tuple("celery -A store worker -l info --autoreload".split())
+CELERY_CMD = tuple("celery -A tasks beat -l info".split())
 CHANGE_EVENTS = ("IN_MODIFY", "IN_ATTRIB", "IN_DELETE")
 WATCH_EXTENSIONS = (".py",)
 
@@ -34,7 +34,7 @@ def watch_tree(stop, path, event):
             if filename is None:
                 continue
 
-            if any(filename.endswith(ename) for ename in WATCH_EXTENSIONS):
+            if not any(filename.endswith(ename) for ename in WATCH_EXTENSIONS):
                 continue
 
             if any(ename in attrs for ename in CHANGE_EVENTS):
