@@ -113,7 +113,6 @@ class MeasurementResource(ModelResource):
     def dehydrate_timestamp(self, bundle):
         return int(bundle.data['timestamp'])
 
-
     def dehydrate(self, bundle):
         '''
         By default the value_info JSONField is retrieved from the DB as a unicode string.
@@ -181,6 +180,18 @@ class ActivityResource(ModelResource):
         return [
             url(r"^(?P<resource_name>%s)/last_activities%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_last_activities'), name="api_last_activities"),
         ]
+
+    def dehydrate(self, bundle):
+        bundle.data['start'] = int(bundle.data['start'])
+        bundle.data['end'] = int(bundle.data['end'])
+        bundle.data['created'] = int(bundle.data['created'])
+        bundle.data['updated'] = int(bundle.data['updated'])
+
+        bundle.data['color'] = ast.literal_eval(bundle.data['color'])
+        bundle.data['reminders'] = ast.literal_eval(bundle.data['reminders'])
+        bundle.data['creator'] = ast.literal_eval(bundle.data['creator'])
+
+        return bundle
 
     def get_last_activities(self, request, **kwargs):
         self.method_check(request, allowed=['get'])
