@@ -1,3 +1,4 @@
+import json
 import pytz
 import time
 import datetime
@@ -97,7 +98,7 @@ def process_events(user, calendar, events, date_from, date_to):
         db_events_hash[event_id] = {
             'id': db_event['id'],
             'updated': db_event['updated'],
-            'color': db_event['color']
+            'color': json.loads(db_event['color'])
         }
 
     # Process the events
@@ -111,7 +112,7 @@ def process_events(user, calendar, events, date_from, date_to):
 
         if event['id'] in db_events_hash:
             db_event = db_events_hash[event['id']]
-
+            
             # Remove the DB event from the hash because it is valid
             db_events_hash.pop(event['id'], None)
 
