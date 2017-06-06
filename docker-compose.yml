@@ -2,16 +2,16 @@ version: '2'
 services:
   cami-mysql:
     build:
-      context: ./docker
-      dockerfile: Dockerfile-mysql
+      context: .
+      dockerfile: ./docker/Dockerfile-mysql
     ports:
       # Make the MySQL server available on the host so VMs can access it
       - "3307:3306"
 
   cami-rabbitmq:
     build:
-      context: ./docker
-      dockerfile: Dockerfile-rabbitmq
+      context: .
+      dockerfile: ./docker/Dockerfile-rabbitmq
     ports:
       # Make the RabbitMQ server available on the host so VMs can access it
       - "5673:5672"
@@ -19,8 +19,8 @@ services:
 
   cami-store:
     build:
-      context: ./docker
-      dockerfile: Dockerfile-store
+      context: .
+      dockerfile: ./docker/Dockerfile-store
     links:
       - cami-mysql
     ports:
@@ -31,8 +31,8 @@ services:
 
   cami-store-migrate:
     build:
-      context: ./docker
-      dockerfile: Dockerfile-store
+      context: .
+      dockerfile: ./docker/Dockerfile-store
     links:
       - cami-mysql
     volumes:
@@ -43,8 +43,8 @@ services:
   # container will just run migrations and load fixtures and then exit.
   cami-medical-compliance-migrate:
     build:
-      context: ./docker
-      dockerfile: Dockerfile-medical-compliance
+      context: .
+      dockerfile: ./docker/Dockerfile-medical-compliance
     links:
       - cami-mysql
     volumes:
@@ -53,8 +53,8 @@ services:
 
   cami-medical-compliance:
     build:
-      context: ./docker
-      dockerfile: Dockerfile-medical-compliance
+      context: .
+      dockerfile: ./docker/Dockerfile-medical-compliance
     links:
       - cami-mysql
       - cami-rabbitmq
@@ -67,8 +67,8 @@ services:
   # Runs the Celery worker for consuming messages received by the medical-compliance
   cami-medical-compliance-message-worker:
     build:
-      context: ./docker
-      dockerfile: Dockerfile-medical-compliance
+      context: .
+      dockerfile: ./docker/Dockerfile-medical-compliance
     links:
       - cami-mysql
       - cami-rabbitmq
@@ -79,8 +79,8 @@ services:
   # Runs the Celery task scheduler for medical-compliance
   cami-medical-compliance-task-scheduler:
     build:
-      context: ./docker
-      dockerfile: Dockerfile-medical-compliance
+      context: .
+      dockerfile: ./docker/Dockerfile-medical-compliance
     links:
       - cami-mysql
       - cami-rabbitmq
@@ -92,8 +92,8 @@ services:
   # container will just run migrations and load fixtures and then exit.
   cami-frontend-migrate:
     build:
-      context: ./docker
-      dockerfile: Dockerfile-frontend
+      context: .
+      dockerfile: ./docker/Dockerfile-frontend
     links:
       - cami-mysql
     volumes:
@@ -103,8 +103,8 @@ services:
   # Should use cached image that is build for cami-frontend-migrate
   cami-frontend:
     build:
-      context: ./docker
-      dockerfile: Dockerfile-frontend
+      context: .
+      dockerfile: ./docker/Dockerfile-frontend
     links:
       - cami-mysql
       - cami-rabbitmq
@@ -117,8 +117,8 @@ services:
   # Runs the Celery worker for consuming messages received by the frontend
   cami-frontend-message-worker:
     build:
-      context: ./docker
-      dockerfile: Dockerfile-frontend
+      context: .
+      dockerfile: ./docker/Dockerfile-frontend
     links:
       - cami-mysql
       - cami-rabbitmq
@@ -129,8 +129,8 @@ services:
   # Runs the Celery worker for consuming measurements and distribute them to the Linkwatch platform
   cami-linkwatch-worker:
     build:
-      context: ./docker
-      dockerfile: Dockerfile-linkwatch
+      context: .
+      dockerfile: ./docker/Dockerfile-linkwatch
     links:
       - cami-rabbitmq
     volumes:
@@ -140,8 +140,8 @@ services:
   # Runs the Celery worker for consuming measurements and distribute them to the OpenTele platform
   cami-opentele-worker:
     build:
-      context: ./docker
-      dockerfile: Dockerfile-opentele
+      context: .
+      dockerfile: ./docker/Dockerfile-opentele
     links:
       - cami-rabbitmq
     volumes:
@@ -151,8 +151,8 @@ services:
   # Runs the Celery worker for consuming messages received by the google-calendar
   cami-google-calendar:
     build:
-      context: ./docker
-      dockerfile: Dockerfile-google-calendar
+      context: .
+      dockerfile: ./docker/Dockerfile-google-calendar
     links:
       - cami-rabbitmq
     volumes:
@@ -162,8 +162,8 @@ services:
   # Runs the Celery task scheduler for google-calendar
   cami-google-calendar-task-scheduler:
     build:
-      context: ./docker
-      dockerfile: Dockerfile-google-calendar
+      context: .
+      dockerfile: ./docker/Dockerfile-google-calendar
     links:
       - cami-rabbitmq
     volumes:
