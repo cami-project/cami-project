@@ -169,4 +169,4 @@ services:
     volumes:
       - .:/cami-project
     entrypoint: docker-task-scheduler-entrypoint-dev.sh
-
+    

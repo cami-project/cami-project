@@ -15,6 +15,8 @@ cami-rabbitmq:
   stdin_open: true
 cami-store:
   image: vitaminsoftware/cami-project:store
+  links:
+    - 'cami-mysql'
   ports:
     - "8008:8008"
   entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-entrypoint.sh
@@ -103,7 +105,6 @@ cami-frontend-message-worker:
 cami-linkwatch-worker:
   image: vitaminsoftware/cami-project:linkwatch
   links:
-    - 'cami-mysql'
     - 'cami-rabbitmq'
   entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-message-worker-entrypoint.sh
   labels:
@@ -113,7 +114,6 @@ cami-linkwatch-worker:
 cami-opentele-worker:
   image: vitaminsoftware/cami-project:opentele
   links:
-    - 'cami-mysql'
     - 'cami-rabbitmq'
   entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-message-worker-entrypoint.sh
   labels:
@@ -138,3 +138,4 @@ cami-google-calendar-task-scheduler:
     io.rancher.container.pull_image: always
   tty: true
   stdin_open: true
+  
