@@ -1,8 +1,6 @@
 import logging
 import requests
 
-from collections import namedtuple
-
 # Local imports
 import settings
 
@@ -13,7 +11,17 @@ logger = logging.getLogger("google_calendar.store_utils")
 def activity_get(**kwargs):
     endpoint = settings.STORE_ENDPOINT_URI + "/api/v1/activity/"
     r = requests.get(endpoint, params=dict(kwargs))
-    return r.json()['activities']
+
+    json_response = r.json()
+    if 'activities' in json_response:
+        return json_response['activities']
+
+    logger.debug(
+        "[google_calendar_store_utils] " +
+        "There was a problem fetching activities from Store. " +
+        "Arguments: %s. Response: %s" % (kwargs, r.text)
+    )
+    return False
 
 def activity_save(**kwargs):
     endpoint = settings.STORE_ENDPOINT_URI + "/api/v1/activity/"
@@ -31,14 +39,36 @@ def activity_save(**kwargs):
         json=data
     )
 
-    return r.status_code == 204
+    if r.status_code == 200:
+        return True
+
+    logger.debug(
+        "[google_calendar_store_utils] " +
+        "There was a problem saving the activity to Store. " +
+        "Arguments: %d. Response: %s" % (r.status_code, r.text)
+    )
+    return False
 
 def activity_delete(**kwargs):
     endpoint = settings.STORE_ENDPOINT_URI + "/api/v1/activity/"
     r = requests.delete(endpoint, params=dict(kwargs))
-    return r.status_code == 204
+
+    if r.status_code == 204:
+        return True
+
+    logger.debug(
+        "[google_calendar_store_utils] " +
+        "There was a problem deleting the activities from Store. " +
+        "Arguments: %s. Response: %s" % (kwargs, r.text)
+    )
+    return False
 
 def user_get(id):
     endpoint = settings.STORE_ENDPOINT_URI + "/api/v1/user/" + str(id)
     r = requests.get(endpoint)
-    return r.json()
+
+    json_response = r.json()
+    if json_response:
+        return json_response
+
+    return False
