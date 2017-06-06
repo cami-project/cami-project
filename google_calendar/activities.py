@@ -104,7 +104,7 @@ def process_events(user, calendar, events, date_from, date_to):
         db_events_hash[event_id] = {
             'id': db_event['id'],
             'updated': db_event['updated'],
-            'color': eval(db_event['color'])
+            'color': db_event['color']
         }
 
     # Process the events
