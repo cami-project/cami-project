@@ -7,14 +7,22 @@ services:
     ports:
       # Make the MySQL server available on the host so VMs can access it
       - "3307:3306"
-  
+
+  cami-rabbitmq:
+    build:
+      context: .
+      dockerfile: Dockerfile-rabbitmq
+    ports:
+      # Make the RabbitMQ server available on the host so VMs can access it
+      - "5673:5672"
+      - "15673:15672"
+
   cami-store:
     build:
       context: .
       dockerfile: Dockerfile-store
     links:
       - cami-mysql
-      - cami-rabbitmq
     ports:
       - "8008:8008"
     volumes:
@@ -31,14 +39,6 @@ services:
       - .:/cami-project
     entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-migration-entrypoint.sh
 
-  cami-rabbitmq:
-    build:
-      context: .
-      dockerfile: Dockerfile-rabbitmq
-    ports:
-      # Make the RabbitMQ server available on the host so VMs can access it
-      - "5673:5672"
-      - "15673:15672"
   # Run migrations in a separate container from the main applications. The
   # container will just run migrations and load fixtures and then exit.
   cami-medical-compliance-migrate:
@@ -132,11 +132,10 @@ services:
       context: .
       dockerfile: Dockerfile-linkwatch
     links:
-      - cami-mysql
       - cami-rabbitmq
     volumes:
       - .:/cami-project
-    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-message-worker-entrypoint-dev.sh
+    entrypoint: docker-message-worker-entrypoint-dev.sh
 
   # Runs the Celery worker for consuming measurements and distribute them to the OpenTele platform
   cami-opentele-worker:
@@ -144,8 +143,30 @@ services:
       context: .
       dockerfile: Dockerfile-opentele
     links:
-      - cami-mysql
       - cami-rabbitmq
     volumes:
       - .:/cami-project
-    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-message-worker-entrypoint-dev.sh
+    entrypoint: docker-message-worker-entrypoint-dev.sh
+
+  # Runs the Celery worker for consuming messages received by the google-calendar
+  cami-google-calendar:
+    build:
+      context: .
+      dockerfile: Dockerfile-google-calendar
+    links:
+      - cami-rabbitmq
+    volumes:
+      - .:/cami-project
+    entrypoint: docker-message-worker-entrypoint-dev.sh
+
+  # Runs the Celery task scheduler for google-calendar
+  cami-google-calendar-task-scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile-google-calendar
+    links:
+      - cami-rabbitmq
+    volumes:
+      - .:/cami-project
+    entrypoint: docker-task-scheduler-entrypoint-dev.sh
+    

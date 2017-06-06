@@ -39,13 +39,13 @@ def activity_save(**kwargs):
         json=data
     )
 
-    if r.status_code == 200:
+    if r.status_code in [200, 201]:
         return True
 
     logger.debug(
         "[google_calendar_store_utils] " +
         "There was a problem saving the activity to Store. " +
-        "Arguments: %d. Response: %s" % (r.status_code, r.text)
+        "Arguments: %s. Response: %s" % (kwargs, r.text)
     )
     return False
 

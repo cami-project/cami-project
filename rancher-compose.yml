@@ -1,18 +1,30 @@
 cami-rabbitmq:
   scale: 1
-cami-store:
+cami-medical-compliance-task-scheduler:
   scale: 1
-cami-medical-compliance-migrate:
+cami-mysql:
+  scale: 1
+cami-store:
   scale: 1
 cami-medical-compliance:
   scale: 1
-cami-medical-compliance-message-worker:
-  scale: 1
-cami-medical-compliance-task-scheduler:
+cami-store-migrate:
   scale: 1
 cami-frontend-migrate:
   scale: 1
-cami-frontend:
+cami-opentele-worker:
+  scale: 1
+cami-google-calendar-task-scheduler:
+  scale: 1
+cami-medical-compliance-migrate:
   scale: 1
 cami-frontend-message-worker:
+  scale: 1
+cami-frontend:
+  scale: 1
+cami-linkwatch-worker:
+  scale: 1
+cami-medical-compliance-message-worker:
+  scale: 1
+cami-google-calendar:
   scale: 1

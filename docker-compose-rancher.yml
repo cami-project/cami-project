@@ -1,4 +1,4 @@
-cami-store:
+cami-mysql:
   image: vitaminsoftware/cami-project:store
   ports:
     - "3307:3306"
@@ -13,21 +13,41 @@ cami-rabbitmq:
     io.rancher.container.pull_image: always
   tty: true
   stdin_open: true
+cami-store:
+  image: vitaminsoftware/cami-project:store
+  links:
+    - 'cami-mysql'
+  ports:
+    - "8008:8008"
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-entrypoint.sh
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  stdin_open: true
+cami-store-migrate:
+  image: vitaminsoftware/cami-project:store
+  links:
+    - 'cami-mysql'
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-migration-entrypoint.sh
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.container.start_once: 'true'
 cami-medical-compliance-migrate:
   image: vitaminsoftware/cami-project:medical-compliance
   links:
-    - 'cami-store'
-  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-migration-entrypoint.sh
+    - 'cami-mysql'
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-migration-entrypoint.sh
   labels:
     io.rancher.container.pull_image: always
+    io.rancher.container.start_once: 'true'
 cami-medical-compliance:
   image: vitaminsoftware/cami-project:medical-compliance
   links:
-    - 'cami-store'
+    - 'cami-mysql'
     - 'cami-rabbitmq'
   ports:
     - "8000:8000"
-  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-entrypoint.sh
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-entrypoint.sh
   labels:
     io.rancher.container.pull_image: always
   tty: true
@@ -35,9 +55,9 @@ cami-medical-compliance:
 cami-medical-compliance-message-worker:
   image: vitaminsoftware/cami-project:medical-compliance
   links:
-    - 'cami-store'
+    - 'cami-mysql'
     - 'cami-rabbitmq'
-  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-message-worker-entrypoint.sh
   labels:
     io.rancher.container.pull_image: always
   tty: true
@@ -45,9 +65,9 @@ cami-medical-compliance-message-worker:
 cami-medical-compliance-task-scheduler:
   image: vitaminsoftware/cami-project:medical-compliance
   links:
-    - 'cami-store'
+    - 'cami-mysql'
     - 'cami-rabbitmq'
-  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-task-scheduler-entrypoint.sh
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-task-scheduler-entrypoint.sh
   labels:
     io.rancher.container.pull_image: always
   tty: true
@@ -55,18 +75,19 @@ cami-medical-compliance-task-scheduler:
 cami-frontend-migrate:
   image: vitaminsoftware/cami-project:frontend
   links:
-    - 'cami-store'
-  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-migration-entrypoint.sh
+    - 'cami-mysql'
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-migration-entrypoint.sh
   labels:
     io.rancher.container.pull_image: always
+    io.rancher.container.start_once: 'true'
 cami-frontend:
   image: vitaminsoftware/cami-project:frontend
   links:
-    - 'cami-store'
+    - 'cami-mysql'
     - 'cami-rabbitmq'
   ports:
     - "8001:8001"
-  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-entrypoint.sh
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-entrypoint.sh
   labels:
     io.rancher.container.pull_image: always
   tty: true
@@ -74,9 +95,9 @@ cami-frontend:
 cami-frontend-message-worker:
   image: vitaminsoftware/cami-project:frontend
   links:
-    - 'cami-store'
+    - 'cami-mysql'
     - 'cami-rabbitmq'
-  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-message-worker-entrypoint.sh
   labels:
     io.rancher.container.pull_image: always
   tty: true
@@ -84,9 +105,8 @@ cami-frontend-message-worker:
 cami-linkwatch-worker:
   image: vitaminsoftware/cami-project:linkwatch
   links:
-    - 'cami-store'
     - 'cami-rabbitmq'
-  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-message-worker-entrypoint.sh
   labels:
     io.rancher.container.pull_image: always
   tty: true
@@ -94,10 +114,28 @@ cami-linkwatch-worker:
 cami-opentele-worker:
   image: vitaminsoftware/cami-project:opentele
   links:
-    - 'cami-store'
     - 'cami-rabbitmq'
-  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
+  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-message-worker-entrypoint.sh
   labels:
     io.rancher.container.pull_image: always
   tty: true
   stdin_open: true
+cami-google-calendar:
+  image: vitaminsoftware/cami-project:google-calendar
+  links:
+    - cami-rabbitmq
+  entrypoint: docker-message-worker-entrypoint.sh
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  stdin_open: true
+cami-google-calendar-task-scheduler:
+  image: vitaminsoftware/cami-project:google-calendar
+  links:
+    - cami-rabbitmq
+  entrypoint: docker-task-scheduler-entrypoint.sh
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  stdin_open: true
+  
