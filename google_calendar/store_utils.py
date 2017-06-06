@@ -45,7 +45,7 @@ def activity_save(**kwargs):
     logger.debug(
         "[google_calendar_store_utils] " +
         "There was a problem saving the activity to Store. " +
-        "Arguments: %d. Response: %s" % (r.status_code, r.text)
+        "Arguments: %s. Response: %s" % (kwargs, r.text)
     )
     return False
 
