@@ -68,7 +68,7 @@ LOGGING = {
 CELERYBEAT_SCHEDULE = {
     'sync_activities': {
         'task': 'google_calendar.sync_activities',
-        'schedule': timedelta(minutes=1),
+        'schedule': timedelta(minutes=5),
     },
 }
 

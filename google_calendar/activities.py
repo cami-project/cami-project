@@ -112,7 +112,7 @@ def process_events(user, calendar, events, date_from, date_to):
 
         if event['id'] in db_events_hash:
             db_event = db_events_hash[event['id']]
-            
+
             # Remove the DB event from the hash because it is valid
             db_events_hash.pop(event['id'], None)
 
