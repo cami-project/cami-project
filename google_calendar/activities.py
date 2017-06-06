@@ -64,7 +64,7 @@ def sync_for_user(user):
         # Get events for the current calendar
         events = list_activities(calendar_service, calendar_id, date_from, date_to)
 
-        logger.debug("[google_calendar] Got %d events from the calendar!" % len(events))
+        logger.debug("[google_calendar] Successfully got %d events from the calendar!" % len(events))
 
         # Add the activity type to the calendar object
         calendar['activity_type'] = calendar_type
@@ -83,13 +83,19 @@ def process_events(user, calendar, events, date_from, date_to):
         'id': calendar['colorId']
     }
 
-    # Get the events from DB to compare them with the fetched ones
+    logger.debug("[google_calendar] Getting the activities from Store to compare them with the fetched events ...")
     db_events = store_utils.activity_get(
         start__gte=int(time.mktime(date_from.timetuple())),
         end__lte=int(time.mktime(date_to.timetuple())),
         user=user['id'],
         calendar_id=calendar['id']
     )
+
+    if db_events != False:
+        logger.debug("[google_calendar] Successfully got %d activities from Store!" % len(db_events))
+    else:
+        logger.debug("[google_calendar] Failed getting activities from Store! Stopped processing the events!")
+        return
 
     # Compute a hash of update times by event id
     db_events_hash = {}
@@ -98,7 +104,7 @@ def process_events(user, calendar, events, date_from, date_to):
         db_events_hash[event_id] = {
             'id': db_event['id'],
             'updated': db_event['updated'],
-            'color': json.loads(db_event['color'])
+            'color': eval(db_event['color'])
         }
 
     # Process the events
@@ -134,7 +140,10 @@ def process_events(user, calendar, events, date_from, date_to):
         else:
             logger.debug("[google_calendar] Inserting new activity from event: %s" % str(event))
 
-        store_utils.activity_save(**activity_data)
+        if store_utils.activity_save(**activity_data):
+            logger.debug("[google_calendar] Successfully updated/inserted activity!")
+        else:
+            logger.debug("[google_calendar] Failed updating/inserting activity!")
 
     # Delete the cancelled DB events (the ones remaining in the hash)
     activities_to_delete = map(
@@ -143,9 +152,11 @@ def process_events(user, calendar, events, date_from, date_to):
     )
 
     logger.debug("[google_calendar] Deleting activities that do not exist anymore in Google Calendar: %s" % str(activities_to_delete))
-
     if activities_to_delete:
-        store_utils.activity_delete(id__in=activities_to_delete)
+        if store_utils.activity_delete(id__in=activities_to_delete):
+            logger.debug("[google_calendar] Successfully deleted activities!")
+        else:
+            logger.debug("[google_calendar] Failed deleting activities!")
 
 def compose_activity_data(event, calendar, calendar_colors, user):
     activity_data = {
