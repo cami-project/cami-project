@@ -46,7 +46,7 @@ def get_credentials():
         flags = tools.argparser.parse_args(args=[])
         credentials = tools.run_flow(flow, store, flags)
 
-        logger.info('Storing GCal acccess credentials to ' + credential_path)
+        logger.info('[google_calendar_backend] Storing GCal acccess credentials to ' + credential_path)
 
     return credentials
 
