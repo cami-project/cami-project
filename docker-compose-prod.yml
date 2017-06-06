@@ -1,91 +1,115 @@
 version: '2'
 services:
-  cami-store:
-    image: vitaminsoftware/cami-project:store
+  cami-mysql:
+    image: vitaminsoftware/cami-project:mysql
     ports:
       # Make the store MySQL available on the host so VMs can access it
       - "3307:3306"
+
   cami-rabbitmq:
     image: vitaminsoftware/cami-project:rabbitmq
     ports:
       # Make the RabbitMQ server available on the host so VMs can access it
       - "5673:5672"
       - "15673:15672"
+
+  cami-store:
+    image: vitaminsoftware/cami-project:store
+    ports:
+      - "8008:8008"
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-entrypoint.sh
+
+  cami-store-migrate:
+    image: vitaminsoftware/cami-project:store
+    links:
+      - cami-mysql
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-migration-entrypoint.sh
+
   # Run migrations in a separate container from the main applications. The
   # container will just run migrations and load fixtures and then exit.
   cami-medical-compliance-migrate:
     image: vitaminsoftware/cami-project:medical-compliance
     links:
-      - cami-store
-    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-migration-entrypoint.sh
+      - cami-mysql
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-migration-entrypoint.sh
 
   cami-medical-compliance:
     image: vitaminsoftware/cami-project:medical-compliance
     links:
-      - cami-store
+      - cami-mysql
       - cami-rabbitmq
     ports:
       - "8000:8000"
-    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-entrypoint.sh
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-entrypoint.sh
 
   # Runs the Celery worker for consuming messages received by the medical-compliance
   cami-medical-compliance-message-worker:
     image: vitaminsoftware/cami-project:medical-compliance
     links:
       # Needs the store to interact with the DB
-      - cami-store
+      - cami-mysql
       - cami-rabbitmq
-    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-message-worker-entrypoint.sh
 
   # Runs the Celery task scheduler for medical-compliance
   cami-medical-compliance-task-scheduler:
     image: vitaminsoftware/cami-project:medical-compliance
     links:
       # Needs the store to interact with the DB
-      - cami-store
+      - cami-mysql
       - cami-rabbitmq
-    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-task-scheduler-entrypoint.sh
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-task-scheduler-entrypoint.sh
 
   # Run migrations in a separate container from the main applications. The
   # container will just run migrations and load fixtures and then exit.
   cami-frontend-migrate:
     image: vitaminsoftware/cami-project:frontend
     links:
-      - cami-store
-    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-migration-entrypoint.sh
+      - cami-mysql
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-migration-entrypoint.sh
 
   cami-frontend:
     image: vitaminsoftware/cami-project:frontend
     links:
-      - cami-store
+      - cami-mysql
       - cami-rabbitmq
     ports:
       - "8001:8001"
-    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-entrypoint.sh
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-entrypoint.sh
 
   # Runs the Celery worker for consuming messages received by the frontend
   cami-frontend-message-worker:
     image: vitaminsoftware/cami-project:frontend
     links:
       # Needs the store to interact with the DB
-      - cami-store
+      - cami-mysql
       - cami-rabbitmq
-    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-message-worker-entrypoint.sh
 
   # Runs the Celery worker for consuming measurements and distribute them to the Linkwatch platform
   cami-linkwatch-worker:
     image: vitaminsoftware/cami-project:linkwatch
     links:
-      # Needs the store to interact with the DB
-      - cami-store
       - cami-rabbitmq
-    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
+    entrypoint: docker-message-worker-entrypoint.sh
 
   # Runs the Celery worker for consuming measurements and distribute them to the Linkwatch platform
   cami-opentele-worker:
     image: vitaminsoftware/cami-project:opentele
     links:
-      # Needs the store to interact with the DB
-      - cami-store
       - cami-rabbitmq
-    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-store:3306 -- docker-message-worker-entrypoint.sh
+    entrypoint: docker-message-worker-entrypoint.sh
+
+  # Runs the Celery worker for consuming messages received by the google-calendar
+  cami-google-calendar:
+    image: vitaminsoftware/cami-project:google-calendar
+    links:
+      - cami-rabbitmq
+    entrypoint: docker-message-worker-entrypoint.sh
+
+  # Runs the Celery task scheduler for google-calendar
+  cami-google-calendar-task-scheduler:
+    image: vitaminsoftware/cami-project:google-calendar
+    links:
+      - cami-rabbitmq
+    entrypoint: docker-task-scheduler-entrypoint.sh
