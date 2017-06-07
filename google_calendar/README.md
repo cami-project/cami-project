@@ -91,8 +91,11 @@ Currently implemented functions:
 - `activity_get`
 
 Function for getting a list of activities from the `store`.
+
 **Arguments**: Django Query-like arguments (https://docs.djangoproject.com/en/1.11/topics/db/queries/#retrieving-objects)
+
 **Returns**: an array of Activities represented as Python Dictionaries
+
 **Example**:
 ```
 activities = store_utils.activity_get(
@@ -106,8 +109,11 @@ activities = store_utils.activity_get(
 - `activity_save`
 
 Function for saving an activity to the `store`. It works mostly like the constructor function used for creating entries directly from a Django Model. If a valid id is provided, then the already existent entry will be updated using `PUT` method on the Tastypie endpoint, otherwise a `POST` request is issued for creating a new entry.
+
 **Arguments**:  Django Query-like arguments (https://docs.djangoproject.com/en/1.11/topics/db/queries/#creating-objects)
+
 **Returns**: `True` if the activity was successfully saved; `False` otherwise
+
 **Example**:
 ```
 store_utils.activity_save(
@@ -120,8 +126,11 @@ store_utils.activity_save(
 - `activity_delete`
 
 Function for deleting activities from the `store`.
+
 **Arguments**: Django Query-like arguments (https://docs.djangoproject.com/en/1.11/topics/db/queries/#deleting-objects). **WARNING**: If no argument is provided, **all** the entries will be deleted. The same goes if an argument with an empty value is provided.
+
 **Returns**: `True` if the activities were successfully deleted; `False` otherwise
+
 **Example**:
 ```
 store_utils.activity_delete(id__in=[24, 32, 46])
@@ -130,8 +139,11 @@ store_utils.activity_delete(id__in=[24, 32, 46])
 - `user_get`
 
 Function for getting an user's details by its`id`.
+
 **Arguments**: User's unique, numeric **id**.
+
 **Returns**: The user's details as a Python Dictionary
+
 **Example**:
 ```
 user = store_utils.user_get(2)
