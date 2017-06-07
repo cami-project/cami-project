@@ -32,17 +32,27 @@ Container's file list:
 ## Description of the files
 ### `activities.py`
 This file contains the main functionality, the engine of this container.
-  - `sync_for_user`
+
+- `sync_for_user`
+
 This is the main function that is called from the `task.py` file. 
 It computes the time frame and it fetches the user's calendars for the four types of activities.
 Then, for each calendar, it fetches it's events using Google API and sends them to `process_events`.
-    - `process_events`
+
+- `process_events`
+
 This function gets the already stored activities from DB and compares them with the just fetched ones from Google API. It then inserts the new ones, that are not already in DB, updates the ones that are already in DB but have changed, and deletes the ones that do not exist anymore in the Google Calendar.
-    - `compose_activity_data`
+
+- `compose_activity_data`
+
 This is the function that creates the payload to be sent to the `Store API` for inserting/updating an activity.
-  - `event_equals_activity`
+
+- `event_equals_activity`
+
 This is the function used in `process_events` for comparing an event from Google API with an activity from database, in order to check if the activity should be updated.
-  - `timestamp_from_event_date`
+
+- `timestamp_from_event_date`
+
 This translates a date from Google API format to a Unix timestamp
 
 ### `google_calendar_backend.py`
@@ -79,6 +89,7 @@ This file contains some wrapper functions over the `Store Tastypie API`. More in
 
 Currently implemented functions:
 - `activity_get`
+
 Function for getting a list of activities from the `store`.
 **Arguments**: Django Query-like arguments (https://docs.djangoproject.com/en/1.11/topics/db/queries/#retrieving-objects)
 **Returns**: an array of Activities represented as Python Dictionaries
@@ -93,6 +104,7 @@ activities = store_utils.activity_get(
 ```
 
 - `activity_save`
+
 Function for saving an activity to the `store`. It works mostly like the constructor function used for creating entries directly from a Django Model. If a valid id is provided, then the already existent entry will be updated using `PUT` method on the Tastypie endpoint, otherwise a `POST` request is issued for creating a new entry.
 **Arguments**:  Django Query-like arguments (https://docs.djangoproject.com/en/1.11/topics/db/queries/#creating-objects)
 **Returns**: `True` if the activity was successfully saved; `False` otherwise
@@ -106,6 +118,7 @@ store_utils.activity_save(
 ```
 
 - `activity_delete`
+
 Function for deleting activities from the `store`.
 **Arguments**: Django Query-like arguments (https://docs.djangoproject.com/en/1.11/topics/db/queries/#deleting-objects). **WARNING**: If no argument is provided, **all** the entries will be deleted. The same goes if an argument with an empty value is provided.
 **Returns**: `True` if the activities were successfully deleted; `False` otherwise
@@ -115,6 +128,7 @@ store_utils.activity_delete(id__in=[24, 32, 46])
 ```
 
 - `user_get`
+
 Function for getting an user's details by its`id`.
 **Arguments**: User's unique, numeric **id**.
 **Returns**: The user's details as a Python Dictionary
@@ -127,8 +141,10 @@ user = store_utils.user_get(2)
 This file contains the Celery tasks that can be called over the Celery queue.
 Currently implemented tasks:
 - `sync_activities`
+
 This is the main task, that will spawn a sync sub-task for each user from the system.
 Currently, there is only one user hardcoded in this method.
 
 - `sync_activities_for_user`
+
 This is the sub-task that will call the `sync_for_user` function from `activities.py` for the user received as a parameter through the queue.
