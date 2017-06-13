@@ -225,3 +225,31 @@ class Activity(models.Model):
             self.calendar_name,
             self.title
         )
+
+# ================ Journal Information ================
+class JournalEntry(models.Model):
+    RECIPIENT_TYPES = (
+        ('elderly', 'elderly'),
+        ('caregiver', 'caregiver')
+    )
+
+    ENTRY_TYPES = (
+        ('weight', 'weight'),
+        ('heart', 'heart'),
+        ('sleep', 'sleep')
+    )
+
+    SEVERITIES = (
+        ('low', 'low'),
+        ('medium', 'medium'),
+        ('high', 'high')
+    )
+
+    user = models.ForeignKey(User)
+    recipient_type = models.CharField(max_length=20, choices=RECIPIENT_TYPES)
+    type = models.CharField(max_length=20, choices=ENTRY_TYPES)
+    severity = models.CharField(max_length=20, choices=SEVERITIES)
+    timestamp = models.BigIntegerField()
+    message = models.CharField(max_length=512)
+    description = models.CharField(max_length=1024)
+    measurement = models.ForeignKey(Measurement)
