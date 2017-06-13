@@ -7,15 +7,18 @@ from tastypie import fields
 from tastypie.utils import trailing_slash
 from tastypie.resources import ModelResource
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
+from tastypie.paginator import Paginator
 from tastypie.exceptions import NotFound
 from tastypie.authorization import Authorization
+from tastypie.authentication import Authentication
 
 from django.core import serializers
 from django.conf.urls import url
 from django.core.urlresolvers import resolve, get_script_prefix, Resolver404
 from django.contrib.auth.models import User
 
-from store.models import EndUserProfile, Device, DeviceUsage, Measurement, Activity
+from store.models import EndUserProfile, Device, DeviceUsage, \
+    Measurement, Activity, JournalEntry
 
 
 class UserResource(ModelResource):
@@ -57,7 +60,6 @@ class DeviceUsageResource(ModelResource):
             "access_info": ALL
         }
 
-
     def dehydrate(self, bundle):
         '''
         By default the access_info JSONField is retrieved from the DB as a unicode string.
@@ -70,7 +72,6 @@ class DeviceUsageResource(ModelResource):
             bundle.data[DeviceUsageResource.ACCESS_INFO_FIELD_NAME] = access_info_dict
 
         return bundle
-
 
     def build_filters(self, filters = None):
         if filters is None:
@@ -256,6 +257,19 @@ class ActivityResource(ModelResource):
         ).order_by('start')
 
         return self.create_response(request, list(last_activities.values()))
+
+
+class JournalEntryResource(ModelResource):
+    class Meta:
+        authentication = Authentication()
+        authorization = Authorization()
+        queryset = JournalEntry.objects.all().order_by('-timestamp')
+        resource_name = 'journal_entries'
+        filtering = {
+            "timestamp": ('gt'),
+            "recipient_type": ('exact')
+        }
+        paginator_class = Paginator
 
 
 def get_pk_from_uri(uri):
