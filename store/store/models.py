@@ -83,7 +83,6 @@ class HealthProfessionalProfile(UserProfileBase):
 
 # ================ Devices ================
 class Device(models.Model):
-
     DEVICE_TYPES = (
         ("weight", "Weight Measurement"),
         ("blood_pressure", "Blood Pressure Monitor"),
@@ -225,3 +224,28 @@ class Activity(models.Model):
             self.calendar_name,
             self.title
         )
+
+# ================ Journal Information ================
+class JournalEntry(models.Model):
+    class Meta:
+        verbose_name_plural = "Journal entries"
+
+    ENTRY_TYPES = (
+        ('weight', 'weight'),
+        ('heart', 'heart'),
+        ('sleep', 'sleep')
+    )
+
+    SEVERITIES = (
+        ('low', 'low'),
+        ('medium', 'medium'),
+        ('high', 'high')
+    )
+
+    user = models.ForeignKey(User)
+    type = models.CharField(max_length=20, choices=ENTRY_TYPES)
+    severity = models.CharField(max_length=20, choices=SEVERITIES)
+    timestamp = models.BigIntegerField()
+    message = models.CharField(max_length=512)
+    description = models.CharField(max_length=1024)
+    measurement = models.ForeignKey(Measurement)
