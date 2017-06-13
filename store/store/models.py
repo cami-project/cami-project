@@ -170,6 +170,7 @@ class Measurement(models.Model):
         default=100, null=True, blank=True, validators=[validate_precision_range]
     )
     value_info = JSONField()
+    ok = models.BooleanField()
     
     def __str__(self):
         return (
