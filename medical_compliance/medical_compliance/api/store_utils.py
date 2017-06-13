@@ -99,8 +99,7 @@ def get_measurements(store_endpoint_host_uri, **kwargs):
 
 def insert_measurement(store_endpoint_host_uri, user_id, device_id,
                        measurement_type, measurement_unit,
-                       timestamp, timezone,
-                       value_info, context_info = None):
+                       timestamp, value_info):
 
     uri_path = "/api/v1/measurement/"
     uri = store_endpoint_host_uri + uri_path
@@ -113,15 +112,11 @@ def insert_measurement(store_endpoint_host_uri, user_id, device_id,
         "unit_type": measurement_unit,
 
         "timestamp": timestamp,
-        "timezone": timezone,
 
         "user": user_uri,
         "device": device_uri,
         "value_info": value_info
     }
-
-    if context_info and isinstance(context_info, dict):
-        payload['context_info'] = context_info
 
     r = requests.post(uri, json=payload)
 
@@ -130,7 +125,7 @@ def insert_measurement(store_endpoint_host_uri, user_id, device_id,
     else:
         logger.error("[medical_compliance.store_utils] Failed to insert measurement regarding "
                      "user_id=%s, device_id=%s, measurement_type=%s, measurement_unit=%s, "
-                     "timestamp=%s, timezone=%s, value_info=%s, context_info=%s."
-                     % (user_id, device_id, measurement_type, measurement_unit, str(timestamp), timezone, str(value_info), str(context_info)))
+                     "timestamp=%s, timezone=%s, value_info=%s."
+                     % (user_id, device_id, measurement_type, measurement_unit, str(timestamp), timezone, str(value_info)))
         r.raise_for_status()
 

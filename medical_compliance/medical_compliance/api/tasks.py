@@ -40,7 +40,7 @@ app.conf.update(
 
 @app.task(name='medical_compliance_measurements.process_weight_measurement')
 def process_weight_measurement(cami_user_id, device_id,
-                               measurement_type, measurement_unit, timestamp, timezone, value):
+                               measurement_type, measurement_unit, timestamp, value):
     logger.debug("[medical-compliance] Process weight measurement: %s" % (locals()))
 
     endpoint_uri = store_utils.STORE_ENDPOINT_URI
@@ -161,8 +161,7 @@ def process_heart_rate_measurement():
                 store_utils.insert_measurement(store_endpoint_uri,
                                                cami_user_id, device_id,
                                                measurement_type, measurement_unit,
-                                               m['timestamp'], 'Europe/Bucharest',
-                                               {"value": m['value']})
+                                               m['timestamp'], {"value": m['value']})
             logger.debug("[medical-compliance] Inserted pulse measurement in CAMI Store: %s" % (str(pulse_meas_res)))
 
         logger.debug("[medical-compliance] Saving heart rate measurement: %s" % (heart_rate_measurement))
@@ -280,7 +279,7 @@ def process_steps_measurement():
                 store_utils.insert_measurement(store_endpoint_uri,
                                                cami_user_id, device_id,
                                                measurement_type, measurement_unit,
-                                               m['end_timestamp'], 'Europe/Bucharest',
+                                               m['end_timestamp'],
                                                {"value": m['value'],
                                                 "start_timestamp": m['start_timestamp'],
                                                 "end_timestamp": m['end_timestamp']

@@ -191,14 +191,12 @@ Example output:
 {
   "measurements": [
     {
-      "context_info": {},
       "device": "/api/v1/device/1/",
       "id": 7,
       "measurement_type": "weight",
       "precision": 100,
       "resource_uri": "/api/v1/measurement/7/",
       "timestamp": "1489836002",
-      "timezone": "GMT",
       "unit_type": "kg",
       "user": "/api/v1/user/14/",
       "value_info": {
@@ -233,7 +231,6 @@ __Pulse__:
     "unit_type" : "bpm",
 
     "timestamp": 1489836002,
-    "timezone": "UTC",
 
     "user": "/api/v1/user/14/",
     "device": "/api/v1/device/2/",
@@ -250,7 +247,6 @@ __Heart rate__:
     "unit_type" : "mmhg",
 
     "timestamp": 1489836002,
-    "timezone": "UTC",
 
     "user": "/api/v1/user/14/",
     "device": "/api/v1/device/2/",
@@ -268,7 +264,6 @@ __Weight__:
     "unit_type" : "kg",
 
     "timestamp": 1489836002,
-    "timezone": "UTC",
 
     "user": "/api/v1/user/14/",
     "device": "/api/v1/device/1/",
