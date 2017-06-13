@@ -313,7 +313,6 @@ def broadcast_measurement(measurement_type, measurement):
             'input_source': "Device with ID: " + measurement['device'],
             'measurement_unit': measurement['unit_type'],
             'timestamp': int(measurement['timestamp']),
-            'timezone': measurement['timezone'],
             'value': measurement["value_info"]['value']
         }
     else:
@@ -324,7 +323,6 @@ def broadcast_measurement(measurement_type, measurement):
             'input_source': "Device with ID: " + measurement['device'],
             'measurement_unit': measurement['unit_type'],
             'timestamp': int(measurement['timestamp']),
-            'timezone': measurement['timezone'],
 
             'end_timestamp': measurement["value_info"]['end_timestamp'],
             'start_timestamp': measurement["value_info"]['start_timestamp'],
