@@ -3,16 +3,17 @@ import json
 import time
 import datetime
 
-from tastypie.resources import ModelResource
-from tastypie.authorization import Authorization
 from tastypie import fields
-from django.contrib.auth.models import User
-from django.conf.urls import url
-from tastypie.exceptions import NotFound
 from tastypie.utils import trailing_slash
-from django.core.urlresolvers import resolve, get_script_prefix, Resolver404
+from tastypie.resources import ModelResource
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
+from tastypie.exceptions import NotFound
+from tastypie.authorization import Authorization
+
 from django.core import serializers
+from django.conf.urls import url
+from django.core.urlresolvers import resolve, get_script_prefix, Resolver404
+from django.contrib.auth.models import User
 
 from store.models import EndUserProfile, Device, DeviceUsage, Measurement, Activity
 
