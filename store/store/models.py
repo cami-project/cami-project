@@ -156,7 +156,7 @@ class Measurement(models.Model):
     MEASUREMENT_UNITS = (
         ("no_dim", "No dimension"),
         ("bpm", "Beats Per Minute"),
-        ("kg", "kilogram"),
+        ("kg", "Kilogram"),
         ("celsius", "Degrees Celsius"),
         ("mmhg", "Pressure in mm Hg")
     )
