@@ -83,7 +83,6 @@ class HealthProfessionalProfile(UserProfileBase):
 
 # ================ Devices ================
 class Device(models.Model):
-
     DEVICE_TYPES = (
         ("weight", "Weight Measurement"),
         ("blood_pressure", "Blood Pressure Monitor"),
@@ -228,10 +227,8 @@ class Activity(models.Model):
 
 # ================ Journal Information ================
 class JournalEntry(models.Model):
-    RECIPIENT_TYPES = (
-        ('elderly', 'elderly'),
-        ('caregiver', 'caregiver')
-    )
+    class Meta:
+        verbose_name_plural = "Journal entries"
 
     ENTRY_TYPES = (
         ('weight', 'weight'),
@@ -246,7 +243,6 @@ class JournalEntry(models.Model):
     )
 
     user = models.ForeignKey(User)
-    recipient_type = models.CharField(max_length=20, choices=RECIPIENT_TYPES)
     type = models.CharField(max_length=20, choices=ENTRY_TYPES)
     severity = models.CharField(max_length=20, choices=SEVERITIES)
     timestamp = models.BigIntegerField()
