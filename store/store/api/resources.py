@@ -3,16 +3,17 @@ import json
 import time
 import datetime
 
-from tastypie.resources import ModelResource
-from tastypie.authorization import Authorization
 from tastypie import fields
-from django.contrib.auth.models import User
-from django.conf.urls import url
-from tastypie.exceptions import NotFound
 from tastypie.utils import trailing_slash
-from django.core.urlresolvers import resolve, get_script_prefix, Resolver404
+from tastypie.resources import ModelResource
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
+from tastypie.exceptions import NotFound
+from tastypie.authorization import Authorization
+
 from django.core import serializers
+from django.conf.urls import url
+from django.core.urlresolvers import resolve, get_script_prefix, Resolver404
+from django.contrib.auth.models import User
 
 from store.models import EndUserProfile, Device, DeviceUsage, Measurement, Activity
 
@@ -85,8 +86,7 @@ class DeviceUsageResource(ModelResource):
 
 
 class MeasurementResource(ModelResource):
-    VALUE_INFO_FIELD_NAME   = "value_info"
-    CONTEXT_INFO_FIELD_NAME = "context_info"
+    VALUE_INFO_FIELD_NAME = "value_info"
 
     user = fields.ForeignKey(UserResource, 'user')
     device = fields.ForeignKey(DeviceResource, 'device')
@@ -107,7 +107,6 @@ class MeasurementResource(ModelResource):
             "device": ALL_WITH_RELATIONS,
             "timestamp": ALL,
             "value_info": ALL,
-            "context_info": ALL
         }
 
     def dehydrate_timestamp(self, bundle):
@@ -124,18 +123,11 @@ class MeasurementResource(ModelResource):
 
             bundle.data[MeasurementResource.VALUE_INFO_FIELD_NAME] = value_info_dict
 
-        if MeasurementResource.CONTEXT_INFO_FIELD_NAME in bundle.data:
-            context_info_str = bundle.data[MeasurementResource.CONTEXT_INFO_FIELD_NAME]
-            context_info_dict = ast.literal_eval(context_info_str)
-
-            bundle.data[MeasurementResource.CONTEXT_INFO_FIELD_NAME] = context_info_dict
-
         return bundle
-
 
     def build_filters(self, filters = None):
         '''
-        The double underscores are for the JSONFields value_info and context_info are interpreted
+        The double underscores are for the JSONFields value_info are interpreted
         by Tastypie as relational filters.
         To include them as JSONField filters, we first remove them from the filter list,
         run the superclass (Tastypie default) filter building and then add them back, such that
@@ -144,15 +136,65 @@ class MeasurementResource(ModelResource):
         if filters is None:
             filters = {}
 
-        info_filters = {k : v for k, v in filters.items()
-                        if k.startswith(MeasurementResource.VALUE_INFO_FIELD_NAME) or
-                        k.startswith(MeasurementResource.CONTEXT_INFO_FIELD_NAME)}
+        info_filters = {
+            k : v
+            for k, v in filters.items()
+            if k.startswith(MeasurementResource.VALUE_INFO_FIELD_NAME)
+        }
         remaining_filter = {k : v for k, v in filters.items() if k not in info_filters}
 
         orm_filters = super(MeasurementResource, self).build_filters(remaining_filter)
         orm_filters.update(info_filters)
 
         return orm_filters
+
+    def prepend_urls(self):
+        return [
+            url(
+                r"^(?P<resource_name>%s)/last_measurements%s$" % (
+                    self._meta.resource_name,
+                    trailing_slash()
+                ),
+                self.wrap_view('get_last_measurements'),
+                name="api_last_measurements"
+            ),
+        ]
+
+    def get_last_measurements(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        try:
+            self.check_get_params(request)
+        except Exception as e:
+            json_error = {
+                "error": {
+                    "message": e
+                }
+            }
+            return self.create_response(request, json_error)
+
+        type = request.GET.get('type', None)
+
+        last_measurements = Measurement.objects.all().filter(
+            measurement_type = type
+        ).order_by('-timestamp')[:20]
+
+        return self.create_response(request, list(last_measurements.values()))
+
+    def check_get_params(self, request):
+        type = request.GET.get('type', None)
+        measurements = dict(Measurement.MEASUREMENTS).keys()
+
+        if type == None:
+            raise Exception(
+                "measurement type is manadatory, and must be one of: %s" % (
+                    ", ".join(measurements)
+                )
+            )
+        elif type not in measurements:
+            raise Exception("measurement type must be one of: %s" % ", ".join(measurements))
 
 
 class ActivityResource(ModelResource):
@@ -178,7 +220,14 @@ class ActivityResource(ModelResource):
 
     def prepend_urls(self):
         return [
-            url(r"^(?P<resource_name>%s)/last_activities%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_last_activities'), name="api_last_activities"),
+            url(
+                r"^(?P<resource_name>%s)/last_activities%s$" % (
+                    self._meta.resource_name,
+                    trailing_slash()
+                ),
+                self.wrap_view('get_last_activities'),
+                name="api_last_activities"
+            ),
         ]
 
     def dehydrate(self, bundle):

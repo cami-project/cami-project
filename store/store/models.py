@@ -1,14 +1,13 @@
-from django.db import models
-from django_mysql.models import JSONField
-from django.contrib.auth.models import User
-
-from django.utils.translation import ugettext_lazy as _
-from django.core.exceptions import ValidationError
-from django.utils import timezone
 import uuid
 import datetime
 
-# Create your models here.
+from django.db import models
+from django.utils import timezone
+from django_mysql.models import JSONField
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import User
+
 
 # ============ User Information ============
 class UserProfileBase(models.Model):
@@ -93,15 +92,15 @@ class Device(models.Model):
         ("pedometer", "Step Counter")
     )
 
-    device_type = models.CharField(max_length = 32, choices=DEVICE_TYPES, default="weight")
-    manufacturer = models.CharField(max_length = 128, null = True, blank = True)
-    model = models.CharField(max_length=64, null = True, blank = True)
+    device_type = models.CharField(max_length=32, choices=DEVICE_TYPES, default="weight")
+    manufacturer = models.CharField(max_length=128, null=True, blank=True)
+    model = models.CharField(max_length=64, null=True, blank=True)
     serial_number = models.CharField(max_length=64)
 
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now = True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-    activation_date = models.DateTimeField(default = timezone.now)
+    activation_date = models.DateTimeField(default=timezone.now)
 
     used_by = models.ManyToManyField(User, related_name="used_devices", through="DeviceUsage")
 
@@ -117,20 +116,10 @@ class DeviceUsage(models.Model):
     uses_since = models.DateField(auto_now=True)
     access_info = JSONField()
 
-
     def __str__(self):
         return str(self.device) + " USED BY " + str(self.user)
 
     __unicode__ = __str__
-
-
-# class MeasurementService(models.Model):
-#     user = models.ForeignKey(UserAccount, related_name="used_health_services")
-#
-#     name = models.CharField(max_length=32)
-#     service_url = models.URLField()
-#
-#     connection_info = JSONField()
 
 
 class ExternalMonitoringService(models.Model):
@@ -149,7 +138,6 @@ class ExternalMonitoringService(models.Model):
 
 
 # ================ Measurement Information ================
-
 def validate_precision_range(value):
     if value < 0 or value > 100:
         raise ValidationError(_('%(value) is not a precision within allowed percentage levels: [0, 100]'),
@@ -168,32 +156,29 @@ class Measurement(models.Model):
     MEASUREMENT_UNITS = (
         ("no_dim", "No dimension"),
         ("bpm", "Beats Per Minute"),
-        ("kg", "kilogram"),
+        ("kg", "Kilogram"),
         ("celsius", "Degrees Celsius"),
         ("mmhg", "Pressure in mm Hg")
     )
 
-    # id = models.AutoField(primary_key=True)
-    measurement_type = models.CharField(max_length = 32, choices=MEASUREMENTS, default="weight")
-    unit_type = models.CharField(max_length = 8, choices=MEASUREMENT_UNITS, default="kg")
-
-    timestamp = models.BigIntegerField()
-    # timestamp = models.DateTimeField()
-    timezone = models.CharField(max_length = 32, default="UTC")     # the timezone in which the user took the measurement
-
-    precision = models.PositiveIntegerField(default=100, null = True, blank=True,
-                                            validators=[validate_precision_range])
-    value_info = JSONField()
     user = models.ForeignKey(User, related_name="health_measurements")
     device = models.ForeignKey(Device, related_name="performed_measurements")
-
-    context_info = JSONField(null=True, blank = True)
-
+    timestamp = models.BigIntegerField()
+    measurement_type = models.CharField(max_length=32, choices=MEASUREMENTS, default="weight")
+    unit_type = models.CharField(max_length=8, choices=MEASUREMENT_UNITS, default="kg")
+    precision = models.PositiveIntegerField(
+        default=100, null=True, blank=True, validators=[validate_precision_range]
+    )
+    value_info = JSONField()
+    ok = models.BooleanField()
+    
     def __str__(self):
-        return "[" + self.measurement_type + "] for user: " + self.user.first_name + " " + self.user.last_name + \
-               ", taken at: " + datetime.datetime.utcfromtimestamp(self.timestamp).isoformat() + ", value: " + str(self.value_info)
-        # return "[" + self.measurement_type + "] for user: " + self.user.first_name + " " + self.user.last_name + \
-        #        ", taken at: " + self.timestamp.isoformat() + ", value: " + str(self.value_info)
+        return (
+            "[" + self.measurement_type + "]" +
+            " for user: " + self.user.first_name + " " + self.user.last_name +
+            ", taken at: " + datetime.datetime.utcfromtimestamp(self.timestamp).isoformat() +
+            ", value: " + str(self.value_info)
+        )
 
     __unicode__ = __str__
 

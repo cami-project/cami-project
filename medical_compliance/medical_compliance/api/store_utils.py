@@ -1,6 +1,7 @@
 import requests
 import logging
 
+
 STORE_HOST = "cami-store"
 STORE_PORT = "8008"
 STORE_ENDPOINT_URI = "http://" + STORE_HOST + ":" + STORE_PORT
@@ -21,8 +22,6 @@ def make_user_uri_path(user_id):
 def make_device_uri_path(device_id):
     return "/api/v1/device/" + str(device_id) + "/"
 
-
-
 def get_device(store_endpoint_host_uri, **kwargs):
     uri_path = "/api/v1/device/"
 
@@ -42,7 +41,6 @@ def get_device(store_endpoint_host_uri, **kwargs):
         return device_data
 
     return None
-
 
 def get_device_usage(store_endpoint_host_uri, **kwargs):
     uri_path = "/api/v1/deviceusage/"
@@ -81,7 +79,6 @@ def get_device_usage(store_endpoint_host_uri, **kwargs):
 
     return None
 
-
 def get_measurements(store_endpoint_host_uri, **kwargs):
     uri_path = "/api/v1/measurement/"
     uri = store_endpoint_host_uri + uri_path
@@ -96,11 +93,9 @@ def get_measurements(store_endpoint_host_uri, **kwargs):
 
     return None
 
-
 def insert_measurement(store_endpoint_host_uri, user_id, device_id,
                        measurement_type, measurement_unit,
-                       timestamp, timezone,
-                       value_info, context_info = None):
+                       timestamp, value_info):
 
     uri_path = "/api/v1/measurement/"
     uri = store_endpoint_host_uri + uri_path
@@ -113,15 +108,12 @@ def insert_measurement(store_endpoint_host_uri, user_id, device_id,
         "unit_type": measurement_unit,
 
         "timestamp": timestamp,
-        "timezone": timezone,
 
         "user": user_uri,
         "device": device_uri,
-        "value_info": value_info
+        "value_info": value_info,
+        "ok": True
     }
-
-    if context_info and isinstance(context_info, dict):
-        payload['context_info'] = context_info
 
     r = requests.post(uri, json=payload)
 
@@ -130,7 +122,7 @@ def insert_measurement(store_endpoint_host_uri, user_id, device_id,
     else:
         logger.error("[medical_compliance.store_utils] Failed to insert measurement regarding "
                      "user_id=%s, device_id=%s, measurement_type=%s, measurement_unit=%s, "
-                     "timestamp=%s, timezone=%s, value_info=%s, context_info=%s."
-                     % (user_id, device_id, measurement_type, measurement_unit, str(timestamp), timezone, str(value_info), str(context_info)))
+                     "timestamp=%s, value_info=%s."
+                     % (user_id, device_id, measurement_type, measurement_unit, str(timestamp), str(value_info)))
         r.raise_for_status()
 
