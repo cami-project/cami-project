@@ -40,7 +40,7 @@ app.conf.update(
 
 @app.task(name='medical_compliance_measurements.process_weight_measurement')
 def process_weight_measurement(cami_user_id, device_id,
-                               measurement_type, measurement_unit, timestamp, value):
+                               measurement_type, measurement_unit, timestamp, timezone, value):
     logger.debug("[medical-compliance] Process weight measurement: %s" % (locals()))
 
     endpoint_uri = store_utils.STORE_ENDPOINT_URI
