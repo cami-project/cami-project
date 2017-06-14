@@ -47,7 +47,7 @@ def process_weight_measurement(cami_user_id, device_id,
     status, weight_meas_res = store_utils.insert_measurement(endpoint_uri,
                                                              cami_user_id, device_id,
                                                              measurement_type, measurement_unit,
-                                                             timestamp, timezone,
+                                                             timestamp,
                                                              {"value" : value}
                                                              )
 
