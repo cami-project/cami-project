@@ -9,12 +9,15 @@ namespace DSS.Delegate
         public string Name { get; private set; }
         public string Type { get; private set; }
         public string Val { get; private set; }
+        public string Device { get; private set;}
 
-        public Event(string name, string type, string val)
+        public Event(string name, string type, string val, string device)
         {
             this.Name = name;
             this.Type = type;
             this.Val = val;
+            this.Device = device;
+
         }
 
 
@@ -44,7 +47,7 @@ namespace DSS.Delegate
 
         public override string ToString()
         {
-            return string.Format("[Event: Name={0}, Type={1}, Val={2}]", Name, Type, Val);
+            return string.Format("[Event: Name={0}, Type={1}, Val={2}, Device={3}]", Name, Type, Val, Device);
         }
 
 

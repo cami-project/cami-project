@@ -47,6 +47,10 @@
       <Project>{728CCD8D-9438-4500-8407-8D86D20B5AA7}</Project>
       <Name>DSS.RMQ</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DSS.FuzzyInference\DSS.FuzzyInference.csproj">
+      <Project>{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}</Project>
+      <Name>DSS.FuzzyInference</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.config.json">

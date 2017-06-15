@@ -9,7 +9,10 @@
     {
       "name": "NOTIFICATION",
       "events": [ "Fall" ]
-
+    },
+    {
+      "name": "FUZZY-INFERENCE",
+      "events": [ "Fall" ]
     }
   ]
 }

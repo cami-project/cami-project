@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.Delegate", "DSS.Delegat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.Main", "DSS.Main\DSS.Main.csproj", "{9BE56BF2-4117-4250-8D4F-F958088CF8D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.FuzzyInference", "DSS.FuzzyInference\DSS.FuzzyInference.csproj", "{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -31,5 +33,9 @@ Global
 		{9BE56BF2-4117-4250-8D4F-F958088CF8D1}.Debug|x86.Build.0 = Debug|x86
 		{9BE56BF2-4117-4250-8D4F-F958088CF8D1}.Release|x86.ActiveCfg = Release|x86
 		{9BE56BF2-4117-4250-8D4F-F958088CF8D1}.Release|x86.Build.0 = Release|x86
+		{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}.Debug|x86.Build.0 = Debug|Any CPU
+		{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}.Release|x86.ActiveCfg = Release|Any CPU
+		{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

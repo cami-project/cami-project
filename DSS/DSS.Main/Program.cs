@@ -1,5 +1,6 @@
 ﻿using System;
 using DSS.Delegate;
+using DSS.FuzzyInference;
 using DSS.RMQ;
 using Newtonsoft.Json;
 
@@ -28,10 +29,11 @@ namespace DSS.Main
 
 
 
-			IRouterHandler<Event>[] handlers =
+            IRouterHandler<Event>[] handlers =
             {
-				new ConsolePrintHandler<Event>(),
-                new PushNotificationHandler<Event>(new RmqWriter<Event>("amqp://cami:cami@141.85.241.224:5673/cami", "cami", "cami", "frontend_notifications"))
+                new ConsolePrintHandler<Event>(),
+                new PushNotificationHandler<Event>(new RmqWriter<Event>("amqp://cami:cami@141.85.241.224:5673/cami", "cami", "cami", "frontend_notifications")),
+                new FuzzyHandler()
 			};
 
             var config = new Config("default.config", router, handlers);
@@ -51,11 +53,11 @@ namespace DSS.Main
                 var num = Console.ReadLine();
 
                 if (num == "1")
-                    rmq.Write(new Event("Fall", "Fall", "High").ToJson());
+                    rmq.Write(new Event("Fall", "Fall", "High", "Device").ToJson());
 
                 if (num == "2")
                 {
-                    var input = new string [3];
+                    var input = new string [4];
                     Console.Write("Name: ");
                     input[0] = Console.ReadLine();
 
@@ -65,11 +67,12 @@ namespace DSS.Main
 					Console.Write("Value: ");
 					input[2] = Console.ReadLine();
 
-                    rmq.Write(new Event(input[0], input[1], input[2]).ToJson());
+					Console.Write("Device: ");
+					input[3] = Console.ReadLine();
+
+                    rmq.Write(new Event(input[0], input[1], input[2], input[3]).ToJson());
 
 				}
-
-
 
                 run = num != "3";
 			}
