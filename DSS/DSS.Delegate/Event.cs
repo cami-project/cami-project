@@ -23,7 +23,7 @@ namespace DSS.Delegate
 
         public bool Equals(Event obj)
         {
-            return obj.Name == this.Name && obj.Type == this.Type;
+            return obj.Name == this.Name && obj.Type == this.Type && obj.Device == this.Device;
         }
 
         public override bool Equals(object obj)
@@ -42,7 +42,7 @@ namespace DSS.Delegate
 
         public override int GetHashCode()
         {
-            return base.GetHashCode() + Name.GetHashCode() + Type.GetHashCode();
+            return base.GetHashCode() + Name.GetHashCode() + Type.GetHashCode() + Device.GetHashCode();
         }
 
         public override string ToString()
