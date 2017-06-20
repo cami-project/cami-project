@@ -157,23 +157,7 @@ SENTRY_AUTO_LOG_STACKS = True
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 # Options from here: https://blog.ionelmc.ro/2014/12/28/terrible-choices-mysql/
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'frontend',
-        'USER': 'cami',
-        'PASSWORD': 'cami',
-        'HOST': 'cami-mysql',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
-        'OPTIONS': {
-            'sql_mode': 'TRADITIONAL',
-            'charset': 'utf8',
-            'init_command': 'SET '
-                'default_storage_engine=INNODB,'
-                'character_set_connection=utf8'
-        }
-    }
-}
+DATABASES = {}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -226,13 +210,11 @@ CELERY_QUEUES = (
     Queue('frontend_notifications', Exchange('frontend_notifications'), routing_key='frontend_notifications'),
 )
 
-# Healthcheker settings
+# Healthchecker settings
 RABBITMQ_CHECK_TIMEOUT = 1
 
-
 PUSH_NOTIFICATIONS_SETTINGS = {
-    "APNS_CERTIFICATE": "/cami-project/frontend/frontend/push-notifications/ios/prod/apns-cert.pem",
-    "APNS_HOST": "gateway.push.apple.com"
+    "APNS_CERTIFICATE": "/cami-project/frontend/frontend/push-notifications/ios/prod/apns-cert.pem"
 }
 
 try:
