@@ -1,40 +1,23 @@
 import logging
 
-from django.conf.urls import url
-from tastypie.utils import trailing_slash
-from tastypie import fields
-from tastypie.authentication import Authentication
-from tastypie.authorization import Authorization
-from tastypie.resources import ModelResource, Resource
-from tastypie.serializers import Serializer
-from tastypie.paginator import Paginator
 from datetime import datetime
 
-from models import Notification
-from push_notifications.models import APNSDevice, GCMDevice
-
+from django.conf.urls import url
 from django.utils.timezone import is_naive
 
+from tastypie import fields
+from tastypie.utils import trailing_slash
+from tastypie.paginator import Paginator
+from tastypie.resources import ModelResource, Resource
+from tastypie.serializers import Serializer
+from tastypie.authorization import Authorization
+from tastypie.authentication import Authentication
+
 from healthchecker import Healthchecker
-from push_notifications.models import APNSDevice
+
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
-
-
-class TZAwareDateSerializer(Serializer):
-    """
-    Our own serializer to format datetimes in ISO 8601 but with timezone
-    offset.
-    """
-
-    def format_datetime(self, data):
-        logger.info(data)
-        # If naive or rfc-2822, default behavior...
-        if is_naive(data) or self.datetime_formatting == 'rfc-2822':
-            return super(TZAwareDateSerializer, self).format_datetime(data)
-
-        return data.isoformat()
 
 
 class NoMetaPaginator(Paginator):
@@ -46,24 +29,6 @@ class NoMetaPaginator(Paginator):
         res = super(NoMetaPaginator, self).page()
         del res['meta']
         return res
-
-
-class ApiModelResource(ModelResource):
-    class Meta:
-        authentication = Authentication()
-        authorization = Authorization()
-        serializer = TZAwareDateSerializer()
-
-
-class NotificationResource(ApiModelResource):
-    class Meta(ApiModelResource.Meta):
-        queryset = Notification.objects.all().order_by('-timestamp')
-        resource_name = 'notifications'
-        filtering = {
-            "timestamp": ('gt'),
-            "recipient_type": ('exact')
-        }
-        paginator_class = Paginator
 
 
 class HealthcheckResource(Resource):
@@ -100,36 +65,12 @@ class MobileNotificationKeyResource(Resource):
         allowed_methods = ['post']
         authentication = Authentication()
         authorization = Authorization()
-        object_class = APNSDevice
 
     def obj_create(self, bundle, **kwargs):
-
         if bundle.data.has_key("mobile_key") and bundle.data.has_key("mobile_os"):
             mobile_key = bundle.data.get("mobile_key")
             mobile_os = bundle.data.get("mobile_os")
             recipient_type = bundle.data.get("recipient_type")
 
-            # TODO: APNSDevice can receive user_id attribute
-            # save APNSDevice or GCMDevice depending on mobile_os
-
-            notification_key, created = APNSDevice.objects.get_or_create(
-                name=recipient_type,
-                active=True,
-                date_created= datetime.now(),
-                registration_id=mobile_key,
-            )
-            return notification_key
+            #APNSDevice.objects.get_or_create()
         return bundle
-
-    def prepend_urls(self):
-        return [
-            url(r"^(?P<resource_name>%s)/resend%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('resend_last_notification'), name="api_resend_last_notification"),
-        ]
-
-    def resend_last_notification(self, request, **kwargs):
-        latest_notification_array = Notification.objects.filter(recipient_type="caregiver").order_by('-timestamp')[:1]
-        if latest_notification_array.count() > 0:
-            latest_notification = latest_notification_array[0]
-            devices = APNSDevice.objects.filter(name=latest_notification.recipient_type)
-            devices.send_message(latest_notification.message, sound="default")
-        return self.create_response(request, {})
