@@ -225,6 +225,7 @@ class Activity(models.Model):
             self.title
         )
 
+
 # ================ Journal Information ================
 class JournalEntry(models.Model):
     class Meta:
@@ -249,3 +250,20 @@ class JournalEntry(models.Model):
     message = models.CharField(max_length=512)
     description = models.CharField(max_length=1024)
     measurement = models.ForeignKey(Measurement)
+
+
+# ================ PushNotificationDevice ================
+class PushNotificationDevice(models.Model):
+    TYPES = (
+        ('APNS', 'Apple Push Notifications Service'),
+        ('GCM', 'Google Cloud Messaging'),
+        ('WNS', 'Windows Push Notification Services'),
+    )
+
+    name = models.CharField(max_length=128, blank=True, null=True)
+    user = models.ForeignKey(User)
+    type = models.CharField(max_length=12, choices=TYPES)
+    active = models.BooleanField(default=True)
+    device_id = models.CharField(max_length=64, blank=True, null=True, db_index=True)
+    registration_id = models.TextField()
+    other_info = JSONField()
