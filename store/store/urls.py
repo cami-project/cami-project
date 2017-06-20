@@ -19,8 +19,8 @@ from django.conf.urls import url, include
 from tastypie.api import Api
 
 from store.api.resources import UserResource, DeviceResource, \
-	DeviceUsageResource, MeasurementResource, ActivityResource, \
-	JournalEntryResource
+    DeviceUsageResource, MeasurementResource, ActivityResource, \
+    JournalEntryResource, PushNotificationDeviceResource
 
 
 v1_api = Api(api_name='v1')
@@ -30,6 +30,7 @@ v1_api.register(DeviceUsageResource())
 v1_api.register(MeasurementResource())
 v1_api.register(ActivityResource())
 v1_api.register(JournalEntryResource())
+v1_api.register(PushNotificationDeviceResource())
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
