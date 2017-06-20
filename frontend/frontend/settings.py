@@ -43,8 +43,6 @@ INSTALLED_APPS = [
     'raven.contrib.django.raven_compat',
     'corsheaders',
     'tastypie',
-    'api',
-    'push_notifications'
 ]
 
 MIDDLEWARE_CLASSES = [

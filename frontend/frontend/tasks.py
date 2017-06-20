@@ -7,16 +7,15 @@ need to have the same module structure in the worker and the client.
 [1] http://docs.celeryproject.org/en/latest/userguide/tasks.html#task-naming-relative-imports
 """
 
+import time
 import celery
+
 from kombu import Queue, Exchange
 from celery import Celery
-import time
+from celery.utils.log import get_task_logger
 
 from django.conf import settings
-from celery.utils.log import get_task_logger
-from push_notifications.models import APNSDevice
 
-from models import Notification
 
 logger = get_task_logger('frontend.tasks')
 
@@ -35,11 +34,13 @@ def send_notification(user_id, recipient_type, type, severity, message, descript
     if timestamp is None:
         timestamp = time.time()
         
+    """
     n = Notification(user_id=user_id, recipient_type=recipient_type, type=type, severity=severity, timestamp=timestamp, message=message, description=description)
     n.full_clean()
     n.save()
 
     devices = APNSDevice.objects.filter(name=recipient_type)
     devices.send_message(message, sound="default")
+    """
     
     logger.debug("[frontend] Notifications were successfully sent.")
