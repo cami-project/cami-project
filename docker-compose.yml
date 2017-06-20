@@ -88,18 +88,6 @@ services:
       - .:/cami-project
     entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-task-scheduler-entrypoint-dev.sh
 
-  # Run migrations in a separate container from the main applications. The
-  # container will just run migrations and load fixtures and then exit.
-  cami-frontend-migrate:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile-frontend
-    links:
-      - cami-mysql
-    volumes:
-      - .:/cami-project
-    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-migration-entrypoint.sh
-
   # Should use cached image that is build for cami-frontend-migrate
   cami-frontend:
     build:
