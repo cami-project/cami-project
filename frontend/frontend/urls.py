@@ -28,9 +28,3 @@ urlpatterns = [
     url(r'^api/', include(v1_api.urls)),
     url(r'^admin/', admin.site.urls),
 ]
-
-
-
-
-
-
