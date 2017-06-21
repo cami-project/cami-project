@@ -260,6 +260,8 @@ class ActivityResource(ModelResource):
 
 
 class JournalEntryResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user')
+    
     class Meta:
         authentication = Authentication()
         authorization = Authorization()
@@ -273,6 +275,8 @@ class JournalEntryResource(ModelResource):
 
 
 class PushNotificationDeviceResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user')
+
     class Meta:
         authentication = Authentication()
         authorization = Authorization()
