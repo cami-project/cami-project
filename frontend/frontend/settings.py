@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'tastypie',
     'frontend',
+    'frontend.api',
 ]
 
 MIDDLEWARE_CLASSES = [

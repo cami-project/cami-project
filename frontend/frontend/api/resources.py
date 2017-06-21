@@ -14,7 +14,7 @@ from tastypie.authorization import Authorization
 from tastypie.authentication import Authentication
 
 # Local imports
-import frontend.store_utils
+import frontend.store_utils as store_utils
 
 from healthchecker import Healthchecker
 
@@ -68,6 +68,12 @@ class PushNotificationSubscribeResource(Resource):
         allowed_methods = ['post']
         authentication = Authentication()
         authorization = Authorization()
+        always_return_data = True
+
+    def detail_uri_kwargs(self, bundle_or_obj):
+        kwargs = {}
+        kwargs['pk'] = bundle_or_obj.data['registration_id']
+        return kwargs
 
     def obj_create(self, bundle, **kwargs):
         if (
@@ -79,8 +85,8 @@ class PushNotificationSubscribeResource(Resource):
             service_type = bundle.data.get("service_type")
             user_id = bundle.data.get("user_id")
 
-            return store_utils.pushnotificationdevice_save(
-                user="/api/v1/user/" + str(user_id),
+            bundle.data = store_utils.pushnotificationdevice_save(
+                user="/api/v1/user/%d/" % user_id,
                 type=service_type,
                 registration_id=registration_id
             )

@@ -13,8 +13,8 @@ def pushnotificationdevice_get(**kwargs):
     r = requests.get(endpoint, params=dict(kwargs))
 
     json_response = r.json()
-    if 'pushnotificationdevices' in json_response:
-        return json_response['pushnotificationdevices']
+    if 'objects' in json_response:
+        return json_response['objects']
 
     logger.debug(
         "[frontend_store_utils] " +
@@ -29,10 +29,13 @@ def pushnotificationdevice_save(**kwargs):
     method = 'POST'
     data = dict(kwargs)
     
-    notification_devices = pushnotificationdevice_get(kwargs)
-    if len(notification_devices) == 1:
-        endpoint = endpoint + str(notification_devices[0]['id']) + "/"
-        method = 'PUT'
+    if 'registration_id' in kwargs:
+        notification_devices = pushnotificationdevice_get(
+            registration_id=kwargs['registration_id']
+        )
+        if notification_devices and len(notification_devices) == 1:
+            endpoint = endpoint + str(notification_devices[0]['id']) + "/"
+            method = 'PUT'
     
     r = requests.request(
         method,
