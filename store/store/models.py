@@ -262,7 +262,7 @@ class PushNotificationDevice(models.Model):
 
     name = models.CharField(max_length=128, blank=True, null=True)
     user = models.ForeignKey(User)
-    type = models.CharField(max_length=12, choices=TYPES)
+    type = models.CharField(max_length=4, choices=TYPES)
     active = models.BooleanField(default=True)
     device_id = models.CharField(max_length=64, blank=True, null=True, db_index=True)
     registration_id = models.TextField()
