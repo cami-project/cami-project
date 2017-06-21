@@ -265,13 +265,15 @@ class JournalEntryResource(ModelResource):
     class Meta:
         authentication = Authentication()
         authorization = Authorization()
+        always_return_data = True
         queryset = JournalEntry.objects.all().order_by('-timestamp')
         resource_name = 'journal_entries'
+        paginator_class = Paginator
+
         filtering = {
             "timestamp": ('gt'),
             "recipient_type": ('exact')
         }
-        paginator_class = Paginator
 
 
 class PushNotificationDeviceResource(ModelResource):
@@ -280,6 +282,7 @@ class PushNotificationDeviceResource(ModelResource):
     class Meta:
         authentication = Authentication()
         authorization = Authorization()
+        always_return_data = True
         queryset = PushNotificationDevice.objects.all()
         allowed_methods = ['get', 'post', 'put', 'delete']
 
