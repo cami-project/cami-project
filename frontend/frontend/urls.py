@@ -18,11 +18,11 @@ from django.conf.urls import include, url
 
 from tastypie.api import Api
 
-from api.resources import HealthcheckResource, MobileNotificationKeyResource
+from api.resources import HealthcheckResource, PushNotificationSubscribeResource
 
 v1_api = Api(api_name='v1')
 v1_api.register(HealthcheckResource())
-v1_api.register(MobileNotificationKeyResource())
+v1_api.register(PushNotificationSubscribeResource())
 
 urlpatterns = [
     url(r'^api/', include(v1_api.urls)),

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'raven.contrib.django.raven_compat',
     'corsheaders',
     'tastypie',
+    'frontend',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -210,6 +211,11 @@ CELERY_QUEUES = (
 
 # Healthchecker settings
 RABBITMQ_CHECK_TIMEOUT = 1
+
+## STORE settings
+STORE_HOST = "cami-store"
+STORE_PORT = "8008"
+STORE_ENDPOINT_URI = "http://" + STORE_HOST + ":" + STORE_PORT
 
 PUSH_NOTIFICATIONS_SETTINGS = {
     "APNS_CERTIFICATE": "/cami-project/frontend/frontend/push-notifications/ios/prod/apns-cert.pem"

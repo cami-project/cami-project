@@ -13,6 +13,9 @@ from tastypie.serializers import Serializer
 from tastypie.authorization import Authorization
 from tastypie.authentication import Authentication
 
+# Local imports
+import frontend.store_utils
+
 from healthchecker import Healthchecker
 
 
@@ -59,18 +62,27 @@ class HealthcheckResource(Resource):
         return healthcheck
 
 
-class MobileNotificationKeyResource(Resource):
+class PushNotificationSubscribeResource(Resource):
     class Meta:
-        resource_name = 'mobile-notification-key'
+        resource_name = 'push-notification-subscribe'
         allowed_methods = ['post']
         authentication = Authentication()
         authorization = Authorization()
 
     def obj_create(self, bundle, **kwargs):
-        if bundle.data.has_key("mobile_key") and bundle.data.has_key("mobile_os"):
-            mobile_key = bundle.data.get("mobile_key")
-            mobile_os = bundle.data.get("mobile_os")
-            recipient_type = bundle.data.get("recipient_type")
+        if (
+            bundle.data.has_key("registration_id") and
+            bundle.data.has_key("service_type") and
+            bundle.data.has_key("user_id")
+        ):
+            registration_id = bundle.data.get("registration_id")
+            service_type = bundle.data.get("service_type")
+            user_id = bundle.data.get("user_id")
 
-            #APNSDevice.objects.get_or_create()
+            return store_utils.pushnotificationdevice_save(
+                user="/api/v1/user/" + str(user_id),
+                type=service_type,
+                registration_id=registration_id
+            )
+
         return bundle

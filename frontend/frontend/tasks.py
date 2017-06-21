@@ -6,15 +6,18 @@ need to have the same module structure in the worker and the client.
 
 [1] http://docs.celeryproject.org/en/latest/userguide/tasks.html#task-naming-relative-imports
 """
+from __future__ import absolute_import
 
 import time
-import celery
 
 from kombu import Queue, Exchange
 from celery import Celery
 from celery.utils.log import get_task_logger
 
 from django.conf import settings
+
+# Local imports
+import frontend.store_utils
 
 
 logger = get_task_logger('frontend.tasks')
@@ -27,20 +30,14 @@ app.conf.update(
     ),
 )
 
-@celery.task(name='frontend.send_notification')
-def send_notification(user_id, recipient_type, type, severity, message, description, timestamp):
+@app.task(name='frontend.send_notification')
+def send_notification(user_id, message):
     logger.debug("[frontend] Send notification request: %s" % (locals()))
-
-    if timestamp is None:
-        timestamp = time.time()
         
-    """
-    n = Notification(user_id=user_id, recipient_type=recipient_type, type=type, severity=severity, timestamp=timestamp, message=message, description=description)
-    n.full_clean()
-    n.save()
-
-    devices = APNSDevice.objects.filter(name=recipient_type)
-    devices.send_message(message, sound="default")
-    """
-    
-    logger.debug("[frontend] Notifications were successfully sent.")
+    devices = store_utils.pushnotificationdevice_get(user="/api/v1/user/" + str(user_id))
+    for device in devices:
+        if device['type'] == "APNS":
+            pass
+            logger.debug("[frontend] Sending notification to device (%s)." % str(device))
+        else:
+            logger.debug("[frontend] Failed sending notification to device (%s)." % str(device))
