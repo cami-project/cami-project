@@ -51,7 +51,32 @@ const ActivitiesView = React.createClass({
           futureEvents.push(index);
         }
     });
-    return futureEvents[0];
+
+    if (futureEvents.length > 0) {
+      return futureEvents[0];
+    }
+
+    return null
+  },
+
+  isArchived(index, nextEventId) {
+    if (nextEventId === null) {
+      return true
+    } else if (index < nextEventId) {
+      return true
+    } else {
+      return false
+    }
+  },
+
+  isToday(index, nextEventId) {
+    if (nextEventId === null) {
+      return false
+    } else if (index !== nextEventId) {
+      return false
+    } else {
+      return true
+    }
   },
 
   render() {
@@ -60,9 +85,12 @@ const ActivitiesView = React.createClass({
     const events = [];
     // id of next event from the list of events received form the API
     // - also used to decide which events are to be displayed as archived
-    const nextEventId = this.findNextEventId(this.props.events, today);
+    const nextEventId = this.findNextEventId(this.props.events, today) !== null
+      ? this.findNextEventId(this.props.events, today)
+      : null;
+
     // moment of next event, used for header dates formatting
-    const nextEventDate = moment.unix(this.props.events.get(nextEventId).get('start'));
+    const nextEventDate = nextEventId ? moment.unix(this.props.events.get(nextEventId).get('start')) : null;
     // month name of 1st event that will be used to selectively display month separators
     let monthKey = moment.unix(this.props.events.get(0).get('start')).format('MMMM');
 
@@ -90,8 +118,8 @@ const ActivitiesView = React.createClass({
           description={event.get('description') !== null ? event.get('description') : 'No description set'}
           location={event.get('location') !== null ? event.get('location') : 'No location set'}
           color={event.get('color').get('background')}
-          archived={index < nextEventId ? true : false}
-          today={index !== nextEventId ? false : true}
+          archived={this.isArchived(index, nextEventId)}
+          today={this.isToday(index, nextEventId)}
         />
       );
     });
@@ -133,12 +161,12 @@ const ActivitiesView = React.createClass({
               </View>
             </View>
             {
-              this.props.events.get(nextEventId).get('title') !== null
+              nextEventId !== null && this.props.events.get(nextEventId).get('title') !== null
                 ? <Text style={styles.nextTitle}>{this.props.events.get(nextEventId).get('title')}</Text>
                 : <Text style={[styles.nextTitle, {color: variables.colors.gray.neutral}]}>No title set</Text>
             }
             {
-              this.props.events.get(nextEventId).get('description') !== null
+              nextEventId !== null && this.props.events.get(nextEventId).get('description') !== null
                 ? <Text style={styles.nextDescription}>{this.props.events.get(nextEventId).get('description')}</Text>
                 : <Text style={[styles.nextDescription, {color: variables.colors.gray.neutral}]}>No description set</Text>
             }
@@ -164,7 +192,7 @@ const ActivitiesView = React.createClass({
               />
               <View style={styles.nextLocation}>
                 {
-                  this.props.events.get(nextEventId).get('location') !== null
+                  nextEventId !== null && this.props.events.get(nextEventId).get('location') !== null
                     ? <Text numberOfLines={1} ellipsizeMode='clip' style={[styles.metaText, {width: 170}]}>{this.props.events.get(nextEventId).get('location')}</Text>
                     : <Text style={styles.metaText}>No location set</Text>
                 }

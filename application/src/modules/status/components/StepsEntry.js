@@ -14,7 +14,7 @@ const StepsEntry = React.createClass({
         title="Steps"
         type="steps"
         data={this.props.steps.get('data')}
-        threshold={this.props.steps.get('threshold')}
+        threshold={this.props.steps.get('threshold') !== undefined ? this.props.steps.get('threshold') : 0}
         units=""
         timeUnits="Day"
         timestampFormat="DD"

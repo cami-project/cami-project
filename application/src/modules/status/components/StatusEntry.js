@@ -68,7 +68,7 @@ const StatusEntry = React.createClass({
     timeUnits: PropTypes.string.isRequired,
     formatValue: PropTypes.func,
     timestampFormat: PropTypes.string.isRequired,
-    total: PropTypes.number
+    total: PropTypes.instanceOf(List)
   },
 
   getDefaultProps() {
