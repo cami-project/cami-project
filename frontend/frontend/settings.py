@@ -15,6 +15,7 @@ import raven
 
 from kombu import Exchange, Queue
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -45,6 +46,8 @@ INSTALLED_APPS = [
     'tastypie',
     'frontend',
     'frontend.api',
+    'frontend.push_notifications',
+    'frontend.push_notifications.conf',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -213,14 +216,16 @@ CELERY_QUEUES = (
 # Healthchecker settings
 RABBITMQ_CHECK_TIMEOUT = 1
 
-## STORE settings
+# STORE settings
 STORE_HOST = "cami-store"
 STORE_PORT = "8008"
 STORE_ENDPOINT_URI = "http://" + STORE_HOST + ":" + STORE_PORT
 
+# Push Notifications settings
 PUSH_NOTIFICATIONS_SETTINGS = {
-    "APNS_CERTIFICATE": "/cami-project/frontend/frontend/push-notifications/ios/prod/apns-cert.pem"
+    "APNS_CERTIFICATE": "/cami-project/frontend/frontend/push_notifications/certificates/ios/prod/apns-cert.pem"
 }
+
 
 try:
     from settings_local import *

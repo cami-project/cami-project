@@ -18,6 +18,7 @@ from django.conf import settings
 
 # Local imports
 import frontend.store_utils
+import frontend.push_notifications.notifications
 
 
 logger = get_task_logger('frontend.tasks')
@@ -33,11 +34,5 @@ app.conf.update(
 @app.task(name='frontend.send_notification')
 def send_notification(user_id, message):
     logger.debug("[frontend] Send notification request: %s" % (locals()))
-        
     devices = store_utils.pushnotificationdevice_get(user="/api/v1/user/" + str(user_id))
-    for device in devices:
-        if device['type'] == "APNS":
-            pass
-            logger.debug("[frontend] Sending notification to device (%s)." % str(device))
-        else:
-            logger.debug("[frontend] Failed sending notification to device (%s)." % str(device))
+    notifications.send_message(devices, message, sound="default")

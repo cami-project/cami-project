@@ -5,7 +5,6 @@ import requests
 import settings
 
 
-logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger("frontend.store_utils")
 
 def pushnotificationdevice_get(**kwargs):
