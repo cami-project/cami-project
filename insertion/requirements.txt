@@ -1,2 +1,5 @@
 Django==1.9.5
 pytz==2016.6.1
+django-celery==3.2.1
+django-celery-results==1.0.1
+raven==5.27.1
