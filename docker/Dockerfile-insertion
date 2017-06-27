@@ -1,0 +1,25 @@
+# Use a base image that has ansible set up.
+FROM williamyeh/ansible:ubuntu16.04
+
+# Add playbooks to the Docker image. This requires that the build context is the
+# project root folder.
+
+COPY . /cami-project
+WORKDIR /cami-project
+
+# Run Ansible to configure the Docker image
+RUN ansible-playbook ansible/insertion.yml -c local
+
+COPY docker/cami-insertion/docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+RUN touch /cami-project/insertion/debug.log
+RUN chmod a+rw /cami-project/insertion/debug.log
+
+RUN adduser --disabled-password --gecos '' insertion
+RUN chown -R insertion /cami-project
+
+USER insertion
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+EXPOSE 8010
