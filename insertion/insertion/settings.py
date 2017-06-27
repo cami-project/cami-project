@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+from kombu import Exchange, Queue
+from kombu.common import Broadcast
+import raven
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -70,6 +74,88 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'insertion.wsgi.application'
 
+# Sentry integration
+RAVEN_CONFIG = {
+    # Set the Sentry API key here
+    'dsn': 'https://d9bec7e9f54943a281d5271c29932e7c:b57cfbbc5edc456aa2ece299cabbd785@sentry.io/104123',
+    'release': raven.fetch_git_sha(os.path.dirname(__file__) + "/../../")
+}
+
+PAPERTRAILS_LOGGING_HOSTNAME = 'logs4.papertrailapp.com'
+PAPERTRAILS_LOGGING_PORT = 43843
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s '
+                      '%(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {
+        'sentry': {
+            'level': 'ERROR', # Set the Sentry logging level here
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': './debug.log',
+        },
+        'syslog': {
+            'level':'DEBUG',
+            'class':'logging.handlers.SysLogHandler',
+            'formatter': 'verbose',
+            'address':(PAPERTRAILS_LOGGING_HOSTNAME, PAPERTRAILS_LOGGING_PORT)
+        },
+    },
+    'loggers': {
+        'insertion': {
+            'level': 'DEBUG',
+            'handlers': ['sentry', 'console', 'syslog'],
+        },
+        'django': {
+            'level': 'DEBUG',
+            'handlers': ['sentry', 'console', 'file'],
+        },
+        'django.db.backends': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'celery': {
+            'level': 'ERROR',
+            'handlers': ['sentry', 'console'],
+        },
+        'insertion.measurements': {
+            'handlers': ['file', 'syslog'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'insertion.events': {
+            'handlers': ['file', 'syslog'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+SENTRY_AUTO_LOG_STACKS = True
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
@@ -119,3 +205,28 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Celery settings
+BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
+
+
+health_measurements_exchange = Exchange('environment_events', type='fanout')
+
+environment_events_exchange = Exchange('environment_events', type='fanout')
+health_events_exchange = Exchange('health_events', type='fanout')
+notification_events_exchange = Exchange('notification_events', type='fanout')
+
+BROKER_EXCHANGES = [
+    health_measurements_exchange,
+    environment_events_exchange,
+    health_events_exchange,
+    notification_events_exchange
+]
+
+# CELERY_QUEUES = (
+#     Queue('health_measurements', health_measurements_exchange, routing_key='health_measurements'),
+#     Queue('environment_events', environment_events_exchange, routing_key='events.environment'),
+#     Queue('health_events', health_events_exchange, routing_key='events.health'),
+#     Queue('notification_events', notification_events_exchange, routing_key='events.notification'),
+# )
