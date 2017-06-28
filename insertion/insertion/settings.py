@@ -211,22 +211,21 @@ STATIC_URL = '/static/'
 BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
 
 
-health_measurements_exchange = Exchange('environment_events', type='fanout')
-
-environment_events_exchange = Exchange('environment_events', type='fanout')
-health_events_exchange = Exchange('health_events', type='fanout')
-notification_events_exchange = Exchange('notification_events', type='fanout')
+HEALTH_MEASUREMENTS_EXCHANGE = Exchange('health_measurements', type='fanout')
+ENVIRONMENT_EVENTS_EXCHANGE = Exchange('environment_events', type='fanout')
+HEALTH_EVENTS_EXCHANGE = Exchange('health_events', type='fanout')
+NOTIFICATION_EVENTS_EXCHANGE = Exchange('notification_events', type='fanout')
 
 BROKER_EXCHANGES = [
-    health_measurements_exchange,
-    environment_events_exchange,
-    health_events_exchange,
-    notification_events_exchange
+    HEALTH_MEASUREMENTS_EXCHANGE,
+    ENVIRONMENT_EVENTS_EXCHANGE,
+    HEALTH_EVENTS_EXCHANGE,
+    NOTIFICATION_EVENTS_EXCHANGE
 ]
 
 # CELERY_QUEUES = (
-#     Queue('health_measurements', health_measurements_exchange, routing_key='health_measurements'),
-#     Queue('environment_events', environment_events_exchange, routing_key='events.environment'),
-#     Queue('health_events', health_events_exchange, routing_key='events.health'),
-#     Queue('notification_events', notification_events_exchange, routing_key='events.notification'),
+#     Queue('health_measurements', HEALTH_MEASUREMENTS_EXCHANGE, routing_key='health_measurements'),
+#     Queue('environment_events', ENVIRONMENT_EVENTS_EXCHANGE, routing_key='events.environment'),
+#     Queue('health_events', HEALTH_EVENTS_EXCHANGE, routing_key='events.health'),
+#     Queue('notification_events', NOTIFICATION_EVENTS_EXCHANGE, routing_key='events.notification'),
 # )
