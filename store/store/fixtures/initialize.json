@@ -151,7 +151,7 @@
         "user": 2,
         "device": 2,
         "uses_since": "2017-06-28",
-        "access_info": "{u'google_fit_client_id': u'701996606933-17j7km8f8ce8vohhdcnur453cbn44aau.apps.googleusercontent.com', u'google_fit_hr_datastream_id': u'raw:com.google.heart_rate.bpm:com.ryansteckler.perfectcinch:', u'google_fit_refresh_token': u'1/eAhtNXxq65LeyzTr4aju27wCPLDAipXdrEd8ovgO8CY', u'google_fit_client_secret': u'K-lZ7t49-Gvhtz2P-RTqBhAQ', u'google_fit_steps_test_datastream_name': u'CAMI Steps Test', u'google_fit_hr_test_datastream_name': u'CAMI Heart Rate Test', u'google_fit_userid': u'11262861'}"
+        "access_info": {"google_fit_client_id": "701996606933-17j7km8f8ce8vohhdcnur453cbn44aau.apps.googleusercontent.com", "google_fit_hr_datastream_id": "raw:com.google.heart_rate.bpm:com.ryansteckler.perfectcinch:", "google_fit_refresh_token": "1/eAhtNXxq65LeyzTr4aju27wCPLDAipXdrEd8ovgO8CY", "google_fit_client_secret": "K-lZ7t49-Gvhtz2P-RTqBhAQ", "google_fit_steps_test_datastream_name": "CAMI Steps Test", "google_fit_hr_test_datastream_name": "CAMI Heart Rate Test", "google_fit_userid": "11262861"}
     }
 },
 {
@@ -161,7 +161,57 @@
         "user": 2,
         "device": 1,
         "uses_since": "2017-06-28",
-        "access_info": "{u'withings_consumer_secret': u'2e75dfb7f1088f398b4cfc5ebed6d5909c48918ee637417e3b0de001b3b', u'withings_consumer_key': u'5b1f8cbeb36cffe108fd8fdd666c51cb5d6eee9f2e2940983958b836451', u'withings_userid': u'11115034', u'withings_oauth_token': u'59dd58ccbd19bfbd8b3522ce50d31c4cb6e530742d22234f4cb4bee11673084', u'withings_measurement_type_id': u'1', u'withings_oauth_token_secret': u'cf31bc8e405d96b975b8014d93c722830bd55f44b437f27c7e6d5964b3'}"
+        "access_info": {"withings_consumer_secret": "2e75dfb7f1088f398b4cfc5ebed6d5909c48918ee637417e3b0de001b3b", "withings_consumer_key": "5b1f8cbeb36cffe108fd8fdd666c51cb5d6eee9f2e2940983958b836451", "withings_userid": "11115034", "withings_oauth_token": "59dd58ccbd19bfbd8b3522ce50d31c4cb6e530742d22234f4cb4bee11673084", "withings_measurement_type_id": "1", "withings_oauth_token_secret": "cf31bc8e405d96b975b8014d93c722830bd55f44b437f27c7e6d5964b3"}
     }
+},
+{
+    "model": "store.deviceusage",
+    "pk": 1,
+    "fields": {
+        "user": 2,
+        "device": 3,
+        "uses_since": "2017-06-28",
+        "access_info": {}
+    }
+},
+{
+  "model": "store.deviceusage",
+  "pk": 3,
+  "fields": {
+      "user": 2,
+      "device": 4,
+      "uses_since": "2017-06-28",
+      "access_info": {}
+  }
+},
+
+{
+  "model": "store.externalmonitoringservice",
+  "pk": 1,
+  "fields": {
+      "user": 2,
+      "created_at": "2017-03-09T13:13:41.647Z",
+      "updated_at": "2017-06-28T12:56:23.204Z",
+      "name": "OpenTele",
+      "service_url": "http://opentele.aliviate.dk:4388/opentele-citizen-server/",
+      "access_info": {
+        "opentele_password": "abcd1234", "opentele_user": "nancyann", "opentele_url_base": "http://opentele.aliviate.dk:4288/opentele-citizen-server"
+      }
+  }
+},
+
+{
+  "model": "store.externalmonitoringservice",
+  "pk": 2,
+  "fields": {
+      "user": 2,
+      "created_at": "2017-03-09T13:13:41.647Z",
+      "updated_at": "2017-06-28T12:56:23.204Z",
+      "name": "LinkWatch",
+      "service_url": "https://linkwatchrestservicetest.azurewebsites.net/",
+      "access_info": {
+        "linkwatch_url_base": "https://linkwatchrestservicetest.azurewebsites.net/", "linkwatch_user": "CNetDemo", "linkwatch_password": "password"
+      }
+  }
 }
 ]
