@@ -1,0 +1,167 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$WVtpFmkmMABM$V873zbS2wstg7dTorEGARIPJe/MWRrSKfJpHM6FKX/o=",
+        "last_login": "2017-06-21T12:29:00.616Z",
+        "is_superuser": true,
+        "username": "cami",
+        "first_name": "",
+        "last_name": "",
+        "email": "proiect.cami@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2017-03-09T13:13:38.952Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+        "password": "CamiDemo123$",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "camidemo",
+        "first_name": "Cami",
+        "last_name": "EndUser",
+        "email": "cami.demo@cami.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2017-03-09T13:13:39.809Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+        "password": "CamiCare123$",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "camicare",
+        "first_name": "Cami",
+        "last_name": "Caregiver",
+        "email": "cami.care@cami.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2017-03-09T13:13:41.506Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "store.enduserprofile",
+    "pk": 1,
+    "fields": {
+        "uuid": "f04c3f5f-2bb5-4eea-af1c-ba446d0b2699",
+        "valid_from": "2017-03-09",
+        "valid_to": "2017-03-09",
+        "updated_at": "2017-06-28T08:39:42.530Z",
+        "account_role": "end_user",
+        "gender": "M",
+        "phone": null,
+        "address": null,
+        "language": "en",
+        "user": 2,
+        "marital_status": "married",
+        "age": 65,
+        "height": 180
+    }
+},
+
+{
+    "model": "store.caregiverprofile",
+    "pk": 1,
+    "fields": {
+        "uuid": "f399ff4c-9721-44de-92a0-e61c23cc099b",
+        "valid_from": "2017-03-09",
+        "valid_to": "2017-03-09",
+        "updated_at": "2017-06-28T08:39:42.530Z",
+        "account_role": "caregiver",
+        "gender": "M",
+        "phone": null,
+        "address": null,
+        "language": "en",
+        "user": 3,
+        "caretaker": 2
+    }
+},
+
+{
+    "model": "store.device",
+    "pk": 1,
+    "fields": {
+        "device_type": "weight",
+        "manufacturer": "Withings",
+        "model": "WS 30",
+        "serial_number": "00:24:e4:24:6f:30",
+        "created_at": "2017-03-09T13:13:41.596Z",
+        "updated_at": "2017-03-09T13:13:41.596Z",
+        "activation_date": "2017-03-09T13:13:41.595Z"
+    }
+},
+{
+    "model": "store.device",
+    "pk": 2,
+    "fields": {
+        "device_type": "pulse",
+        "manufacturer": "LG",
+        "model": "Urbane",
+        "serial_number": "1234",
+        "created_at": "2017-03-09T13:13:41.632Z",
+        "updated_at": "2017-03-09T13:13:41.632Z",
+        "activation_date": "2017-03-09T13:13:41.632Z"
+    }
+},
+{
+    "model": "store.device",
+    "pk": 3,
+    "fields": {
+        "device_type": "weight",
+        "manufacturer": "AND Medical",
+        "model": "UC-352BLE",
+        "serial_number": "B4994CFFFE5AB7F9",
+        "created_at": "2017-05-30T12:56:00.941Z",
+        "updated_at": "2017-05-30T12:56:00.941Z",
+        "activation_date": "2017-05-30T12:54:38Z"
+    }
+},
+{
+    "model": "store.device",
+    "pk": 4,
+    "fields": {
+        "device_type": "blood_pressure",
+        "manufacturer": "AND Medical",
+        "model": "UA-651BLE",
+        "serial_number": "5C313EFFFE020E12",
+        "created_at": "2017-05-30T12:56:23.204Z",
+        "updated_at": "2017-05-30T12:56:23.204Z",
+        "activation_date": "2017-05-30T12:56:01Z"
+    }
+},
+
+{
+    "model": "store.deviceusage",
+    "pk": 2,
+    "fields": {
+        "user": 2,
+        "device": 2,
+        "uses_since": "2017-06-28",
+        "access_info": "{u'google_fit_client_id': u'701996606933-17j7km8f8ce8vohhdcnur453cbn44aau.apps.googleusercontent.com', u'google_fit_hr_datastream_id': u'raw:com.google.heart_rate.bpm:com.ryansteckler.perfectcinch:', u'google_fit_refresh_token': u'1/eAhtNXxq65LeyzTr4aju27wCPLDAipXdrEd8ovgO8CY', u'google_fit_client_secret': u'K-lZ7t49-Gvhtz2P-RTqBhAQ', u'google_fit_steps_test_datastream_name': u'CAMI Steps Test', u'google_fit_hr_test_datastream_name': u'CAMI Heart Rate Test', u'google_fit_userid': u'11262861'}"
+    }
+},
+{
+    "model": "store.deviceusage",
+    "pk": 4,
+    "fields": {
+        "user": 2,
+        "device": 1,
+        "uses_since": "2017-06-28",
+        "access_info": "{u'withings_consumer_secret': u'2e75dfb7f1088f398b4cfc5ebed6d5909c48918ee637417e3b0de001b3b', u'withings_consumer_key': u'5b1f8cbeb36cffe108fd8fdd666c51cb5d6eee9f2e2940983958b836451', u'withings_userid': u'11115034', u'withings_oauth_token': u'59dd58ccbd19bfbd8b3522ce50d31c4cb6e530742d22234f4cb4bee11673084', u'withings_measurement_type_id': u'1', u'withings_oauth_token_secret': u'cf31bc8e405d96b975b8014d93c722830bd55f44b437f27c7e6d5964b3'}"
+    }
+}
+]
