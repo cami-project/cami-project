@@ -2,14 +2,14 @@
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>DSS.FuzzyInference</RootNamespace>
-    <AssemblyName>DSS.FuzzyInference</AssemblyName>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{F7646D2F-E370-4545-A43D-E9E1389A4A94}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>DSS.FuzzyInference.Playground</RootNamespace>
+    <AssemblyName>DSS.FuzzyInference.Playground</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -17,37 +17,29 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
+    <ExternalConsole>true</ExternalConsole>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
+    <ExternalConsole>true</ExternalConsole>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="Shim">
-      <HintPath>..\packages\shim.2.0.0\lib\net40\Shim.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge">
-      <HintPath>..\packages\portable.aforge.core.2.2.5.60302\lib\net45\AForge.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Fuzzy">
-      <HintPath>..\packages\portable.aforge.fuzzy.2.2.5.60302\lib\portable-net45+netcore45+wpa81\AForge.Fuzzy.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Wearable.cs" />
-    <Compile Include="FuzzyHandler.cs" />
-    <Compile Include="TimerQueue.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\DSS.FuzzyInference\DSS.FuzzyInference.csproj">
+      <Project>{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}</Project>
+      <Name>DSS.FuzzyInference</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DSS.Delegate\DSS.Delegate.csproj">
       <Project>{1E221878-FB21-409A-A2DE-9318BF4710FC}</Project>
       <Name>DSS.Delegate</Name>
