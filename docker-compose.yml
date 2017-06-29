@@ -169,4 +169,24 @@ services:
     volumes:
       - .:/cami-project
     entrypoint: docker-task-scheduler-entrypoint-dev.sh
+
+# Runs the CAMI Insertion Service implementing the endpoints for measurement and event insertion into the
+# CAMI Event Stream Manager (the RabbitMQ message broker)
+  cami-insertion:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-insertion
+    links:
+      # Needs the RabbitMQ broker
+      - cami-rabbitmq
+    volumes:
+      - .:/cami-project
+    ports:
+      - "8010:8010"
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-rabbitmq:5672 -- docker-entrypoint.sh
+
+volumes:
+    .:
+      external: True
+
     
