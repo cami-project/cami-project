@@ -4,7 +4,7 @@
 
 # Run migration first
 python /cami-project/store/manage.py migrate
-python /cami-project/store/manage.py loaddata initialize.yaml
+python /cami-project/store/manage.py loaddata initialize.json
 
 # Create Django superuser account if not exists
 #USER="cami"
