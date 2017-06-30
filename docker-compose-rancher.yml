@@ -72,22 +72,13 @@ cami-medical-compliance-task-scheduler:
     io.rancher.container.pull_image: always
   tty: true
   stdin_open: true
-cami-frontend-migrate:
-  image: vitaminsoftware/cami-project:frontend
-  links:
-    - 'cami-mysql'
-  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-migration-entrypoint.sh
-  labels:
-    io.rancher.container.pull_image: always
-    io.rancher.container.start_once: 'true'
 cami-frontend:
   image: vitaminsoftware/cami-project:frontend
   links:
-    - 'cami-mysql'
     - 'cami-rabbitmq'
   ports:
     - "8001:8001"
-  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-entrypoint.sh
+  entrypoint: docker-entrypoint.sh
   labels:
     io.rancher.container.pull_image: always
   tty: true
@@ -95,9 +86,8 @@ cami-frontend:
 cami-frontend-message-worker:
   image: vitaminsoftware/cami-project:frontend
   links:
-    - 'cami-mysql'
     - 'cami-rabbitmq'
-  entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-message-worker-entrypoint.sh
+  entrypoint: docker-message-worker-entrypoint.sh
   labels:
     io.rancher.container.pull_image: always
   tty: true

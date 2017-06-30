@@ -18,7 +18,7 @@ from django.core.urlresolvers import resolve, get_script_prefix, Resolver404
 from django.contrib.auth.models import User
 
 from store.models import EndUserProfile, Device, DeviceUsage, \
-    Measurement, Activity, JournalEntry
+    Measurement, Activity, JournalEntry, PushNotificationDevice
 
 
 class UserResource(ModelResource):
@@ -260,16 +260,39 @@ class ActivityResource(ModelResource):
 
 
 class JournalEntryResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user')
+    
     class Meta:
         authentication = Authentication()
         authorization = Authorization()
+        always_return_data = True
         queryset = JournalEntry.objects.all().order_by('-timestamp')
         resource_name = 'journal_entries'
+        paginator_class = Paginator
+
         filtering = {
             "timestamp": ('gt'),
             "recipient_type": ('exact')
         }
-        paginator_class = Paginator
+
+
+class PushNotificationDeviceResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user')
+
+    class Meta:
+        authentication = Authentication()
+        authorization = Authorization()
+        always_return_data = True
+        queryset = PushNotificationDevice.objects.all()
+        allowed_methods = ['get', 'post', 'put', 'delete']
+
+        filtering = {
+            'id' : ('exact'),
+            'name': ALL,
+            'user': ALL_WITH_RELATIONS,
+            'device_id': ('exact'),
+            'registration_id': ('exact'),
+        }
 
 
 def get_pk_from_uri(uri):
