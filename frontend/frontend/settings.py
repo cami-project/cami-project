@@ -223,7 +223,8 @@ STORE_ENDPOINT_URI = "http://" + STORE_HOST + ":" + STORE_PORT
 
 # Push Notifications settings
 PUSH_NOTIFICATIONS_SETTINGS = {
-    "APNS_CERTIFICATE": "/cami-project/frontend/frontend/push_notifications/certificates/ios/prod/apns-cert.pem"
+    "APNS_CERTIFICATE": "/cami-project/frontend/frontend/push_notifications/certificates/ios/prod/apns-cert.pem",
+    "APNS_USE_SANDBOX": False
 }
 
 
