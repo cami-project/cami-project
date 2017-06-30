@@ -53,7 +53,7 @@ namespace DSS.Main
                 var num = Console.ReadLine();
 
                 if (num == "1")
-                    rmq.Write(new Event("Fall", "Fall", "High", "Device").ToJson());
+                   // rmq.Write(new Event("Fall", "Fall", "High", "Device").ToJson());
 
                 if (num == "2")
                 {
@@ -70,7 +70,7 @@ namespace DSS.Main
 					Console.Write("Device: ");
 					input[3] = Console.ReadLine();
 
-                    rmq.Write(new Event(input[0], input[1], input[2], input[3]).ToJson());
+                    //rmq.Write(new Event(input[0], input[1], input[2], input[3]).ToJson());
 
 				}
 
