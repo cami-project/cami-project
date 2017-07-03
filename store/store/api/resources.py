@@ -73,7 +73,7 @@ class DeviceUsageResource(ModelResource):
 
         return bundle
 
-    def build_filters(self, filters = None):
+    def build_filters(self, filters=None, ignore_bad_filters=True):
         if filters is None:
             filters = {}
 
@@ -126,7 +126,7 @@ class MeasurementResource(ModelResource):
 
         return bundle
 
-    def build_filters(self, filters = None):
+    def build_filters(self, filters=None, ignore_bad_filters=True):
         '''
         The double underscores are for the JSONFields value_info are interpreted
         by Tastypie as relational filters.
@@ -271,6 +271,7 @@ class JournalEntryResource(ModelResource):
         paginator_class = Paginator
 
         filtering = {
+            "user": ALL_WITH_RELATIONS,
             "timestamp": ('gt'),
             "recipient_type": ('exact')
         }
