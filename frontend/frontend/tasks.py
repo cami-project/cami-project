@@ -17,8 +17,8 @@ from celery.utils.log import get_task_logger
 from django.conf import settings
 
 # Local imports
-import frontend.store_utils
-import frontend.push_notifications.notifications
+from frontend import store_utils
+from frontend.push_notifications import notifications
 
 
 logger = get_task_logger('frontend.tasks')
@@ -34,5 +34,6 @@ app.conf.update(
 @app.task(name='frontend.send_notification')
 def send_notification(user_id, message):
     logger.debug("[frontend] Send notification request: %s" % (locals()))
-    devices = store_utils.pushnotificationdevice_get(user="/api/v1/user/" + str(user_id))
-    notifications.send_message(devices, message, sound="default")
+    devices = store_utils.pushnotificationdevice_get(user=int(user_id))
+    if devices:
+    	notifications.send_message(devices, message, sound="default")
