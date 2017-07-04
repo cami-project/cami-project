@@ -15,6 +15,7 @@ import raven
 
 from kombu import Exchange, Queue
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -43,8 +44,10 @@ INSTALLED_APPS = [
     'raven.contrib.django.raven_compat',
     'corsheaders',
     'tastypie',
-    'api',
-    'push_notifications'
+    'frontend',
+    'frontend.api',
+    'frontend.push_notifications',
+    'frontend.push_notifications.conf',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -157,23 +160,7 @@ SENTRY_AUTO_LOG_STACKS = True
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 # Options from here: https://blog.ionelmc.ro/2014/12/28/terrible-choices-mysql/
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'frontend',
-        'USER': 'cami',
-        'PASSWORD': 'cami',
-        'HOST': 'cami-mysql',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
-        'OPTIONS': {
-            'sql_mode': 'TRADITIONAL',
-            'charset': 'utf8',
-            'init_command': 'SET '
-                'default_storage_engine=INNODB,'
-                'character_set_connection=utf8'
-        }
-    }
-}
+DATABASES = {}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -226,14 +213,20 @@ CELERY_QUEUES = (
     Queue('frontend_notifications', Exchange('frontend_notifications'), routing_key='frontend_notifications'),
 )
 
-# Healthcheker settings
+# Healthchecker settings
 RABBITMQ_CHECK_TIMEOUT = 1
 
+# STORE settings
+STORE_HOST = "cami-store"
+STORE_PORT = "8008"
+STORE_ENDPOINT_URI = "http://" + STORE_HOST + ":" + STORE_PORT
 
+# Push Notifications settings
 PUSH_NOTIFICATIONS_SETTINGS = {
-    "APNS_CERTIFICATE": "/cami-project/frontend/frontend/push-notifications/ios/prod/apns-cert.pem",
-    "APNS_HOST": "gateway.push.apple.com"
+    "APNS_CERTIFICATE": "/cami-project/frontend/frontend/push_notifications/certificates/ios/prod/apns-cert.pem",
+    "APNS_USE_SANDBOX": False
 }
+
 
 try:
     from settings_local import *
