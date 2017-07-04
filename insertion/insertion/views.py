@@ -29,6 +29,8 @@ def insert_measurement(request):
                 )
                 inserter.publish(request.body)
 
+                logger.debug("[insertion] New measurement was enqueued: %s", str(content))
+
                 return HttpResponse(status=201)
     except Exception:
         pass
@@ -53,6 +55,8 @@ def insert_event(request):
                     routing_key="event." + content['category']
                 )
                 inserter.publish(request.body)
+
+                logger.debug("[insertion] New event was enqueued: %s", str(content))
 
                 return HttpResponse(status=201)
     except Exception:
