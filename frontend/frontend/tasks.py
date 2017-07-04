@@ -6,17 +6,20 @@ need to have the same module structure in the worker and the client.
 
 [1] http://docs.celeryproject.org/en/latest/userguide/tasks.html#task-naming-relative-imports
 """
+from __future__ import absolute_import
 
-import celery
-from kombu import Queue, Exchange
-from celery import Celery
 import time
 
-from django.conf import settings
+from kombu import Queue, Exchange
+from celery import Celery
 from celery.utils.log import get_task_logger
-from push_notifications.models import APNSDevice
 
-from models import Notification
+from django.conf import settings
+
+# Local imports
+from frontend import store_utils
+from frontend.push_notifications import notifications
+
 
 logger = get_task_logger('frontend.tasks')
 
@@ -28,18 +31,9 @@ app.conf.update(
     ),
 )
 
-@celery.task(name='frontend.send_notification')
-def send_notification(user_id, recipient_type, type, severity, message, description, timestamp):
+@app.task(name='frontend.send_notification')
+def send_notification(user_id, message):
     logger.debug("[frontend] Send notification request: %s" % (locals()))
-
-    if timestamp is None:
-        timestamp = time.time()
-        
-    n = Notification(user_id=user_id, recipient_type=recipient_type, type=type, severity=severity, timestamp=timestamp, message=message, description=description)
-    n.full_clean()
-    n.save()
-
-    devices = APNSDevice.objects.filter(name=recipient_type)
-    devices.send_message(message, sound="default")
-    
-    logger.debug("[frontend] Notifications were successfully sent.")
+    devices = store_utils.pushnotificationdevice_get(user=int(user_id))
+    if devices:
+    	notifications.send_message(devices, message, sound="default")

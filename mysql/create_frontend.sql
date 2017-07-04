@@ -1,5 +1,0 @@
-DROP DATABASE IF EXISTS frontend;
-
-CREATE DATABASE frontend CHARACTER SET utf8;
-
-GRANT ALL ON frontend.* TO 'cami'@'%' IDENTIFIED BY 'cami';
