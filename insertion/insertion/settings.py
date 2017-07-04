@@ -207,8 +207,8 @@ STATIC_URL = '/static/'
 BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
 
 
-MEASUREMENTS_EXCHANGE = Exchange('health_measurements', type='topic')
-EVENTS_EXCHANGE = Exchange('environment_events', type='topic')
+MEASUREMENTS_EXCHANGE = Exchange('measurements', type='topic')
+EVENTS_EXCHANGE = Exchange('events', type='topic')
 
 BROKER_EXCHANGES = [
     MEASUREMENTS_EXCHANGE,
