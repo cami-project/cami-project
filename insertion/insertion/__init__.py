@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from . import settings
 from kombu import Connection
 
-# When Django starts, we want to have already declared the fanout exchanges for each type of measurement or event
+# When Django starts, we want to have already declared the exchanges for each type of measurement or event
 with Connection(settings.BROKER_URL) as conn:
     channel = conn.channel()
 

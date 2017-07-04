@@ -11,9 +11,10 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import raven
+
 from kombu import Exchange, Queue
 from kombu.common import Broadcast
-import raven
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -142,13 +143,8 @@ LOGGING = {
             'level': 'ERROR',
             'handlers': ['sentry', 'console'],
         },
-        'insertion.measurements': {
-            'handlers': ['file', 'syslog'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'insertion.events': {
-            'handlers': ['file', 'syslog'],
+        'insertion': {
+            'handlers': ['file', 'syslog', 'console'],
             'level': 'DEBUG',
             'propagate': True,
         },
@@ -211,21 +207,10 @@ STATIC_URL = '/static/'
 BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
 
 
-HEALTH_MEASUREMENTS_EXCHANGE = Exchange('health_measurements', type='fanout')
-ENVIRONMENT_EVENTS_EXCHANGE = Exchange('environment_events', type='fanout')
-HEALTH_EVENTS_EXCHANGE = Exchange('health_events', type='fanout')
-NOTIFICATION_EVENTS_EXCHANGE = Exchange('notification_events', type='fanout')
+MEASUREMENTS_EXCHANGE = Exchange('health_measurements', type='topic')
+EVENTS_EXCHANGE = Exchange('environment_events', type='topic')
 
 BROKER_EXCHANGES = [
-    HEALTH_MEASUREMENTS_EXCHANGE,
-    ENVIRONMENT_EVENTS_EXCHANGE,
-    HEALTH_EVENTS_EXCHANGE,
-    NOTIFICATION_EVENTS_EXCHANGE
+    MEASUREMENTS_EXCHANGE,
+    EVENTS_EXCHANGE,
 ]
-
-# CELERY_QUEUES = (
-#     Queue('health_measurements', HEALTH_MEASUREMENTS_EXCHANGE, routing_key='health_measurements'),
-#     Queue('environment_events', ENVIRONMENT_EVENTS_EXCHANGE, routing_key='events.environment'),
-#     Queue('health_events', HEALTH_EVENTS_EXCHANGE, routing_key='events.health'),
-#     Queue('notification_events', NOTIFICATION_EVENTS_EXCHANGE, routing_key='events.notification'),
-# )

@@ -1,17 +1,14 @@
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
+import json
+import logging
+import settings
+
 from kombu import Connection, Producer
 
-import settings
-import logging, json
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
-measurement_logger = logging.getLogger("insertion.measurements")
-events_logger = logging.getLogger("insertion.events")
-
-ENVIRONMENT_EVENT = "USER_ENVIRONMENT"
-USER_HEALTH = "USER_HEALTH"
-USER_NOTIFICATIONS = "USER_NOTIFICATIONS"
+logger = logging.getLogger("insertion")
 
 @csrf_exempt
 def insert_measurement(request):
@@ -21,12 +18,16 @@ def insert_measurement(request):
         with Connection(settings.BROKER_URL) as conn:
             channel = conn.channel()
 
-            inserter = Producer(exchange = settings.HEALTH_MEASUREMENTS_EXCHANGE, channel=channel, routing_key="health_measurements")
+            inserter = Producer(
+                exchange=settings.MEASUREMENTS_EXCHANGE,
+                channel=channel,
+                routing_key="measurement." + content['measurement_type']
+            )
             inserter.publish(request.body)
 
-            return HttpResponse(status = 201)
+            return HttpResponse(status=201)
 
-    return HttpResponse(status = 405)
+    return HttpResponse(status=405)
 
 @csrf_exempt
 def insert_event(request):
@@ -36,21 +37,13 @@ def insert_event(request):
         with Connection(settings.BROKER_URL) as conn:
             channel = conn.channel()
 
-            if content['category'] == ENVIRONMENT_EVENT:
-                inserter = Producer(exchange=settings.ENVIRONMENT_EVENTS_EXCHANGE, channel=channel,
-                                    routing_key="events.environment")
-                inserter.publish(request.body)
+            inserter = Producer(
+                exchange=settings.EVENTS_EXCHANGE,
+                channel=channel,
+                routing_key="event." + content['category']
+            )
+            inserter.publish(request.body)
 
-            elif content['category'] ==  USER_HEALTH:
-                inserter = Producer(exchange=settings.HEALTH_EVENTS_EXCHANGE, channel=channel,
-                                    routing_key="events.health")
-                inserter.publish(request.body)
+            return HttpResponse(status=201)
 
-            elif content['category'] == USER_NOTIFICATIONS:
-                inserter = Producer(exchange=settings.HEALTH_EVENTS_EXCHANGE, channel=channel,
-                                    routing_key="events.notification")
-                inserter.publish(request.body)
-
-            return HttpResponse(status = 201)
-
-    return HttpResponse(status = 405)
+    return HttpResponse(status=405)
