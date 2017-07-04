@@ -32,7 +32,7 @@ namespace DSS.Delegate
 			{
 				foreach (var e in ChannelsEvents[channel])
 				{
-					router.RegisterEvent(channel, new Event(e, e,  "", "Device"));
+                   router.RegisterEvent(channel, new Event(e));
 				}
 			}
         }

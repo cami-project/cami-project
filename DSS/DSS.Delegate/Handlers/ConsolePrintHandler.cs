@@ -8,7 +8,7 @@ namespace DSS.Delegate
 
 		public void Handle(T obj)
 		{
-            Console.WriteLine("Handled by CONSOLE channel: " + obj.ToJson());
+            Console.WriteLine("Handled by CONSOLE channel: " + obj.ToString());
 		}
     }
 }

@@ -27,7 +27,7 @@ namespace DSS.Delegate
 		public string name { get; set; }
 		public string value_type { get; set; }
 		
-        [JsonProperty(PropertyName = "value")]
+        //[JsonProperty(PropertyName = "/value")]
 		public Value val { get; set; }
 	}
 
@@ -51,6 +51,10 @@ namespace DSS.Delegate
 		public Content content { get; set; }
 		public Annotations annotations { get; set; }
 
+        public Event()
+        {
+
+        }
 
         public Event(string category, Content content, Annotations annotations) 
         {
@@ -58,6 +62,39 @@ namespace DSS.Delegate
             this.content = content;
             this.annotations = annotations;
         }
+
+		public Event(string category)
+		{
+			this.category = category;
+
+		}
+
+
+		public bool Equals(Event obj)
+	    {
+            return obj.category == this.category ;
+	    }
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Event);
+        }
+
+		public static bool operator== (Event a, Event b)
+        {
+            return a.Equals(b);
+        }
+		public static bool operator !=(Event a, Event b)
+        { 
+            return !(a == b);
+		}
+
+        public override string ToString()
+        {
+			 return string.Format("[Event: category={0}, content={1}, annotations={2}]", category, content, annotations);
+
+			//return string.Format("[Event: category={0}]", category);
+
+		}
 
 		public string ToJson()
 		{

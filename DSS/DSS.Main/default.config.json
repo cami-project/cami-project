@@ -3,16 +3,18 @@
   "port": "12123",
   "channels": [
     {
-      "name": "CONSOLE",
-      "events": [ "Fall" ]
-    },
-    {
       "name": "NOTIFICATION",
       "events": [ "Fall" ]
     },
     {
+      "name": "CONSOLE",
+      "events": [ "Fall" ]
+    },
+
+    {
       "name": "FUZZY-INFERENCE",
       "events": [ "Fall" ]
-    }
+    },
+
   ]
 }
