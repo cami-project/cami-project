@@ -1,7 +1,7 @@
 Data Insertion API container
 ============================
 
-This container's purpose is to wrap an HTTP API over our internal RabbitMQ ecosystem. It's an input interface for CAMI System, through which one can insert data that will proceed through the full CAMI internal mechanism. For example, a (health) measurement can be inserted by an external source into our system, and that measurement will be sent to all the parts of the system that work with measurements, i.e. **Linkwatch** container and **OpenTele** container for sending it further to third parties, or medical compliance for analyzing the value, triggering an alert and finally inserting the value into the **Store**.
+This container's purpose is to wrap an HTTP API over our internal RabbitMQ ecosystem. It's an input interface for CAMI System, through which one can insert data that will proceed through the full CAMI internal mechanism. For example, a (health) measurement can be inserted by an external source into our system, and that measurement will be sent to all the parts of the system that work with measurements, i.e. **Linkwatch** container and **OpenTele** container for sending it further to third parties, or **medical compliance** for analyzing the value, triggering an alert and finally inserting the value into the **Store**.
 
 
 ## Architecture
@@ -9,8 +9,8 @@ This container's purpose is to wrap an HTTP API over our internal RabbitMQ ecosy
 This is actually a Django application that sets up some HTTP endpoints for posting data by an established structure (see [CAMI Insertion API](cami-insertion-api.yml)). The data posted to the endpoints will be sent further to our internal [`RabbitMQ Exchanges`](https://lostechies.com/derekgreer/2012/03/28/rabbitmq-for-windows-exchange-types/). Then, that piece of data will get to any internal part of our system that has a queue listening on that particular Exchange and with the corresponding `routing key`.
 
 The currently implemented Exchanges are:
-* `measurements`: the messages are sent to this exchange with the "measurement.%%MEASUREMENT_TYPE%%" `routing_key`
-* `events`: the messages are sent to this exchange with the "event.%%CATEGORY%%" `routing_key`
+* `measurements`: `routing_key = measurement.%%MEASUREMENT_TYPE%%`
+* `events`: `routing_key = event.%%CATEGORY%%`
 
 All of the Exchanges are `topic` type.
 
