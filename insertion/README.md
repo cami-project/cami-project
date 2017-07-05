@@ -12,7 +12,7 @@ The currently implemented Exchanges are:
 * `measurements`: `routing_key = measurement.%%MEASUREMENT_TYPE%%`
 * `events`: `routing_key = event.%%CATEGORY%%`
 
-All of the Exchanges are `topic` type.
+All of the Exchanges are of `topic` type.
 
 ## Example
 We have a simple example of a consumer and an external inserter. It can be found in the [`example`](example/) directory.
