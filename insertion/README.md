@@ -11,6 +11,7 @@ This is actually a Django application that sets up some HTTP endpoints for posti
 The currently implemented Exchanges are:
 * `measurements`: `routing_key = measurement.%%MEASUREMENT_TYPE%%`
 * `events`: `routing_key = event.%%CATEGORY%%`
+* `push_notifications`: `routing_key = push_notification`
 
 All of the Exchanges are of `topic` type.
 
