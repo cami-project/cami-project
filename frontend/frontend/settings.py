@@ -121,10 +121,6 @@ LOGGING = {
             'level': 'DEBUG',
             'handlers': ['sentry', 'console', 'syslog'],
         },
-        'api': {
-            'level': 'DEBUG',
-            'handlers': ['sentry', 'console', 'syslog'],
-        },
         'django': {
             'level': 'DEBUG',
             'handlers': ['sentry', 'console'],
@@ -143,14 +139,6 @@ LOGGING = {
             'level': 'DEBUG',
             'handlers': ['console'],
             'propagate': False,
-        },
-        'celery': {
-            'level': 'ERROR',
-            'handlers': ['sentry', 'console'],
-        },
-        'frontend.tasks': {
-            'level': 'DEBUG',
-            'handlers': ['sentry', 'console', 'syslog'],
         },
     },
 }
@@ -205,12 +193,10 @@ STATIC_URL = '/static/'
 CORS_ORIGIN_ALLOW_ALL = True
 X_FRAME_OPTIONS='ALLOW-FROM *'
 
-# Celery settings
+# RabbitMQ settings
 BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
-
-CELERY_DEFAULT_QUEUE = 'frontend_notifications'
-CELERY_QUEUES = (
-    Queue('frontend_notifications', Exchange('frontend_notifications'), routing_key='frontend_notifications'),
+QUEUES = (
+    Queue('push_notifications', Exchange('push_notifications', type='topic'), routing_key='push_notification'),
 )
 
 # Healthchecker settings
