@@ -17,15 +17,20 @@ The `Apple Push Notifications Service` implementation is originally taken from t
 
 ### Registering a push notification device into the system
 There is an API endpoint for subscribing a user's device to the push notifications of that user:
+
 **Endpoint**: `http://<cami_hostname_or_ip>:8001/api/v1/push-notification-subscribe`
+
 **Method**: `POST`
+
 **Payload Format**: `json`
+
 **Payload**:
 ```
 registration_id => the device token issued by the push notifications provider
 service_type => the push notifications provider - one of (APNS, GCM, WNS)
 user_id => the user's id from CAMI system
 ```
+
 **Example**:
 ```
 {
