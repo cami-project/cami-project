@@ -33,7 +33,7 @@ def insert_measurement(request):
 
                 return HttpResponse(status=201)
     except Exception:
-        pass
+        logger.debug("[insertion] ERROR! Exception caught in insert_measurement method: %s", e.value)
 
     return HttpResponse(status=400)
 
@@ -60,6 +60,35 @@ def insert_event(request):
 
                 return HttpResponse(status=201)
     except Exception:
-        pass
+        logger.debug("[insertion] ERROR! Exception caught in insert_event method: %s", e.value)
+
+    return HttpResponse(status=400)
+
+
+@csrf_exempt
+def insert_push_notification(request):
+    if request.method != "POST":
+        return HttpResponse(status=405)
+
+    try:
+        content = json.loads(request.body)
+
+        if 'user_id' in content and 'message' in content:
+            # get a connection to RabbitMQ broker, create a channel and create a producer for pushing the message to the appropriate CAMI event exchange
+            with Connection(settings.BROKER_URL) as conn:
+                channel = conn.channel()
+
+                inserter = Producer(
+                    exchange=settings.PUSH_NOTIFICATIONS_EXCHANGE,
+                    channel=channel,
+                    routing_key="push_notification"
+                )
+                inserter.publish(request.body)
+
+                logger.debug("[insertion] New push notification was enqueued: %s", str(content))
+
+                return HttpResponse(status=201)
+    except Exception as e:
+        logger.debug("[insertion] ERROR! Exception caught in insert_push_notification method: %s", e.value)
 
     return HttpResponse(status=400)

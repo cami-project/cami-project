@@ -17,6 +17,9 @@ def send_message(devices, message, **kwargs):
                 None,
                 **kwargs
             )
-            logger.debug("[frontend] Sent notification to device (%s)." % str(device))
+            logger.debug("[frontend] Sent notification to device (%s): \"%s\"" % (
+                str(device),
+                message
+            ))
         else:
             logger.debug("[frontend] Failed sending notification to device (%s)." % str(device))

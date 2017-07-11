@@ -5,4 +5,4 @@ export PYTHONPATH="${PYTHONPATH}:/cami-project"
 
 # Start a celery worker for the frontend app.
 cd /cami-project/frontend
-celery -A frontend worker -l info
+python frontend/worker.py

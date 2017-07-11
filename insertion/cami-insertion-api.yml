@@ -19,17 +19,14 @@ paths:
     post:
       tags:
       - "measurements"
-      summary: "Insert a new health measurement into the CAMI Cloud Event Stream Manager"
+      summary: "Insert a new health measurement into the CAMI System"
       operationId: "insertMeasurement"
       consumes:
-      - "application/json"
-      - "application/rdf"
-      produces:
       - "application/json"
       parameters:
       - in: "body"
         name: "body"
-        description: "Measurement object that needs to be inserted in the CAMI Cloud Event Stream Manager"
+        description: "Measurement object that needs to be inserted in the CAMI System"
         required: true
         schema:
           $ref: "#/definitions/Measurement"
@@ -45,18 +42,15 @@ paths:
     post:
       tags:
       - "events"
-      summary: "Insert a new event into the CAMI Cloud Event Stream Manager"
+      summary: "Insert a new event into the CAMI System"
       description: ""
       operationId: "insertEvent"
       consumes:
       - "application/json"
-      - "application/rdf"
-      produces:
-      - "application/json"
       parameters:
       - in: "body"
         name: "body"
-        description: "Event object that needs to be inserted in the CAMI Cloud Event Stream Manager"
+        description: "Event object that needs to be inserted in the CAMI System"
         required: true
         schema:
           $ref: "#/definitions/Event"
@@ -65,6 +59,30 @@ paths:
           description: "Event successfully inserted"
         400:
           description: "Invalid event content"
+        405:
+          description: "Invalid request method"
+          
+  /push_notifications:
+    post:
+      tags:
+      - "push_notifications"
+      summary: "Insert a push notification into the CAMI System to be sent to an user"
+      description: ""
+      operationId: "insertPushNotification"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Push notification object that needs to be sent through the CAMI System"
+        required: true
+        schema:
+          $ref: "#/definitions/PushNotification"
+      responses:
+        201:
+          description: "Push notification successfully inserted"
+        400:
+          description: "Invalid push notification content"
         405:
           description: "Invalid request method"
 
@@ -139,6 +157,22 @@ definitions:
       annotations:
         $ref: "#/definitions/EventAnnotations"
   
+  PushNotification:
+    type: "object"
+    required:
+    - "user_id"
+    - "message"
+    properties:
+      user_id:
+        type: "integer"
+        example: 2
+        description: "The id of the user registered in the CAMI System"
+        
+      message:
+        type: "string"
+        description: "The literal message of the push notification"
+        example: "Your blood pressure is way too low!"
+    
   EventContent:
     type: "object"
     properties:
@@ -199,4 +233,3 @@ definitions:
         type: "integer"
         format: "int64"
         description: "The end of the validity interval, given as UNIX Epoch timestamp."
-      

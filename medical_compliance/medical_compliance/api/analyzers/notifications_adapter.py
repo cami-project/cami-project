@@ -1,27 +1,30 @@
-import celery
-from celery import Celery
+import json
 
+from kombu import Producer, Exchange, Connection
+
+from django.conf import settings
 from medical_compliance.api import store_utils
 
-class NotificationsAdapter():
-    __celery_notification_task = 'frontend.send_notification'
-    __celery_queue = 'frontend_notifications'
 
-    def __get_celery_app(self):
-        app = Celery()
-        app.config_from_object('django.conf:settings')
-        return app
+class NotificationsAdapter():
+    def __send_push_notification(self, user_id, message):
+        payload = {
+            "user_id": user_id,
+            "message": message
+        }
+
+        with Connection(settings.BROKER_URL) as conn:
+            channel = conn.channel()
+
+            inserter = Producer(
+                exchange=Exchange('push_notifications', type='topic'),
+                channel=channel,
+                routing_key="push_notification"
+            )
+            inserter.publish(json.dumps(payload))
 
     def send_caregiver_notification(self, user_id, notification_type, severity, message, description, timestamp = None):
-        celery_app = self.__get_celery_app()
-        celery_app.send_task(
-            self.__celery_notification_task,
-            (
-                3,
-                message
-            ),
-            queue=self.__celery_queue
-        )
+        self.__send_push_notification(3, message)
 
         store_utils.insert_journal_entry(
             user="/api/v1/user/%d/" % 3,
@@ -35,15 +38,7 @@ class NotificationsAdapter():
         )
 
     def send_elderly_notification(self, user_id, notification_type, severity, message, description, timestamp = None):
-        celery_app = self.__get_celery_app()
-        celery_app.send_task(
-            self.__celery_notification_task,
-            (
-                2,
-                message
-            ),
-            queue=self.__celery_queue
-        )
+        self.__send_push_notification(2, message)
 
         store_utils.insert_journal_entry(
             user="/api/v1/user/%d/" % 2,
