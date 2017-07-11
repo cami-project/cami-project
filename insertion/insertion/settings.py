@@ -204,8 +204,10 @@ BROKER_URL = 'amqp://cami:cami@cami-rabbitmq:5672/cami'
 
 MEASUREMENTS_EXCHANGE = Exchange('measurements', type='topic')
 EVENTS_EXCHANGE = Exchange('events', type='topic')
+PUSH_NOTIFICATIONS_EXCHANGE = Exchange('push_notifications', type='topic')
 
 BROKER_EXCHANGES = [
     MEASUREMENTS_EXCHANGE,
     EVENTS_EXCHANGE,
+    PUSH_NOTIFICATIONS_EXCHANGE,
 ]
