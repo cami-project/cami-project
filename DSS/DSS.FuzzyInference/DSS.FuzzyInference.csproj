@@ -43,6 +43,7 @@
     <Compile Include="Wearable.cs" />
     <Compile Include="FuzzyHandler.cs" />
     <Compile Include="TimerQueue.cs" />
+    <Compile Include="EventToLabel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

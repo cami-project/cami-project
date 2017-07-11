@@ -33,6 +33,7 @@ namespace DSS.FuzzyInference
             public T Value { get; set; }
             public DateTime TimeStamp { get; set; }
             public float Duration { get; set; }
+            public string FuzzyLabel { get; set; }
 
 
             public Item(T val)
