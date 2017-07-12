@@ -19,36 +19,27 @@ namespace DSS.Main
             var client = new HttpClient();
             HttpContent content = new StringContent(new Event("Fall").ToJson());   //new StringContent("{ \"measurement_type\": \"AAAAAAAAAAAAAAAAAAAAAAA\", \"unit_type\": \"kg\",\"timestamp\": 0,\"user\": \"/api/v1/user/14/\",\"device\": \"/api/v1/device/1/\",\"value_info\": \"{'systolic': 115, 'diastolic': 70}\"}", Encoding.UTF8, "application/json");
 
-
-			//139.59.181.210
-			//141.85.241.224
-
-			//in measruments chanel works
 			//var response = client.PostAsync("http://141.85.241.224:8010/api/v1/insertion/measurements/", content);
-
-
 			var response = client.PostAsync("http://141.85.241.224:8010/api/v1/insertion/events/", content);
-
 
             Console.WriteLine(response.Result);
 
         }
 
-        private static void ReadFromExchange()
-        {
 
-
-        }
 
         public static void Main(string[] args)
         {
             Console.WriteLine("DSS invoked...");
 			Console.WriteLine("Connecting to the msg broker...");
 
-            PushToAPI();
+            //PushToAPI();
+            var rmqAPI = new RmqAPI("http://141.85.241.224:8010/api/v1/insertion");
+            rmqAPI.PushEvent(new Event("Fall").ToJson());
 
 
 			var router = new Router<Event>();
+            var rmqConfig = new RmqConfig("amqp://cami:cami@141.85.241.224:5673/cami", "cami", "cami", "events");
 
             var rmq = new Rmq<Event>("amqp://cami:cami@141.85.241.224:5673/cami",
                               "cami",
@@ -60,18 +51,7 @@ namespace DSS.Main
                                 router.Handle(JsonConvert.DeserializeObject<Event>(result));
                              } );
 
-			var rmqExchange = new RmqExchange("amqp://cami:cami@141.85.241.224:5673/cami",
-				  "cami",
-				  "cami",
-				  "measurements",
-				  (result) =>
-				  {
-					  Console.WriteLine("RECIEVED EXCHANGE: " + result);
-					  //router.Handle(JsonConvert.DeserializeObject<Event>(result));
-				  });
-
-
-
+            var rmqExchange = new RmqExchange(rmqConfig);
 
 
             IRouterHandler<Event>[] handlers =
