@@ -18,7 +18,7 @@ paths:
       tags:
       - "activity"
       summary: "Insert a new activity into the CAMI Store"
-      operationId: "insertActivity"
+      operationId: "insertActivities"
       consumes:
       - "application/json"
       produces:
@@ -35,6 +35,51 @@ paths:
           description: "Activity successfully inserted"
         400:
           description: "Invalid activity content"
+      
+    get:
+      tags:
+      - "activity"
+      summary: "Get the list of activities from CAMI Store"
+      operationId: "getActivities"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Successfully got the collection of activity objects"
+          schema:
+            type: "object"
+            properties:
+              activities:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Activity"
+                  
+              meta:
+                type: "object"
+                properties:
+                  limit:
+                    type: "integer"
+                    example: 20
+                    
+                  next:
+                    type: "string"
+                    format: "URI"
+                    example: "/api/v1/activity/?limit=20&offset=20"
+                    
+                  offset:
+                    type: integer
+                    example: 0
+                    
+                  previous:
+                    type: "string"
+                    example: null
+                    
+                  total_count:
+                    type: "integer"
+                    example: 35
 
 definitions:
   Activity:
@@ -139,17 +184,3 @@ definitions:
           - "exercise"
           - "medication"
           - "measurement"
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
