@@ -11,7 +11,9 @@ tags:
 - name: "measurements"
   description: "CAMI health measurement insertion endpoint"
 - name: "events"
-  description: "Event insertion endpoint" 
+  description: "Event insertion endpoint"
+- name: "push_notifications"
+  description: "Push notification insertion endpoint"
 schemes:
 - "http"
 paths:
