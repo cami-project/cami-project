@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_mysql',
     'djcelery',
     'tastypie',
+    'tastypie_swagger',
     'store',
 ]
 
