@@ -1,6 +1,7 @@
 import Promise from 'bluebird';
 import {fromJS, Map} from 'immutable';
 import {loop, Effects} from 'redux-loop';
+import store from '../../redux/store';
 import icons from 'Cami/src/icons-fa';
 
 import * as env from '../../../env';
@@ -41,6 +42,7 @@ const initialState = Map({
   })
 });
 
+
 // Actions
 const HIDE_ACTIONABILITY = 'HomepageState/HIDE_ACTIONABILITY';
 const CAREGIVER_DATA_RESPONSE = 'HomepageState/CAREGIVER_DATA_RESPONSE';
@@ -60,8 +62,12 @@ export async function requestCaregiverData() {
 }
 
 async function fetchPageData() {
-  var notificationsUrl = env.NOTIFICATIONS_REST_API + "?recipient_type=caregiver&limit=10&offset=0";
+  // getting the user id from state after auth0 signin
+  var user_id = store.getState().get('auth').get('currentUser').get('userMetadata').get('user_id');
+  var notificationsUrl = env.NOTIFICATIONS_REST_API + "?user=" + user_id;
+  // override caching issues
   notificationsUrl += '&r=' + Math.floor(Math.random() * 10000);
+
   var result = {
     hasNotification: false,
     weight: {
