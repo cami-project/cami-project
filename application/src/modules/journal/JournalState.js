@@ -26,7 +26,7 @@ export async function requestJournalData() {
   };
 }
 async function fetchPageData() {
-  var notificationsUrl = env.NOTIFICATIONS_REST_API + "?recipient_type=caregiver&limit=30&offset=0";
+  var notificationsUrl = env.NOTIFICATIONS_REST_API + "?user=3";
   notificationsUrl += '&r=' + Math.floor(Math.random() * 10000);
 
   return fetch(notificationsUrl)
