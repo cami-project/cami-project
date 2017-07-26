@@ -10,10 +10,6 @@ import {AppRegistry} from 'react-native';
 const Cami = React.createClass({
 
   render() {
-    // Start polling for notifications.
-    store.dispatch(HomepageStateActions.requestNotification());
-    store.dispatch(HomepageCaregiverStateActions.requestCaregiverData());
-
     return (
       <Provider store={store}>
         <AppViewContainer />
