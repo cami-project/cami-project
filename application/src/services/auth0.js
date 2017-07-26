@@ -68,9 +68,6 @@ export function showLogin() {
         store.dispatch(AuthStateActions.onUserLoginSuccess(profile, token)).then(() => {
             var userType = profile.userMetadata.userType;
 
-        fetch(notificationsSubscriptionApi).then((response) => {
-        }).catch((error) => {
-        });
             console.log('[auth] - user logged in, figuring out data fetch & interface redirect');
 
             if (userType == 'elderly') {
@@ -81,22 +78,6 @@ export function showLogin() {
                     resolve("success");
                 });
 
-        const pushNotificationsState = store.getState().get('pushNotifications');
-        var didReceiveKey = pushNotificationsState.getIn(['didReceiveKey']);
-        if (didReceiveKey) {
-            mobileNotificationKey = pushNotificationsState.getIn(['mobileNotificationKey']);
-            mobileOS = pushNotificationsState.getIn(['mobileOS']);
-
-            fetch(mobileNotificationKeyApi, {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    mobile_key: mobileNotificationKey,
-                    mobile_os: mobileOS,
-                    recipient_type: userType
                 promise_elder.then(() => {
                     console.log('[auth] - data has been fetched for [elder]. redirecting to homescreen');
 
@@ -104,7 +85,6 @@ export function showLogin() {
 
                     console.log('[auth] - successfully, redirected [elder] to the homescreen')
                 })
-            }).then((response) => {
 
             } else {
                 console.log('[auth] - user is [caregiver]. fetching data before redirecting...');
@@ -122,8 +102,46 @@ export function showLogin() {
                     console.log('[auth] - successfully, redirected [caregiver] to the homescreen')
                 });
             }
+
+            console.log('[auth] - subscribing to withings & push notifications...');
+
+            // TODO @rtud: related to Withings subscribing in Medical Compliance container
+            // - will need tending to after we get to the MC refactoring
+            fetch(notificationsSubscriptionApi).then((response) => {
+                console.log('[auth] - withings subscribing successful:');
+                console.log(response);
             }).catch((error) => {
+                console.log('[auth] - failed to subscribe to withings:');
+                console.warning(error);
             });
+
+            const pushNotificationsState = store.getState().get('pushNotifications');
+            var didReceiveKey = pushNotificationsState.getIn(['didReceiveKey']);
+            if (didReceiveKey) {
+                mobileNotificationKey = pushNotificationsState.getIn(['mobileNotificationKey']);
+                mobileOS = pushNotificationsState.getIn(['mobileOS']);
+
+                console.log('[auth] - submitting push notifications information...');
+
+                fetch(mobileNotificationKeyApi, {
+                    method: "POST",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        registration_id: mobileNotificationKey,
+                        user_id: profile.userMetadata.user_id,
+                        service_type: "APNS",
+                    })
+                }).then((response) => {
+                    console.log('[auth] - push notifications infotmation submitted succesfully:');
+                    console.log(response);
+                }).catch((error) => {
+                    console.log('[auth] - failed to submit push notifications information:');
+                    console.warning(error);
+                });
+            }
         })
     })
 }
