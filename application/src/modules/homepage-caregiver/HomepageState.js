@@ -92,6 +92,8 @@ async function fetchPageData() {
     lastActivities: []
   };
 
+  console.log("[HomepageState] - fetching data for the [careviger] with id: " + user_id);
+
   return fetch(notificationsUrl)
     .then((response) => response.json())
     .then((notificationJson) => {
@@ -131,39 +133,41 @@ async function fetchPageData() {
 
       return fetch(activitiesApiUrl).then((response) => response.json())
         .then((activitiesJson) => {
-
           result.lastActivities = activitiesJson;
 
           return fetch(weightApiUrl).then((response) => response.json())
             .then((weightsJson) => {
-
               result.weight = weightsJson.weight;
 
               return fetch(heartRateApiUrl).then((response) => response.json())
                 .then((heartRateJson) => {
-
                   result.heart_rate = heartRateJson.heart_rate;
 
                   return fetch(stepsCountApiUrl).then((response) => response.json())
                     .then((stepsCountJson) => {
-
                       result.steps = stepsCountJson.steps;
+
+                      console.log('[HomepageState] - successfully fetched [caregiver] data');
 
                       return result;
 
                   }).catch((error) => {
+                    console.warning('[HomepageState] - encountered error while fetching [caregiver] step count: ' + error);
 
                     return result;
                   });
               }).catch((error) => {
+                console.warning('[HomepageState] - encountered error while fetching [caregiver] heart rate: ' + error);
 
                 return result;
               });
           }).catch((error) => {
+            console.warning('[HomepageState] - encountered error while fetching [caregiver] weight: ' + error);
 
             return result;
           });
       }).catch((error) => {
+        console.warning('[HomepageState] - encountered error while fetching [caregiver] activities: ' + error);
 
         return result;
       });
