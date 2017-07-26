@@ -3,6 +3,9 @@ import Auth0Lock from 'react-native-lock';
 import * as AuthStateActions from '../modules/auth/AuthState';
 import store from '../redux/store';
 const {Platform} = require('react-native');
+import Promise from 'bluebird';
+import * as HomepageStateActions from '../modules/homepage/HomepageState'
+import * as HomepageCaregiverStateActions from '../modules/homepage-caregiver/HomepageState'
 
 import Color from 'color';
 import variables from '../modules/variables/ElderGlobalVariables';
@@ -61,39 +64,84 @@ export function showLogin() {
         }
 
         // Authentication worked!
-        store.dispatch(AuthStateActions.onUserLoginSuccess(profile, token));
-        var userType = profile.userMetadata.userType;
-        if (userType == 'elderly') {
-            store.dispatch(redirectToElderlyPage());
-        }
-        else {
-            store.dispatch(redirectToOnboardingPage());
-        }
+        // -- time to trigger data fetch for the specific user
+        store.dispatch(AuthStateActions.onUserLoginSuccess(profile, token)).then(() => {
+            var userType = profile.userMetadata.userType;
 
-        fetch(notificationsSubscriptionApi).then((response) => {
-        }).catch((error) => {
-        });
+            console.log('[auth] - user logged in, figuring out data fetch & interface redirect');
 
-        const pushNotificationsState = store.getState().get('pushNotifications');
-        var didReceiveKey = pushNotificationsState.getIn(['didReceiveKey']);
-        if (didReceiveKey) {
-            mobileNotificationKey = pushNotificationsState.getIn(['mobileNotificationKey']);
-            mobileOS = pushNotificationsState.getIn(['mobileOS']);
+            if (userType == 'elderly') {
+                console.log('[auth] - user is [elder]. fetching data before redirecting...');
 
-            fetch(mobileNotificationKeyApi, {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    mobile_key: mobileNotificationKey,
-                    mobile_os: mobileOS,
-                    recipient_type: userType
+                var promise_elder = new Promise((resolve, reject) => {
+                    store.dispatch(HomepageStateActions.requestNotification());
+                    resolve("success");
+                });
+
+                promise_elder.then(() => {
+                    console.log('[auth] - data has been fetched for [elder]. redirecting to homescreen');
+
+                    store.dispatch(redirectToElderlyPage());
+
+                    console.log('[auth] - successfully, redirected [elder] to the homescreen')
                 })
-            }).then((response) => {
+
+            } else {
+                console.log('[auth] - user is [caregiver]. fetching data before redirecting...');
+
+                var promise_caregiver = new Promise((resolve, reject) => {
+                    store.dispatch(HomepageCaregiverStateActions.requestCaregiverData());
+                    resolve("success");
+                });
+
+                promise_caregiver.then(() => {
+                    console.log('[auth] - data has been fetched for [caregiver]. redirecting to homescreen...');
+
+                    store.dispatch(redirectToOnboardingPage());
+
+                    console.log('[auth] - successfully, redirected [caregiver] to the homescreen')
+                });
+            }
+
+            console.log('[auth] - subscribing to withings & push notifications...');
+
+            // TODO @rtud: related to Withings subscribing in Medical Compliance container
+            // - will need tending to after we get to the MC refactoring
+            fetch(notificationsSubscriptionApi).then((response) => {
+                console.log('[auth] - withings subscribing successful:');
+                console.log(response);
             }).catch((error) => {
+                console.log('[auth] - failed to subscribe to withings:');
+                console.warning(error);
             });
-        }
-    });
+
+            const pushNotificationsState = store.getState().get('pushNotifications');
+            var didReceiveKey = pushNotificationsState.getIn(['didReceiveKey']);
+            if (didReceiveKey) {
+                mobileNotificationKey = pushNotificationsState.getIn(['mobileNotificationKey']);
+                mobileOS = pushNotificationsState.getIn(['mobileOS']);
+
+                console.log('[auth] - submitting push notifications information...');
+
+                fetch(mobileNotificationKeyApi, {
+                    method: "POST",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        registration_id: mobileNotificationKey,
+                        user_id: profile.userMetadata.user_id,
+                        service_type: "APNS",
+                    })
+                }).then((response) => {
+                    console.log('[auth] - push notifications infotmation submitted succesfully:');
+                    console.log(response);
+                }).catch((error) => {
+                    console.log('[auth] - failed to submit push notifications information:');
+                    console.warning(error);
+                });
+            }
+        })
+    })
 }

@@ -1,8 +1,9 @@
 import Promise from 'bluebird';
 import {fromJS} from 'immutable';
 import {loop, Effects} from 'redux-loop';
-
+import store from '../../redux/store';
 import * as env from '../../../env';
+// import store from '../../redux/store';
 
 var json = require('../../../api-examples/homepage/severity.low.json');
 
@@ -24,11 +25,15 @@ export async function requestNotification() {
 }
 
 async function fetchNotification() {
-  var apiUrl = env.NOTIFICATIONS_REST_API + "?recipient_type=elderly&limit=1&offset=0";
+  // getting the user id from state after auth0 signin
+  var user_id = store.getState().get('auth').get('currentUser').get('userMetadata').get('user_id');
+  var apiUrl = env.NOTIFICATIONS_REST_API + "?user=" + user_id;
 
   // Use random parameter to defeat cache.
   apiUrl += apiUrl.indexOf('?') > -1 ? '&' : '?';
   apiUrl += 'r=' + Math.floor(Math.random() * 10000);
+
+  console.log('[HomepageState] - Fetching data for [elder] with user ID: ' + user_id);
 
   return fetch(apiUrl)
     .then((response) => {
@@ -36,10 +41,13 @@ async function fetchNotification() {
         if (json.objects.length == 0) {
           return initialState.getIn(['notification']);
         }
+
+        console.log('[HomepageState] - sucessfully fetched [elder] data');
         return json.objects[0];
       });
     })
     .catch((error) => {
+      console.warning('[HomepageState] - error encountered when fetching [elder] data: ' + error);
       return initialState.getIn(['notification']);
     });
 }

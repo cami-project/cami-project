@@ -118,9 +118,6 @@ const StatusEntry = React.createClass({
       dataSet.circleColors.push(this.formatStatus(item.get('status')));
     });
 
-    console.log('DATA SET -------------');
-    console.log(dataSet);
-
     // for the majority of the status widgets we get the most recent value
     var lastValue = this.props.data.size > 0 ? this.props.data.get(this.props.data.size - 1).get('value') : 0;
 

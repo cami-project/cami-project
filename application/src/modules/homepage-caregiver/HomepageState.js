@@ -1,6 +1,7 @@
 import Promise from 'bluebird';
 import {fromJS, Map} from 'immutable';
 import {loop, Effects} from 'redux-loop';
+import store from '../../redux/store';
 import icons from 'Cami/src/icons-fa';
 
 import * as env from '../../../env';
@@ -41,6 +42,7 @@ const initialState = Map({
   })
 });
 
+
 // Actions
 const HIDE_ACTIONABILITY = 'HomepageState/HIDE_ACTIONABILITY';
 const CAREGIVER_DATA_RESPONSE = 'HomepageState/CAREGIVER_DATA_RESPONSE';
@@ -60,8 +62,12 @@ export async function requestCaregiverData() {
 }
 
 async function fetchPageData() {
-  var notificationsUrl = env.NOTIFICATIONS_REST_API + "?recipient_type=caregiver&limit=10&offset=0";
+  // getting the user id from state after auth0 signin
+  var user_id = store.getState().get('auth').get('currentUser').get('userMetadata').get('user_id');
+  var notificationsUrl = env.NOTIFICATIONS_REST_API + "?user=" + user_id;
+  // override caching issues
   notificationsUrl += '&r=' + Math.floor(Math.random() * 10000);
+
   var result = {
     hasNotification: false,
     weight: {
@@ -85,6 +91,8 @@ async function fetchPageData() {
     lastEvents: [],
     lastActivities: []
   };
+
+  console.log("[HomepageState] - fetching data for the [careviger] with id: " + user_id);
 
   return fetch(notificationsUrl)
     .then((response) => response.json())
@@ -125,39 +133,41 @@ async function fetchPageData() {
 
       return fetch(activitiesApiUrl).then((response) => response.json())
         .then((activitiesJson) => {
-
           result.lastActivities = activitiesJson;
 
           return fetch(weightApiUrl).then((response) => response.json())
             .then((weightsJson) => {
-
               result.weight = weightsJson.weight;
 
               return fetch(heartRateApiUrl).then((response) => response.json())
                 .then((heartRateJson) => {
-
                   result.heart_rate = heartRateJson.heart_rate;
 
                   return fetch(stepsCountApiUrl).then((response) => response.json())
                     .then((stepsCountJson) => {
-
                       result.steps = stepsCountJson.steps;
+
+                      console.log('[HomepageState] - successfully fetched [caregiver] data');
 
                       return result;
 
                   }).catch((error) => {
+                    console.warning('[HomepageState] - encountered error while fetching [caregiver] step count: ' + error);
 
                     return result;
                   });
               }).catch((error) => {
+                console.warning('[HomepageState] - encountered error while fetching [caregiver] heart rate: ' + error);
 
                 return result;
               });
           }).catch((error) => {
+            console.warning('[HomepageState] - encountered error while fetching [caregiver] weight: ' + error);
 
             return result;
           });
       }).catch((error) => {
+        console.warning('[HomepageState] - encountered error while fetching [caregiver] activities: ' + error);
 
         return result;
       });
