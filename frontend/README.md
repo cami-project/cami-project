@@ -44,6 +44,9 @@ user_id => the user's id from CAMI system
 Sending push notifications over the **RabbitMQ** exchanges/queues is as simple as posting a `json` encoded string on the queue.
 
 The messages that are posted on the queue must respect the following format:
+
+**Endpoint**: `http://cami.vitaminsoftware.com:8010/api/v1/insertion/push_notifications/`
+
 ```
 user_id => the user's id from CAMI system
 message => the actual, literal message to be sent to the user
@@ -57,6 +60,11 @@ message => the actual, literal message to be sent to the user
 }
 ```
 
+**Example with cURL**
+```
+curl -H "Content-type: application/json" -X POST -d '{"user_id": 2, "message": "Hey Jim! Your heart rate is quite low!"}' http://cami.vitaminsoftware.com:8010/api/v1/insertion/push_notifications/
+```
+
 ### Generating iOS Push Notifications certificate
 
 - To be able to send notifications using the APNS service, we need to configure the App ID in the Apple Dev console with development and production certificates
@@ -64,7 +72,7 @@ message => the actual, literal message to be sent to the user
 - Launch Keychain Access from your local Mac and from the login keychain, filter by the Certificates category. You will see an expandable option called `Apple Development Push Services`
 - Right click on `Apple Development Push Services` > Export `Apple Development Push Services ID123`. Save this as `cert.p12` file somewhere you can access it. **Do no enter a password !!!**
 - The next command generates the cert in Mac's Terminal for **PEM** format (Privacy Enhanced Mail Security Certificate):
-    
+
 `openssl pkcs12 -in cert.p12 -out apns-cert.pem -nodes -clcerts`
 
 - The resulting **.pem** file needs to be copied in the `frontend/push-notifications/certificates/ios/prod/` or `frontend/push-notifications/certificates/ios/dev/` folder. The path is set in the Django settings file.
