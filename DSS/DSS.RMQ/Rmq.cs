@@ -76,9 +76,6 @@ namespace DSS.RMQ
 				noAck: true,
 				consumer: consumer);
 
-
-
-
 			}
 		
         }
@@ -89,7 +86,7 @@ namespace DSS.RMQ
 			var factory = new ConnectionFactory() { Uri = url, UserName = username, Password = pass };
             var connection = factory.CreateConnection();
             var channel = connection.CreateModel();
-			{
+		
                 
 				channel.ExchangeDeclare(exchange: exchange, type: "topic", durable: true);
 
@@ -116,7 +113,7 @@ namespace DSS.RMQ
 
 
 
-			}
+			
 		}
     }
 

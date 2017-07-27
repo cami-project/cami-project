@@ -36,7 +36,6 @@ namespace DSS.Delegate
         public void Handle(T obj)
         {
 			
-
             foreach (var channel in Channels.Values)
             {
                 if(channel.Contains(obj))

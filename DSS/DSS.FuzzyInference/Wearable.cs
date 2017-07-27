@@ -17,7 +17,6 @@ namespace DSS.FuzzyInference
 			SetUpFisII();
 		}
 
-
 		private void SetUpFisI()
 		{
 			//Input

@@ -8,40 +8,25 @@ using System.Text;
 
 namespace DSS.Main
 {
-
-
-
+    
     class Program
     {
         
-        public static void PushToAPI()
-        {
-            var client = new HttpClient();
-            HttpContent content = new StringContent(new Event("Fall").ToJson());   //new StringContent("{ \"measurement_type\": \"AAAAAAAAAAAAAAAAAAAAAAA\", \"unit_type\": \"kg\",\"timestamp\": 0,\"user\": \"/api/v1/user/14/\",\"device\": \"/api/v1/device/1/\",\"value_info\": \"{'systolic': 115, 'diastolic': 70}\"}", Encoding.UTF8, "application/json");
-
-			//var response = client.PostAsync("http://141.85.241.224:8010/api/v1/insertion/measurements/", content);
-			var response = client.PostAsync("http://141.85.241.224:8010/api/v1/insertion/events/", content);
-
-            Console.WriteLine(response.Result);
-
-        }
-
-
-
         public static void Main(string[] args)
         {
             Console.WriteLine("DSS invoked...");
 			Console.WriteLine("Connecting to the msg broker...");
 
-            //PushToAPI();
-            var rmqAPI = new RmqAPI("http://141.85.241.224:8010/api/v1/insertion");
-            rmqAPI.PushEvent(new Event("Fall").ToJson());
-
+            //var rmqAPI = new RmqAPI("http://141.85.241.224:8010/api/v1/insertion");
+            //rmqAPI.PushEvent(new Event("Fall").ToJson());
+            //rmqAPI.PushNotification("{  user_id: 2,  message: \"Your blood pressure is way too low!\"}");
 
 			var router = new Router<Event>();
-            var rmqConfig = new RmqConfig("amqp://cami:cami@141.85.241.224:5673/cami", "cami", "cami", "events");
+            var url = "amqp://cami:cami@141.85.241.224:5673/cami";
 
-            var rmq = new Rmq<Event>("amqp://cami:cami@141.85.241.224:5673/cami",
+            var rmqConfig = new RmqConfig( url, "cami", "cami", "events");
+
+            var rmq = new Rmq<Event>(url,
                               "cami",
                               "cami",
                               "test-queue",
@@ -57,9 +42,11 @@ namespace DSS.Main
             IRouterHandler<Event>[] handlers =
             {
                 new ConsolePrintHandler<Event>(),
-                new PushNotificationHandler<Event>(new RmqWriter<Event>("amqp://cami:cami@141.85.241.224:5673/cami", "cami", "cami", "frontend_notifications")),
+                new PushNotificationHandler<Event>(new RmqWriter<Event>(url, "cami", "cami", "frontend_notifications")),
                 new FuzzyHandler()
 			};
+
+            handlers[2].Handle(new Event("USER-INPUT", new Content(){ name = "EXERCISE_MODE"}, new Annotations()));
 
             var config = new Config("default.config", router, handlers);
 

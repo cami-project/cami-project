@@ -53,6 +53,10 @@
       <Project>{1E221878-FB21-409A-A2DE-9318BF4710FC}</Project>
       <Name>DSS.Delegate</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DSS.RMQ\DSS.RMQ.csproj">
+      <Project>{728CCD8D-9438-4500-8407-8D86D20B5AA7}</Project>
+      <Name>DSS.RMQ</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
