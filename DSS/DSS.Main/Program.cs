@@ -46,9 +46,10 @@ namespace DSS.Main
                 new FuzzyHandler()
 			};
 
-            handlers[2].Handle(new Event("USER-INPUT", new Content(){ name = "EXERCISE_MODE"}, new Annotations()));
+			handlers[2].Handle(new Event("USER-INPUT", new Content(){ name = "EXERCISE_MODE_ON"}, new Annotations()));
+            handlers[2].Handle(new Event("Heart-Rate", new Content() { name = "Heart-Rate", val = new Value(){ numVal = 90} }, new Annotations()));
 
-            var config = new Config("default.config", router, handlers);
+			var config = new Config("default.config", router, handlers);
 
 
             var run = true;

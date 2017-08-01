@@ -11,13 +11,15 @@ namespace DSS.FuzzyInference
         public EventToLabel()
         {
             mapTable = new Dictionary<string, string>();
+
+
+            mapTable["Heart-Rate"] = "HR";
+
         }
 
         public string Do(Event e){
-
-
-
-            return mapTable[""];
+            
+            return mapTable[e.content.name];
 
         }
     }

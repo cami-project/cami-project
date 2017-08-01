@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DSS.FuzzyInference
 {
@@ -10,6 +11,11 @@ namespace DSS.FuzzyInference
         public TimerQueue()
         {
             this.Queue = new List<Item<T>>();
+        }
+
+        public List<T> ToNormal() {
+
+            return Queue.Select(x => x.Value).ToList<T>();
         }
 
         public void Push(T item, float duration)

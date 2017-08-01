@@ -13,58 +13,61 @@ namespace DSS.FuzzyInference
 
 	    public string Name => "FUZZY-INFERENCE";
 
+        private List<string> WhitelistManagebleQueueItems { get; set; }
+        private FuzzyContainer Fuzzy;
+
 
         public FuzzyHandler()
         {
             Queue = new TimerQueue<Event>();
             RequestManagableQueue = new List<Event>();
+
+            WhitelistManagebleQueueItems = new List<string>();
+            WhitelistManagebleQueueItems.Add("EXERCISE_MODE_OFF");
+            Fuzzy = new FuzzyContainer();
         }
 
         public void Handle(Event obj)
         {
-            Console.WriteLine("OVO je fuzzy inference");
+            Console.WriteLine("Fuzzy inference invoked...");
 
             Queue.Refresh();
 
-            if (obj.category == "USER-INPUT")
+            if (obj.category == "USER-INPUT" && !WhitelistManagebleQueueItems.Contains(obj.content.name))
             {
-
-                //add or remove (later)
-                RequestManagableQueue.Add(obj);
+               RequestManagableQueue.Add(obj);
             }
             else
             {
                 Queue.Push(obj, 1);
             }
 
-            // post-processing 
 
-            var inferenceResult = "Heartrate-High";
+            var inferenceResult = Fuzzy.Infer(Queue.ToNormal());
+			
 
-
-            if (inferenceResult == "Heartrate-High")
+            if (inferenceResult == "HEART_RATE-High")
             {
-
-
                 foreach (var item in RequestManagableQueue)
                 {
-                    if( item.content.name == "EXERCISE_MODE")
+                    if( item.content.name == "EXERCISE_MODE_ON")
                     {
 						inferenceResult = "";
 					}
                 }
 
+                if(Queue.Queue.FirstOrDefault(x=> x.Value.content.name == "EXERCISE_MODE_OFF") != null)
+                {
+                    inferenceResult = "";
+                }
             }
 
+            Console.WriteLine("Final decision: " + inferenceResult);
 
-            var fakeJSON = "{  user_id: 2,  message: \"Your blood pressure is way too low!\"}";
+            //var fakeJSON = "{  user_id: 2,  message: \"Your blood pressure is way too low!\"}";
+            //var api = new RmqAPI("http://141.85.241.224:8010/api/v1/insertion");
 
-
-            var api = new RmqAPI("http://141.85.241.224:8010/api/v1/insertion");
-
-            api.PushNotification(fakeJSON);
-
-            
+            //api.PushNotification(fakeJSON);
         }
     }
 
