@@ -234,13 +234,15 @@ class JournalEntry(models.Model):
     ENTRY_TYPES = (
         ('weight', 'weight'),
         ('heart', 'heart'),
-        ('sleep', 'sleep')
+        ('sleep', 'sleep'),
+        ('activity', 'activity')
     )
 
     SEVERITIES = (
         ('low', 'low'),
         ('medium', 'medium'),
-        ('high', 'high')
+        ('high', 'high'),
+        ('none', 'none')
     )
 
     user = models.ForeignKey(User)
@@ -249,7 +251,7 @@ class JournalEntry(models.Model):
     timestamp = models.BigIntegerField()
     message = models.CharField(max_length=512)
     description = models.CharField(max_length=1024)
-    measurement = models.ForeignKey(Measurement)
+    reference_id = models.IntegerField(null=True, blank=True)
 
 
 # ================ PushNotificationDevice ================

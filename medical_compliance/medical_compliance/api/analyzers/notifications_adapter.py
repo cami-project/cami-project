@@ -32,9 +32,7 @@ class NotificationsAdapter():
             severity=severity,
             timestamp=timestamp,
             message=message,
-            description=description,
-            # This is dummy, will be removed anyway when refactoring medical_compliance
-            measurement="/api/v1/measurement/%d/" % 1
+            description=description
         )
 
     def send_elderly_notification(self, user_id, notification_type, severity, message, description, timestamp = None):
@@ -46,7 +44,5 @@ class NotificationsAdapter():
             severity=severity,
             timestamp=timestamp,
             message=message,
-            description=description,
-            # This is dummy, will be removed anyway when refactoring medical_compliance
-            measurement="/api/v1/measurement/%d/" % 1
+            description=description
         )

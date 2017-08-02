@@ -261,7 +261,6 @@ class ActivityResource(ModelResource):
 
 class JournalEntryResource(ModelResource):
     user = fields.ForeignKey(UserResource, 'user')
-    measurement = fields.ForeignKey(MeasurementResource, 'measurement')
     
     class Meta:
         authentication = Authentication()
