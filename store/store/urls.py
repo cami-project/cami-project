@@ -35,4 +35,13 @@ v1_api.register(PushNotificationDeviceResource())
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(v1_api.urls)),
+    url(
+        r'^api/documentation/',
+        include('tastypie_swagger.urls', namespace='store_tastypie_swagger'),
+        kwargs={
+            "tastypie_api_module": v1_api,
+            "namespace": "store_tastypie_swagger",
+            "version": "0.1"
+        }
+    ),
 ]

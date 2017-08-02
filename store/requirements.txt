@@ -7,4 +7,4 @@ pytz==2016.6.1
 raven==5.27.1
 inotify==0.2.8
 django-tastypie==0.13.3
-django-tastypie-swagger==0.1.4
+https://github.com/concentricsky/django-tastypie-swagger/tarball/master
