@@ -14,6 +14,8 @@ There is one endpoint that does not appear in the auto-generated documentation, 
 
 Currently, this retrieves the activities from 7 days in the past and 7 days in the future from the current time(14 days totally), for ALL the users. There is information only for one hardcoded user, though. This will have to be modified to accept a user parameter, in order to be able to retrieve information only for one user.
 
+The elements of the array are actually `activity` objects, that are described here: [http://cami.vitaminsoftware.com:8008/api/documentation/#!/activity/activity_detail](http://cami.vitaminsoftware.com:8008/api/documentation/#!/activity/activity_detail)
+
 This is how it looks like:
 ```
 http://cami.vitaminsoftware.com:8008/api/v1/activity/last_activities
