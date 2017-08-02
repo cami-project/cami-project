@@ -10,7 +10,7 @@ import datetime, pytz
 
 from celery import Celery
 from celery.utils.log import get_task_logger
-from kombu import Queue, Exchange
+from kombu import Queue, Exchange, Connection, Producer
 from django.conf import settings #noqa
 
 import google_fit
@@ -68,6 +68,7 @@ def process_weight_measurement(cami_user_id, device_id,
 
     logger.debug("[medical-compliance] Broadcasting weight measurement: %s" % (weight_meas_res))
     broadcast_measurement('weight', weight_meas_res)
+    enqueue_measurement(weight_meas_res)
 
 
 @app.task(name='medical_compliance_measurements.process_heart_rate_measurement')
@@ -169,6 +170,7 @@ def process_heart_rate_measurement():
 
         logger.debug("[medical-compliance] Broadcasting heart rate measurement: %s" % (heart_rate_measurement))
         broadcast_measurement('heartrate', pulse_meas_res)
+        enqueue_measurement(pulse_meas_res)
 
     logger.debug("[medical-compliance] Sending the last cinch heart rate measurement for analysis: %s" % (last_cinch_measurement))
     analyze_heart_rates.delay(last_cinch_measurement, 'cinch')
@@ -291,8 +293,30 @@ def process_steps_measurement():
 
         logger.debug("[medical-compliance] Broadcasting steps measurement: %s" % (steps_measurement))
         broadcast_measurement('steps', steps_meas_res)
+        enqueue_measurement(steps_meas_res)
 
     return json.dumps(measurements, indent=4, sort_keys=True)
+
+
+def enqueue_measurement(measurement):
+    measurement.pop('id', None)
+    measurement.pop('ok', None)
+    measurement.pop('precision', None)
+    measurement.pop('resource_uri', None)
+
+    # get a connection to RabbitMQ broker, create a channel and create a
+    # producer for pushing the message to the measurements exchange
+    with Connection(settings.BROKER_URL) as conn:
+        channel = conn.channel()
+
+        inserter = Producer(
+            exchange=Exchange('measurements', type='topic'),
+            channel=channel,
+            routing_key="measurement." + measurement['measurement_type']
+        )
+        inserter.publish(measurement)
+
+        logger.debug("[medical-compliance] New measurement was enqueued: %s", str(measurement))
 
 
 def broadcast_measurement(measurement_type, measurement):
