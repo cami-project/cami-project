@@ -18,7 +18,8 @@ def insert_measurement(request):
     try:
         content = json.loads(request.body)
         if 'measurement_type' in content:
-            # get a connection to RabbitMQ broker, create a channel and create a producer for pushing the message to the health_measurements exchange
+            # get a connection to RabbitMQ broker, create a channel and create a
+            # producer for pushing the message to the measurements exchange
             with Connection(settings.BROKER_URL) as conn:
                 channel = conn.channel()
 
