@@ -108,13 +108,24 @@ def process_events(user, calendar, events, date_from, date_to):
         }
 
     # Process the events
-    for event in events:
+    for event in events['items']:
         activity_data = compose_activity_data(
             event,
             calendar,
             calendar_colors,
             user
         )
+
+        if event['reminders']['useDefault']:
+            activity_data['reminders'] = process_event_reminders(
+                activity_data['start'],
+                events['defaultReminders']
+            )
+        elif 'overrides' in event['reminders']:
+            activity_data['reminders'] = process_event_reminders(
+                activity_data['start'],
+                event['reminders']['overrides']
+            )
 
         if event['id'] in db_events_hash:
             db_event = db_events_hash[event['id']]
@@ -205,3 +216,10 @@ def timestamp_from_event_date(date):
         dateutil.parser.parse(date).utctimetuple()
     )
 
+def process_event_reminders(start_timestamp, raw_reminders):
+    reminders = []
+
+    for r in raw_reminders:
+        reminders.append(start_timestamp - r['minutes'] * 60)
+
+    return reminders
