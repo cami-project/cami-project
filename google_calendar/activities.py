@@ -178,8 +178,6 @@ def compose_activity_data(event, calendar, calendar_colors, user):
         'title': event['summary'],
         'calendar_id': calendar['id'],
         'calendar_name': calendar['summary'],
-        'start': timestamp_from_event_date(event['start']['dateTime']),
-        'end': timestamp_from_event_date(event['end']['dateTime']),
         'created': timestamp_from_event_date(event['created']),
         'updated': timestamp_from_event_date(event['updated']),
         'activity_type': calendar['activity_type'],
@@ -187,6 +185,16 @@ def compose_activity_data(event, calendar, calendar_colors, user):
         'creator': event['creator'],
         'iCalUID': event['iCalUID']
     }
+
+    if 'dateTime' in event['start']:
+        activity_data['start'] = timestamp_from_event_date(event['start']['dateTime'])
+    else:
+        activity_data['start'] = timestamp_from_event_date(event['start']['date'])
+
+    if 'dateTime' in event['end']:
+        activity_data['end'] = timestamp_from_event_date(event['end']['dateTime'])
+    else:
+        activity_data['end'] = timestamp_from_event_date(event['end']['date'])
 
     if 'description' in event:
         activity_data['description'] = event['description']
