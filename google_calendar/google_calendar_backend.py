@@ -105,7 +105,7 @@ def get_calendar(calendar_service, calendar_id):
         raise e
 
 def consume_event_results(calendar_service, api_req):
-    event_results = []
+    event_results = None
 
     while True:
         try:
@@ -114,12 +114,13 @@ def consume_event_results(calendar_service, api_req):
             logger.exception("[google_calendar_backend] Cannot consume all results from api_req %s." % (api_req))
             break
 
-        if current_res['items']:
-            event_results.extend(current_res['items'])
+        if event_results is None:
+            event_results = current_res
+        elif current_res['items']:
+            event_results['items'].extend(current_res['items'])
 
         api_req = calendar_service.events().list_next(api_req, current_res)
         if not api_req:
             break
 
     return event_results
-
