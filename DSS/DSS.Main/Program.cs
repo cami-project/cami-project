@@ -46,8 +46,8 @@ namespace DSS.Main
                 new FuzzyHandler()
 			};
 
-			handlers[2].Handle(new Event("USER-INPUT", new Content(){ name = "EXERCISE_MODE_ON"}, new Annotations()));
-            handlers[2].Handle(new Event("Heart-Rate", new Content() { name = "Heart-Rate", val = new Value(){ numVal = 90} }, new Annotations()));
+
+
 
 			var config = new Config("default.config", router, handlers);
 
@@ -59,6 +59,10 @@ namespace DSS.Main
 				Console.WriteLine("=========================");
                 Console.WriteLine("[1] - Generate default fall event {\"Category\":\"Fall\"}");
 				Console.WriteLine("[2] - Generate fall event with custom data");
+                Console.WriteLine("[3] - HIGH HEART_RATE");
+				Console.WriteLine("[4] - EXERCISE_MODE_ON");
+				Console.WriteLine("[5] - FALL");
+
 
 				Console.WriteLine("ctrl + c - Exit");
 				Console.WriteLine("=========================");
@@ -75,23 +79,21 @@ namespace DSS.Main
                     var input = new string [4];
                     Console.Write("Category: ");
                     input[0] = Console.ReadLine();
-
-					//Console.Write("Type: ");
-					//input[1] = Console.ReadLine();
-
-					//Console.Write("Value: ");
-					//input[2] = Console.ReadLine();
-
-					//Console.Write("Device: ");
-					//input[3] = Console.ReadLine();
-
-					//rmq.Write(new Event(input[0], input[1], input[2], input[3]).ToJson());
-
-
                     rmq.Write(new Event(input[0]).ToJson());
 				}
 
-                run = num != "3";
+                if(num == "3")
+					handlers[2].Handle(new Event("Heart-Rate", new Content() { name = "Heart-Rate", val = new Value() { numVal = 90 } }, new Annotations()));
+                if(num == "4")
+					handlers[2].Handle(new Event("USER-INPUT", new Content() { name = "EXERCISE_MODE_ON" }, new Annotations()));
+                if(num == "5")
+                {
+					handlers[2].Handle(new Event("IMPACT", new Content() { name = "IMPACT", val = new Value() { numVal = 90 } }, new Annotations()));
+					handlers[2].Handle(new Event("ON_GROUND", new Content() { name = "ON_GROUND", val = new Value() { numVal = 1.4f } }, new Annotations()));
+					handlers[2].Handle(new Event("TIME_ON_GROUND", new Content() { name = "TIME_ON_GROUND", val = new Value() { numVal = 700 } }, new Annotations()));
+				}
+
+				run = num != "6";
 			}
             rmq.Dispose();
 

@@ -21,7 +21,7 @@ namespace DSS.Delegate
 		public User user { get; set; }
 		public Room room { get; set; }
         //This is added by me
-        public int numVal { get; set; }
+        public float numVal { get; set; }
 	}
 
 	public class Content

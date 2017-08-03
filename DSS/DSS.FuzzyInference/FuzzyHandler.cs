@@ -44,25 +44,40 @@ namespace DSS.FuzzyInference
 
 
             var inferenceResult = Fuzzy.Infer(Queue.ToNormal());
-			
 
-            if (inferenceResult == "HEART_RATE-High")
+            for (int i = 0; i < inferenceResult.Count; i++)
             {
-                foreach (var item in RequestManagableQueue)
-                {
-                    if( item.content.name == "EXERCISE_MODE_ON")
-                    {
-						inferenceResult = "";
+				if (inferenceResult[i] == "HEART_RATE-High")
+				{
+					foreach (var item in RequestManagableQueue)
+					{
+						if (item.content.name == "EXERCISE_MODE_ON")
+						{
+							inferenceResult[i] = "";
+						}
 					}
-                }
 
-                if(Queue.Queue.FirstOrDefault(x=> x.Value.content.name == "EXERCISE_MODE_OFF") != null)
-                {
-                    inferenceResult = "";
-                }
+					if (Queue.Queue.FirstOrDefault(x => x.Value.content.name == "EXERCISE_MODE_OFF") != null)
+					{
+						inferenceResult[i] = "";
+					}
+				}
             }
 
-            Console.WriteLine("Final decision: " + inferenceResult);
+            inferenceResult.RemoveAll( x=> x == "");
+
+
+            if (inferenceResult.Count == 0)
+				Console.WriteLine("NO RESULTS");
+            else 
+			    Console.WriteLine("Final decision: " + inferenceResult.Count);
+            foreach (var item in inferenceResult)
+            {
+				Console.WriteLine("---------------");
+
+				Console.WriteLine(item);
+
+			}
 
             //var fakeJSON = "{  user_id: 2,  message: \"Your blood pressure is way too low!\"}";
             //var api = new RmqAPI("http://141.85.241.224:8010/api/v1/insertion");
