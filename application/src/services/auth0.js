@@ -4,8 +4,9 @@ import * as AuthStateActions from '../modules/auth/AuthState';
 import store from '../redux/store';
 const {Platform} = require('react-native');
 import Promise from 'bluebird';
-import * as HomepageStateActions from '../modules/homepage/HomepageState'
-import * as HomepageCaregiverStateActions from '../modules/homepage-caregiver/HomepageState'
+import * as HomepageStateActions from '../modules/homepage/HomepageState';
+import * as HomepageCaregiverStateActions from '../modules/homepage-caregiver/HomepageState';
+import * as JournalStateActions from '../modules/journal/JournalState';
 
 import Color from 'color';
 import variables from '../modules/variables/ElderGlobalVariables';
@@ -89,12 +90,20 @@ export function showLogin() {
             } else {
                 console.log('[auth] - user is [caregiver]. fetching data before redirecting...');
 
-                var promise_caregiver = new Promise((resolve, reject) => {
+                // caregiver general data fetch
+                var promise_caregiver_home = new Promise((resolve, reject) => {
                     store.dispatch(HomepageCaregiverStateActions.requestCaregiverData());
                     resolve("success");
                 });
 
-                promise_caregiver.then(() => {
+                // caregiver journal data fetch
+                // - separate fetch due to Pull to Refresh mechanics
+                var promise_caregiver_journal = new Promise((resolve, reject) => {
+                    store.dispatch(JournalStateActions.requestJournalData());
+                    resolve("success");
+                });
+
+                Promise.all(promise_caregiver_home, promise_caregiver_journal).then(() => {
                     console.log('[auth] - data has been fetched for [caregiver]. redirecting to homescreen...');
 
                     store.dispatch(redirectToOnboardingPage());

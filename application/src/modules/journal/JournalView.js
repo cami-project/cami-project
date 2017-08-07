@@ -28,10 +28,9 @@ const JournalView = React.createClass({
     refreshing: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired
   },
-  componentDidMount() {
-    this.onRefresh();
-  },
-
+  // componentDidMount() {
+  //   this.onRefresh();
+  // },
   onRefresh() {
     this.props.dispatch(JournalStateActions.markStartRefreshing());
     this.props.dispatch(JournalStateActions.requestJournalData());
