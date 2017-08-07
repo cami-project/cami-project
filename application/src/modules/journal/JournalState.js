@@ -1,5 +1,6 @@
 // import Promise from 'bluebird';
 import {fromJS, Map} from 'immutable';
+import store from '../../redux/store';
 // import {loop, Effects} from 'redux-loop';
 
 import * as env from '../../../env';
@@ -26,7 +27,10 @@ export async function requestJournalData() {
   };
 }
 async function fetchPageData() {
-  var notificationsUrl = env.NOTIFICATIONS_REST_API + "?user=3";
+  // getting the user id from state after auth0 signin
+  var user_id = store.getState().get('auth').get('currentUser').get('userMetadata').get('user_id');
+  var notificationsUrl = env.NOTIFICATIONS_REST_API + "?user=" + user_id;
+  // override caching issues
   notificationsUrl += '&r=' + Math.floor(Math.random() * 10000);
 
   return fetch(notificationsUrl)
