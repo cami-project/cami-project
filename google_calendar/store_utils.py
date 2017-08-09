@@ -72,3 +72,25 @@ def user_get(id):
         return json_response
 
     return False
+
+def insert_journal_entry(**kwargs):
+    endpoint = settings.STORE_ENDPOINT_URI + "/api/v1/journal_entries/"
+
+    method = 'POST'
+    data = dict(kwargs)
+
+    r = requests.request(
+        method,
+        endpoint,
+        json=data
+    )
+
+    if r.status_code in [200, 201]:
+        return r.json()
+
+    logger.debug(
+        "[medical_compliance.store_utils] " +
+        "Failed inserting a new Journal Entry. " +
+        "Arguments: %s. Response: %s" % (kwargs, r.text)
+    )
+    return False
