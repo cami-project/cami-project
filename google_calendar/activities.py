@@ -20,8 +20,7 @@ def sync_for_user(user):
     calendars = {
         "personal": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
         "exercise": "8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
-        "medication": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
-        "measurement": ""
+        "medication": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com"
     }
 
     logger.debug("[google_calendar] Getting the Google Calendar service... ")
