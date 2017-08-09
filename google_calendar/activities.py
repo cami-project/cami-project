@@ -228,6 +228,6 @@ def process_event_reminders(start_timestamp, raw_reminders):
     reminders = []
 
     for r in raw_reminders:
-        reminders.append(start_timestamp - r['minutes'] * 60)
+        reminders.append(str(start_timestamp - r['minutes'] * 60))
 
     return reminders
