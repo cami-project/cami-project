@@ -17,7 +17,7 @@ def activity_get(**kwargs):
         return json_response['activities']
 
     logger.debug(
-        "[google_calendar_store_utils] " +
+        "[google_calendar.store_utils] " +
         "There was a problem fetching activities from Store. " +
         "Arguments: %s. Response: %s" % (kwargs, r.text)
     )
@@ -43,7 +43,7 @@ def activity_save(**kwargs):
         return True
 
     logger.debug(
-        "[google_calendar_store_utils] " +
+        "[google_calendar.store_utils] " +
         "There was a problem saving the activity to Store. " +
         "Arguments: %s. Response: %s" % (kwargs, r.text)
     )
@@ -57,7 +57,7 @@ def activity_delete(**kwargs):
         return True
 
     logger.debug(
-        "[google_calendar_store_utils] " +
+        "[google_calendar.store_utils] " +
         "There was a problem deleting the activities from Store. " +
         "Arguments: %s. Response: %s" % (kwargs, r.text)
     )
@@ -89,7 +89,7 @@ def insert_journal_entry(**kwargs):
         return r.json()
 
     logger.debug(
-        "[medical_compliance.store_utils] " +
+        "[google_calendar.store_utils] " +
         "Failed inserting a new Journal Entry. " +
         "Arguments: %s. Response: %s" % (kwargs, r.text)
     )
