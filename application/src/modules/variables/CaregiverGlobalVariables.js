@@ -12,7 +12,8 @@ const colors = {
     alert: '#c23f21',
     low: '#658d51',
     medium: '#D2B52E',
-    high: '#c23f21'
+    high: '#c23f21',
+    info: '#458bcc'
   },
   gray: {
     darkest: '#212121',
