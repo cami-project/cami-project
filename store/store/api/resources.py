@@ -217,6 +217,7 @@ class ActivityResource(ModelResource):
             "end": ALL,
             "activity_type": ALL,
             "calendar_id": ALL,
+            "reminders": ALL,
         }
 
     def prepend_urls(self):

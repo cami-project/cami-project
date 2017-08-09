@@ -17,7 +17,7 @@ def activity_get(**kwargs):
         return json_response['activities']
 
     logger.debug(
-        "[google_calendar_store_utils] " +
+        "[google_calendar.store_utils] " +
         "There was a problem fetching activities from Store. " +
         "Arguments: %s. Response: %s" % (kwargs, r.text)
     )
@@ -43,7 +43,7 @@ def activity_save(**kwargs):
         return True
 
     logger.debug(
-        "[google_calendar_store_utils] " +
+        "[google_calendar.store_utils] " +
         "There was a problem saving the activity to Store. " +
         "Arguments: %s. Response: %s" % (kwargs, r.text)
     )
@@ -57,7 +57,7 @@ def activity_delete(**kwargs):
         return True
 
     logger.debug(
-        "[google_calendar_store_utils] " +
+        "[google_calendar.store_utils] " +
         "There was a problem deleting the activities from Store. " +
         "Arguments: %s. Response: %s" % (kwargs, r.text)
     )
@@ -71,4 +71,26 @@ def user_get(id):
     if json_response:
         return json_response
 
+    return False
+
+def insert_journal_entry(**kwargs):
+    endpoint = settings.STORE_ENDPOINT_URI + "/api/v1/journal_entries/"
+
+    method = 'POST'
+    data = dict(kwargs)
+
+    r = requests.request(
+        method,
+        endpoint,
+        json=data
+    )
+
+    if r.status_code in [200, 201]:
+        return r.json()
+
+    logger.debug(
+        "[google_calendar.store_utils] " +
+        "Failed inserting a new Journal Entry. " +
+        "Arguments: %s. Response: %s" % (kwargs, r.text)
+    )
     return False

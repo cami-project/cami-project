@@ -20,8 +20,7 @@ def sync_for_user(user):
     calendars = {
         "personal": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
         "exercise": "8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
-        "medication": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com",
-        "measurement": ""
+        "medication": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com"
     }
 
     logger.debug("[google_calendar] Getting the Google Calendar service... ")
@@ -108,13 +107,24 @@ def process_events(user, calendar, events, date_from, date_to):
         }
 
     # Process the events
-    for event in events:
+    for event in events['items']:
         activity_data = compose_activity_data(
             event,
             calendar,
             calendar_colors,
             user
         )
+
+        if event['reminders']['useDefault']:
+            activity_data['reminders'] = process_event_reminders(
+                activity_data['start'],
+                events['defaultReminders']
+            )
+        elif 'overrides' in event['reminders']:
+            activity_data['reminders'] = process_event_reminders(
+                activity_data['start'],
+                event['reminders']['overrides']
+            )
 
         if event['id'] in db_events_hash:
             db_event = db_events_hash[event['id']]
@@ -167,8 +177,6 @@ def compose_activity_data(event, calendar, calendar_colors, user):
         'title': event['summary'],
         'calendar_id': calendar['id'],
         'calendar_name': calendar['summary'],
-        'start': timestamp_from_event_date(event['start']['dateTime']),
-        'end': timestamp_from_event_date(event['end']['dateTime']),
         'created': timestamp_from_event_date(event['created']),
         'updated': timestamp_from_event_date(event['updated']),
         'activity_type': calendar['activity_type'],
@@ -176,6 +184,16 @@ def compose_activity_data(event, calendar, calendar_colors, user):
         'creator': event['creator'],
         'iCalUID': event['iCalUID']
     }
+
+    if 'dateTime' in event['start']:
+        activity_data['start'] = timestamp_from_event_date(event['start']['dateTime'])
+    else:
+        activity_data['start'] = timestamp_from_event_date(event['start']['date'])
+
+    if 'dateTime' in event['end']:
+        activity_data['end'] = timestamp_from_event_date(event['end']['dateTime'])
+    else:
+        activity_data['end'] = timestamp_from_event_date(event['end']['date'])
 
     if 'description' in event:
         activity_data['description'] = event['description']
@@ -205,3 +223,10 @@ def timestamp_from_event_date(date):
         dateutil.parser.parse(date).utctimetuple()
     )
 
+def process_event_reminders(start_timestamp, raw_reminders):
+    reminders = []
+
+    for r in raw_reminders:
+        reminders.append(str(start_timestamp - r['minutes'] * 60))
+
+    return reminders

@@ -70,6 +70,10 @@ CELERYBEAT_SCHEDULE = {
         'task': 'google_calendar.sync_activities',
         'schedule': timedelta(minutes=5),
     },
+    'process_reminders': {
+        'task': 'google_calendar.process_reminders',
+        'schedule': timedelta(minutes=1),
+    },
 }
 
 ## CELERY settings
