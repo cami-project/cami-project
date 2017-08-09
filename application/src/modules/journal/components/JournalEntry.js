@@ -84,6 +84,22 @@ const JournalEntry = React.createClass({
     message: PropTypes.string.isRequired
   },
 
+  matchStatus() {
+    var status = this.props.status;
+
+    if (status) {
+      return status;
+    } else {
+      // this will be the case for activity-related entries
+      switch (this.props.type) {
+        case 'exercise': return 'info';
+        case 'medication': return 'info';
+        case 'appointment': return 'info';
+        default: return 'info';
+      }
+    }
+  },
+
   render() {
     const time = moment(new Date(this.props.timestamp * 1000)).format('HH:mm');
 
@@ -91,16 +107,16 @@ const JournalEntry = React.createClass({
       <View style={styles.journalEntry}>
         <View style={styles.iconContainer}>
           <View style={styles.icon}>
-            <Icon name={icons[this.props.type]} size={30} color={variables.colors.status[this.props.status]}/>
+            <Icon name={icons[this.props.type]} size={30} color={variables.colors.status[this.matchStatus()]}/>
           </View>
           <View>
             <Text style={styles.time}>{time}</Text>
           </View>
-          <View style={[styles.statusIcon, {backgroundColor: variables.colors.status[this.props.status]}]}>
+          <View style={[styles.statusIcon, {backgroundColor: variables.colors.status[this.matchStatus()]}]}>
             <Icon name={icons[this.props.status]} size={12} color={'white'}/>
           </View>
         </View>
-        <View style={{flex: 7, borderLeftWidth: 2, borderColor: variables.colors.status[this.props.status]}}>
+        <View style={{flex: 7, borderLeftWidth: 2, borderColor: variables.colors.status[this.matchStatus()]}}>
           <View style={[styles.textContainer]}>
             <View style={{flexWrap: 'wrap'}}>
               <Text style={[styles.text, {color: variables.colors.gray.darker}]}>{this.props.title}</Text>

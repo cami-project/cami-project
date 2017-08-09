@@ -18,13 +18,29 @@ const JournalEntry = React.createClass({
     title: PropTypes.string.isRequired
   },
 
+  matchStatus() {
+    var status = this.props.status;
+
+    if (status) {
+      return status;
+    } else {
+      // this will be the case for activity-related entries
+      switch (this.props.type) {
+        case 'exercise': return 'info';
+        case 'medication': return 'info';
+        case 'appointment': return 'info';
+        default: return 'info';
+      }
+    }
+  },
+
   render() {
     const time = moment(new Date(this.props.timestamp * 1000)).format('HH:mm');
 
     return (
       <View style={styles.journalEntry}>
         <View style={styles.icon}>
-          <Icon name={icons[this.props.type]} size={20} color={variables.colors.status[this.props.status]}/>
+          <Icon name={icons[this.props.type]} size={20} color={variables.colors.status[this.matchStatus()]}/>
         </View>
         <View>
           <Text style={styles.time}>{time}</Text>
