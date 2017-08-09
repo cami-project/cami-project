@@ -1,4 +1,5 @@
-DSS -  Decision support system
+ 
+ DSS -  Decision support system
 ===================
 ----------
 System architecture
@@ -17,6 +18,15 @@ How to run
 mono DSS.Main.exe
 ```
 Make sure **Mono** is installed on the system. (http://www.mono-project.com) 
+
+How to run inside of docker
+-------------
+
+Navigate to the root folder **cami-project/DSS** and execute following commands.
+```
+docker build -t inital-docker-test .
+docker run -i inital-docker-test
+```
 
 How it works
 -------------

@@ -32,7 +32,7 @@ namespace DSS.RMQ
             try
             {
                 var response = client.PostAsync(url + "/push_notifications/", new StringContent( json));
-                Console.WriteLine(response.Result);
+               Console.WriteLine(response.Result);
             }
             catch (Exception )
             {

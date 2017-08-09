@@ -42,7 +42,6 @@ namespace DSS.FuzzyInference
                 Queue.Push(obj, 1);
             }
 
-
             var inferenceResult = Fuzzy.Infer(Queue.ToNormal());
 
             for (int i = 0; i < inferenceResult.Count; i++)
@@ -67,6 +66,8 @@ namespace DSS.FuzzyInference
             inferenceResult.RemoveAll( x=> x == "");
 
 
+            Console.BackgroundColor = ConsoleColor.Red;
+
             if (inferenceResult.Count == 0)
 				Console.WriteLine("NO RESULTS");
             else 
@@ -78,6 +79,8 @@ namespace DSS.FuzzyInference
 				Console.WriteLine(item);
 
 			}
+
+            Console.BackgroundColor = ConsoleColor.White;
 
             //var fakeJSON = "{  user_id: 2,  message: \"Your blood pressure is way too low!\"}";
             //var api = new RmqAPI("http://141.85.241.224:8010/api/v1/insertion");
