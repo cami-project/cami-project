@@ -28,6 +28,25 @@ const HomepageView = React.createClass({
     logout: PropTypes.func.isRequired
   },
 
+  // some Journal entries don't come w/ severity information
+  // - for the elder's interface it's essential to have custom color schemes
+  //   based on the severity, to improve the way he/she'll react to it
+  matchSeverity() {
+    severity = this.props.notification.get('severity');
+
+    if (severity) {
+      return severity;
+    } else {
+      // this will be the case for activity-related entries
+      switch (this.props.notification.get('type')) {
+        case 'exercise': return 'low';
+        case 'medication': return 'medium';
+        case 'appointment': return 'low';
+        default: return 'low';
+      }
+    }
+  },
+
   render() {
     return (
       <View style={styles.container}>
@@ -40,7 +59,7 @@ const HomepageView = React.createClass({
             styles.background,
             {
               zIndex: 2,
-              backgroundColor: Color(variables.colors.status[this.props.notification.get('severity')]).clearer(.25).rgbaString()
+              backgroundColor: Color(variables.colors.status[this.matchSeverity()]).clearer(.25).rgbaString()
             }
           ]}
         />
@@ -66,7 +85,7 @@ const HomepageView = React.createClass({
               <Icon
                 name={icons[this.props.notification.get('type')]}
                 size={60}
-                color={variables.colors.status[this.props.notification.get('severity')]}
+                color={variables.colors.status[this.matchSeverity()]}
                 style={{
                   alignSelf: 'center',
                   marginTop: -10
@@ -95,7 +114,7 @@ const HomepageView = React.createClass({
                 styles.button,
                 styles.buttonPanic,
                 {
-                  shadowColor: Color(variables.colors.status[this.props.notification.get('severity')]).darken(.7).hexString()
+                  shadowColor: Color(variables.colors.status[this.matchSeverity()]).darken(.7).hexString()
                 }
               ]}
               onPress={() => tapButtonSound.setVolume(1.0).play()}
@@ -110,7 +129,7 @@ const HomepageView = React.createClass({
                 styles.button,
                 styles.buttonConfirm,
                 {
-                  shadowColor: Color(variables.colors.status[this.props.notification.get('severity')]).darken(.7).hexString()
+                  shadowColor: Color(variables.colors.status[this.matchSeverity()]).darken(.7).hexString()
                 }
               ]}
               onPress={() => tapButtonSound.setVolume(1.0).play()}
