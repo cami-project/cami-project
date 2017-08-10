@@ -21,7 +21,7 @@ const JournalEntry = React.createClass({
   matchStatus() {
     var status = this.props.status;
 
-    if (status) {
+    if (status !== 'none') {
       return status;
     } else {
       // this will be the case for activity-related entries
