@@ -34,7 +34,7 @@ const HomepageView = React.createClass({
   matchSeverity() {
     severity = this.props.notification.get('severity');
 
-    if (severity) {
+    if (severity !== 'none') {
       return severity;
     } else {
       // this will be the case for activity-related entries
