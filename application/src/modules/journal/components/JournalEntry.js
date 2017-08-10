@@ -113,7 +113,7 @@ const JournalEntry = React.createClass({
             <Text style={styles.time}>{time}</Text>
           </View>
           <View style={[styles.statusIcon, {backgroundColor: variables.colors.status[this.matchStatus()]}]}>
-            <Icon name={icons[this.props.status]} size={12} color={'white'}/>
+            <Icon name={icons[this.matchStatus()]} size={12} color={'white'}/>
           </View>
         </View>
         <View style={{flex: 7, borderLeftWidth: 2, borderColor: variables.colors.status[this.matchStatus()]}}>
