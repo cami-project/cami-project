@@ -35,7 +35,7 @@ def process_reminders():
     # Get current minute in UTC timestamp
     time_now = datetime.datetime.utcnow().strftime("%a, %d %b %Y %H:%M")
     time_now = time.mktime(time.strptime(time_now, "%a, %d %b %Y %H:%M"))
-    
+
     # Get all the activities that should be reminded in the current minute
     # and send reminders for each one of them
     activities = store_utils.activity_get(reminders__contains=int(time_now))
@@ -82,7 +82,7 @@ def send_reminder(activity, timestamp):
 
     # Caregiver Journal Entry
     store_utils.insert_journal_entry(
-        user="/api/v1/user/%d/" % 2,
+        user="/api/v1/user/%d/" % 3,
         type=journal_entry_type,
         severity='none',
         timestamp=timestamp,
@@ -92,7 +92,7 @@ def send_reminder(activity, timestamp):
 
     # Elder Journal Entry
     store_utils.insert_journal_entry(
-        user="/api/v1/user/%d/" % 3,
+        user="/api/v1/user/%d/" % 2,
         type=journal_entry_type,
         severity='none',
         timestamp=timestamp,
@@ -102,7 +102,7 @@ def send_reminder(activity, timestamp):
 
     # Elder Push Notification
     payload = {
-        "user_id": 3,
+        "user_id": 2,
         "message": elder_message
     }
 
