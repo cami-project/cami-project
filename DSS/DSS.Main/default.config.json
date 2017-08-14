@@ -1,0 +1,20 @@
+﻿{
+  "url": "www.example.url.com",
+  "port": "12123",
+  "channels": [
+    {
+      "name": "NOTIFICATION",
+      "events": [ "Fall" ]
+    },
+    {
+      "name": "CONSOLE",
+      "events": [ "Fall" ]
+    },
+
+    {
+      "name": "FUZZY-INFERENCE",
+      "events": [ "Fall" ]
+    },
+
+  ]
+}

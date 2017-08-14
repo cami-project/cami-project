@@ -1,0 +1,10 @@
+﻿{
+  "url": "www.example.url.com",
+  "port": "12123",
+  "channels": [
+    {
+      "name": "CONSOLE",
+      "events": [ "Fall" ]
+    }
+  ]
+}
