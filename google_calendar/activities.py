@@ -84,8 +84,6 @@ def process_events(user, calendar, events, date_from, date_to):
 
     logger.debug("[google_calendar] Getting the activities from Store to compare them with the fetched events ...")
     db_events = store_utils.activity_get(
-        start__gte=int(time.mktime(date_from.timetuple())),
-        end__lte=int(time.mktime(date_to.timetuple())),
         user=user['id'],
         calendar_id=calendar['id']
     )
