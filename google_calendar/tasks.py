@@ -51,7 +51,7 @@ def process_reminders():
 
 @app.task(name='google_calendar.send_reminder')
 def send_reminder(activity, timestamp):
-    activity_type = activity['activity_type'].decode('utf-8')
+    activity_type = activity['activity_type']
     caregiver_message_format = "Jim has %s at %s"
 
     if activity_type == 'personal':
