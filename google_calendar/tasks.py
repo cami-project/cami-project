@@ -51,7 +51,7 @@ def process_reminders():
 
 @app.task(name='google_calendar.send_reminder')
 def send_reminder(activity, timestamp):
-    activity_type = activity['activity_type']
+    activity_type = activity['activity_type'].decode('utf-8')
     caregiver_message_format = "Jim has %s at %s"
 
     if activity_type == 'personal':
@@ -60,7 +60,7 @@ def send_reminder(activity, timestamp):
             "an appointment",
             "%s"
         )
-    elif activity_type == 'excercise':
+    elif activity_type == 'exercise':
         journal_entry_type = 'exercise'
         caregiver_message_format = caregiver_message_format % (
             "to exercise",
@@ -100,19 +100,41 @@ def send_reminder(activity, timestamp):
         description=activity['description']
     )
 
-    # Elder Push Notification
-    payload = {
-        "user_id": 2,
-        "message": elder_message
-    }
-
     with Connection(settings.BROKER_URL) as conn:
         channel = conn.channel()
 
+        # Elder Push Notification
+        payload = {
+            "user_id": 2,
+            "message": elder_message
+        }
         inserter = Producer(
             exchange=Exchange('push_notifications', type='topic'),
             channel=channel,
             routing_key="push_notification"
+        )
+        inserter.publish(json.dumps(payload))
+
+        # reminder_sent event
+        payload = {
+            "category": "user_notifications",
+            "content": {
+                "name": "reminder_send",
+                "value_type": "complex",
+                "value": {
+                    "user": { "id": 2 },
+                    "activity": activity
+                },
+                "annotations": {
+                    "timestamp": timestamp,
+                    "source": "google_calendar"
+                }
+            }
+        }
+        inserter = Producer(
+            exchange=Exchange('events', type='topic'),
+            channel=channel,
+            routing_key="event.user_notifications"
         )
         inserter.publish(json.dumps(payload))
 
