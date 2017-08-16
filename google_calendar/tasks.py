@@ -139,6 +139,6 @@ def send_reminder(activity, timestamp):
         inserter.publish(json.dumps(payload))
 
     logger.debug(
-        "[google_calendar] Succesfully sent reminder for activity (%s).",
+        "[google_calendar] Successfully sent reminder for activity (%s).",
         str(activity)
     )
