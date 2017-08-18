@@ -108,6 +108,7 @@ class MeasurementResource(ModelResource):
             "device": ALL_WITH_RELATIONS,
             "timestamp": ALL,
             "value_info": ALL,
+            "gateway_id": ALL
         }
 
     def dehydrate_timestamp(self, bundle):

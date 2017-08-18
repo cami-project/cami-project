@@ -1,6 +1,8 @@
 import pika
 
-parameters = pika.URLParameters('amqp://cami:cami@127.0.0.1:5673/cami')
+HOST_IP = "141.85.241.224"
+
+parameters = pika.URLParameters('amqp://cami:cami@' + HOST_IP + ':5673/cami')
 connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
 
