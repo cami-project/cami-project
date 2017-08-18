@@ -142,6 +142,10 @@ definitions:
         description: "A field representing the JSON encoding of the health parameters recorded by this measurement."
         example: "{'systolic': 115, 'diastolic': 70}"
 
+      gateway_id:
+        type: "string"
+        description: "A field containing a unique identifier (encoded as a string) of the Eclexys SNG Gateway instance which is used to relay the measurement."
+
   Event:
     type: "object"
     properties:
