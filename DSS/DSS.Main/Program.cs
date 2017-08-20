@@ -6,21 +6,30 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
+using log4net;
+using log4net.Config;
+using System.Xml;
 
 namespace DSS.Main
 {
     
     class Program
     {
-        
-        public static void Main(string[] args)
+
+        private static readonly ILog log = LogManager.GetLogger(typeof(Program));
+
+		public static void Main(string[] args)
         {
             Console.WriteLine("DSS invoked...");
 			Console.WriteLine("Connecting to the msg broker...");
 
-            //var rmqAPI = new RmqAPI("http://141.85.241.224:8010/api/v1/insertion/");
-            //rmqAPI.PushEvent(new Event("Fall").ToJson());
-            //rmqAPI.PushNotification("{  user_id: 2,  message: \"Your blood pressure is way too low!\"}");
+            XmlConfigurator.Configure(new System.IO.FileInfo("log4net.config.xml"));
+
+            log.Info("hello from docker");
+
+			//var rmqAPI = new RmqAPI("http://141.85.241.224:8010/api/v1/insertion/");
+			//rmqAPI.PushEvent(new Event("Fall").ToJson());
+			//rmqAPI.PushNotification("{  user_id: 2,  message: \"Your blood pressure is way too low!\"}");
 
 			var router = new Router<Event>();
             //var url = "amqp://cami:cami@141.85.241.224:5673/cami";
