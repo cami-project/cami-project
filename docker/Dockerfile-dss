@@ -1,0 +1,9 @@
+
+FROM mono
+COPY DSS /app
+WORKDIR /app
+
+RUN nuget restore -NonInteractive
+RUN msbuild DSS.sln
+
+CMD ["mono", "DSS.Main/bin/Debug/DSS.Main.exe"]

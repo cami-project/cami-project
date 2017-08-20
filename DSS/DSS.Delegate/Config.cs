@@ -16,9 +16,15 @@ namespace DSS.Delegate
         public Config(string path, Router<Event> router ,IRouterHandler<Event> [] handlers)
         {
             path = path.Contains(".json") ? path : path + ".json";
-            var config = JsonConvert.DeserializeObject<Details>(File.ReadAllText(path));
+			//var config = JsonConvert.DeserializeObject<Details>(File.ReadAllText(path));
 
-            Url = config.url + ":" + config.port;
+
+
+			var config = JsonConvert.DeserializeObject<Details>("{\n  \"url\": \"www.example.url.com\",\n  \"port\": \"12123\",\n  \"channels\": [\n    {\n      \"name\": \"CONSOLE\",\n      \"events\": [ \"Fall\" ]\n    },\n\n    {\n      \"name\": \"FUZZY-INFERENCE\",\n      \"events\": [ \"Fall\" ]\n    },\n\n  ]\n}\n");
+
+
+
+			Url = config.url + ":" + config.port;
             Channels = config.channels.ToList().Select(x => x.name).ToArray();
             ChannelsEvents = config.channels.ToDictionary(x => x.name, x => x.events);
 
