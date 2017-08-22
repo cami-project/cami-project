@@ -94,7 +94,7 @@ class Device(models.Model):
     device_type = models.CharField(max_length=32, choices=DEVICE_TYPES, default="weight")
     manufacturer = models.CharField(max_length=128, null=True, blank=True)
     model = models.CharField(max_length=64, null=True, blank=True)
-    serial_number = models.CharField(max_length=64)
+    serial_number = models.CharField(max_length=64, null = True, blank = True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
