@@ -34,8 +34,10 @@ class UserResource(ModelResource):
 class DeviceResource(ModelResource):
     class Meta:
         queryset = Device.objects.all()
-        allowed_methods = ['get']
+        allowed_methods = ['get', 'post', 'put']
         collection_name = "devices"
+        always_return_data = True
+        authorization = Authorization()
 
         filtering = {
             'id' : ('exact', ),
