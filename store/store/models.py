@@ -91,6 +91,8 @@ class Device(models.Model):
         ("pedometer", "Step Counter")
     )
 
+    device_identifier = models.CharField(max_length=64, default=uuid.uuid4, unique=True)
+
     device_type = models.CharField(max_length=32, choices=DEVICE_TYPES, default="weight")
     manufacturer = models.CharField(max_length=128, null=True, blank=True)
     model = models.CharField(max_length=64, null=True, blank=True)
@@ -104,7 +106,15 @@ class Device(models.Model):
     used_by = models.ManyToManyField(User, related_name="used_devices", through="DeviceUsage")
 
     def __str__(self):
-        return "Device of type " + self.device_type + ": " + self.manufacturer + " " + self.model
+        _str = "Device of type " + self.device_type + " with id: " + self.device_identifier
+
+        if self.manufacturer:
+            _str += " , " + self.manufacturer
+
+        if self.model:
+            _str += " , " + self.model
+        return _str
+
 
     __unicode__ = __str__
 
