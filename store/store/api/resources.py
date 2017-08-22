@@ -43,7 +43,9 @@ class DeviceResource(ModelResource):
             'id' : ('exact', ),
             'model': ('exact',),
             'manufacturer': ('exact',),
-            'serial_number': ('exact',)
+            'serial_number': ('exact',),
+            'device_identifier': ('exact',),
+            'device_type': ('exact',)
         }
 
 
