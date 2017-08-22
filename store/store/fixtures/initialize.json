@@ -96,6 +96,7 @@
     "pk": 1,
     "fields": {
         "device_type": "weight",
+        "device_identifier": "36285708-92a0-468d-82a3-eb652e6ec28c",
         "manufacturer": "Withings",
         "model": "WS 30",
         "serial_number": "00:24:e4:24:6f:30",
@@ -109,6 +110,7 @@
     "pk": 2,
     "fields": {
         "device_type": "pulse",
+        "device_identifier": "38ef8c04-9068-4a86-adca-1e606c942931",
         "manufacturer": "LG",
         "model": "Urbane",
         "serial_number": "1234",
@@ -122,6 +124,7 @@
     "pk": 3,
     "fields": {
         "device_type": "weight",
+        "device_identifier": "45377ec9-be4b-4a6f-af3d-5c28f7732115",
         "manufacturer": "AND Medical",
         "model": "UC-352BLE",
         "serial_number": "B4994CFFFE5AB7F9",
@@ -135,6 +138,7 @@
     "pk": 4,
     "fields": {
         "device_type": "blood_pressure",
+        "device_identifier": "13b3232c-b0c6-42c3-b451-ff09c864777d",
         "manufacturer": "AND Medical",
         "model": "UA-651BLE",
         "serial_number": "5C313EFFFE020E12",

@@ -6,9 +6,9 @@ from django.db import migrations, models
 import uuid
 
 def gen_uuid(apps, schema_editor):
-    MyModel = apps.get_model('store', 'Device')
-    for row in MyModel.objects.all():
-        row.uuid = uuid.uuid4()
+    DeviceModel = apps.get_model('store', 'Device')
+    for row in DeviceModel.objects.all():
+        row.device_identifier = uuid.uuid4()
         row.save()
 
 class Migration(migrations.Migration):
