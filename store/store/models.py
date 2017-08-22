@@ -266,6 +266,7 @@ class JournalEntry(models.Model):
     message = models.CharField(max_length=512)
     description = models.CharField(max_length=1024)
     reference_id = models.IntegerField(null=True, blank=True)
+    acknowledged = models.NullBooleanField()
 
 
 # ================ PushNotificationDevice ================
