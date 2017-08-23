@@ -119,7 +119,7 @@ def send_reminder(activity, timestamp):
         payload = {
             "category": "user_notifications",
             "content": {
-                "name": "reminder_send",
+                "name": "reminder_sent",
                 "value_type": "complex",
                 "value": {
                     "user": { "id": 2 },
