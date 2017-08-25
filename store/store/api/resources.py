@@ -17,8 +17,7 @@ from django.conf.urls import url
 from django.core.urlresolvers import resolve, get_script_prefix, Resolver404
 from django.contrib.auth.models import User
 
-from store.models import EndUserProfile, Device, DeviceUsage, \
-    Measurement, Activity, JournalEntry, PushNotificationDevice
+from store.models import *
 
 
 class UserResource(ModelResource):
@@ -88,6 +87,21 @@ class DeviceUsageResource(ModelResource):
         orm_filters.update(access_info_filters)
 
         return orm_filters
+
+
+class GatewayResource(ModelResource):
+    user = fields.ForeignKey(UserResource, 'user')
+
+    class Meta:
+        queryset = Gateway.objects.all()
+        allowed_methods = ['get', 'post', 'put']
+        always_return_data = True
+        authorization = Authorization()
+
+        filtering = {
+            'user' : ALL_WITH_RELATIONS,
+            'device_id': ALL
+        }
 
 
 class MeasurementResource(ModelResource):
