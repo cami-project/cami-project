@@ -9,13 +9,13 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Sound from 'react-native-sound';
+import Color from 'color';
 import icons from 'Cami/src/icons-fa';
 import variables from 'Cami/src/modules/variables/ElderGlobalVariables';
+import ElderButton from './components/ElderButton';
 
-var Color = require("color");
-
-var Sound = require('react-native-sound');
-var tapButtonSound = new Sound('sounds/knuckle.mp3', Sound.MAIN_BUNDLE, (error) => {
+const tapButtonSound = new Sound('sounds/knuckle.mp3', Sound.MAIN_BUNDLE, (error) => {
   if (error) {
     console.log('failed to load the sound', error);
   }
