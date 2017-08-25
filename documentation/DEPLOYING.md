@@ -1,12 +1,12 @@
 # Deploying CAMI Cloud
-CAMI Cloud infrastructure is made of Docker Containers that are run from images. The images that are used for production deployment are stored and pulled from [Docker Hub](https://hub.docker.com/r/vitaminsoftware/cami-project/). Whenever the `master` branch of the project is modified, the images are automatically rebuilt by Docker Hub.
+CAMI Cloud infrastructure is made of Docker Containers that are run from images. The images that are used for production deployment are stored and pulled from [Docker Cloud](https://cloud.docker.com/app/vitaminsoftware/repository/docker/vitaminsoftware/cami-project). Whenever the `master` branch of the project is modified, the images are automatically rebuilt by Docker Cloud.
 
 Let's assume that you just pushed some commits in the `master` branch. The steps that must be followed afterwards are described below.
 
 ## Simple procedure
 
 ### 1. Check the build status of the Docker Images
- * Go to [Docker Hub](https://hub.docker.com/r/vitaminsoftware/cami-project/) to see the build status of the project's Docker Images
+ * Go to [Docker Cloud](https://cloud.docker.com/app/vitaminsoftware/repository/docker/vitaminsoftware/cami-project/builds) (`Builds` tab) to see the build status of the project's Docker Images
 * Wait for them to be successfully built
 
 ### 2. Upgrade the containers from Rancher Web UI
@@ -19,13 +19,15 @@ Let's assume that you just pushed some commits in the `master` branch. The steps
 
 ## Advanced actions
 ### Adding a new container image in Docker Hub
-* Log in to [Docker Hub](https://hub.docker.com/) with your vitamin email
-* Go to [CAMI on Docker Hub](https://hub.docker.com/r/vitaminsoftware/cami-project/)
-* Go to **Build Settings** tab
+* Log in to [Docker Cloud](https://cloud.docker.com/) with your vitamin email
+* Go to [CAMI on Docker Cloud](https://cloud.docker.com/app/vitaminsoftware/repository/docker/vitaminsoftware/cami-project)
+* Go to **Builds** tab
+* Click on `Configure Automated Builds`
+* Go to `BUILD RULES` section
 * Add a new docker image entry
 * Set the `Dockerfile location` to the container's docker file path from the project's repo
-* Set the `Dockertag name` to the container's name used in the dockerfile's name
-* Click **Save Changes**
+* Set the `Docker Tag` to the container's name used in the dockerfile's name
+* Click **Save** or **Save and Build**
 
 ### Adding a new container in Rancher
 * Go to [CAMI's Rancher Web UI](http://138.68.92.229:8080/) and select the **CAMI** stack
