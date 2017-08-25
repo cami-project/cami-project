@@ -47,6 +47,64 @@ const HomepageView = React.createClass({
     }
   },
 
+  defaultAction() {
+    tapButtonSound.setVolume(1.0).play();
+  },
+
+  callCaregiver() {
+    tapButtonSound.setVolume(1.0).play();
+  },
+
+  acknowledgeEntry() {
+    tapButtonSound.setVolume(1.0).play();
+  },
+
+  matchButtons(type) {
+    console.log('[Homepage Elder] - Switching buttons according to ' + type + ' type');
+
+    switch (type) {
+      case 'exercise':
+      case 'medication':
+      case 'appointment':
+        return (
+          <View style={styles.buttonContainer}>
+            <ElderButton
+              type="default"
+              action={this.acknowledgeEntry}
+              severity={this.matchSeverity()}
+              text="OK"
+            />
+
+            <ElderButton
+              type="default"
+              action={this.defaultAction}
+              severity={this.matchSeverity()}
+              text="Cancel"
+            />
+          </View>
+        );
+      default:
+        return (
+          <View style={styles.buttonContainer}>
+            <ElderButton
+              type="panic"
+              action={this.callCaregiver}
+              severity={this.matchSeverity()}
+              text="Help"
+            />
+
+            <ElderButton
+              type="default"
+              action={this.defaultAction}
+              severity={this.matchSeverity()}
+              text="OK"
+            />
+          </View>
+        );
+    }
+
+  },
+
   render() {
     return (
       <View style={styles.container}>
@@ -104,41 +162,11 @@ const HomepageView = React.createClass({
               Hey Jim
             </Text>
             <Text style={[styles.text, {paddingTop: 20}]}>
-              {this.props.notification.get("message")}
+              {this.props.notification.get('message')}
             </Text>
           </View>
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[
-                styles.button,
-                styles.buttonPanic,
-                {
-                  shadowColor: Color(variables.colors.status[this.matchSeverity()]).darken(.7).hexString()
-                }
-              ]}
-              onPress={() => tapButtonSound.setVolume(1.0).play()}
-            >
-              <Text style={[styles.buttonText, {color: 'white'}]}>
-                Help
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.button,
-                styles.buttonConfirm,
-                {
-                  shadowColor: Color(variables.colors.status[this.matchSeverity()]).darken(.7).hexString()
-                }
-              ]}
-              onPress={() => tapButtonSound.setVolume(1.0).play()}
-            >
-              <Text style={[styles.buttonText, {color: 'green'}]}>
-                OK
-              </Text>
-            </TouchableOpacity>
-          </View>
+          {this.matchButtons(this.props.notification.get('type'))}
         </View>
       </View>
     );
@@ -223,27 +251,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: variables.dimensions.width*.1,
     left: variables.dimensions.width*.1
-  },
-  button: {
-    ...buttonCircle,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    shadowRadius: 40,
-    shadowOffset: {width: 0, height: 0},
-    shadowOpacity: 0.4,
-  },
-  buttonText: {
-    backgroundColor: 'transparent',
-    textAlign: 'center',
-    alignSelf: 'center',
-    fontSize: 22,
-    fontWeight: 'bold'
-  },
-  buttonConfirm: {
-    backgroundColor: 'white',
-  },
-  buttonPanic: {
-    backgroundColor: variables.colors.panic
   }
 });
 
