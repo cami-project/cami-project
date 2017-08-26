@@ -73,30 +73,47 @@ const HomepageView = React.createClass({
   },
 
   matchButtons(type) {
-    console.log('[Homepage Elder] - Switching buttons according to ' + type + ' type');
-
     switch (type) {
       case 'exercise':
       case 'medication':
       case 'appointment':
-        return (
-          <View style={styles.buttonContainer}>
-            <ElderButton
-              type="default"
-              action={this.acknowledgeEntry}
-              severity={this.matchSeverity()}
-              text="OK"
-            />
+        if (!this.props.acknowledged) {
+          console.log('[HomepageView] - Using button layout for ' + type + ' type Journal Entry, that hasn\'t been acknowledged.');
 
-            <ElderButton
-              type="default"
-              action={this.defaultAction}
-              severity={this.matchSeverity()}
-              text="Cancel"
-            />
-          </View>
-        );
+          return (
+            <View style={styles.buttonContainer}>
+              <ElderButton
+                type="default"
+                action={this.acknowledgeReminder}
+                severity={this.matchSeverity()}
+                text="OK"
+              />
+
+              <ElderButton
+                type="default"
+                action={this.defaultAction}
+                severity={this.matchSeverity()}
+                text="Cancel"
+              />
+            </View>
+          );
+        } else {
+            console.log('[HomepageView] - Using button layout for ' + type + ' type Journal Entry, that has been acknowledged.');
+
+            return (
+            <View style={styles.buttonContainer}>
+              <ElderButton
+                type="panic"
+                action={this.callCaregiver}
+                severity={this.matchSeverity()}
+                text="Help"
+              />
+            </View>
+          );
+        }
       default:
+        console.log('[HomepageView] - Using default button layout for ' + type + ' type Journal Entry.');
+
         return (
           <View style={styles.buttonContainer}>
             <ElderButton
