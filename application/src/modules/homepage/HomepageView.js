@@ -27,6 +27,7 @@ const HomepageView = React.createClass({
   propTypes: {
     notification: PropTypes.instanceOf(Map).isRequired,
     username: PropTypes.string.isRequired,
+    acknowledged: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired
   },
 

@@ -5,6 +5,7 @@ import HomepageView from './HomepageView';
 export default connect(
   state => ({
     notification: state.getIn(['homepage', 'notification']),
-    username: state.getIn(['auth', 'currentUser', 'name'])
+    username: state.getIn(['auth', 'currentUser', 'name']),
+    acknowledged: state.getIn(['homepage', 'acknowledged'])
   })
 )(HomepageView);
