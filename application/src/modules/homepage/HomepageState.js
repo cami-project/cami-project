@@ -1,18 +1,23 @@
 import Promise from 'bluebird';
-import {fromJS} from 'immutable';
+import {fromJS, Map} from 'immutable';
 import {loop, Effects} from 'redux-loop';
 import store from '../../redux/store';
+import moment from 'moment';
 import * as env from '../../../env';
-// import store from '../../redux/store';
 
-var json = require('../../../api-examples/homepage/severity.low.json');
+var json = require('../../../api-examples/homepage/severity.medium.json');
 
 // Initial state
-const initialState = fromJS(json);
+const initialState = Map({
+  'notification': fromJS(json).get('notification'),
+  'acknowledged': false
+});
+
 
 // Actions
 const NOTIFICATION_RESPONSE = 'HomepageState/NOTIFICATION_RESPONSE';
 const TRIGGER_REQUEST = 'HomepageState/TRIGGER_REQUEST';
+const ACK_RESPONSE = 'HomepageState/ACK_RESPONSE';
 
 
 // Action creators
@@ -22,6 +27,13 @@ export async function requestNotification() {
     type: NOTIFICATION_RESPONSE,
     payload: await fetchNotification()
   };
+}
+
+export async function ackReminder(ack, reference_id) {
+  return {
+    type: ACK_RESPONSE,
+    payload: await postReminderAcknowledgement(ack, reference_id)
+  }
 }
 
 async function fetchNotification() {
@@ -52,8 +64,47 @@ async function fetchNotification() {
     });
 }
 
-// Simulates a periodic timer. This is for experimental purposes only, a proper timer should be used instead in
-// production.
+async function postReminderAcknowledgement(ack, reference_id) {
+  var user_id = store.getState().get('auth').get('currentUser').get('userMetadata').get('user_id');
+  var timestamp = moment().format('X');
+
+  return fetch(env.INSERTION_ENDPOINT + 'events/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "category": "user_notifications",
+        "content": {
+          "name": "reminder_acknowledged",
+          "value_type": "complex",
+          "value": {
+            "ack": "ok",
+            "user": { "id": user_id },
+            "activity": { "id": reference_id }
+          },
+          "annotations": {
+            "timestamp": timestamp,
+            "source": "ios_app"
+          }
+        }
+      })
+    }).then((response) => {
+      if (response.status >= 200 && response.status < 300) {
+        console.log('[HomepageState] - Reminder acknowledged successfully: ' + JSON.stringify(response));
+        return response;
+      } else {
+        let error = new Error(response.statusText);
+        error.response = response;
+        throw error;
+      }
+    }).catch((error) => {
+      console.log('[HomepageState] - There was a problem with acknowledging reminder: ' + JSON.stringify(error));
+    });
+}
+
+// Simulates a periodic timer. This is for experimental purposes only, a proper
+// timer should be used instead in production.
 async function triggerFetchNotification() {
   return Promise.delay(env.POLL_INTERVAL_MILLIS).then(() => ({
     type: TRIGGER_REQUEST
@@ -69,15 +120,15 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
         state,
         Effects.promise(requestNotification)
       );
-
     case NOTIFICATION_RESPONSE:
       // We got a notification update so let's update the state and then restart the timer.
       return loop(
         // TODO(@iprunache) stop triggering a render for every poll when the payload does not change; happens with immutable too.
-        state.set('notification', fromJS(action.payload)),
+        state.setIn(['notification'], fromJS(action.payload)),
         Effects.promise(triggerFetchNotification)
       );
-
+    case ACK_RESPONSE:
+      return state.setIn(['acknowledged'], true);
     default:
       return state;
   }

@@ -9,13 +9,17 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Sound from 'react-native-sound';
+import Color from 'color';
 import icons from 'Cami/src/icons-fa';
 import variables from 'Cami/src/modules/variables/ElderGlobalVariables';
+import ElderButton from './components/ElderButton';
 
-var Color = require("color");
+import * as HomepageStateActions from './HomepageState';
+import {redirectToLoginPage} from '../navigation/NavigationState';
+import {logout} from '../auth/AuthState';
 
-var Sound = require('react-native-sound');
-var tapButtonSound = new Sound('sounds/knuckle.mp3', Sound.MAIN_BUNDLE, (error) => {
+const tapButtonSound = new Sound('sounds/knuckle.mp3', Sound.MAIN_BUNDLE, (error) => {
   if (error) {
     console.log('failed to load the sound', error);
   }
@@ -25,7 +29,13 @@ const HomepageView = React.createClass({
   propTypes: {
     notification: PropTypes.instanceOf(Map).isRequired,
     username: PropTypes.string.isRequired,
-    logout: PropTypes.func.isRequired
+    acknowledged: PropTypes.bool.isRequired,
+    dispatch: PropTypes.func.isRequired
+  },
+
+  logoutElder() {
+    this.props.dispatch(logout());
+    this.props.dispatch(redirectToLoginPage());
   },
 
   // some Journal entries don't come w/ severity information
@@ -45,6 +55,84 @@ const HomepageView = React.createClass({
         default: return 'low';
       }
     }
+  },
+
+  defaultAction() {
+    tapButtonSound.setVolume(1.0).play();
+  },
+
+  callCaregiver() {
+    tapButtonSound.setVolume(1.0).play();
+  },
+
+  acknowledgeReminder() {
+    tapButtonSound.setVolume(1.0).play();
+
+    var reference_id = this.props.notification.get('reference_id');
+    this.props.dispatch(HomepageStateActions.ackReminder('ok', reference_id));
+  },
+
+  matchButtons(type) {
+    switch (type) {
+      case 'exercise':
+      case 'medication':
+      case 'appointment':
+        if (!this.props.acknowledged) {
+          console.log('[HomepageView] - Using button layout for ' + type + ' type Journal Entry, that hasn\'t been acknowledged.');
+
+          return (
+            <View style={styles.buttonContainer}>
+              <ElderButton
+                type="default"
+                action={this.acknowledgeReminder}
+                severity={this.matchSeverity()}
+                text="OK"
+              />
+
+              <ElderButton
+                type="default"
+                action={this.defaultAction}
+                severity={this.matchSeverity()}
+                text="Cancel"
+              />
+            </View>
+          );
+        } else {
+            console.log('[HomepageView] - Using button layout for ' + type + ' type Journal Entry, that has been acknowledged.');
+
+            return (
+            <View style={styles.buttonContainer}>
+              <ElderButton
+                type="panic"
+                action={this.callCaregiver}
+                severity={this.matchSeverity()}
+                text="Help"
+              />
+            </View>
+          );
+        }
+      default:
+        console.log('[HomepageView] - Using default button layout for ' + type + ' type Journal Entry.');
+
+        return (
+          <View style={styles.buttonContainer}>
+            <ElderButton
+              type="panic"
+              action={this.callCaregiver}
+              severity={this.matchSeverity()}
+              text="Help"
+            />
+
+            <ElderButton
+              type="default"
+              action={this.defaultAction}
+              severity={this.matchSeverity()}
+              text="OK"
+            />
+          </View>
+        );
+    }
+
   },
 
   render() {
@@ -71,7 +159,7 @@ const HomepageView = React.createClass({
           <View style={styles.logoutButtonContainer}>
             <TouchableOpacity
               style={styles.logoutButton}
-              onPress={() => tapButtonSound.setVolume(1.0).play() && this.props.logout()}
+              onPress={() => tapButtonSound.setVolume(1.0).play() && this.logoutElder()}
             >
               <Icon
                 name={icons.logout}
@@ -104,41 +192,11 @@ const HomepageView = React.createClass({
               Hey Jim
             </Text>
             <Text style={[styles.text, {paddingTop: 20}]}>
-              {this.props.notification.get("message")}
+              {this.props.notification.get('message')}
             </Text>
           </View>
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[
-                styles.button,
-                styles.buttonPanic,
-                {
-                  shadowColor: Color(variables.colors.status[this.matchSeverity()]).darken(.7).hexString()
-                }
-              ]}
-              onPress={() => tapButtonSound.setVolume(1.0).play()}
-            >
-              <Text style={[styles.buttonText, {color: 'white'}]}>
-                Help
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.button,
-                styles.buttonConfirm,
-                {
-                  shadowColor: Color(variables.colors.status[this.matchSeverity()]).darken(.7).hexString()
-                }
-              ]}
-              onPress={() => tapButtonSound.setVolume(1.0).play()}
-            >
-              <Text style={[styles.buttonText, {color: 'green'}]}>
-                OK
-              </Text>
-            </TouchableOpacity>
-          </View>
+          {this.matchButtons(this.props.notification.get('type'))}
         </View>
       </View>
     );
@@ -223,27 +281,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: variables.dimensions.width*.1,
     left: variables.dimensions.width*.1
-  },
-  button: {
-    ...buttonCircle,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    shadowRadius: 40,
-    shadowOffset: {width: 0, height: 0},
-    shadowOpacity: 0.4,
-  },
-  buttonText: {
-    backgroundColor: 'transparent',
-    textAlign: 'center',
-    alignSelf: 'center',
-    fontSize: 22,
-    fontWeight: 'bold'
-  },
-  buttonConfirm: {
-    backgroundColor: 'white',
-  },
-  buttonPanic: {
-    backgroundColor: variables.colors.panic
   }
 });
 
