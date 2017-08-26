@@ -1,7 +1,13 @@
 {
   "notification": {
-    "type": "weight",
-    "severity": "medium",
-    "message": "Your weight loss plan is in danger"
+     "description":"Time for your medicine: Paracetamol\nRed box on the table.",
+     "id":87,
+     "message":"Jim has to take his medicine at 08:00",
+     "reference_id":null,
+     "resource_uri":"/api/v1/journal_entries/87/",
+     "severity":"none",
+     "timestamp":"1503732600",
+     "type":"medication",
+     "user":"/api/v1/user/3/"
   }
 }

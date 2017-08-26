@@ -5,7 +5,7 @@ import store from '../../redux/store';
 import * as env from '../../../env';
 // import store from '../../redux/store';
 
-var json = require('../../../api-examples/homepage/severity.low.json');
+var json = require('../../../api-examples/homepage/severity.medium.json');
 
 // Initial state
 const initialState = fromJS(json);
