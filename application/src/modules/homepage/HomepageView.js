@@ -15,6 +15,8 @@ import icons from 'Cami/src/icons-fa';
 import variables from 'Cami/src/modules/variables/ElderGlobalVariables';
 import ElderButton from './components/ElderButton';
 
+import {redirectToLoginPage} from '../navigation/NavigationState';
+import {logout} from '../auth/AuthState';
 const tapButtonSound = new Sound('sounds/knuckle.mp3', Sound.MAIN_BUNDLE, (error) => {
   if (error) {
     console.log('failed to load the sound', error);
@@ -25,7 +27,12 @@ const HomepageView = React.createClass({
   propTypes: {
     notification: PropTypes.instanceOf(Map).isRequired,
     username: PropTypes.string.isRequired,
-    logout: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired
+  },
+
+  logoutElder() {
+    this.props.dispatch(logout());
+    this.props.dispatch(redirectToLoginPage());
   },
 
   // some Journal entries don't come w/ severity information
@@ -129,7 +136,7 @@ const HomepageView = React.createClass({
           <View style={styles.logoutButtonContainer}>
             <TouchableOpacity
               style={styles.logoutButton}
-              onPress={() => tapButtonSound.setVolume(1.0).play() && this.props.logout()}
+              onPress={() => tapButtonSound.setVolume(1.0).play() && this.logoutElder()}
             >
               <Icon
                 name={icons.logout}
