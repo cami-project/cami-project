@@ -3,12 +3,13 @@
     <facility value="Local6" />
     <identity value="%date{yyyy-MM-ddTHH:mm:ss.ffffffzzz} %P{log4net:HostName} DSS" />
     <layout type="log4net.Layout.PatternLayout" value="%level - %message%newline" />
-    <remoteAddress value="logs5.papertrailapp.com" />
-    <remotePort value="34095" />
+    <remoteAddress value="logs3.papertrailapp.com" />
+    <remotePort value="43843" />
   </appender>
 
   <root>
     <level value="DEBUG" />
     <appender-ref ref="PapertrailRemoteSyslogAppender" />
   </root>
+
 </log4net>

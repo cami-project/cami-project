@@ -25,9 +25,16 @@ namespace DSS.Main
 
             XmlConfigurator.Configure(new System.IO.FileInfo("log4net.config.xml"));
 
-            log.Info("hello from docker");
 
-			//var rmqAPI = new RmqAPI("http://141.85.241.224:8010/api/v1/insertion/");
+            //cami-insertion
+			//var rmqAPI = new RmqAPI("amqp://cami:cami@cami-insertion:8010");
+			var rmqAPIVS = new RmqAPI("http://cami.vitaminsoftware.com:8008");
+
+			
+            rmqAPIVS.PushMeasuremnt("");
+            rmqAPIVS.PushJournalEntry("");
+            rmqAPIVS.PushNotification("");
+
 			//rmqAPI.PushEvent(new Event("Fall").ToJson());
 			//rmqAPI.PushNotification("{  user_id: 2,  message: \"Your blood pressure is way too low!\"}");
 

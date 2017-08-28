@@ -16,12 +16,12 @@ namespace DSS.FuzzyInference
 		public FuzzyContainer()
         {
 
-			var HR = new LinguisticVariable("HR", 0, 100);
+			var HR = new LinguisticVariable("HR", 0, 200);
 			new List<FuzzySet>()
 			{
-				new FuzzySet("Low", new TrapezoidalFunction(0, 5, 25, 30)),
-				new FuzzySet("Medium", new TrapezoidalFunction(20, 25, 55, 60)),
-				new FuzzySet("High", new TrapezoidalFunction(50, 55, 95 ,100))
+				new FuzzySet("Low", new TrapezoidalFunction(0, 5, 45, 50)),
+				new FuzzySet("Medium", new TrapezoidalFunction(50, 55, 115, 120)),
+				new FuzzySet("High", new TrapezoidalFunction(120, 125, 195 ,200))
 			}.ForEach(x => HR.AddLabel(x));
 
 
