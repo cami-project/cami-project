@@ -179,14 +179,14 @@ services:
     links:
       - cami-rabbitmq
       - cami-store
-    volumes:
-      - DSS:/app
+    #volumes:
+    #  - DSS:/app
 
 volumes:
     .:
       external: True
 
-    DSS:
-      external: True
+    #DSS:
+    #  external: True
 
     
