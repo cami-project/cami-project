@@ -68,6 +68,15 @@ namespace DSS.RMQ
             Console.WriteLine(response.Result);
         }
 
+        public int GetLatestWeightMeasurement() 
+        {
+
+            var response = new HttpClient().GetAsync("http://cami.vitaminsoftware.com:8008/api/v1/measurement?limit=1&order_by=-timestamp");
+            Console.WriteLine(response.Result);
+
+            return 0;
+        }
+
 
         public void PushJournalEntry(string json) 
         {
