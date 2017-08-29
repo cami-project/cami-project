@@ -25,17 +25,20 @@ namespace DSS.Main
 
             XmlConfigurator.Configure(new System.IO.FileInfo("log4net.config.xml"));
 
-
             log.Info("THIS IS A MSG FROM DSS DOCKER");
+            log.Debug("THIS IS A MSG FROM DSS DOCKER");
+
+
 
             //cami-insertion
 			//var rmqAPI = new RmqAPI("amqp://cami:cami@cami-insertion:8010");
-			//var rmqAPIVS = new RmqAPI("http://cami.vitaminsoftware.com:8008");
+			
+            var rmqAPIVS = new RmqAPI("http://cami.vitaminsoftware.com:8008");
 
 			
             //rmqAPIVS.PushMeasuremnt("");
             //rmqAPIVS.PushJournalEntry("");
-            //rmqAPIVS.PushNotification("");
+            rmqAPIVS.PushNotification("");
 
 			//rmqAPI.PushEvent(new Event("Fall").ToJson());
 			//rmqAPI.PushNotification("{  user_id: 2,  message: \"Your blood pressure is way too low!\"}");
@@ -66,11 +69,8 @@ namespace DSS.Main
 			};
 
 			var config = new Config("default.config", router, handlers);
-            var run = true;
 
-            while(run)
             {
-                Console.BackgroundColor = ConsoleColor.Yellow;
 				Console.WriteLine("=========================");
 				Console.WriteLine("[3] - HIGH HEART_RATE");
                 Console.WriteLine("[4] - EXERCISE_MODE_ON");
@@ -78,21 +78,8 @@ namespace DSS.Main
 				Console.WriteLine("[6] - HIGH HEART_RATE every 10 sec");
 				Console.WriteLine("ctrl + c - Exit");
 				Console.WriteLine("=========================");
-                Console.BackgroundColor = ConsoleColor.White;
 
 				var num = Console.ReadLine();
-
-                if (num == "1")
-                   // rmq.Write(new Event("Fall").ToJson());
-
-
-				if (num == "2")
-                {
-                    var input = new string [4];
-                    Console.Write("Category: ");
-                    input[0] = Console.ReadLine();
-                   // rmq.Write(new Event(input[0]).ToJson());
-				}
 
                 if(num == "3")
 					handlers[1].Handle(new Event("Heart-Rate", new Content() { name = "Heart-Rate", val = new Value() { numVal = 90 } }, new Annotations()));
@@ -111,12 +98,15 @@ namespace DSS.Main
                         (handler as FuzzyHandler).Handle(new Event("Heart-Rate", new Content() { name = "Heart-Rate", val = new Value() { numVal = 90 } }, new Annotations()));
 
                     }, handlers[1], 1, 10000);
-				
                 }
-
-				run = num != "7";
 			}
            // rmq.Dispose();
+
+            while (true)
+            {
+
+            }
+
 
         }
 

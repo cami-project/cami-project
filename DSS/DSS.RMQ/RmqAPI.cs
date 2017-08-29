@@ -124,7 +124,8 @@ namespace DSS.RMQ
 
 			HttpContent content = new StringContent(json);
 			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-			var response = new HttpClient().PostAsync("http://cami.vitaminsoftware.com:8008/api/v1/pushnotificationdevice/", content);
+			//var response = new HttpClient().PostAsync("http://cami.vitaminsoftware.com:8008/api/v1/pushnotificationdevice/", content);
+			var response = new HttpClient().PostAsync("http://cami-store:8008/api/v1/pushnotificationdevice/", content);
 
 			Console.WriteLine(response.Result);
             
