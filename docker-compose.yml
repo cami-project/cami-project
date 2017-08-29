@@ -170,13 +170,23 @@ services:
     ports:
       - "8010:8010"
     entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-rabbitmq:5672 -- docker-entrypoint.sh
-  # Cami DSS 
+
+# Runs the CAMI Decision Support Service
   cami-dss:
     build:
       context: .
       dockerfile: ./docker/Dockerfile-dss
+    links:
+      - cami-rabbitmq
+      - cami-store
+    #volumes:
+    #  - DSS:/app
+
 volumes:
     .:
       external: True
+
+    #DSS:
+    #  external: True
 
     
