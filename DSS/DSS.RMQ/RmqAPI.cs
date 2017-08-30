@@ -69,6 +69,8 @@ namespace DSS.RMQ
 
 			Console.WriteLine("PUSH MEASUREMNT:" + response.Result);
         }
+
+
         public bool AreLastNHeartRateCritical(int n, int low, int high){
 
             var urlVS = "http://cami.vitaminsoftware.com:8008/api/v1/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp\n";
@@ -99,15 +101,21 @@ namespace DSS.RMQ
             throw new Exception("Something went wrong on the server side while checking for pulse " + response.Result);
          }
 
-        public int GetLatestWeightMeasurement() 
+        public float GetLatestWeightMeasurement() 
         {
 
-            var response = new HttpClient().GetAsync("http://cami.vitaminsoftware.com:8008/api/v1/measurement?limit=1&order_by=-timestamp");
-            Console.WriteLine(response.Result);
+            var response = new HttpClient().GetAsync("http://cami.vitaminsoftware.com:8008/api/v1/measurement/?limit=1&measurement_type=weight&order_by=-timestamp");
 
-            return 0;
+            if (response.Result.IsSuccessStatusCode)
+            {
+                dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
+
+                return deserialized["measurements"][0]["value_info"]["value"];
+            }
+
+			throw new Exception("Something went wrong on the server side while geting last wight measurement " + response.Result);
+
         }
-
 
         public void PushJournalEntry(string json) 
         {

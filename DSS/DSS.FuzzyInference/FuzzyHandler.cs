@@ -14,6 +14,7 @@ namespace DSS.FuzzyInference
 	    public string Name => "FUZZY-INFERENCE";
 
         private List<string> WhitelistManagebleQueueItems { get; set; }
+        private List<string> IgnoredByFuzzy { get; set; }
         private FuzzyContainer Fuzzy;
 
 
@@ -21,9 +22,13 @@ namespace DSS.FuzzyInference
         {
             Queue = new TimerQueue<Event>();
             RequestManagableQueue = new List<Event>();
+            IgnoredByFuzzy = new List<string>();
 
             WhitelistManagebleQueueItems = new List<string>();
             WhitelistManagebleQueueItems.Add("EXERCISE_MODE_OFF");
+
+            IgnoredByFuzzy.Add("MEASUREMENT");
+
             Fuzzy = new FuzzyContainer();
         }
 
@@ -39,8 +44,10 @@ namespace DSS.FuzzyInference
             }
             else
             {
-                Queue.Push(obj, 1);
+                if(!IgnoredByFuzzy.Contains(obj.category))
+                    Queue.Push(obj, 1);
             }
+
 
             var inferenceResult = Fuzzy.Infer(Queue.ToNormal());
 
@@ -68,7 +75,6 @@ namespace DSS.FuzzyInference
 						inferenceResult[i] = "";
 					}
 
-
                     if (inferenceResult[i] != ""){
 
                         if (!new RmqAPI("").AreLastNHeartRateCritical(3, 50, 80))
@@ -77,10 +83,24 @@ namespace DSS.FuzzyInference
 				}
             }
 
+			if (obj.category == "MEASUREMENT")
+			{
+
+				if (obj.content.name == "weight")
+				{
+					var kg = new RmqAPI("").GetLatestWeightMeasurement();
+
+                    if (Math.Abs(obj.content.val.numVal - kg) > 2){
+                        
+                        if(obj.content.val.numVal > kg)
+							Console.WriteLine("Have lighter meals");
+                        else
+							Console.WriteLine("Have more consistent meals");
+					}
+				}
+			}
+
             inferenceResult.RemoveAll( x=> x == "");
-
-
-            Console.BackgroundColor = ConsoleColor.Red;
 
             if (inferenceResult.Count == 0)
 				Console.WriteLine("NO RESULTS");
@@ -94,7 +114,6 @@ namespace DSS.FuzzyInference
 
 			}
 
-            Console.BackgroundColor = ConsoleColor.White;
 
             //var fakeJSON = "{  user_id: 2,  message: \"Your blood pressure is way too low!\"}";
             //var api = new RmqAPI("http://141.85.241.224:8010/api/v1/insertion");

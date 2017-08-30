@@ -20,8 +20,7 @@ namespace DSS.Main
 
 		public static void Main(string[] args)
         {
-
-
+            
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...");
 			Console.WriteLine("Connecting to the msg broker...");
@@ -38,6 +37,7 @@ namespace DSS.Main
 			
             var rmqAPIVS = new RmqAPI("http://cami.vitaminsoftware.com:8008");
 
+            Console.WriteLine( rmqAPIVS.GetLatestWeightMeasurement());
 
             //rmqAPIVS.AreLastNHeartRateCritical(3, 40, 90);
         //    rmqAPIVS.PushMeasuremnt("");
@@ -80,26 +80,28 @@ namespace DSS.Main
 
    //             if(num == "3")
 				handlers[1].Handle(new Event("Heart-Rate", new Content() { name = "Heart-Rate", val = new Value() { numVal = 60 } }, new Annotations()));
-   //             if(num == "4")
+			    handlers[1].Handle(new Event("MEASUREMENT", new Content() { name = "weight", val = new Value() { numVal = 69 } }, new Annotations()));
+
+			//          if(num == "4")
 			//		handlers[1].Handle(new Event("USER-INPUT", new Content() { name = "EXERCISE_MODE_ON" }, new Annotations()));
-   //             if(num == "5")
-   //             {
+			//             if(num == "5")
+			//             {
 			//		handlers[1].Handle(new Event("IMPACT", new Content() { name = "IMPACT", val = new Value() { numVal = 90 } }, new Annotations()));
 			//		handlers[1].Handle(new Event("ON_GROUND", new Content() { name = "ON_GROUND", val = new Value() { numVal = 1.4f } }, new Annotations()));
 			//		handlers[1].Handle(new Event("TIME_ON_GROUND", new Content() { name = "TIME_ON_GROUND", val = new Value() { numVal = 700 } }, new Annotations()));
 			//	}
-   //             if(num == "6")
-   //             {
-   //                 var timer = new Timer((handler) => {
-   //                     Console.WriteLine("HR invoked...");
-   //                     (handler as FuzzyHandler).Handle(new Event("Heart-Rate", new Content() { name = "Heart-Rate", val = new Value() { numVal = 90 } }, new Annotations()));
+			//             if(num == "6")
+			//             {
+			//                 var timer = new Timer((handler) => {
+			//                     Console.WriteLine("HR invoked...");
+			//                     (handler as FuzzyHandler).Handle(new Event("Heart-Rate", new Content() { name = "Heart-Rate", val = new Value() { numVal = 90 } }, new Annotations()));
 
-   //                 }, handlers[1], 1, 10000);
-   //             }
+			//                 }, handlers[1], 1, 10000);
+			//             }
 			//}
-           // rmq.Dispose();
+			// rmq.Dispose();
 
-            while (true)
+			while (true)
             {
 
             }
