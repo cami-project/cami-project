@@ -63,9 +63,10 @@ namespace DSS.RMQ
      
 			HttpContent content = new StringContent(json);
             content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-            var response = new HttpClient().PostAsync("http://cami.vitaminsoftware.com:8008/api/v1/measurement/", content);
+           // var response = new HttpClient().PostAsync("http://cami.vitaminsoftware.com:8008/api/v1/measurement/", content);
+			var response = new HttpClient().PostAsync("http://cami-store:8008/api/v1/measurement/", content);
 
-            Console.WriteLine(response.Result);
+			Console.WriteLine("PUSH MEASUREMNT:" + response.Result);
         }
 
         public int GetLatestWeightMeasurement() 
@@ -98,9 +99,10 @@ namespace DSS.RMQ
             }";
 			HttpContent content = new StringContent(json);
 			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-            var response = new HttpClient().PostAsync("http://cami.vitaminsoftware.com:8008/api/v1/journal_entries/", content);
+			//var response = new HttpClient().PostAsync("http://cami.vitaminsoftware.com:8008/api/v1/journal_entries/", content);
+			var response = new HttpClient().PostAsync("http://cami-store:8008/api/v1/journal_entries/", content);
 
-			Console.WriteLine(response.Result);
+			Console.WriteLine("JOURNAL ENTRTY: " + response.Result);
 
         }
 
@@ -127,7 +129,7 @@ namespace DSS.RMQ
 			//var response = new HttpClient().PostAsync("http://cami.vitaminsoftware.com:8008/api/v1/pushnotificationdevice/", content);
 			var response = new HttpClient().PostAsync("http://cami-store:8008/api/v1/pushnotificationdevice/", content);
 
-			Console.WriteLine(response.Result);
+			Console.WriteLine("PUSH NOTIFICATION" + response.Result);
             
 
 			

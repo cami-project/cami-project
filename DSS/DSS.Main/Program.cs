@@ -31,7 +31,7 @@ namespace DSS.Main
             log.Info("THIS IS A MSG FROM DSS DOCKER");
             log.Debug("THIS IS A MSG FROM DSS DOCKER");
 
-            Console.WriteLine("This is version 1.0");
+            Console.WriteLine("This is version 1.0.1");
 
             //cami-insertion
 			//var rmqAPI = new RmqAPI("amqp://cami:cami@cami-insertion:8010");
@@ -39,8 +39,8 @@ namespace DSS.Main
             var rmqAPIVS = new RmqAPI("http://cami.vitaminsoftware.com:8008");
 
 			
-            //rmqAPIVS.PushMeasuremnt("");
-            //rmqAPIVS.PushJournalEntry("");
+            rmqAPIVS.PushMeasuremnt("");
+            rmqAPIVS.PushJournalEntry("");
             rmqAPIVS.PushNotification("");
 
 			//rmqAPI.PushEvent(new Event("Fall").ToJson());
