@@ -179,6 +179,8 @@ services:
     links:
       - cami-rabbitmq
       - cami-store
+    depends_on:
+      - "cami-store" 
     #volumes:
     #  - DSS:/app
 
