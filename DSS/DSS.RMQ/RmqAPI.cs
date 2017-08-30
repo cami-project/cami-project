@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace DSS.RMQ
 {
@@ -52,7 +53,7 @@ namespace DSS.RMQ
               ""device"": ""/api/v1/device/2/"",
               ""id"": 105,
               ""measurement_type"": ""pulse"",
-              ""ok"": false,
+              ""ok"": true,
               ""precision"": 100,
               ""resource_uri"": ""/api/v1/measurement/1/"",
               ""timestamp"": 1477413397,
@@ -68,6 +69,35 @@ namespace DSS.RMQ
 
 			Console.WriteLine("PUSH MEASUREMNT:" + response.Result);
         }
+        public bool AreLastNHeartRateCritical(int n, int low, int high){
+
+            var urlVS = "http://cami.vitaminsoftware.com:8008/api/v1/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp\n";
+
+            var response = new HttpClient().GetAsync(urlVS);
+
+            if (response.Result.IsSuccessStatusCode)
+            {
+                dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
+                var isCritical = true;
+
+                if (n == deserialized["measurements"].Count)
+                {
+                    foreach (var item in deserialized["measurements"])
+                    {
+                        if (item["value_info"]["value"] > low && item["value_info"]["value"] < high)
+                        {
+                            isCritical = false;
+						}
+                    }
+                }
+                else 
+                {
+                    throw new Exception("Server response doesn't match requested number of pulse items " + deserialized);
+				}
+                return isCritical;
+            }
+            throw new Exception("Something went wrong on the server side while checking for pulse " + response.Result);
+         }
 
         public int GetLatestWeightMeasurement() 
         {

@@ -38,10 +38,11 @@ namespace DSS.Main
 			
             var rmqAPIVS = new RmqAPI("http://cami.vitaminsoftware.com:8008");
 
-			
-            rmqAPIVS.PushMeasuremnt("");
-            rmqAPIVS.PushJournalEntry("");
-            rmqAPIVS.PushNotification("");
+
+            //rmqAPIVS.AreLastNHeartRateCritical(3, 40, 90);
+        //    rmqAPIVS.PushMeasuremnt("");
+           // rmqAPIVS.PushJournalEntry("");
+           // rmqAPIVS.PushNotification("");
 
 			//rmqAPI.PushEvent(new Event("Fall").ToJson());
 			//rmqAPI.PushNotification("{  user_id: 2,  message: \"Your blood pressure is way too low!\"}");
@@ -49,7 +50,7 @@ namespace DSS.Main
 			var router = new Router<Event>();
 
             var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
-            var rmqConfig = new RmqConfig( url, "cami", "cami", "events");
+           // var rmqConfig = new RmqConfig( url, "cami", "cami", "events");
 
             //var rmq = new Rmq<Event>(url,
             //                  "cami",
@@ -61,7 +62,7 @@ namespace DSS.Main
             //                    router.Handle(JsonConvert.DeserializeObject<Event>(result));
             //                 } );
 
-            var rmqExchange = new RmqExchange(rmqConfig);
+           // var rmqExchange = new RmqExchange(rmqConfig);
 
 
             IRouterHandler<Event>[] handlers =
@@ -78,7 +79,7 @@ namespace DSS.Main
 			//	var num = Console.ReadLine();
 
    //             if(num == "3")
-			//		handlers[1].Handle(new Event("Heart-Rate", new Content() { name = "Heart-Rate", val = new Value() { numVal = 90 } }, new Annotations()));
+				handlers[1].Handle(new Event("Heart-Rate", new Content() { name = "Heart-Rate", val = new Value() { numVal = 60 } }, new Annotations()));
    //             if(num == "4")
 			//		handlers[1].Handle(new Event("USER-INPUT", new Content() { name = "EXERCISE_MODE_ON" }, new Annotations()));
    //             if(num == "5")

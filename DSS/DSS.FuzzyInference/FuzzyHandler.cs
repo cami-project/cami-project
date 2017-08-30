@@ -44,10 +44,17 @@ namespace DSS.FuzzyInference
 
             var inferenceResult = Fuzzy.Infer(Queue.ToNormal());
 
+
             for (int i = 0; i < inferenceResult.Count; i++)
             {
-				if (inferenceResult[i] == "HEART_RATE-High")
+
+                if (inferenceResult[i] == "HEART_RATE-High" || inferenceResult[i] == "HEART_RATE-Low" || inferenceResult[i] == "HEART_RATE-Medium")
 				{
+
+                    if (inferenceResult[i] == "HEART_RATE-Medium")
+						inferenceResult[i] = "";
+
+
 					foreach (var item in RequestManagableQueue)
 					{
 						if (item.content.name == "EXERCISE_MODE_ON")
@@ -60,6 +67,13 @@ namespace DSS.FuzzyInference
 					{
 						inferenceResult[i] = "";
 					}
+
+
+                    if (inferenceResult[i] != ""){
+
+                        if (!new RmqAPI("").AreLastNHeartRateCritical(3, 50, 80))
+                            inferenceResult[i] = "";
+                    }
 				}
             }
 
