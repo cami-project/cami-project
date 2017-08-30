@@ -40,8 +40,6 @@ namespace DSS.RMQ
             this.password = pass;
             this.exchange = exchange;
         }
-
-
     }
 
     public class RmqExchange 
@@ -72,14 +70,11 @@ namespace DSS.RMQ
 
 					//onRecieve(Encoding.UTF8.GetString(ea.Body));
 				};
-				channel.BasicConsume(queue: queueName,
-				noAck: true,
-				consumer: consumer);
-
+                channel.BasicConsume(queue: queueName,
+                noAck: true,
+                                     consumer: consumer);
 			}
-		
         }
-
 
         public RmqExchange(string url, string username, string pass, string exchange, Action<string> onRecieve)
         {
@@ -109,11 +104,7 @@ namespace DSS.RMQ
 				channel.BasicConsume(queue: queueName,
 				noAck: true,
 				consumer: consumer);
-
-
-
-
-			
+            
 		}
     }
 

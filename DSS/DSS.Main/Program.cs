@@ -31,25 +31,25 @@ namespace DSS.Main
             log.Info("THIS IS A MSG FROM DSS DOCKER");
             log.Debug("THIS IS A MSG FROM DSS DOCKER");
 
-            Console.WriteLine("This is version 1.0.1");
+            Console.WriteLine("This is version 1.0.3");
 
             //cami-insertion
 			//var rmqAPI = new RmqAPI("amqp://cami:cami@cami-insertion:8010");
 			
-            var rmqAPIVS = new RmqAPI("http://cami.vitaminsoftware.com:8008");
+            //var rmqAPIVS = new RmqAPI("http://cami.vitaminsoftware.com:8008");
 
 			
-            rmqAPIVS.PushMeasuremnt("");
-            rmqAPIVS.PushJournalEntry("");
-            rmqAPIVS.PushNotification("");
+            //rmqAPIVS.PushMeasuremnt("");
+            //rmqAPIVS.PushJournalEntry("");
+            //rmqAPIVS.PushNotification("");
 
 			//rmqAPI.PushEvent(new Event("Fall").ToJson());
 			//rmqAPI.PushNotification("{  user_id: 2,  message: \"Your blood pressure is way too low!\"}");
 
 			var router = new Router<Event>();
-            //var url = "amqp://cami:cami@141.85.241.224:5673/cami";
 
-            //var rmqConfig = new RmqConfig( url, "cami", "cami", "events");
+            var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
+            var rmqConfig = new RmqConfig( url, "cami", "cami", "events");
 
             //var rmq = new Rmq<Event>(url,
             //                  "cami",
@@ -61,7 +61,7 @@ namespace DSS.Main
             //                    router.Handle(JsonConvert.DeserializeObject<Event>(result));
             //                 } );
 
-            //var rmqExchange = new RmqExchange(rmqConfig);
+            var rmqExchange = new RmqExchange(rmqConfig);
 
 
             IRouterHandler<Event>[] handlers =
