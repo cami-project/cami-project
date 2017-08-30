@@ -36,12 +36,12 @@ namespace DSS.Main
             //cami-insertion
 			//var rmqAPI = new RmqAPI("amqp://cami:cami@cami-insertion:8010");
 			
-            //var rmqAPIVS = new RmqAPI("http://cami.vitaminsoftware.com:8008");
+            var rmqAPIVS = new RmqAPI("http://cami.vitaminsoftware.com:8008");
 
 			
-            //rmqAPIVS.PushMeasuremnt("");
-            //rmqAPIVS.PushJournalEntry("");
-            //rmqAPIVS.PushNotification("");
+            rmqAPIVS.PushMeasuremnt("");
+            rmqAPIVS.PushJournalEntry("");
+            rmqAPIVS.PushNotification("");
 
 			//rmqAPI.PushEvent(new Event("Fall").ToJson());
 			//rmqAPI.PushNotification("{  user_id: 2,  message: \"Your blood pressure is way too low!\"}");

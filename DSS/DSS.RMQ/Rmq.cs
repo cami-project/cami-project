@@ -59,7 +59,7 @@ namespace DSS.RMQ
 
 				channel.QueueBind(queue: queueName,
 								  exchange: config.exchange,
-								  routingKey: "event.*");
+								  routingKey: "measurement.*");
 
 				var consumer = new EventingBasicConsumer(channel);
 
