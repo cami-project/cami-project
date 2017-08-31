@@ -92,10 +92,9 @@ namespace DSS.FuzzyInference
 
                     if (Math.Abs(obj.content.val.numVal - kg) > 2){
                         
-                        if(obj.content.val.numVal > kg)
-							Console.WriteLine("Have lighter meals");
-                        else
-							Console.WriteLine("Have more consistent meals");
+                        var msg = obj.content.val.numVal > kg ? "Have lighter meals" : "Have more consistent meals";
+                        inferenceResult.Add("Abnormal change in weight noticed - " +msg );
+                        new RmqAPI("").PushJournalEntry(msg, "Abnormal change in weight noticed");
 					}
 				}
 			}

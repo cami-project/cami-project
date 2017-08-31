@@ -24,7 +24,17 @@ namespace DSS.RMQ
 		public string user { get; set; }
 		public ValueInfo value_info { get; set; }
 	}
-
+	public class JournalEntry
+	{
+		public string user { get; set; }
+		public string severity { get; set; }
+		public string timestamp { get; set; }
+		public string description { get; set; }
+		public string message { get; set; }
+        public string reference_id { get; set; }
+		public string resource_uri { get; set; }
+		public string type { get; set; }
+	}
 
     public class RmqAPI
     {
@@ -117,28 +127,25 @@ namespace DSS.RMQ
 
         }
 
-        public void PushJournalEntry(string json) 
+        public void PushJournalEntry(string msg, string desc) 
         {
-            json = @"{
-              ""user"": ""/api/v1/user/3/"",
-              ""severity"": """",
-              ""timestamp"": """",
-            ""description"": ""Time for your medicine table."",
-                  ""id"": 89,
-                  ""message"": ""Jim has to take his medicine at 08:00"",
-                  ""reference_id"": null,
-                  ""resource_uri"": ""/api/v1/journal_entries/89/"",
-                  ""severity"": ""none"",
-                  ""timestamp"": ""1503905400"",
-                  ""type"": ""medication"",
-                  ""user"": ""/api/v1/user/3/"", ""type"": """",
-              ""reference_id"": null,
-              ""description"": """"
-            }";
-			HttpContent content = new StringContent(json);
+
+            var obj = new JournalEntry()
+            {
+
+                user = "/api/v1/user/3/",
+                description = desc,
+                message = msg,
+                severity = "none",
+                reference_id = null,
+                timestamp = "1503905400",
+                type = "medication"
+            };
+
+            HttpContent content = new StringContent(JsonConvert.SerializeObject(obj));
 			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-			//var response = new HttpClient().PostAsync("http://cami.vitaminsoftware.com:8008/api/v1/journal_entries/", content);
-			var response = new HttpClient().PostAsync("http://cami-store:8008/api/v1/journal_entries/", content);
+			var response = new HttpClient().PostAsync("http://cami.vitaminsoftware.com:8008/api/v1/journal_entries/", content);
+			//var response = new HttpClient().PostAsync("http://cami-store:8008/api/v1/journal_entries/", content);
 
 			Console.WriteLine("JOURNAL ENTRTY: " + response.Result);
 

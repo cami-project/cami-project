@@ -37,12 +37,12 @@ namespace DSS.Main
 			
             var rmqAPIVS = new RmqAPI("http://cami.vitaminsoftware.com:8008");
 
-            Console.WriteLine( rmqAPIVS.GetLatestWeightMeasurement());
+         
 
-            //rmqAPIVS.AreLastNHeartRateCritical(3, 40, 90);
-        //    rmqAPIVS.PushMeasuremnt("");
-           // rmqAPIVS.PushJournalEntry("");
-           // rmqAPIVS.PushNotification("");
+            // rmqAPIVS.AreLastNHeartRateCritical(3, 40, 90);
+            // rmqAPIVS.PushMeasuremnt("");
+             //rmqAPIVS.PushJournalEntry("CIRKUZ", "THIS IS DESC");
+            // rmqAPIVS.PushNotification("");
 
 			//rmqAPI.PushEvent(new Event("Fall").ToJson());
 			//rmqAPI.PushNotification("{  user_id: 2,  message: \"Your blood pressure is way too low!\"}");
