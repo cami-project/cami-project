@@ -62,7 +62,7 @@ namespace DSS.Main
             //                    router.Handle(JsonConvert.DeserializeObject<Event>(result));
             //                 } );
 
-           // var rmqExchange = new RmqExchange(rmqConfig);
+            var rmqExchange = new RmqExchange(url, null);
 
 
             IRouterHandler<Event>[] handlers =
@@ -106,6 +106,7 @@ namespace DSS.Main
 
             }
 
+            Console.WriteLine("DSS killed");
 
         }
 

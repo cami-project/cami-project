@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.FuzzyInference", "DSS.F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.FuzzyInference.Playground", "DSS.FuzzyInference.Playground\DSS.FuzzyInference.Playground.csproj", "{F7646D2F-E370-4545-A43D-E9E1389A4A94}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMQ.Playground.Client", "RMQ.Playground.Client\RMQ.Playground.Client.csproj", "{084E00A0-E590-4ED2-A401-F0D036798168}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMQ.Playgorund.Receiver", "RMQ.Playgorund.Receiver\RMQ.Playgorund.Receiver.csproj", "{7F11A322-16F1-4947-A534-3CAF05FB24C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -43,5 +47,13 @@ Global
 		{F7646D2F-E370-4545-A43D-E9E1389A4A94}.Debug|x86.Build.0 = Debug|x86
 		{F7646D2F-E370-4545-A43D-E9E1389A4A94}.Release|x86.ActiveCfg = Release|x86
 		{F7646D2F-E370-4545-A43D-E9E1389A4A94}.Release|x86.Build.0 = Release|x86
+		{084E00A0-E590-4ED2-A401-F0D036798168}.Debug|x86.ActiveCfg = Debug|x86
+		{084E00A0-E590-4ED2-A401-F0D036798168}.Debug|x86.Build.0 = Debug|x86
+		{084E00A0-E590-4ED2-A401-F0D036798168}.Release|x86.ActiveCfg = Release|x86
+		{084E00A0-E590-4ED2-A401-F0D036798168}.Release|x86.Build.0 = Release|x86
+		{7F11A322-16F1-4947-A534-3CAF05FB24C7}.Debug|x86.ActiveCfg = Debug|x86
+		{7F11A322-16F1-4947-A534-3CAF05FB24C7}.Debug|x86.Build.0 = Debug|x86
+		{7F11A322-16F1-4947-A534-3CAF05FB24C7}.Release|x86.ActiveCfg = Release|x86
+		{7F11A322-16F1-4947-A534-3CAF05FB24C7}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 EndGlobal

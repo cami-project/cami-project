@@ -132,7 +132,6 @@ namespace DSS.RMQ
 
             var obj = new JournalEntry()
             {
-
                 user = "/api/v1/user/3/",
                 description = desc,
                 message = msg,
