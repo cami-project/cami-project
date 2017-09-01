@@ -3,10 +3,6 @@
   "port": "12123",
   "channels": [
     {
-      "name": "NOTIFICATION",
-      "events": [ "Fall" ]
-    },
-    {
       "name": "CONSOLE",
       "events": [ "Fall" ]
     },

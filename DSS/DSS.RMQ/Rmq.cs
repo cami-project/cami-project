@@ -40,8 +40,6 @@ namespace DSS.RMQ
             this.password = pass;
             this.exchange = exchange;
         }
-
-
     }
 
     public class RmqExchange 
@@ -61,7 +59,7 @@ namespace DSS.RMQ
 
 				channel.QueueBind(queue: queueName,
 								  exchange: config.exchange,
-								  routingKey: "event.*");
+								  routingKey: "measurement.*");
 
 				var consumer = new EventingBasicConsumer(channel);
 
@@ -72,48 +70,41 @@ namespace DSS.RMQ
 
 					//onRecieve(Encoding.UTF8.GetString(ea.Body));
 				};
-				channel.BasicConsume(queue: queueName,
-				noAck: true,
-				consumer: consumer);
-
+                channel.BasicConsume(queue: queueName,
+                noAck: true,
+                                     consumer: consumer);
 			}
-		
         }
 
-
-        public RmqExchange(string url, string username, string pass, string exchange, Action<string> onRecieve)
+        public RmqExchange(string url, Action<string> onRecieve)
         {
-			var factory = new ConnectionFactory() { Uri = url, UserName = username, Password = pass };
+			var factory = new ConnectionFactory() { Uri = url };
             var connection = factory.CreateConnection();
             var channel = connection.CreateModel();
 		
-                
-				channel.ExchangeDeclare(exchange: exchange, type: "topic", durable: true);
+
+				channel.ExchangeDeclare(exchange: "amq.topic", type: "topic", durable: true);
 
 				var queueName = channel.QueueDeclare().QueueName;
 
 
 				channel.QueueBind(queue: queueName,
-								  exchange: exchange,
-								  routingKey: "event.*");
+								  exchange: "amq.topic",
+								  routingKey: "measurement.*");
 
 				var consumer = new EventingBasicConsumer(channel);
 
 
 				consumer.Received += (model, ea) =>
 				{
-					Console.WriteLine("Rmq response");
+                Console.WriteLine("Rmq response: " + Encoding.UTF8.GetString(ea.Body));
 
-					onRecieve(Encoding.UTF8.GetString(ea.Body));
+					//onRecieve(Encoding.UTF8.GetString(ea.Body));
 				};
 				channel.BasicConsume(queue: queueName,
 				noAck: true,
 				consumer: consumer);
-
-
-
-
-			
+            
 		}
     }
 

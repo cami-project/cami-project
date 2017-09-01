@@ -149,6 +149,18 @@ If you are using [Visual Studio Code](https://code.visualstudio.com/download), t
 
 Be sure to leave the celery worker always open as it needs to handle the async tasks.
 
+### cami-dss
+This instance hosts the DSS module. 
+
+Building the image
+```
+docker-compose build cami-dss
+```
+
+Run the dss container:
+```
+docker run -i  camiproject_cami-dss:latest
+```
 
 ## API
 
