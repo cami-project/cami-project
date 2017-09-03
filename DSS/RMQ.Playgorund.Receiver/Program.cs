@@ -44,7 +44,12 @@ namespace RMQ.Playgorund.Receiver
 
 
 
-            Console.ReadLine();
+           // Console.ReadLine();
+            while (true)
+            {
+
+            }
+        
         }
     }
 }

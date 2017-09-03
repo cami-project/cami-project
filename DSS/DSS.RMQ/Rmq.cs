@@ -88,6 +88,9 @@ namespace DSS.RMQ
 				var queueName = channel.QueueDeclare().QueueName;
 
 
+                Console.WriteLine("Queue name: " + queueName);
+
+
 				channel.QueueBind(queue: queueName,
 								  exchange: "amq.topic",
 								  routingKey: "measurement.*");
@@ -97,7 +100,7 @@ namespace DSS.RMQ
 
 				consumer.Received += (model, ea) =>
 				{
-                Console.WriteLine("Rmq response: " + Encoding.UTF8.GetString(ea.Body));
+                    Console.WriteLine("Rmq response: " + Encoding.UTF8.GetString(ea.Body));
 
 					//onRecieve(Encoding.UTF8.GetString(ea.Body));
 				};
