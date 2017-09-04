@@ -26,9 +26,9 @@ namespace DSS.Main
 
 			var router = new Router<Event>();
 
-            //var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
+            var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
 
-            var url = "amqp://cami:cami@141.85.241.224:15673/cami";
+           // var url = "amqp://cami:cami@141.85.241.224:15673/cami";
             try
             {
 				var rmqExchange = new RmqExchange(url, null);
