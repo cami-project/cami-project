@@ -37,17 +37,19 @@ namespace DSS.Main
             }
 
 
-            IRouterHandler<Event>[] handlers =
+            IRouterHandler[] handlers =
             {
                 new ConsolePrintHandler<Event>(),
-                new FuzzyHandler()
+                new FuzzyHandler(),
+                new MeasurementHandler()
 			};
 
-			//var config = new Config("default.config", router, handlers);
+            //var config = new Config("default.config", router, handlers);
 
-			//handlers[1].Handle(new Event("Heart-Rate", new Content() { name = "Heart-Rate", val = new Value() { numVal = 60 } }, new Annotations()));
-			// handlers[1].Handle(new Event("MEASUREMENT", new Content() { name = "weight", val = new Value() { numVal = 69 } }, new Annotations()));
+            //handlers[1].Handle(new Event("Heart-Rate", new Content() { name = "Heart-Rate", val = new Value() { numVal = 60 } }, new Annotations()));
+            // handlers[1].Handle(new Event("MEASUREMENT", new Content() { name = "weight", val = new Value() { numVal = 69 } }, new Annotations()));
 
+            //handlers[2].Handle(new Measurement() { value_info = "68", measurement_type = "weight" });
 
 			while (true)
             {

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace DSS.Delegate
 {
-	public class PushNotificationHandler<T> : IRouterHandler<T>
+	public class PushNotificationHandler<T> : IRouterHandler
 	{
 		private IWriteToBroker<T> MsgBroker;
 
@@ -15,7 +15,7 @@ namespace DSS.Delegate
 
 		public string Name => "NOTIFICATION";
 
-		public void Handle(T obj)
+        public void Handle(object obj)
 		{
 			Console.WriteLine("Handled by NOTIFICATION channel: " + obj);
 			MsgBroker.Write(JsonConvert.SerializeObject(obj));

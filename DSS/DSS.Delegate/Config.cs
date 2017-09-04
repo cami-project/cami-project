@@ -13,7 +13,7 @@ namespace DSS.Delegate
         public Dictionary<string, string[]> ChannelsEvents { get; }
 
 
-        public Config(string path, Router<Event> router ,IRouterHandler<Event> [] handlers)
+        public Config(string path, Router<Event> router ,IRouterHandler [] handlers)
         {
             path = path.Contains(".json") ? path : path + ".json";
 			//var config = JsonConvert.DeserializeObject<Details>(File.ReadAllText(path));

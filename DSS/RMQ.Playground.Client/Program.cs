@@ -20,7 +20,7 @@ namespace RMQ.Playground.Client
                 var message = "pojedi govance";
 				var body = Encoding.UTF8.GetBytes(message);
 				channel.BasicPublish(exchange: "amq.topic",
-									 routingKey: "event.one",
+									 routingKey: "measurement.one",
 									 basicProperties: 
                                      null,
 									 body: body);

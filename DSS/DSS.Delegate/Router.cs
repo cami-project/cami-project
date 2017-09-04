@@ -7,15 +7,15 @@ namespace DSS.Delegate
     public class Router<T>
     {
 		private Dictionary<string, Channel<T>> Channels;
-        private Dictionary<string, IRouterHandler<T>> Handlers;
+        private Dictionary<string, IRouterHandler> Handlers;
 
         public Router()
         {
             this.Channels = new Dictionary<string, Channel<T>>();
-            this.Handlers = new Dictionary<string, IRouterHandler<T>>();
+            this.Handlers = new Dictionary<string, IRouterHandler>();
         }
 
-        public void RegisterChannel(string name, IRouterHandler<T> handler)
+        public void RegisterChannel(string name, IRouterHandler handler)
         {
             Channels.Add(name.ToUpper(), new Channel<T>(name.ToUpper()));
             Handlers.Add(name.ToUpper(), handler);
