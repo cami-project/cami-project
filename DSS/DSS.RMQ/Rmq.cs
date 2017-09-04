@@ -52,7 +52,7 @@ namespace DSS.RMQ
             var channel = connection.CreateModel();
 		
 
-				channel.ExchangeDeclare(exchange: "amq.topic", type: "topic", durable: true);
+				channel.ExchangeDeclare(exchange: "measurements", type: "topic", durable: true);
 
 				var queueName = channel.QueueDeclare().QueueName;
 
@@ -60,7 +60,7 @@ namespace DSS.RMQ
 
 
 				channel.QueueBind(queue: queueName,
-								  exchange: "amq.topic",
+								  exchange: "measurements",
 								  routingKey: "measurement.*");
 
 				var consumer = new EventingBasicConsumer(channel);
@@ -72,6 +72,7 @@ namespace DSS.RMQ
 
 					//onRecieve(Encoding.UTF8.GetString(ea.Body));
 				};
+
 				channel.BasicConsume(queue: queueName,
 				noAck: true,
 				consumer: consumer);
