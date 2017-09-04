@@ -6,7 +6,7 @@ using DSS.RMQ;
 
 namespace DSS.FuzzyInference
 {
-    public class FuzzyHandler : IRouterHandler<Event>
+    public class FuzzyHandler : IRouterHandler
     {
         public TimerQueue<Event> Queue { get; set; }
         public List<Event> RequestManagableQueue { get; set; }
@@ -14,7 +14,6 @@ namespace DSS.FuzzyInference
 	    public string Name => "FUZZY-INFERENCE";
 
         private List<string> WhitelistManagebleQueueItems { get; set; }
-        private List<string> IgnoredByFuzzy { get; set; }
         private FuzzyContainer Fuzzy;
 
 
@@ -22,18 +21,18 @@ namespace DSS.FuzzyInference
         {
             Queue = new TimerQueue<Event>();
             RequestManagableQueue = new List<Event>();
-            IgnoredByFuzzy = new List<string>();
 
             WhitelistManagebleQueueItems = new List<string>();
             WhitelistManagebleQueueItems.Add("EXERCISE_MODE_OFF");
-
-            IgnoredByFuzzy.Add("MEASUREMENT");
-
+                
             Fuzzy = new FuzzyContainer();
         }
 
-        public void Handle(Event obj)
+        public void Handle(object obje)
         {
+
+            var obj = obje as Event;
+
             Console.WriteLine("Fuzzy inference invoked...");
 
             Queue.Refresh();
@@ -44,7 +43,6 @@ namespace DSS.FuzzyInference
             }
             else
             {
-                if(!IgnoredByFuzzy.Contains(obj.category))
                     Queue.Push(obj, 1);
             }
 
@@ -83,21 +81,7 @@ namespace DSS.FuzzyInference
 				}
             }
 
-			if (obj.category == "MEASUREMENT")
-			{
 
-				if (obj.content.name == "weight")
-				{
-					var kg = new RmqAPI("").GetLatestWeightMeasurement();
-
-                    if (Math.Abs(obj.content.val.numVal - kg) > 2){
-                        
-                        var msg = obj.content.val.numVal > kg ? "Have lighter meals" : "Have more consistent meals";
-                        inferenceResult.Add("Abnormal change in weight noticed - " +msg );
-                        new RmqAPI("").PushJournalEntry(msg, "Abnormal change in weight noticed");
-					}
-				}
-			}
 
             inferenceResult.RemoveAll( x=> x == "");
 
@@ -108,16 +92,9 @@ namespace DSS.FuzzyInference
             foreach (var item in inferenceResult)
             {
 				Console.WriteLine("---------------");
-
 				Console.WriteLine(item);
-
 			}
 
-
-            //var fakeJSON = "{  user_id: 2,  message: \"Your blood pressure is way too low!\"}";
-            //var api = new RmqAPI("http://141.85.241.224:8010/api/v1/insertion");
-
-            //api.PushNotification(fakeJSON);
         }
     }
 

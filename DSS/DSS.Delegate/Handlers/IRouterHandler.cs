@@ -4,10 +4,12 @@ using Newtonsoft.Json;
 
 namespace DSS.Delegate
 {
-    
-	public interface IRouterHandler<T>
-	{ 
-        string Name { get; }
-		void Handle(T obj);
+
+    public interface IRouterHandler
+    {
+		string Name { get; }
+        void Handle(object obj);
+
 	}
+  
 }

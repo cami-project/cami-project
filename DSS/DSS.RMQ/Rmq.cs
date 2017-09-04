@@ -44,38 +44,7 @@ namespace DSS.RMQ
 
     public class RmqExchange 
     {
-
-        public RmqExchange(RmqConfig config)
-        {
-            var factory = new ConnectionFactory() { Uri = config.url, UserName = config.username, Password = config.password };
-			var connection = factory.CreateConnection();
-			var channel = connection.CreateModel();
-			{
-
-				channel.ExchangeDeclare(exchange: config.exchange, type: "topic", durable: true);
-
-				var queueName = channel.QueueDeclare().QueueName;
-
-
-				channel.QueueBind(queue: queueName,
-								  exchange: config.exchange,
-								  routingKey: "measurement.*");
-
-				var consumer = new EventingBasicConsumer(channel);
-
-
-				consumer.Received += (model, ea) =>
-				{
-					Console.WriteLine("Rmq response");
-
-					//onRecieve(Encoding.UTF8.GetString(ea.Body));
-				};
-                channel.BasicConsume(queue: queueName,
-                noAck: true,
-                                     consumer: consumer);
-			}
-        }
-
+        
         public RmqExchange(string url, Action<string> onRecieve)
         {
 			var factory = new ConnectionFactory() { Uri = url };
@@ -86,7 +55,6 @@ namespace DSS.RMQ
 				channel.ExchangeDeclare(exchange: "amq.topic", type: "topic", durable: true);
 
 				var queueName = channel.QueueDeclare().QueueName;
-
 
                 Console.WriteLine("Queue name: " + queueName);
 
@@ -110,8 +78,6 @@ namespace DSS.RMQ
             
 		}
     }
-
-
 
 
     public class Rmq<T> : IDisposable, IWriteToBroker<T>

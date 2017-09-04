@@ -24,7 +24,7 @@ namespace RMQ.Playgorund.Receiver
 
 			channel.QueueBind(queue: queueName,
                               exchange: "amq.topic",
-                              routingKey: "event.*",
+                              routingKey: "measurement.*",
                               nowait: false,
                               arguments: null);
             
@@ -42,9 +42,7 @@ namespace RMQ.Playgorund.Receiver
                                  consumer: consumer, filter: null);     
 
 
-
-
-           // Console.ReadLine();
+            // Console.ReadLine();
             while (true)
             {
 

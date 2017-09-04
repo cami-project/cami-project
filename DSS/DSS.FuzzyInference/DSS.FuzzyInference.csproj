@@ -45,6 +45,7 @@
     <Compile Include="TimerQueue.cs" />
     <Compile Include="EventToLabel.cs" />
     <Compile Include="FuzzyContainer.cs" />
+    <Compile Include="MeasurementHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
