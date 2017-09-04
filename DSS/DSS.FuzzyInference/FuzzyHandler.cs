@@ -43,9 +43,8 @@ namespace DSS.FuzzyInference
             }
             else
             {
-                    Queue.Push(obj, 1);
+                Queue.Push(obj, 1);
             }
-
 
             var inferenceResult = Fuzzy.Infer(Queue.ToNormal());
 
