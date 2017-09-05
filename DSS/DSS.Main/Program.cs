@@ -23,19 +23,19 @@ namespace DSS.Main
             
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...");
-            Console.WriteLine("This is version 1.0.5");
+            Console.WriteLine("This is version 1.0.6");
 
 			var router = new Router<Event>();
 
-   //         var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
-   //         try
-   //         {
-			//	var rmqExchange = new RmqExchange(url, null);
-			//}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine("Something went wrong iwth the rmq exchange: " +  ex);
-            //}
+            var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
+            try
+            {
+				var rmqExchange = new RmqExchange(url, null);
+			}
+            catch (Exception ex)
+            {
+                Console.WriteLine("Something went wrong iwth the rmq exchange: " +  ex);
+            }
 
 
             IRouterHandler[] handlers =
@@ -100,9 +100,7 @@ namespace DSS.Main
   }
 }");
 
-            Console.Write(anEvent.content.VALUE.user.name = "EZEL");
-
-
+            //Console.Write(anEvent.content.VALUE.user.name = "EZEL");
             insertionAPI.InsertEvent(JsonConvert.SerializeObject(anEvent));
 
 			while (true)

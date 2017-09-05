@@ -47,6 +47,8 @@ namespace DSS.RMQ
         
         public RmqExchange(string url, Action<string> onRecieve)
         {
+			Console.WriteLine("Exchange connection invoked ");
+
 			var factory = new ConnectionFactory() { Uri = url };
             var connection = factory.CreateConnection();
             var channel = connection.CreateModel();
@@ -55,8 +57,9 @@ namespace DSS.RMQ
 				channel.ExchangeDeclare(exchange: "events", type: "topic", durable: true);
 
 				var queueName = channel.QueueDeclare().QueueName;
+			
 
-                Console.WriteLine("Queue name: " + queueName);
+			Console.WriteLine("Queue name: " + queueName);
 
 
 				channel.QueueBind(queue: queueName,
