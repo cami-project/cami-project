@@ -23,26 +23,7 @@ namespace DSS.RMQ
 		public string type { get; set; }
 	}
 
-    public class InsertionAPI 
-    {
-		public string url { get; set; }
 
-		public InsertionAPI(string baseUrl)
-		{
-			this.url = baseUrl;
-		}
-
-        public void InsertEvent(string json) 
-        {
-			HttpContent content = new StringContent(json);
-			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-
-			var response = new HttpClient().PostAsync(url + "/events/", content);
-
-			Console.WriteLine("INSERT EVENT:" + response.Result);
-        }
-
-    }
 
 
     public class StoreAPI

@@ -52,7 +52,7 @@ namespace DSS.RMQ
             var channel = connection.CreateModel();
 		
 
-				channel.ExchangeDeclare(exchange: "measurements", type: "topic", durable: true);
+				channel.ExchangeDeclare(exchange: "events", type: "topic", durable: true);
 
 				var queueName = channel.QueueDeclare().QueueName;
 
@@ -60,15 +60,15 @@ namespace DSS.RMQ
 
 
 				channel.QueueBind(queue: queueName,
-								  exchange: "measurements",
-								  routingKey: "measurement.*");
+								  exchange: "events",
+								  routingKey: "events.*");
 
 				var consumer = new EventingBasicConsumer(channel);
 
 
 				consumer.Received += (model, ea) =>
 				{
-                    Console.WriteLine("Rmq response: " + Encoding.UTF8.GetString(ea.Body));
+                    Console.WriteLine("Rmq response events: " + Encoding.UTF8.GetString(ea.Body));
 
 					//onRecieve(Encoding.UTF8.GetString(ea.Body));
 				};

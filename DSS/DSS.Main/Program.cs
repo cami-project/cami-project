@@ -66,8 +66,13 @@ namespace DSS.Main
             //handlers[2].Handle(measure);
 
 
-            var insertionAPI = new InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
-			insertionAPI.InsertEvent(@"{
+            var insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
+
+
+
+
+
+            var anEvent = JsonConvert.DeserializeObject<RMQ.INS.Event>(@"{
   ""category"": ""USER_ENVIRONMENT"",
   ""content"": {
     ""name"": ""presence_detected | kitchen_window"",
@@ -94,6 +99,11 @@ namespace DSS.Main
     }
   }
 }");
+
+            Console.Write(anEvent.content.VALUE.user.name = "EZEL");
+
+
+            insertionAPI.InsertEvent(JsonConvert.SerializeObject(anEvent));
 
 			while (true)
             {
