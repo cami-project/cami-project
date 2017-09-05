@@ -74,7 +74,7 @@ namespace DSS.FuzzyInference
 
                     if (inferenceResult[i] != ""){
 
-                        if (!new RmqAPI("").AreLastNHeartRateCritical(3, 50, 80))
+                        if (!new StoreAPI("").AreLastNHeartRateCritical(3, 50, 80))
                             inferenceResult[i] = "";
                     }
 				}

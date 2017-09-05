@@ -51,7 +51,7 @@
     <Compile Include="Rmq.cs" />
     <Compile Include="IWriteToBroker.cs" />
     <Compile Include="RmqWriter.cs" />
-    <Compile Include="RmqAPI.cs" />
+    <Compile Include="StoreAPI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -37,6 +37,9 @@
     <Reference Include="AForge.Fuzzy">
       <HintPath>..\packages\portable.aforge.fuzzy.2.2.5.60302\lib\portable-net45+netcore45+wpa81\AForge.Fuzzy.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
