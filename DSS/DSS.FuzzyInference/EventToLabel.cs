@@ -17,7 +17,6 @@ namespace DSS.FuzzyInference
             mapTable["ON_GROUND"] = "ON_GROUND";
             mapTable["TIME_ON_GROUND"] = "TIME_ON_GROUND";
         }
-
         public string Do(Event e){
             
             return mapTable[e.content.name];

@@ -40,84 +40,45 @@ namespace DSS.RMQ
             this.password = pass;
             this.exchange = exchange;
         }
-
-
     }
 
     public class RmqExchange 
     {
-
-        public RmqExchange(RmqConfig config)
+        
+        public RmqExchange(string url, Action<string> onRecieve)
         {
-            var factory = new ConnectionFactory() { Uri = config.url, UserName = config.username, Password = config.password };
-			var connection = factory.CreateConnection();
-			var channel = connection.CreateModel();
-			{
-
-				channel.ExchangeDeclare(exchange: config.exchange, type: "topic", durable: true);
-
-				var queueName = channel.QueueDeclare().QueueName;
-
-
-				channel.QueueBind(queue: queueName,
-								  exchange: config.exchange,
-								  routingKey: "event.*");
-
-				var consumer = new EventingBasicConsumer(channel);
-
-
-				consumer.Received += (model, ea) =>
-				{
-					Console.WriteLine("Rmq response");
-
-					//onRecieve(Encoding.UTF8.GetString(ea.Body));
-				};
-				channel.BasicConsume(queue: queueName,
-				noAck: true,
-				consumer: consumer);
-
-			}
-		
-        }
-
-
-        public RmqExchange(string url, string username, string pass, string exchange, Action<string> onRecieve)
-        {
-			var factory = new ConnectionFactory() { Uri = url, UserName = username, Password = pass };
+			var factory = new ConnectionFactory() { Uri = url };
             var connection = factory.CreateConnection();
             var channel = connection.CreateModel();
 		
-                
-				channel.ExchangeDeclare(exchange: exchange, type: "topic", durable: true);
+
+				channel.ExchangeDeclare(exchange: "measurements", type: "topic", durable: true);
 
 				var queueName = channel.QueueDeclare().QueueName;
 
+                Console.WriteLine("Queue name: " + queueName);
+
 
 				channel.QueueBind(queue: queueName,
-								  exchange: exchange,
-								  routingKey: "event.*");
+								  exchange: "measurements",
+								  routingKey: "measurement.*");
 
 				var consumer = new EventingBasicConsumer(channel);
 
 
 				consumer.Received += (model, ea) =>
 				{
-					Console.WriteLine("Rmq response");
+                    Console.WriteLine("Rmq response: " + Encoding.UTF8.GetString(ea.Body));
 
-					onRecieve(Encoding.UTF8.GetString(ea.Body));
+					//onRecieve(Encoding.UTF8.GetString(ea.Body));
 				};
+
 				channel.BasicConsume(queue: queueName,
 				noAck: true,
 				consumer: consumer);
-
-
-
-
-			
+            
 		}
     }
-
-
 
 
     public class Rmq<T> : IDisposable, IWriteToBroker<T>
