@@ -11,19 +11,6 @@ namespace DSS.RMQ
 		public int val { get; set; }
 	}
 
-	//public class Measurement
-	//{
-	//	public string device { get; set; }
-	//	public int id { get; set; }
-	//	public string measurement_type { get; set; }
-	//	public bool ok { get; set; }
-	//	public int precision { get; set; }
-	//	public string resource_uri { get; set; }
-	//	public int timestamp { get; set; }
-	//	public string unit_type { get; set; }
-	//	public string user { get; set; }
-	//	public ValueInfo value_info { get; set; }
-	//}
 	public class JournalEntry
 	{
 		public string user { get; set; }
@@ -44,6 +31,16 @@ namespace DSS.RMQ
 		{
 			this.url = baseUrl;
 		}
+
+        public void InsertEvent(string json) 
+        {
+			HttpContent content = new StringContent(json);
+			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+			var response = new HttpClient().PostAsync(url + "/events/", content);
+
+			Console.WriteLine("INSERT EVENT:" + response.Result);
+        }
 
     }
 
