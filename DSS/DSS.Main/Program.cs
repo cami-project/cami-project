@@ -23,32 +23,33 @@ namespace DSS.Main
             
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...");
-            Console.WriteLine("This is version 1.0.6");
+            Console.WriteLine("This is version 1.0.7");
 
 			var router = new Router<Event>();
+
+			IRouterHandler[] handlers =
+{
+				new ConsolePrintHandler<Event>(),
+				new FuzzyHandler(),
+				new MeasurementHandler()
+			};
 
             var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
             try
             {
-				var rmqExchange = new RmqExchange(url, null);
+                var rmqEvents = new RmqExchange(url, "events", "event.*", (json)=> { handlers[1].Handle(json); });
+				var rmqMeasurements = new RmqExchange(url, "measurements", "measurement.*", (json) => { handlers[2].Handle(json); });
+
 			}
             catch (Exception ex)
             {
                 Console.WriteLine("Something went wrong iwth the rmq exchange: " +  ex);
             }
 
-
-            IRouterHandler[] handlers =
-            {
-                new ConsolePrintHandler<Event>(),
-                new FuzzyHandler(),
-                new MeasurementHandler()
-			};
-
             //var config = new Config("default.config", router, handlers);
 
             //handlers[1].Handle(new Event("Heart-Rate", new Content() { name = "Heart-Rate", val = new Value() { numVal = 60 } }, new Annotations()));
-            // handlers[1].Handle(new Event("MEASUREMENT", new Content() { name = "weight", val = new Value() { numVal = 69 } }, new Annotations()));
+            //handlers[1].Handle(new Event("MEASUREMENT", new Content() { name = "weight", val = new Value() { numVal = 69 } }, new Annotations()));
 
 
             //var measure = new Measurement()
@@ -68,12 +69,8 @@ namespace DSS.Main
 
             var insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
 
-
-
-
-
             var anEvent = JsonConvert.DeserializeObject<RMQ.INS.Event>(@"{
-  ""category"": ""USER_ENVIRONMENT"",
+  ""category"": ""Heart-Rate"",
   ""content"": {
     ""name"": ""presence_detected | kitchen_window"",
     ""value_type"": ""integer"",

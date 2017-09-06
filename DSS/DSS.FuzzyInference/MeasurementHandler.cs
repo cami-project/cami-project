@@ -34,10 +34,10 @@ namespace DSS.FuzzyInference
             API = new StoreAPI("http://cami.vitaminsoftware.com:8008/api/v1");
         }
 
-        public void Handle(object obje) 
+        public void Handle(string json) 
         {
 
-            var obj = obje as Measurement;
+            var obj = JsonConvert.DeserializeObject<Measurement>(json);
 
             var result = new List<string>();
 

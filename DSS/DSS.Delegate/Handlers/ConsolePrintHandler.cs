@@ -6,9 +6,9 @@ namespace DSS.Delegate
     {
 		public string Name { get { return "CONSOLE"; } }
 
-        public void Handle(object obj)
+        public void Handle(string json)
 		{
-            Console.WriteLine("Handled by CONSOLE channel: " + obj.ToString());
+            Console.WriteLine("Handled by CONSOLE channel: " + json);
 		}
     }
 }

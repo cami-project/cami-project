@@ -45,7 +45,7 @@ namespace DSS.RMQ
     public class RmqExchange 
     {
         
-        public RmqExchange(string url, Action<string> onRecieve)
+        public RmqExchange(string url, string exchange, string routingKey, Action<string> onRecieve)
         {
 			Console.WriteLine("Exchange connection invoked ");
 
@@ -54,17 +54,17 @@ namespace DSS.RMQ
             var channel = connection.CreateModel();
 		
 
-				channel.ExchangeDeclare(exchange: "events", type: "topic", durable: true);
+            channel.ExchangeDeclare(exchange: exchange, type: "topic", durable: true);
 
 				var queueName = channel.QueueDeclare().QueueName;
 			
 
-			Console.WriteLine("Queue name: " + queueName);
+			    Console.WriteLine("Queue name: " + queueName);
 
 
 				channel.QueueBind(queue: queueName,
-								  exchange: "events",
-								  routingKey: "event.*");
+                                  exchange: exchange,
+                                  routingKey: routingKey);
 
 				var consumer = new EventingBasicConsumer(channel);
 
@@ -72,8 +72,7 @@ namespace DSS.RMQ
 				consumer.Received += (model, ea) =>
 				{
                     Console.WriteLine("Rmq response events: " + Encoding.UTF8.GetString(ea.Body));
-
-					//onRecieve(Encoding.UTF8.GetString(ea.Body));
+					onRecieve(Encoding.UTF8.GetString(ea.Body));
 				};
 
 				channel.BasicConsume(queue: queueName,

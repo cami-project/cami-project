@@ -49,6 +49,7 @@
     <Compile Include="EventToLabel.cs" />
     <Compile Include="FuzzyContainer.cs" />
     <Compile Include="MeasurementHandler.cs" />
+    <Compile Include="EventsHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

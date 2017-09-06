@@ -15,10 +15,10 @@ namespace DSS.Delegate
 
 		public string Name => "NOTIFICATION";
 
-        public void Handle(object obj)
+        public void Handle(string json)
 		{
-			Console.WriteLine("Handled by NOTIFICATION channel: " + obj);
-			MsgBroker.Write(JsonConvert.SerializeObject(obj));
+			//Console.WriteLine("Handled by NOTIFICATION channel: " + obj);
+			//MsgBroker.Write(JsonConvert.SerializeObject(obj));
 		}
 	}
 }

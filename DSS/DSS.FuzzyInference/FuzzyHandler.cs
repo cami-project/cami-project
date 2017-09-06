@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DSS.Delegate;
 using System.Linq;
 using DSS.RMQ;
+using Newtonsoft.Json;
 
 namespace DSS.FuzzyInference
 {
@@ -28,10 +29,10 @@ namespace DSS.FuzzyInference
             Fuzzy = new FuzzyContainer();
         }
 
-        public void Handle(object obje)
+        public void Handle(string json)
         {
 
-            var obj = obje as Event;
+            var obj = JsonConvert.DeserializeObject<Event>(json);
 
             Console.WriteLine("Fuzzy inference invoked...");
 
