@@ -146,6 +146,20 @@ class ExternalMonitoringService(models.Model):
         return "ExternalMonitoringService " + self.name + " for user: " + self.user.email
 
 
+class Gateway(models.Model):
+    user = models.ForeignKey(User)
+    device_id = models.CharField(max_length=64)
+
+    def __str__(self):
+        return "Gateway, ID: %d, User: %s, Device ID: %s" % (
+            self.id,
+            self.user.username,
+            self.device_id
+        )
+
+    __unicode__ = __str__
+
+
 # ================ Measurement Information ================
 def validate_precision_range(value):
     if value < 0 or value > 100:
@@ -180,9 +194,7 @@ class Measurement(models.Model):
     )
     value_info = JSONField()
     ok = models.BooleanField()
-
-    gateway_id = models.CharField(max_length=64, null=True, blank=True)
-
+    gateway = models.ForeignKey(Gateway, null=True, blank=True)
     
     def __str__(self):
         return (
