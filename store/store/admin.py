@@ -1,8 +1,6 @@
 from django.contrib import admin
 
-from models import EndUserProfile, CaregiverProfile, HealthProfessionalProfile, \
-    Activity, ExternalMonitoringService, Measurement, Device, DeviceUsage, \
-    JournalEntry, PushNotificationDevice
+from models import *
 
 admin.site.register(
 	[
@@ -16,6 +14,7 @@ admin.site.register(
 		Activity,
 		JournalEntry,
 		PushNotificationDevice,
+		Gateway
 	]
 )
 
