@@ -21,6 +21,7 @@ namespace DSS.RMQ
         public string reference_id { get; set; }
 		public string resource_uri { get; set; }
 		public string type { get; set; }
+        public bool acknowledged { get; set; }
 	}
 
     public class StoreAPI
@@ -97,10 +98,9 @@ namespace DSS.RMQ
                 user = "/api/v1/user/3/",
                 description = desc,
                 message = msg,
-                severity = "none",
-                reference_id = null,
+                reference_id = "100",
                 timestamp = "1503905400",
-                type = "medication"
+                acknowledged = false
             };
 
             HttpContent content = new StringContent(JsonConvert.SerializeObject(obj));

@@ -30,10 +30,8 @@ namespace DSS.FuzzyInference
 
         public MeasurementHandler()
         {
-            //API = new RmqAPI("http://cami-store:8008/api/v1");
             storeAPI = new StoreAPI("http://cami-store:8008/api/v1");
             insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
-
 		}
 
         public void Handle(string json) 
