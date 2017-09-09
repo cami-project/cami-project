@@ -40,7 +40,7 @@ namespace DSS.Delegate
             {
                 if(channel.Contains(obj))
                 {
-                    Handlers[channel.Name].Handle(obj);
+                    Handlers[channel.Name].Handle(obj.ToString());
                   
                 }
             }

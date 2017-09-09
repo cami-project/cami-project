@@ -11,19 +11,6 @@ namespace DSS.RMQ
 		public int val { get; set; }
 	}
 
-	//public class Measurement
-	//{
-	//	public string device { get; set; }
-	//	public int id { get; set; }
-	//	public string measurement_type { get; set; }
-	//	public bool ok { get; set; }
-	//	public int precision { get; set; }
-	//	public string resource_uri { get; set; }
-	//	public int timestamp { get; set; }
-	//	public string unit_type { get; set; }
-	//	public string user { get; set; }
-	//	public ValueInfo value_info { get; set; }
-	//}
 	public class JournalEntry
 	{
 		public string user { get; set; }
@@ -36,15 +23,17 @@ namespace DSS.RMQ
 		public string type { get; set; }
 	}
 
-    public class RmqAPI
+
+
+
+    public class StoreAPI
     {
 
         public string url { get; set; }
 
-        public RmqAPI(string baseUrl)
+        public StoreAPI(string baseUrl)
         {
             this.url = baseUrl;
-
 		}
 
         public void PushEvent(string json )
@@ -56,26 +45,12 @@ namespace DSS.RMQ
 			Console.WriteLine(response.Result);
         }
 
-        public void PushMeasuremnt( string json )
+        public void PushMeasurement( string json )
         {
-            
-            json = @"    {
-              ""device"": ""/api/v1/device/2/"",
-              ""id"": 105,
-              ""measurement_type"": ""pulse"",
-              ""ok"": true,
-              ""precision"": 100,
-              ""resource_uri"": ""/api/v1/measurement/1/"",
-              ""timestamp"": 1477413397,
-              ""unit_type"": ""bpm"",
-              ""user"": ""/api/v1/user/2/"",
-              ""value_info"": {}
-            }";
-     
 			HttpContent content = new StringContent(json);
             content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-           // var response = new HttpClient().PostAsync("http://cami.vitaminsoftware.com:8008/api/v1/measurement/", content);
-			var response = new HttpClient().PostAsync("http://cami-store:8008/api/v1/measurement/", content);
+           
+            var response = new HttpClient().PostAsync( url +"/measurement/", content);
 
 			Console.WriteLine("PUSH MEASUREMNT:" + response.Result);
         }
@@ -83,7 +58,7 @@ namespace DSS.RMQ
 
         public bool AreLastNHeartRateCritical(int n, int low, int high){
 
-            var urlVS = "http://cami.vitaminsoftware.com:8008/api/v1/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp\n";
+            var urlVS = url + "/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp";
 
             var response = new HttpClient().GetAsync(urlVS);
 
@@ -114,7 +89,7 @@ namespace DSS.RMQ
         public float GetLatestWeightMeasurement() 
         {
 
-            var response = new HttpClient().GetAsync("http://cami.vitaminsoftware.com:8008/api/v1/measurement/?limit=1&measurement_type=weight&order_by=-timestamp");
+            var response = new HttpClient().GetAsync(url +"/measurement/?limit=1&measurement_type=weight&order_by=-timestamp");
 
             if (response.Result.IsSuccessStatusCode)
             {
@@ -143,7 +118,7 @@ namespace DSS.RMQ
 
             HttpContent content = new StringContent(JsonConvert.SerializeObject(obj));
 			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-			var response = new HttpClient().PostAsync("http://cami.vitaminsoftware.com:8008/api/v1/journal_entries/", content);
+			var response = new HttpClient().PostAsync(url +"/journal_entries/", content);
 			//var response = new HttpClient().PostAsync("http://cami-store:8008/api/v1/journal_entries/", content);
 
 			Console.WriteLine("JOURNAL ENTRTY: " + response.Result);
@@ -171,7 +146,7 @@ namespace DSS.RMQ
 			HttpContent content = new StringContent(json);
 			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 			//var response = new HttpClient().PostAsync("http://cami.vitaminsoftware.com:8008/api/v1/pushnotificationdevice/", content);
-			var response = new HttpClient().PostAsync("http://cami-store:8008/api/v1/pushnotificationdevice/", content);
+            var response = new HttpClient().PostAsync(url+"/pushnotificationdevice/", content);
 
 			Console.WriteLine("PUSH NOTIFICATION" + response.Result);
             
