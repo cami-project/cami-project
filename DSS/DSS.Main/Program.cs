@@ -52,10 +52,10 @@ namespace DSS.Main
 			{
 			    device = "/api/v1/device/2/",
 			    id = "200",
-			    measurement_type = "pulse",
+			    measurement_type = "weight",
 			    resource_uri = "/api/v1/measurement/1/",
 			    timestamp = 1477413397,
-			    unit_type = "bpm",
+			    unit_type = "kg",
 			    user = "/api/v1/user/2/",
 			    value_info = "200"
 			};
