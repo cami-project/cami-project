@@ -23,9 +23,6 @@ namespace DSS.RMQ
 		public string type { get; set; }
 	}
 
-
-
-
     public class StoreAPI
     {
 
@@ -36,7 +33,6 @@ namespace DSS.RMQ
             this.url = baseUrl;
 		}
 
-
         public void PushMeasurement( string json )
         {
 			HttpContent content = new StringContent(json);
@@ -46,7 +42,6 @@ namespace DSS.RMQ
 
 			Console.WriteLine("PUSH MEASUREMNT:" + response.Result);
         }
-
 
         public bool AreLastNHeartRateCritical(int n, int low, int high){
 
@@ -111,10 +106,8 @@ namespace DSS.RMQ
             HttpContent content = new StringContent(JsonConvert.SerializeObject(obj));
 			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 			var response = new HttpClient().PostAsync(url +"/journal_entries/", content);
-			//var response = new HttpClient().PostAsync("http://cami-store:8008/api/v1/journal_entries/", content);
 
 			Console.WriteLine("JOURNAL ENTRTY: " + response.Result);
-
         }
 
     }

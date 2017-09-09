@@ -28,6 +28,7 @@ namespace DSS.RMQ.INS
 		public string name { get; set; }
 		public string value_type { get; set; }
 		public Value VALUE { get; set; }
+        public float num_value { get; set; }
 	}
 
 	public class TemporalValidity
@@ -52,10 +53,16 @@ namespace DSS.RMQ.INS
 	}
 
 
+	public class PushNotification
+	{
+		public int user_id { get; set; }
+		public string message { get; set; }
+	}
 
-    /// <summary>
-    /// //////////////////////////////////////////////////
-    /// </summary>
+
+	/// <summary>
+	/// //////////////////////////////////////////////////
+	/// </summary>
 
 	public class InsertionAPI
 	{

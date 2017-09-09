@@ -45,15 +45,23 @@ namespace DSS.Main
                 Console.WriteLine("Something went wrong iwth the rmq exchange: " +  ex);
             }
 
+			//Testing measuremnts 
 
-            var insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
 
-            var notificationMsg = @"{
-              ""user_id"": 2,
-              ""message"": ""Your blood pressure is way too low!""
-            }";
-            
-            insertionAPI.InsertPushNotification(notificationMsg);
+			var measure = new Measurement()
+			{
+			    device = "/api/v1/device/2/",
+			    id = "200",
+			    measurement_type = "pulse",
+			    resource_uri = "/api/v1/measurement/1/",
+			    timestamp = 1477413397,
+			    unit_type = "bpm",
+			    user = "/api/v1/user/2/",
+			    value_info = "200"
+			};
+
+            handlers[1].Handle(JsonConvert.SerializeObject(measure) );
+
 
 
 			while (true)

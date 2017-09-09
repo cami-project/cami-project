@@ -12,11 +12,14 @@ namespace DSS.FuzzyInference
 
 		private List<string> WhitelistManagebleQueueItems { get; set; }
         public string Name => "EVENT";
+        private RMQ.INS.InsertionAPI api; 
 
         public EventsHandler()
         {
             Queue = new TimerQueue<Event>();
 			RequestManagableQueue = new List<Event>();
+
+            api = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion"); 
         }
 
         public void Handle(string json)
@@ -44,7 +47,7 @@ namespace DSS.FuzzyInference
 
             if (obj.category == "HEART_RATE")
 			{
-                result = "Abnormal heart rate";
+                result = "ABNORMAL_HEART_RATE";
 
 					foreach (var item in RequestManagableQueue)
 					{
@@ -55,7 +58,14 @@ namespace DSS.FuzzyInference
 					}
 			}
 
-            Console.WriteLine("EVENT HANDLER RESULT: " + result);
+
+            if(result == "ABNORMAL_HEART_RATE") {
+                
+                api.InsertPushNotification( JsonConvert.SerializeObject( new DSS.RMQ.INS.PushNotification() { message = "Abnormal heart rate", user_id = 2}  ) );
+
+				Console.WriteLine("EVENT HANDLER RESULT: " + result);
+			}
+
         }
     }
 }
