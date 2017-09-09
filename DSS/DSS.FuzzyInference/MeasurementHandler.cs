@@ -24,15 +24,15 @@ namespace DSS.FuzzyInference
 
     public class MeasurementHandler : IRouterHandler
     {
-        private StoreAPI API;
-
+        private StoreAPI storeAPI;
+        private RMQ.INS.InsertionAPI insertionAPI;
         public string Name => "MEASUREMENT";
 
         public MeasurementHandler()
         {
-            //API = new RmqAPI("http://cami-store:8008/api/v1");
-            API = new StoreAPI("http://cami.vitaminsoftware.com:8008/api/v1");
-        }
+            storeAPI = new StoreAPI("http://cami-store:8008/api/v1");
+            insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
+		}
 
         public void Handle(string json) 
         {
@@ -47,9 +47,12 @@ namespace DSS.FuzzyInference
                 //TODO: wight data is going to be wrapped inside of an object!
                 var val = float.Parse( obj.value_info);
 
-				var kg = API.GetLatestWeightMeasurement();
+				var kg = storeAPI.GetLatestWeightMeasurement();
 
-               if (Math.Abs(val - kg) > 2)                {                     var msg = val > kg ? "Have lighter meals" : "Have more consistent meals";                     result.Add("Abnormal change in weight noticed - " + msg);                     API.PushJournalEntry(msg, "Abnormal change in weight noticed");                         					obj.ok = false;                     //and push notification                  }                 else                  {                     obj.ok = true;                     API.PushJournalEntry("Weight is OK", "Weight is OK");                }             }
+               if (Math.Abs(val - kg) > 2)                {                     var msg = val > kg ? "Have lighter meals" : "Have more consistent meals";                     result.Add("Abnormal change in weight noticed - " + msg);                     storeAPI.PushJournalEntry(msg, "Abnormal change in weight noticed");                     insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = msg, user_id = 2 }));
+     
+                    obj.ok = false;
+				}                 else                  {                     obj.ok = true;                }             }
             else if(obj.measurement_type == "pulse") 
             {
 				var val = float.Parse(obj.value_info);
@@ -60,23 +63,22 @@ namespace DSS.FuzzyInference
                 {
 					obj.ok = false;
 
-					if(API.AreLastNHeartRateCritical(3, min, max)) 
+					if(storeAPI.AreLastNHeartRateCritical(3, min, max)) 
                     {
-                        //generate an event and push it to the event exchange 
+                        var anEvent = new RMQ.INS.Event() { category = "HEART_RATE", content = new RMQ.INS.Content() { num_value = val } };
+                        insertionAPI.InsertEvent( JsonConvert.SerializeObject(anEvent));
                     }
 
-
-					API.PushJournalEntry("Pulse is abnormal", "Pulse is abnormal");
+					storeAPI.PushJournalEntry("Pulse is abnormal", "Pulse is abnormal");
 				}
                 else 
                 {
                     obj.ok = true;
-					API.PushJournalEntry("Pulse is OK", "Pulse is OK");
 				}
 
 			}
 
-            API.PushMeasurement(JsonConvert.SerializeObject(obj));
+            storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
 		}
 	}
 }
