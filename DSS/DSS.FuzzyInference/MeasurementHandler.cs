@@ -49,7 +49,7 @@ namespace DSS.FuzzyInference
 
 				var kg = API.GetLatestWeightMeasurement();
 
-               if (Math.Abs(val - kg) > 2)                {                     var msg = val > kg ? "Have lighter meals" : "Have more consistent meals";                     result.Add("Abnormal change in weight noticed - " + msg);                     API.PushJournalEntry(msg, "Abnormal change in weight noticed");                         					obj.ok = false;                     //and push notification                  }                 else                  {                     obj.ok = true;                     API.PushJournalEntry("Weight is OK", "Weight is OK");                }             }
+               if (Math.Abs(val - kg) > 2)                {                     var msg = val > kg ? "Have lighter meals" : "Have more consistent meals";                     result.Add("Abnormal change in weight noticed - " + msg);                     API.PushJournalEntry(msg, "Abnormal change in weight noticed");                         					obj.ok = false;                     //and push notification                  }                 else                  {                     obj.ok = true;                }             }
             else if(obj.measurement_type == "pulse") 
             {
 				var val = float.Parse(obj.value_info);
@@ -71,7 +71,6 @@ namespace DSS.FuzzyInference
                 else 
                 {
                     obj.ok = true;
-					API.PushJournalEntry("Pulse is OK", "Pulse is OK");
 				}
 
 			}

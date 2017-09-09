@@ -67,6 +67,9 @@ namespace DSS.Main
             //handlers[2].Handle(measure);
 
 
+
+
+
             var insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
 
             var anEvent = JsonConvert.DeserializeObject<RMQ.INS.Event>(@"{
@@ -96,6 +99,15 @@ namespace DSS.Main
     }
   }
 }");
+
+
+
+
+            var notificationMsg = @"{
+  ""user_id"": 2,
+  ""message"": ""Your blood pressure is way too low!""
+}";
+
 
             //Console.Write(anEvent.content.VALUE.user.name = "EZEL");
             insertionAPI.InsertEvent(JsonConvert.SerializeObject(anEvent));

@@ -36,14 +36,6 @@ namespace DSS.RMQ
             this.url = baseUrl;
 		}
 
-        public void PushEvent(string json )
-        {
-
-            HttpContent content = new StringContent(json);  
-            var response = new HttpClient().PostAsync( url + "/events/", content);
-
-			Console.WriteLine(response.Result);
-        }
 
         public void PushMeasurement( string json )
         {
@@ -125,33 +117,5 @@ namespace DSS.RMQ
 
         }
 
-
-
-
-        public void PushNotification(string json) 
-        {
-
-            json = @"    {
-      ""active"": true,
-      ""device_id"": null,
-      ""id"": 13,
-      ""name"": null,
-      ""other_info"": ""{}"",
-      ""registration_id"": ""b638da69b963856df03b5e5a3c221161edd55b100dda4b5d66fa2f05e3f3f390"",
-      ""resource_uri"": ""/api/v1/pushnotificationdevice/13/"",
-      ""type"": ""APNS"",
-      ""user"": ""/api/v1/user/3/""
-    }";
-
-			HttpContent content = new StringContent(json);
-			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-			//var response = new HttpClient().PostAsync("http://cami.vitaminsoftware.com:8008/api/v1/pushnotificationdevice/", content);
-            var response = new HttpClient().PostAsync(url+"/pushnotificationdevice/", content);
-
-			Console.WriteLine("PUSH NOTIFICATION" + response.Result);
-            
-
-			
-        }
     }
 }

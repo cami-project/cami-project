@@ -76,5 +76,16 @@ namespace DSS.RMQ.INS
 			Console.WriteLine("INSERT EVENT:" + response.Result);
 		}
 
+
+        public void InsertPushNotification(string json){
+
+			HttpContent content = new StringContent(json);
+			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+			var response = new HttpClient().PostAsync(url + "/push_notifications/", content);
+
+			Console.WriteLine("INSERT NOTIFICATION:" + response.Result);
+
+        } 
 	}
 }
