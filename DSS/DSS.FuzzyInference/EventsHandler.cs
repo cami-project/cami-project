@@ -36,8 +36,11 @@ namespace DSS.FuzzyInference
                 if(obj.content.name == "EXERCISE_MODE_ON")
 				    RequestManagableQueue.Add(obj);
 
-                if (obj.content.name == "EXERCISE_MODE_OFF")
-                    RequestManagableQueue.RemoveAll(x => x.content.name == "EXERCISE_MODE_ON");
+                if (obj.content.name == "EXERCISE_MODE_OFF") {
+
+					RequestManagableQueue.RemoveAll(x => x.content.name == "EXERCISE_MODE_ON");
+                    Queue.Push(new Event(){ category = "SYSTEM", content = new Content() { name = "POST_EXERCISE"}}, 10);
+                }
                 
             }
             else  
@@ -49,14 +52,22 @@ namespace DSS.FuzzyInference
 			{
                 result = "ABNORMAL_HEART_RATE";
 
-					foreach (var item in RequestManagableQueue)
+				foreach (var item in RequestManagableQueue)
+				{
+					if (item.content.name == "EXERCISE_MODE_ON")
 					{
-						if (item.content.name == "EXERCISE_MODE_ON")
-						{
-                            result = "";
-						}
+                        result = "";
 					}
-			}
+				}
+
+                foreach (var item in Queue.Queue)
+                {
+                    if(item.Value.content.name == "POST_EXERCISE") 
+                    {
+                        result = "";
+                    }
+                }
+            }
 
 
             if(result == "ABNORMAL_HEART_RATE") {
