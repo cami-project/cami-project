@@ -77,7 +77,7 @@ namespace DSS.RMQ
         public float GetLatestWeightMeasurement() 
         {
 
-            var response = new HttpClient().GetAsync(url +"/measurement/?limit=1&measurement_type=weight&order_by=-timestamp");
+            var response = new HttpClient().GetAsync(url +"/measurement/?limit=1&measurement_type=weight&order_by=-timestamp&user=2");
 
             if (response.Result.IsSuccessStatusCode)
             {

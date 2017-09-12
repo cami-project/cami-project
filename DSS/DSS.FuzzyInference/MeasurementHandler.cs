@@ -7,6 +7,12 @@ using Newtonsoft.Json;
 namespace DSS.FuzzyInference
 {
 
+    public class ValueInfo 
+    {
+        public string Value;
+
+    }
+
     public class Measurement
     {
 		public string measurement_type { get; set; }
@@ -14,7 +20,7 @@ namespace DSS.FuzzyInference
 		public int timestamp { get; set; }
 		public string user { get; set; }
 		public string device { get; set; }
-		public string value_info { get; set; }
+        public ValueInfo value_info { get; set; }
 		public string gateway_id { get; set; }
         public bool ok { get; set; }
         public string id { get; set; }
@@ -36,6 +42,7 @@ namespace DSS.FuzzyInference
 
         public void Handle(string json) 
         {
+            Console.WriteLine("Measurement handler invoked");
 
             var obj = JsonConvert.DeserializeObject<Measurement>(json);
 
@@ -43,9 +50,8 @@ namespace DSS.FuzzyInference
 
 			if (obj.measurement_type == "weight")
 			{
-                
                 //TODO: wight data is going to be wrapped inside of an object!
-                var val = float.Parse( obj.value_info);
+                var val = float.Parse( obj.value_info.Value);
 
 				var kg = storeAPI.GetLatestWeightMeasurement();
 
@@ -55,7 +61,7 @@ namespace DSS.FuzzyInference
 				}                 else                  {                     obj.ok = true;                }             }
             else if(obj.measurement_type == "pulse") 
             {
-				var val = float.Parse(obj.value_info);
+                var val = float.Parse(obj.value_info.Value);
                 var min = 50;
                 var max = 120;
 
@@ -69,13 +75,12 @@ namespace DSS.FuzzyInference
                         insertionAPI.InsertEvent( JsonConvert.SerializeObject(anEvent));
                     }
 
-					storeAPI.PushJournalEntry("Pulse is abnormal", "Pulse is abnormal");
+				    storeAPI.PushJournalEntry("Pulse is abnormal", "Pulse is abnormal");
 				}
                 else 
                 {
                     obj.ok = true;
 				}
-
 			}
 
             storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));

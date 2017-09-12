@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Wearable.cs" />
-    <Compile Include="FuzzyHandler.cs" />
+    <Compile Include="FallHandler.cs" />
     <Compile Include="TimerQueue.cs" />
     <Compile Include="EventToLabel.cs" />
     <Compile Include="FuzzyContainer.cs" />

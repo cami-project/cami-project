@@ -9,7 +9,6 @@ using System.Threading;
 using log4net;
 using log4net.Config;
 using System.Xml;
-using DSS.RMQ;
 
 namespace DSS.Main
 {
@@ -23,13 +22,13 @@ namespace DSS.Main
             
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...");
-            Console.WriteLine("This is version 1.0.8");
+            Console.WriteLine("This is version 1.1.0");
 
 			var router = new Router<Event>();
 
 			IRouterHandler[] handlers =
             {
-				new FuzzyHandler(),
+                new EventsHandler(),
 				new MeasurementHandler()
 			};
 
@@ -46,21 +45,19 @@ namespace DSS.Main
             }
 
 			//Testing measuremnts 
+			//var measure = new Measurement()
+			//{
+			//    device = "/api/v1/device/2/",
+			//    id = "200",
+			//    measurement_type = "weight",
+			//    resource_uri = "/api/v1/measurement/1/",
+			//    timestamp = 1477413397,
+			//    unit_type = "kg",
+			//    user = "/api/v1/user/2/",
+			//    value_info = "200"
+			//};
 
-
-			var measure = new Measurement()
-			{
-			    device = "/api/v1/device/2/",
-			    id = "200",
-			    measurement_type = "weight",
-			    resource_uri = "/api/v1/measurement/1/",
-			    timestamp = 1477413397,
-			    unit_type = "kg",
-			    user = "/api/v1/user/2/",
-			    value_info = "200"
-			};
-
-            handlers[1].Handle(JsonConvert.SerializeObject(measure) );
+            //handlers[1].Handle(JsonConvert.SerializeObject(measure) );
 
 
 
