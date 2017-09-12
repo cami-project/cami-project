@@ -33,8 +33,8 @@ def insert_measurement(request):
                 logger.debug("[insertion] New measurement was enqueued: %s", str(content))
 
                 return HttpResponse(status=201)
-    except Exception:
-        logger.debug("[insertion] ERROR! Exception caught in insert_measurement method: %s", e.value)
+    except Exception as e:
+        logger.debug("[insertion] ERROR! Exception caught in insert_measurement method: %s", e.message)
 
     return HttpResponse(status=400)
 
@@ -60,8 +60,8 @@ def insert_event(request):
                 logger.debug("[insertion] New event was enqueued: %s", str(content))
 
                 return HttpResponse(status=201)
-    except Exception:
-        logger.debug("[insertion] ERROR! Exception caught in insert_event method: %s", e.value)
+    except Exception as e:
+        logger.debug("[insertion] ERROR! Exception caught in insert_event method: %s", e.message)
 
     return HttpResponse(status=400)
 
@@ -90,6 +90,6 @@ def insert_push_notification(request):
 
                 return HttpResponse(status=201)
     except Exception as e:
-        logger.debug("[insertion] ERROR! Exception caught in insert_push_notification method: %s", e.value)
+        logger.debug("[insertion] ERROR! Exception caught in insert_push_notification method: %s", e.message)
 
     return HttpResponse(status=400)
