@@ -93,9 +93,12 @@ namespace DSS.RMQ
         public void PushJournalEntry(string msg, string desc, string type) 
         {
 
+            Console.WriteLine("Timestamp: " +  (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds.ToString());
+
+
             var obj = new JournalEntry()
             {
-                user = "/api/v1/user/2/",
+				user = "/api/v1/user/2/",
                 description = desc,
                 message = msg,
                 reference_id = null,
