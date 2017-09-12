@@ -90,17 +90,18 @@ namespace DSS.RMQ
 
         }
 
-        public void PushJournalEntry(string msg, string desc) 
+        public void PushJournalEntry(string msg, string desc, string type) 
         {
 
             var obj = new JournalEntry()
             {
-                user = "/api/v1/user/3/",
+                user = "/api/v1/user/2/",
                 description = desc,
                 message = msg,
-                reference_id = "100",
-                timestamp = "1503905400",
-                acknowledged = false
+                reference_id = null,
+                timestamp = (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds.ToString(),
+                acknowledged = false,
+                type = type
             };
 
             HttpContent content = new StringContent(JsonConvert.SerializeObject(obj));

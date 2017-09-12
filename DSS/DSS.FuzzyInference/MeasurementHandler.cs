@@ -45,6 +45,7 @@ namespace DSS.FuzzyInference
             Console.WriteLine("Measurement handler invoked");
 
             var obj = JsonConvert.DeserializeObject<Measurement>(json);
+            obj.timestamp = (int) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
             var result = new List<string>();
 
@@ -55,7 +56,7 @@ namespace DSS.FuzzyInference
 
 				var kg = storeAPI.GetLatestWeightMeasurement();
 
-               if (Math.Abs(val - kg) > 2)                {                     var msg = val > kg ? "Have lighter meals" : "Have more consistent meals";                     result.Add("Abnormal change in weight noticed - " + msg);                     storeAPI.PushJournalEntry(msg, "Abnormal change in weight noticed");                     insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = msg, user_id = 2 }));
+               if (Math.Abs(val - kg) > 2)                {                     var msg = val > kg ? "Have lighter meals" : "Have more consistent meals";                     result.Add("Abnormal change in weight noticed - " + msg);                     storeAPI.PushJournalEntry(msg, "Abnormal change in weight noticed", "weight");                     insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = msg, user_id = 2 }));
      
                     obj.ok = false;
 				}                 else                  {                     obj.ok = true;                }             }
@@ -75,7 +76,7 @@ namespace DSS.FuzzyInference
                         insertionAPI.InsertEvent( JsonConvert.SerializeObject(anEvent));
                     }
 
-				    storeAPI.PushJournalEntry("Pulse is abnormal", "Pulse is abnormal");
+				    storeAPI.PushJournalEntry("Pulse is abnormal", "Pulse is abnormal", "pulse");
 				}
                 else 
                 {

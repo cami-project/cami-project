@@ -22,7 +22,7 @@ namespace DSS.Main
             
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...");
-            Console.WriteLine("This is version 1.1.0");
+            Console.WriteLine("This is version 1.1.1");
 
 			var router = new Router<Event>();
 
