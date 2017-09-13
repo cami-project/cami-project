@@ -46,7 +46,7 @@ namespace DSS.RMQ
 
         public bool AreLastNHeartRateCritical(int n, int low, int high){
 
-            var urlVS = url + "/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp&user=2&device=2";
+            var urlVS = url + "/measurement/?limit=4&measurement_type=pulse&order_by=-timestamp&user=2&device=2";
 
             var response = new HttpClient().GetAsync(urlVS);
 
@@ -56,20 +56,29 @@ namespace DSS.RMQ
                 var isCritical = true;
 
 
-                Console.WriteLine(deserialized);
+                //Console.WriteLine(deserialized);
 
-                if (n == deserialized["measurements"].Count)
+                if (n + 1 == deserialized["measurements"].Count)
                 {
-                    foreach (var item in deserialized["measurements"])
+
+
+                    for (int i = 1; i < deserialized["measurements"].Count; i++)
                     {
-                        var hr = item["value_info"]["value"] ?? item["value_info"]["Value"];
+                        var item = deserialized["measurements"][i];
+
+                        var hr =  (int) (item["value_info"]["value"] ?? item["value_info"]["Value"]);
+
+                        Console.WriteLine("HR: " + hr);
 
                         if ( hr > low && hr < high)
                         {
                             isCritical = false;
 						}
                     }
-                }
+
+					Console.WriteLine("IS critical: " + isCritical);
+				}
+
                 else 
                 {
                     throw new Exception("Server response doesn't match requested number of pulse items " + deserialized);

@@ -45,6 +45,12 @@ namespace DSS.Main
             }
 
 
+
+            //var store = new StoreAPI("http://141.85.241.224:8008/api/v1");
+
+            //store.AreLastNHeartRateCritical(3, 50, 180);
+
+
 			while (true)
             {
 
