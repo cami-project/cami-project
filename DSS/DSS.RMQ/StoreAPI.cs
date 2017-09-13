@@ -55,11 +55,16 @@ namespace DSS.RMQ
                 dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
                 var isCritical = true;
 
+
+                Console.WriteLine(deserialized);
+
                 if (n == deserialized["measurements"].Count)
                 {
                     foreach (var item in deserialized["measurements"])
                     {
-                        if (item["value_info"]["value"] > low && item["value_info"]["value"] < high)
+                        var hr = item["value_info"]["value"] ?? item["value_info"]["Value"];
+
+                        if ( hr > low && hr < high)
                         {
                             isCritical = false;
 						}
