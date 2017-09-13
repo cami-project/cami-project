@@ -110,6 +110,8 @@ namespace DSS.FuzzyInference
         public List<string> Infer(List<Event> events){
 
 
+            Console.WriteLine("Inference: " + events.Count);
+
             var results = new List<string>();
 
             foreach (var e in events)
