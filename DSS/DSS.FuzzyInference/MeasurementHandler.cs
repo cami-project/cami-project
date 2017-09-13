@@ -51,7 +51,6 @@ namespace DSS.FuzzyInference
 
 			if (obj.measurement_type == "weight")
 			{
-                //TODO: wight data is going to be wrapped inside of an object!
                 var val = float.Parse( obj.value_info.Value);
 
 				var kg = storeAPI.GetLatestWeightMeasurement();

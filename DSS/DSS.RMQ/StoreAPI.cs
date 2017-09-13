@@ -46,7 +46,7 @@ namespace DSS.RMQ
 
         public bool AreLastNHeartRateCritical(int n, int low, int high){
 
-            var urlVS = url + "/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp";
+            var urlVS = url + "/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp&user=2&device=2";
 
             var response = new HttpClient().GetAsync(urlVS);
 
