@@ -29,13 +29,14 @@ namespace DSS.Main
 			IRouterHandler[] handlers =
             {
                 new EventsHandler(),
-				new MeasurementHandler()
+				new MeasurementHandler(),
+                new FallHandler(),
 			};
 
             var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
             try
             {
-                var rmqEvents = new RmqExchange(url, "events", "event.*", (json)=> { handlers[0].Handle(json); });
+                var rmqEvents = new RmqExchange(url, "events", "event.*", (json) => { handlers[0].Handle(json); handlers[2].Handle(json); } );
 				var rmqMeasurements = new RmqExchange(url, "measurements", "measurement.*", (json) => { handlers[1].Handle(json); });
 
 			}
