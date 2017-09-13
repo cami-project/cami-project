@@ -79,13 +79,11 @@ namespace DSS.RMQ
 
             var response = new HttpClient().GetAsync(url +"/measurement/?limit=1&measurement_type=weight&order_by=-timestamp&user=2");
 
-            Console.WriteLine("GET 3 MEASUREMENTS: " + response);
-
             if (response.Result.IsSuccessStatusCode)
             {
                 dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
 
-                return deserialized["measurements"][0]["value_info"]["value"];
+                return deserialized["measurements"][0]["value_info"]["value"] ?? deserialized["measurements"][0]["value_info"]["Value"] ;
             }
 
 			throw new Exception("Something went wrong on the server side while geting last wight measurement " + response.Result);

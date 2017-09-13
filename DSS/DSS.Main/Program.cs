@@ -22,7 +22,7 @@ namespace DSS.Main
             
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...");
-            Console.WriteLine("This is version 1.1.1");
+            Console.WriteLine("This is version 1.2");
 
 			var router = new Router<Event>();
 
@@ -41,23 +41,8 @@ namespace DSS.Main
 			}
             catch (Exception ex)
             {
-                Console.WriteLine("Something went wrong iwth the rmq exchange: " +  ex);
+                Console.WriteLine("Something went wrong with the rmq exchange: " +  ex);
             }
-
-			//Testing measuremnts 
-			var measure = new Measurement()
-			{
-			    device = "/api/v1/device/2/",
-			    measurement_type = "weight",
-                resource_uri = null,
-			    timestamp = 1477413397,
-			    unit_type = "kg",
-			    user = "/api/v1/user/2/",
-                value_info = new FuzzyInference.ValueInfo() { Value = "100"}
-			};
-
-            handlers[1].Handle(JsonConvert.SerializeObject(measure) );
-
 
 
 			while (true)
