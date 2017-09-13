@@ -60,8 +60,6 @@ namespace DSS.FuzzyInference
 				var kg = storeAPI.GetLatestWeightMeasurement();
 
 
-                Console.WriteLine("Weight " + val + " / " + kg);
-
 
                if (Math.Abs(val - kg) > 2)                {                     var msg = val > kg ? "Have lighter meals" : "Have more consistent meals";                     result.Add("Abnormal change in weight noticed - " + msg);                     storeAPI.PushJournalEntry(msg, "Abnormal change in weight noticed", "weight");                     insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = msg, user_id = 2 }));
      
