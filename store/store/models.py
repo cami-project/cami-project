@@ -91,7 +91,7 @@ class Device(models.Model):
         ("pedometer", "Step Counter")
     )
 
-    device_identifier = models.CharField(max_length=64, default=uuid.uuid4, unique=True)
+    device_identifier = models.CharField(max_length=128, default=uuid.uuid4, unique=True)
 
     device_type = models.CharField(max_length=32, choices=DEVICE_TYPES, default="weight")
     manufacturer = models.CharField(max_length=128, null=True, blank=True)
