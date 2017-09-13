@@ -39,6 +39,9 @@ namespace DSS.FuzzyInference
             registredVariables.Add(impact.Name);
 
 
+            Console.WriteLine("IMPACT name: " + impact.Name);
+
+
 			var onGround = new LinguisticVariable("ON_GROUND", -0.5f, 1.5f);
 			new List<FuzzySet>()
 			{
@@ -116,12 +119,12 @@ namespace DSS.FuzzyInference
 
             foreach (var e in events)
             {
-                if(registredVariables.Contains( e2l.Do(e))) {
+                //if(registredVariables.Contains( e2l.Do(e))) {
 
 					fis.SetInput(e2l.Do(e), e.content.val.numVal);
 
                     Console.WriteLine(e2l.Do(e) +" - "+ e.content.val.numVal);
-                }
+                //}
 			}
 
             //Execute("HEART_RATE", results);
