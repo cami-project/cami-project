@@ -9,8 +9,7 @@ var json = require('../../../api-examples/homepage/severity.medium.json');
 
 // Initial state
 const initialState = Map({
-  'notification': fromJS(json).get('notification'),
-  'acknowledged': false
+  'notification': fromJS(json).get('notification')
 });
 
 
@@ -128,7 +127,7 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
         Effects.promise(triggerFetchNotification)
       );
     case ACK_RESPONSE:
-      return state.setIn(['acknowledged'], true);
+      return state.setIn(['notification', 'acknowledged'], true);
     default:
       return state;
   }

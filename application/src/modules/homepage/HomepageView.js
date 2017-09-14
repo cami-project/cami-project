@@ -29,7 +29,6 @@ const HomepageView = React.createClass({
   propTypes: {
     notification: PropTypes.instanceOf(Map).isRequired,
     username: PropTypes.string.isRequired,
-    acknowledged: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired
   },
 
@@ -68,8 +67,9 @@ const HomepageView = React.createClass({
   acknowledgeReminder() {
     tapButtonSound.setVolume(1.0).play();
 
-    var reference_id = this.props.notification.get('reference_id');
-    this.props.dispatch(HomepageStateActions.ackReminder('ok', reference_id));
+    var reference_id = this.props.notification.get('reference_id'),
+        entry_id = this.props.notification.get('id');
+    this.props.dispatch(HomepageStateActions.ackReminder('ok', reference_id, entry_id));
   },
 
   matchButtons(type) {
@@ -77,7 +77,7 @@ const HomepageView = React.createClass({
       case 'exercise':
       case 'medication':
       case 'appointment':
-        if (!this.props.acknowledged) {
+        if (!this.props.notification.get('acknowledged')) {
           console.log('[HomepageView] - Using button layout for ' + type + ' type Journal Entry, that hasn\'t been acknowledged.');
 
           return (
