@@ -28,10 +28,10 @@ export async function requestNotification() {
   };
 }
 
-export async function ackReminder(ack, reference_id) {
+export async function ackReminder(ack, reference_id, entry_id) {
   return {
     type: ACK_RESPONSE,
-    payload: await postReminderAcknowledgement(ack, reference_id)
+    payload: await postReminderAcknowledgement(ack, reference_id, entry_id)
   }
 }
 
@@ -63,10 +63,13 @@ async function fetchNotification() {
     });
 }
 
-async function postReminderAcknowledgement(ack, reference_id) {
+async function postReminderAcknowledgement(ack, reference_id, entry_id) {
   var user_id = store.getState().get('auth').get('currentUser').get('userMetadata').get('user_id');
   var timestamp = moment().format('X');
 
+  // Posting an event on the Insertion queue on acknowledgement
+  // - This can be picked up by any services that are listening to the it, and
+  //   trigger custom actions based on the User Input
   return fetch(env.INSERTION_ENDPOINT + 'events/', {
       method: 'POST',
       headers: {
@@ -90,8 +93,35 @@ async function postReminderAcknowledgement(ack, reference_id) {
       })
     }).then((response) => {
       if (response.status >= 200 && response.status < 300) {
-        console.log('[HomepageState] - Reminder acknowledged successfully: ' + JSON.stringify(response));
-        return response;
+        console.log('[HomepageState] - Successful send of reminder acknowledgement event: ' + JSON.stringify(response));
+
+        // Changing status of acknowledged field of the Journal Entry
+        // - We need to remember the acknowledged state of a reminder so that we
+        // no longer allow users to re-ack it
+        return fetch(env.NOTIFICATIONS_REST_API + entry_id + '/', {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            "acknowledged": ack === 'ok' ? true : false
+          })
+        }).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            console.log('[HomepageState] - Journal entry acknowledge field patched successfully: ' + JSON.stringify(response));
+
+            return response;
+
+          } else {
+            let error = new Error(response.statusText);
+            error.response = response;
+            throw error;
+          }
+
+        }).catch((error) => {
+          console.log('[HomepageState] - There was a problem patching the Joournal Entry acknowledged field: ' + JSON.stringify(error));
+        });
+
       } else {
         let error = new Error(response.statusText);
         error.response = response;
