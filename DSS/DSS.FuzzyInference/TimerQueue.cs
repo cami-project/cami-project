@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DSS.Delegate;
 
 namespace DSS.FuzzyInference
 {
-    public class TimerQueue<T>
+    public class TimerQueue<T> where T: Event
     {
         public List<Item<T>> Queue { get; set; }
 
@@ -20,6 +21,7 @@ namespace DSS.FuzzyInference
 
         public void Push(T item, float duration)
         {
+            Queue.RemoveAll(x=> x.Value.content.name == item.content.name);
             Queue.Add(new Item<T>(item, duration));
         }
 

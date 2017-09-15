@@ -9,7 +9,6 @@ using System.Threading;
 using log4net;
 using log4net.Config;
 using System.Xml;
-using DSS.RMQ;
 
 namespace DSS.Main
 {
@@ -23,45 +22,34 @@ namespace DSS.Main
             
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...");
-            Console.WriteLine("This is version 1.0.8");
+            Console.WriteLine("This is version 1.2");
 
 			var router = new Router<Event>();
 
 			IRouterHandler[] handlers =
             {
-				new FuzzyHandler(),
-				new MeasurementHandler()
+                new EventsHandler(),
+				new MeasurementHandler(),
+                new FallHandler(),
 			};
 
             var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
             try
             {
-                var rmqEvents = new RmqExchange(url, "events", "event.*", (json)=> { handlers[0].Handle(json); });
+                var rmqEvents = new RmqExchange(url, "events", "event.*", (json) => { handlers[0].Handle(json); handlers[2].Handle(json); } );
 				var rmqMeasurements = new RmqExchange(url, "measurements", "measurement.*", (json) => { handlers[1].Handle(json); });
 
 			}
             catch (Exception ex)
             {
-                Console.WriteLine("Something went wrong iwth the rmq exchange: " +  ex);
+                Console.WriteLine("Something went wrong with the rmq exchange: " +  ex);
             }
 
-			//Testing measuremnts 
 
 
-			var measure = new Measurement()
-			{
-			    device = "/api/v1/device/2/",
-			    id = "200",
-			    measurement_type = "weight",
-			    resource_uri = "/api/v1/measurement/1/",
-			    timestamp = 1477413397,
-			    unit_type = "kg",
-			    user = "/api/v1/user/2/",
-			    value_info = "200"
-			};
+            //var store = new StoreAPI("http://141.85.241.224:8008/api/v1");
 
-            handlers[1].Handle(JsonConvert.SerializeObject(measure) );
-
+            //store.AreLastNHeartRateCritical(3, 50, 180);
 
 
 			while (true)
