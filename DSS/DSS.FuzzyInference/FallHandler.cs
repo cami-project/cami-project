@@ -31,6 +31,9 @@ namespace DSS.FuzzyInference
 
             var inferenceResult = Fuzzy.Infer(Queue.ToNormal());
 
+
+            Console.WriteLine("FALL RESULT");
+
             if (inferenceResult.Count == 0)
 				Console.WriteLine("NO RESULTS");
             else 
