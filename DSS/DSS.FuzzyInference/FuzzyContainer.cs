@@ -119,12 +119,11 @@ namespace DSS.FuzzyInference
 
             foreach (var e in events)
             {
-                //if(registredVariables.Contains( e2l.Do(e))) {
+                if(registredVariables.Contains( e2l.Do(e))) {
 
 					fis.SetInput(e2l.Do(e), e.content.val.numVal);
-
                     Console.WriteLine(e2l.Do(e) +" - "+ e.content.val.numVal);
-                //}
+                }
 			}
 
             //Execute("HEART_RATE", results);

@@ -24,8 +24,8 @@ namespace DSS.Main
             Console.WriteLine("DSS invoked...");
             Console.WriteLine("This is version 1.2");
 
-			var router = new Router<Event>();
 
+			var router = new Router<Event>();
 			IRouterHandler[] handlers =
             {
                 new EventsHandler(),
