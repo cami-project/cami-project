@@ -26,7 +26,7 @@ namespace DSS.FuzzyInference
         public void Handle(string json)
         {
 			Console.WriteLine("Fuzzy inference invoked (Fall detection)...");
-			Console.WriteLine("Object handled by fall: " + json );
+			//Console.WriteLine("Object handled by fall: " + json );
 
             var obj = JsonConvert.DeserializeObject<Event>(json);
 
@@ -36,7 +36,7 @@ namespace DSS.FuzzyInference
             var inferenceResult = Fuzzy.Infer(Queue.ToNormal());
 
 
-            Console.WriteLine("FALL RESULT");
+            Console.WriteLine("FALL RESULT: ");
 
             if (inferenceResult.Count == 0)
 				Console.WriteLine("NO RESULTS");
