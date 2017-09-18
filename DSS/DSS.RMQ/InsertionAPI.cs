@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace DSS.RMQ.INS
 {
@@ -27,6 +28,8 @@ namespace DSS.RMQ.INS
 	{
 		public string name { get; set; }
 		public string value_type { get; set; }
+
+		[JsonProperty("value")]
 		public Value VALUE { get; set; }
         public float num_value { get; set; }
 	}

@@ -27,9 +27,12 @@ namespace DSS.FuzzyInference
             var obj = JsonConvert.DeserializeObject<Event>(json);
 
             Queue.Refresh();
-            Queue.Push(obj, 5);
+            Queue.Push(obj, 15);
 
             var inferenceResult = Fuzzy.Infer(Queue.ToNormal());
+
+
+            Console.WriteLine("FALL RESULT");
 
             if (inferenceResult.Count == 0)
 				Console.WriteLine("NO RESULTS");
