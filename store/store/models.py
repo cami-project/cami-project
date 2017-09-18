@@ -281,6 +281,15 @@ class JournalEntry(models.Model):
     acknowledged = models.NullBooleanField()
 
 
+    def __str__(self):
+        return "[JounralEntry] User: %s, Time: %s, Type: %s" % (
+            self.user.first_name + " " + self.user.last_name,
+            datetime.datetime.fromtimestamp(self.timestamp).strftime('%Y-%m-%d %H:%M:%S'),
+            self.type
+        )
+
+    __unicode__ = __str__
+
 # ================ PushNotificationDevice ================
 class PushNotificationDevice(models.Model):
     TYPES = (
