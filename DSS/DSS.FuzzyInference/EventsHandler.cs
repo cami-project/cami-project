@@ -72,8 +72,7 @@ namespace DSS.FuzzyInference
             if(result == "ABNORMAL_HEART_RATE") {
                 
                 api.InsertPushNotification( JsonConvert.SerializeObject( new DSS.RMQ.INS.PushNotification() { message = "Abnormal heart rate", user_id = 2}  ) );
-
-				Console.WriteLine("EVENT HANDLER RESULT: " + result);
+				Console.WriteLine("EVENT HANDLER RESULT: " + JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = "Abnormal heart rate", user_id = 2 }) );
 			}
 
         }

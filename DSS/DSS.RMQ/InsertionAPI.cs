@@ -83,7 +83,8 @@ namespace DSS.RMQ.INS
 
 			var response = new HttpClient().PostAsync(url + "/events/", content);
 
-			Console.WriteLine("INSERT EVENT:" + response.Result);
+			//Console.WriteLine("INSERT EVENT:" + response.Result);
+            Console.WriteLine("Event inserted");
 		}
 
 
@@ -94,8 +95,10 @@ namespace DSS.RMQ.INS
 
 			var response = new HttpClient().PostAsync(url + "/push_notifications/", content);
 
-			Console.WriteLine("INSERT NOTIFICATION:" + response.Result);
+			//Console.WriteLine("INSERT NOTIFICATION:" + response.Result);
+			Console.WriteLine("Notification inserted");
 
-        } 
+
+		} 
 	}
 }

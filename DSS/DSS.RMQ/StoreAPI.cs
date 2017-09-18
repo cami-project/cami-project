@@ -41,8 +41,10 @@ namespace DSS.RMQ
            
             var response = new HttpClient().PostAsync( url +"/measurement/", content);
 
-			Console.WriteLine("PUSH MEASUREMNT:" + response.Result);
-        }
+			//Console.WriteLine("PUSH MEASUREMNT:" + response.Result);
+			Console.WriteLine("Measurement inserted");
+
+		}
 
         public bool AreLastNHeartRateCritical(int n, int low, int high){
 
@@ -125,8 +127,10 @@ namespace DSS.RMQ
 			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 			var response = new HttpClient().PostAsync(url +"/journal_entries/", content);
 
-			Console.WriteLine("JOURNAL ENTRTY: " + response.Result);
-        }
+			//Console.WriteLine("JOURNAL ENTRTY: " + response.Result);
+			Console.WriteLine("Journal entry inserted");
+
+		}
 
     }
 }

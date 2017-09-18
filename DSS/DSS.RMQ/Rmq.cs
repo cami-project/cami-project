@@ -71,7 +71,7 @@ namespace DSS.RMQ
 
 				consumer.Received += (model, ea) =>
 				{
-                    Console.WriteLine("Rmq response events: " + Encoding.UTF8.GetString(ea.Body));
+                    //Console.WriteLine("Rmq response events: " + Encoding.UTF8.GetString(ea.Body));
 					onRecieve(Encoding.UTF8.GetString(ea.Body));
 				};
 
