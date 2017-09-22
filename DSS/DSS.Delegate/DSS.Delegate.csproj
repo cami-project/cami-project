@@ -40,7 +40,6 @@
     <Compile Include="Config.cs" />
     <Compile Include="Handlers\ConsolePrintHandler.cs" />
     <Compile Include="Handlers\IRouterHandler.cs" />
-    <Compile Include="Handlers\PushNotificationHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="delegate.config.json">
