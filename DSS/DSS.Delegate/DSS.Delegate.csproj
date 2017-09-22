@@ -38,7 +38,6 @@
     <Compile Include="Channel.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Handlers\ConsolePrintHandler.cs" />
     <Compile Include="Handlers\IRouterHandler.cs" />
   </ItemGroup>
   <ItemGroup>
