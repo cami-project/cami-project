@@ -173,7 +173,8 @@ class Measurement(models.Model):
         ("blood_pressure", "Blood Pressure Measurement"),
         ("pulse", "Heart Rate Measurement"),
         ("saturation", "Blood Oxygen Saturation Measurement"),
-        ("steps", "Pedometry")
+        ("steps", "Pedometry"),
+        ("sleep", "Minutes of Sleep")
     )
 
     MEASUREMENT_UNITS = (
@@ -181,7 +182,8 @@ class Measurement(models.Model):
         ("bpm", "Beats Per Minute"),
         ("kg", "Kilogram"),
         ("celsius", "Degrees Celsius"),
-        ("mmhg", "Pressure in mm Hg")
+        ("mmhg", "Pressure in mm Hg"),
+        ("minutes", "Minutes")
     )
 
     user = models.ForeignKey(User, related_name="health_measurements")
