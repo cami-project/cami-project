@@ -50,6 +50,7 @@
     <Compile Include="FuzzyContainer.cs" />
     <Compile Include="MeasurementHandler.cs" />
     <Compile Include="EventsHandler.cs" />
+    <Compile Include="MeasurementConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

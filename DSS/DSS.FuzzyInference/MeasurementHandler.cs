@@ -126,6 +126,7 @@ namespace DSS.FuzzyInference
         private StoreAPI storeAPI;
         private RMQ.INS.InsertionAPI insertionAPI;
         public string Name => "MEASUREMENT";
+        private JsonSerializerSettings settings;
 
         public MeasurementHandler()
         {
@@ -135,15 +136,19 @@ namespace DSS.FuzzyInference
 
             insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
 			//insertionAPI = new RMQ.INS.InsertionAPI("http://141.85.241.224:8010/api/v1/insertion");
+
+
+		    settings = new JsonSerializerSettings();
+			settings.Converters.Add(new MeasurementConverter());
 		}
 
         public void Handle(string json) 
         {
             Console.WriteLine("Measurement handler invoked");
 
-            var obj = JsonConvert.DeserializeObject<Measurement>(json);
-            obj.timestamp = (int) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
+            var obj = JsonConvert.DeserializeObject<Measurement>(json, settings);
+            obj.timestamp = (int) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
 			if (obj.measurement_type == "weight")
 			{
@@ -151,9 +156,7 @@ namespace DSS.FuzzyInference
 
                 //var val = float.Parse( obj.value_info.Value);
                 var val = weightValInfo.Value;
-
                 var kg = storeAPI.GetLatestWeightMeasurement();
-
 
 
                if (Math.Abs(val - kg) > 2)                {                     var msg = val > kg ? "Have lighter meals" : "Have more consistent meals";                     storeAPI.PushJournalEntry(msg, "Abnormal change in weight noticed", "weight");
