@@ -40,6 +40,8 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Mono.CSharp" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -51,6 +53,7 @@
     <Compile Include="MeasurementHandler.cs" />
     <Compile Include="EventsHandler.cs" />
     <Compile Include="MeasurementConverter.cs" />
+    <Compile Include="SensorToLocationHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
