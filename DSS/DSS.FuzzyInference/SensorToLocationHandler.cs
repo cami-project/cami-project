@@ -23,13 +23,21 @@ namespace DSS.FuzzyInference
 
         public void Handle(string json)
         {
+
+            Console.WriteLine("Sensor handler invoked");
+
             var deserialized = JsonConvert.DeserializeObject<dynamic>(json);
 
             if(deserialized.category == "USER_ENVIRONMENT"){
 
-                if(deserialized.content.name == "presence"){
+				Console.WriteLine("USER_ENVIRONMENT");
 
-                    var msg = "User has entered the" + Map[deserialized.annotations.source.sensor];
+
+				if(deserialized.content.name == "presence"){
+                    
+					Console.WriteLine("presence");
+
+					var msg = "User has entered the" + Map[deserialized.annotations.source.sensor];
 
                     storeAPI.PushJournalEntry(msg, msg, "location");
 

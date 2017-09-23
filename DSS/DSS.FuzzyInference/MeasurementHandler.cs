@@ -26,6 +26,12 @@ namespace DSS.FuzzyInference
         [JsonProperty("value")]
         public float Value { get; set; }
     }
+    public class DefaultValueInfo : ValueInfoBase
+	{
+		[JsonProperty("value")]
+		public float Value { get; set; }
+	}
+
     
     public class BloodPressureValueInfo : ValueInfoBase
     {

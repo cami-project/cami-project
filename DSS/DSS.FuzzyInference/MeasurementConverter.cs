@@ -39,20 +39,22 @@ class MeasurementConverter : JsonConverter
 				case "blood_pressure":
 					{
 						measurementVal = new BloodPressureValueInfo();
-
-						// set custom BPValueContractResolver contract resolver
-						//serializer.ContractResolver = new BPValueContractResolver();
-						//serializer.Converters.Insert(0, new BloodPressureValueConverter());
-
-						//JsonSerializer bpValSerializer = JsonSerializer.CreateDefault();
-						//bpValSerializer.Converters.Add(new BloodPressureValueConverter());
-
-						serializer.Populate(measurement["value_info"].CreateReader(), measurementVal);
+                        serializer.Populate(measurement["value_info"].CreateReader(), measurementVal);
 						convertedMeasurement.value_info = (BloodPressureValueInfo)measurementVal;
 						break;
 					}
-				default:
-					throw new ArgumentException("Invalid measurement type: " + measurementType);
+                default: {
+
+                        measurementVal = new DefaultValueInfo();
+						serializer.Populate(measurement["value_info"].CreateReader(), measurementVal);
+						convertedMeasurement.value_info = (DefaultValueInfo)measurementVal;
+                        break;
+                    }
+						
+
+
+                    
+					
 			}
 
 			return convertedMeasurement;
