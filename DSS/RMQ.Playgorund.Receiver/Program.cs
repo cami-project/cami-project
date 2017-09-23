@@ -18,17 +18,15 @@ namespace RMQ.Playgorund.Receiver
 
 
 			channel.ExchangeDeclare(exchange: "amq.topic", type: "topic", durable: true);
-
             var queueName = "hello" ;//channel.QueueDeclare();
 
 
 			channel.QueueBind(queue: queueName,
                               exchange: "amq.topic",
                               routingKey: "measurement.*",
-                              nowait: false,
                               arguments: null);
             
-			var consumer = new EventingBasicConsumer();
+			var consumer = new EventingBasicConsumer(channel);
 
 
 			consumer.Received += (model, ea) =>
@@ -39,7 +37,7 @@ namespace RMQ.Playgorund.Receiver
 			};
 			channel.BasicConsume(queue: queueName,
             noAck: true,
-                                 consumer: consumer, filter: null);     
+                                 consumer: consumer);     
 
 
             // Console.ReadLine();
