@@ -1191,7 +1191,7 @@ void _NotificationsPropertiesChanged(GDBusProxy *proxy,
         uuid = string(g_variant_get_string(array, nullptr));
     }
 
-    notifications->emplace(notifications->end(), v, length, uuid);
+        notifications->emplace(notifications->end(), v, length, uuid);
 }
 
 gboolean _StopGMainLoop(gpointer data) {
