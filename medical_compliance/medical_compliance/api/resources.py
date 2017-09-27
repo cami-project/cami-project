@@ -326,7 +326,7 @@ class StepsMeasurementResource(ModelResource):
 
 
     def get_steps_from_store(self, start_ts, end_ts):
-        return get_measurements_from_store(endpoint_path = "api/v1/measurement/",
+        return get_measurements_from_store(endpoint_path = "/api/v1/measurement/",
                                            measurement_type = "steps",
                                            value_info__start_timestamp__gte = start_ts,
                                            value_info__start_timestamp__lte = end_ts,
