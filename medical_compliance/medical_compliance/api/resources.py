@@ -326,8 +326,13 @@ class StepsMeasurementResource(ModelResource):
 
 
     def get_steps_from_store(self, start_ts, end_ts):
-        return get_measurements_from_store(endpoint_path = "/api/v1/measurement/",
+        steps_data = get_measurements_from_store(endpoint_path = "/api/v1/measurement/",
                                            measurement_type = "steps",
                                            value_info__start_timestamp__gte = start_ts,
                                            value_info__start_timestamp__lte = end_ts,
                                            order_by = "-timestamp")
+        #logger.debug("[medical-compliance] Retrieved last steps data: %s " % str(steps_data))
+        if 'measurements' in steps_data:
+            return steps_data['measurements']
+        else:
+            return []
