@@ -4,6 +4,8 @@ from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource
 from tastypie.paginator import Paginator
 from tastypie.utils import trailing_slash
+from django.conf import settings
+
 import numpy as np
 
 import datetime
@@ -12,6 +14,25 @@ import logging
 from models import MedicationPlan, WeightMeasurement, HeartRateMeasurement, StepsMeasurement
 
 logger = logging.getLogger("medical_compliance")
+
+def get_last_measurements_from_store(**kwargs):
+    import requests
+
+    LAST_MEASUREMENTS_ENDPOINT = "/api/v1/measurement/last_measurements/"
+
+    # if not "limit" in kwargs:
+    #     kwargs["limit"] = 20
+    #
+    # if not "order_by" in kwargs:
+    #     kwargs["order_by"] = "-timestamp"
+
+    endpoint = settings.STORE_URI + LAST_MEASUREMENTS_ENDPOINT
+    r = requests.get(endpoint, params=dict(kwargs))
+
+    response_json = r.json()
+
+    return response_json
+
 
 class MedicationPlanResource(ModelResource):
     class Meta:
@@ -39,15 +60,23 @@ class WeightMeasurementResource(ModelResource):
         self.is_authenticated(request)
         self.throttle_check(request)
 
-        last_weight_measurements = WeightMeasurement.objects.all().order_by('-timestamp')[:20]
+        #last_weight_measurements = WeightMeasurement.objects.all().order_by('-timestamp')[:20]
+        last_weight_measurements = self.get_last_values_from_store()
+
         amount = []
         data_list = []
         
         for index, measurement in enumerate(last_weight_measurements):
-            amount = [measurement.value] + amount
+            #amount = [measurement.value] + amount
+            amount = [measurement['value_info']['value']] + amount
+
             data_entry = {}
-            data_entry['timestamp'] = measurement.timestamp
-            data_entry['value'] = measurement.value
+            #data_entry['timestamp'] = measurement.timestamp
+            data_entry['timestamp'] = measurement['timestamp']
+
+            #data_entry['value'] = measurement.value
+            data_entry['value'] = measurement['value_info']['value']
+
             data_entry['status'] = "ok"
             if index > 0:
                 prev_measurement = last_weight_measurements[index - 1]
@@ -74,6 +103,12 @@ class WeightMeasurementResource(ModelResource):
         }
         return self.create_response(request, jsonResult)
 
+    def get_last_values_from_store(self):
+        params = {"type" : "weight"}
+        latest_measurements = get_last_measurements_from_store(params)
+
+        return latest_measurements
+
 
 class HeartRateMeasurementResource(ModelResource):
     class Meta:
@@ -93,15 +128,21 @@ class HeartRateMeasurementResource(ModelResource):
         self.is_authenticated(request)
         self.throttle_check(request)
 
-        last_hr_measurements = HeartRateMeasurement.objects.all().order_by('-timestamp')[:20]
+        #last_hr_measurements = HeartRateMeasurement.objects.all().order_by('-timestamp')[:20]
+        last_hr_measurements = self.get_last_values_from_store()
         amount = []
         data_list = []
         
         for index, measurement in enumerate(last_hr_measurements):
-            amount = [measurement.value] + amount
+            #amount = [measurement.value] + amount
+            amount = [measurement['value_info']['value']] + amount
+
             data_entry = {}
-            data_entry['timestamp'] = measurement.timestamp
-            data_entry['value'] = measurement.value
+            #data_entry['timestamp'] = measurement.timestamp
+            #data_entry['value'] = measurement.value
+            data_entry['timestamp'] = measurement['timestamp']
+            data_entry['timestamp'] = measurement['value_info']['value']
+
             data_entry['status'] = "ok"
             if data_entry['value'] < 60 or data_entry['value'] > 100:
                 data_entry['status'] = "warning"
@@ -125,9 +166,18 @@ class HeartRateMeasurementResource(ModelResource):
         }
         return self.create_response(request, jsonResult)
 
+
+    def get_last_values_from_store(self):
+        params = {"type": "pulse"}
+        latest_measurements = get_last_measurements_from_store(params)
+
+        return latest_measurements
+
+
 class MeasurementTimeResolution(object):
     HOURS         = "hours"
     DAYS          = "days"
+
 
 class MeasurementTimeFrame(object):
     def __init__(self, start_ts, end_ts):
