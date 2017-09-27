@@ -108,6 +108,9 @@ class WeightMeasurementResource(ModelResource):
 
     def get_last_values_from_store(self):
         latest_measurements = get_last_measurements_from_store(type = "weight")
+        for i, meas in enumerate(latest_measurements):
+            latest_measurements[i]['value_info']['value'] = float(meas['value_info']['value'])
+
         return latest_measurements
 
 
@@ -170,6 +173,9 @@ class HeartRateMeasurementResource(ModelResource):
 
     def get_last_values_from_store(self):
         latest_measurements = get_last_measurements_from_store(type="pulse")
+
+        for i, meas in enumerate(latest_measurements):
+            latest_measurements[i]['value_info']['value'] = int(meas['value_info']['value'])
 
         return latest_measurements
 
