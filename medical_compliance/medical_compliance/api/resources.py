@@ -79,9 +79,12 @@ class WeightMeasurementResource(ModelResource):
 
             data_entry['status'] = "ok"
             if index > 0:
+                #prev_measurement = last_weight_measurements[index - 1]
+                #if abs(measurement.value - prev_measurement.value) >= 2:
+                #    data_entry['status'] = "warning"
                 prev_measurement = last_weight_measurements[index - 1]
-                if abs(measurement.value - prev_measurement.value) >= 2:
-                    data_entry['status'] = "warning"
+                if abs(measurement['value_info']['value'] - prev_measurement['value_info']['value']) >= 2:
+                   data_entry['status'] = "warning"
             data_list = [data_entry] + data_list
             
         status = "ok"
