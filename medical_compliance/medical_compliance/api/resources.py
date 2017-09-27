@@ -109,7 +109,13 @@ class WeightMeasurementResource(ModelResource):
     def get_last_values_from_store(self):
         latest_measurements = get_last_measurements_from_store(type = "weight")
         for i, meas in enumerate(latest_measurements):
-            latest_measurements[i]['value_info']['value'] = float(meas['value_info']['value'])
+            val = None
+            if 'Value' in meas['value_info']:
+                val = meas['value_info']['Value']
+            else:
+                val = meas['value_info']['value']
+
+            latest_measurements[i]['value_info']['value'] = float(val)
 
         return latest_measurements
 
@@ -145,7 +151,7 @@ class HeartRateMeasurementResource(ModelResource):
             #data_entry['timestamp'] = measurement.timestamp
             #data_entry['value'] = measurement.value
             data_entry['timestamp'] = measurement['timestamp']
-            data_entry['timestamp'] = measurement['value_info']['value']
+            data_entry['value'] = measurement['value_info']['value']
 
             data_entry['status'] = "ok"
             if data_entry['value'] < 60 or data_entry['value'] > 100:
@@ -175,7 +181,13 @@ class HeartRateMeasurementResource(ModelResource):
         latest_measurements = get_last_measurements_from_store(type="pulse")
 
         for i, meas in enumerate(latest_measurements):
-            latest_measurements[i]['value_info']['value'] = int(meas['value_info']['value'])
+            val = None
+            if 'Value' in meas['value_info']:
+                val = meas['value_info']['Value']
+            else:
+                val = meas['value_info']['value']
+
+            latest_measurements[i]['value_info']['value'] = int(val)
 
         return latest_measurements
 
