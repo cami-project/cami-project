@@ -158,7 +158,10 @@ class MeasurementResource(ModelResource):
             filters = {}
 
         info_filters = {
-            k : v
+            # TODO: this is an elegant hack, but still a hack.
+            # It because Django JSONField filtering will not handle comparisons with the string form of numbers,
+            # where the JSONField actually stores numeric (int, float) values
+            k : ast.literal_eval(v)
             for k, v in filters.items()
             if k.startswith(MeasurementResource.VALUE_INFO_FIELD_NAME)
         }
