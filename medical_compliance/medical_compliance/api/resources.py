@@ -4,6 +4,8 @@ from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource
 from tastypie.paginator import Paginator
 from tastypie.utils import trailing_slash
+from django.conf import settings
+
 import numpy as np
 
 import datetime
@@ -12,6 +14,22 @@ import logging
 from models import MedicationPlan, WeightMeasurement, HeartRateMeasurement, StepsMeasurement
 
 logger = logging.getLogger("medical_compliance")
+
+def get_measurements_from_store(endpoint_path ="/api/v1/measurement/last_measurements/", **kwargs):
+    import requests
+    # if not "limit" in kwargs:
+    #     kwargs["limit"] = 20
+    #
+    # if not "order_by" in kwargs:
+    #     kwargs["order_by"] = "-timestamp"
+
+    endpoint = settings.STORE_ENDPOINT_URI + endpoint_path
+    r = requests.get(endpoint, params=dict(kwargs))
+
+    response_json = r.json()
+
+    return response_json
+
 
 class MedicationPlanResource(ModelResource):
     class Meta:
@@ -39,20 +57,31 @@ class WeightMeasurementResource(ModelResource):
         self.is_authenticated(request)
         self.throttle_check(request)
 
-        last_weight_measurements = WeightMeasurement.objects.all().order_by('-timestamp')[:20]
+        #last_weight_measurements = WeightMeasurement.objects.all().order_by('-timestamp')[:20]
+        last_weight_measurements = self.get_last_values_from_store()
+
         amount = []
         data_list = []
         
         for index, measurement in enumerate(last_weight_measurements):
-            amount = [measurement.value] + amount
+            #amount = [measurement.value] + amount
+            amount = [measurement['value_info']['value']] + amount
+
             data_entry = {}
-            data_entry['timestamp'] = measurement.timestamp
-            data_entry['value'] = measurement.value
+            #data_entry['timestamp'] = measurement.timestamp
+            data_entry['timestamp'] = measurement['timestamp']
+
+            #data_entry['value'] = measurement.value
+            data_entry['value'] = measurement['value_info']['value']
+
             data_entry['status'] = "ok"
             if index > 0:
+                #prev_measurement = last_weight_measurements[index - 1]
+                #if abs(measurement.value - prev_measurement.value) >= 2:
+                #    data_entry['status'] = "warning"
                 prev_measurement = last_weight_measurements[index - 1]
-                if abs(measurement.value - prev_measurement.value) >= 2:
-                    data_entry['status'] = "warning"
+                if abs(measurement['value_info']['value'] - prev_measurement['value_info']['value']) >= 2:
+                   data_entry['status'] = "warning"
             data_list = [data_entry] + data_list
             
         status = "ok"
@@ -74,6 +103,19 @@ class WeightMeasurementResource(ModelResource):
         }
         return self.create_response(request, jsonResult)
 
+    def get_last_values_from_store(self):
+        latest_measurements = get_measurements_from_store(type ="weight")
+        for i, meas in enumerate(latest_measurements):
+            val = None
+            if 'Value' in meas['value_info']:
+                val = meas['value_info']['Value']
+            else:
+                val = meas['value_info']['value']
+
+            latest_measurements[i]['value_info']['value'] = float(val)
+
+        return latest_measurements
+
 
 class HeartRateMeasurementResource(ModelResource):
     class Meta:
@@ -93,15 +135,21 @@ class HeartRateMeasurementResource(ModelResource):
         self.is_authenticated(request)
         self.throttle_check(request)
 
-        last_hr_measurements = HeartRateMeasurement.objects.all().order_by('-timestamp')[:20]
+        #last_hr_measurements = HeartRateMeasurement.objects.all().order_by('-timestamp')[:20]
+        last_hr_measurements = self.get_last_values_from_store()
         amount = []
         data_list = []
         
         for index, measurement in enumerate(last_hr_measurements):
-            amount = [measurement.value] + amount
+            #amount = [measurement.value] + amount
+            amount = [measurement['value_info']['value']] + amount
+
             data_entry = {}
-            data_entry['timestamp'] = measurement.timestamp
-            data_entry['value'] = measurement.value
+            #data_entry['timestamp'] = measurement.timestamp
+            #data_entry['value'] = measurement.value
+            data_entry['timestamp'] = measurement['timestamp']
+            data_entry['value'] = measurement['value_info']['value']
+
             data_entry['status'] = "ok"
             if data_entry['value'] < 60 or data_entry['value'] > 100:
                 data_entry['status'] = "warning"
@@ -125,9 +173,26 @@ class HeartRateMeasurementResource(ModelResource):
         }
         return self.create_response(request, jsonResult)
 
+
+    def get_last_values_from_store(self):
+        latest_measurements = get_measurements_from_store(type="pulse")
+
+        for i, meas in enumerate(latest_measurements):
+            val = None
+            if 'Value' in meas['value_info']:
+                val = meas['value_info']['Value']
+            else:
+                val = meas['value_info']['value']
+
+            latest_measurements[i]['value_info']['value'] = int(val)
+
+        return latest_measurements
+
+
 class MeasurementTimeResolution(object):
     HOURS         = "hours"
     DAYS          = "days"
+
 
 class MeasurementTimeFrame(object):
     def __init__(self, start_ts, end_ts):
@@ -178,7 +243,10 @@ class StepsMeasurementResource(ModelResource):
         if len(frames) > 0:
             start_from = frames[-1].start_ts
             start_to = frames[0].end_ts
-            last_steps_measurements = StepsMeasurement.objects.filter(start_timestamp__gte=start_from, start_timestamp__lte=start_to).order_by('-start_timestamp')
+
+            # last_steps_measurements = StepsMeasurement.objects.filter(start_timestamp__gte=start_from, start_timestamp__lte=start_to).order_by('-start_timestamp')
+            last_steps_measurements = self.get_steps_from_store(start_from, start_to)
+
             logger.debug("[medical-compliance] Filtered steps measurements (%s, %s): %s" % (start_from, start_to, last_steps_measurements))
 
             total_amount = 0
@@ -193,9 +261,13 @@ class StepsMeasurementResource(ModelResource):
                 for measurement in last_steps_measurements:
                     logger.debug("[medical-compliance] Check if measurement %s should be aggregated in frame %s" % (measurement, frame))
                     
-                    if measurement.start_timestamp < frame.start_ts or measurement.start_timestamp > frame.end_ts:
+                    # if measurement.start_timestamp < frame.start_ts or measurement.start_timestamp > frame.end_ts:
+                    #     continue
+
+                    if measurement['value_info']['start_timestamp'] < frame.start_ts or measurement['value_info']['start_timestamp'] > frame.end_ts:
                         continue
-                    frame_amount = measurement.value + frame_amount    
+                    #frame_amount = measurement.value + frame_amount
+                    frame_amount = measurement['value_info']['value'] + frame_amount
 
                 data_entry['status'] = "ok" 
                 data_entry['value'] = frame_amount
@@ -251,3 +323,16 @@ class StepsMeasurementResource(ModelResource):
                 datetime.datetime(1970, 1, 1)
             ).total_seconds()
         )
+
+
+    def get_steps_from_store(self, start_ts, end_ts):
+        steps_data = get_measurements_from_store(endpoint_path = "/api/v1/measurement/",
+                                           measurement_type = "steps",
+                                           value_info__start_timestamp__gte = start_ts,
+                                           value_info__start_timestamp__lte = end_ts,
+                                           order_by = "-timestamp")
+        #logger.debug("[medical-compliance] Retrieved last steps data: %s " % str(steps_data))
+        if 'measurements' in steps_data:
+            return steps_data['measurements']
+        else:
+            return []
