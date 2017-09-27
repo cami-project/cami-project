@@ -18,7 +18,7 @@ logger = logging.getLogger("medical_compliance")
 def get_last_measurements_from_store(**kwargs):
     import requests
 
-    LAST_MEASUREMENTS_ENDPOINT = "/api/v1/measurement/last_measurements/"
+    LAST_MEASUREMENTS_PATH = "/api/v1/measurement/last_measurements/"
 
     # if not "limit" in kwargs:
     #     kwargs["limit"] = 20
@@ -26,7 +26,7 @@ def get_last_measurements_from_store(**kwargs):
     # if not "order_by" in kwargs:
     #     kwargs["order_by"] = "-timestamp"
 
-    endpoint = settings.STORE_URI + LAST_MEASUREMENTS_ENDPOINT
+    endpoint = settings.STORE_ENDPOINT_URI + LAST_MEASUREMENTS_PATH
     r = requests.get(endpoint, params=dict(kwargs))
 
     response_json = r.json()
