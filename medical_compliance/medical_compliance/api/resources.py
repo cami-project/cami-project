@@ -104,9 +104,7 @@ class WeightMeasurementResource(ModelResource):
         return self.create_response(request, jsonResult)
 
     def get_last_values_from_store(self):
-        params = {"type" : "weight"}
-        latest_measurements = get_last_measurements_from_store(params)
-
+        latest_measurements = get_last_measurements_from_store(type = "weight")
         return latest_measurements
 
 
@@ -168,8 +166,7 @@ class HeartRateMeasurementResource(ModelResource):
 
 
     def get_last_values_from_store(self):
-        params = {"type": "pulse"}
-        latest_measurements = get_last_measurements_from_store(params)
+        latest_measurements = get_last_measurements_from_store(type="pulse")
 
         return latest_measurements
 
