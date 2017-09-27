@@ -15,18 +15,15 @@ from models import MedicationPlan, WeightMeasurement, HeartRateMeasurement, Step
 
 logger = logging.getLogger("medical_compliance")
 
-def get_last_measurements_from_store(**kwargs):
+def get_measurements_from_store(endpoint_path ="/api/v1/measurement/last_measurements/", **kwargs):
     import requests
-
-    LAST_MEASUREMENTS_PATH = "/api/v1/measurement/last_measurements/"
-
     # if not "limit" in kwargs:
     #     kwargs["limit"] = 20
     #
     # if not "order_by" in kwargs:
     #     kwargs["order_by"] = "-timestamp"
 
-    endpoint = settings.STORE_ENDPOINT_URI + LAST_MEASUREMENTS_PATH
+    endpoint = settings.STORE_ENDPOINT_URI + endpoint_path
     r = requests.get(endpoint, params=dict(kwargs))
 
     response_json = r.json()
@@ -107,7 +104,7 @@ class WeightMeasurementResource(ModelResource):
         return self.create_response(request, jsonResult)
 
     def get_last_values_from_store(self):
-        latest_measurements = get_last_measurements_from_store(type = "weight")
+        latest_measurements = get_measurements_from_store(type ="weight")
         for i, meas in enumerate(latest_measurements):
             val = None
             if 'Value' in meas['value_info']:
@@ -178,7 +175,7 @@ class HeartRateMeasurementResource(ModelResource):
 
 
     def get_last_values_from_store(self):
-        latest_measurements = get_last_measurements_from_store(type="pulse")
+        latest_measurements = get_measurements_from_store(type="pulse")
 
         for i, meas in enumerate(latest_measurements):
             val = None
@@ -246,7 +243,10 @@ class StepsMeasurementResource(ModelResource):
         if len(frames) > 0:
             start_from = frames[-1].start_ts
             start_to = frames[0].end_ts
-            last_steps_measurements = StepsMeasurement.objects.filter(start_timestamp__gte=start_from, start_timestamp__lte=start_to).order_by('-start_timestamp')
+
+            # last_steps_measurements = StepsMeasurement.objects.filter(start_timestamp__gte=start_from, start_timestamp__lte=start_to).order_by('-start_timestamp')
+            last_steps_measurements = self.get_steps_from_store(start_from, start_to)
+
             logger.debug("[medical-compliance] Filtered steps measurements (%s, %s): %s" % (start_from, start_to, last_steps_measurements))
 
             total_amount = 0
@@ -261,9 +261,13 @@ class StepsMeasurementResource(ModelResource):
                 for measurement in last_steps_measurements:
                     logger.debug("[medical-compliance] Check if measurement %s should be aggregated in frame %s" % (measurement, frame))
                     
-                    if measurement.start_timestamp < frame.start_ts or measurement.start_timestamp > frame.end_ts:
+                    # if measurement.start_timestamp < frame.start_ts or measurement.start_timestamp > frame.end_ts:
+                    #     continue
+
+                    if measurement['value_info']['start_timestamp'] < frame.start_ts or measurement['value_info']['start_timestamp'] > frame.end_ts:
                         continue
-                    frame_amount = measurement.value + frame_amount    
+                    #frame_amount = measurement.value + frame_amount
+                    frame_amount = measurement['value_info']['value'] + frame_amount
 
                 data_entry['status'] = "ok" 
                 data_entry['value'] = frame_amount
@@ -319,3 +323,11 @@ class StepsMeasurementResource(ModelResource):
                 datetime.datetime(1970, 1, 1)
             ).total_seconds()
         )
+
+
+    def get_steps_from_store(self, start_ts, end_ts):
+        return get_measurements_from_store(endpoint_path = "api/v1/measurement/",
+                                           measurement_type = "steps",
+                                           value_info__start_timestamp__gte = start_ts,
+                                           value_info__start_timestamp__lte = end_ts,
+                                           order_by = "-timestamp")
