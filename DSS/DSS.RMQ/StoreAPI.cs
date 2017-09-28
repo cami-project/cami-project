@@ -48,7 +48,9 @@ namespace DSS.RMQ
 
         public bool AreLastNHeartRateCritical(int n, int low, int high){
 
-            var urlVS = url + "/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp&user=2&device=2";
+            //var urlVS = url + "/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp&user=2&device=2";
+            // we want to get all pulse related data for the end-user (user=2), not just the ones from device 2
+            var urlVS = url + "/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp&user=2";
 
             var response = new HttpClient().GetAsync(urlVS);
 
@@ -106,7 +108,7 @@ namespace DSS.RMQ
 
         }
 
-        public void PushJournalEntry(string msg, string desc, string type) 
+        public void PushJournalEntry(string user_uri, string notification_type, string severity, string msg, string desc) 
         {
 
             Console.WriteLine("Timestamp: " +  ((int) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString());
@@ -114,13 +116,14 @@ namespace DSS.RMQ
 
             var obj = new JournalEntry()
             {
-				user = "/api/v1/user/2/",
+				user = user_uri,
                 description = desc,
                 message = msg,
                 reference_id = null,
                 timestamp = ((int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString(),
                 acknowledged = false,
-                type = type
+                type = notification_type,
+                severity = severity
             };
 
             HttpContent content = new StringContent(JsonConvert.SerializeObject(obj));

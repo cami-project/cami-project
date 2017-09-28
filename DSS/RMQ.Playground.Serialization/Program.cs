@@ -25,7 +25,7 @@ namespace RMQ.Playground.Serialization
                                 ""timestamp"": 1505827500, 
                                 ""user"": ""/api/v1/user/2/"", 
                                 ""device"": ""/api/v1/device/1/"", 
-                                ""value_info"": {""value"" : 74.1} }";
+                                ""value_info"": {""weight"" : 74.1} }";
 
             string jsonPulseStr = @"{""measurement_type"": ""pulse"", 
                                 ""unit_type"" : ""mmHg"", 
