@@ -342,6 +342,12 @@ namespace DSS.FuzzyInference
 				}
                 */
 			}
+            else
+            {
+                // for measurements for which there is no analysis, just mark the measurement as ok and insert it in the CAMI Store
+                obj.ok = true;
+                storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
+            }
 		}
 	}
 }
