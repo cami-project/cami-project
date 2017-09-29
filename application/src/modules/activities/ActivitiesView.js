@@ -28,7 +28,7 @@ const ActivitiesView = React.createClass({
     if(this.props.events.size > 0) {
       const _scrollView = this.scrollView;
       // we need the nextEventId to calculate scrolling distance
-      const nextEventId = this.findNextEventId(this.props.events, moment());
+      const nextEventId = this.findNextEventId(this.props.events, moment().utc());
       // scroll offset to get last event in view
       // - used when there aren't enough future events to justify nextEvent hidden under header
       const scrollToEndOffset = ((this.props.events.size * 127) - (variables.dimensions.height - 140 - 49 - 20));
@@ -80,7 +80,7 @@ const ActivitiesView = React.createClass({
   },
 
   render() {
-    const today = moment();
+    const today = moment().utc();
     // placeholder for the events to be itterated upon
     const events = [];
     // id of next event from the list of events received form the API
@@ -90,13 +90,13 @@ const ActivitiesView = React.createClass({
       : null;
 
     // moment of next event, used for header dates formatting
-    const nextEventDate = nextEventId ? moment.unix(this.props.events.get(nextEventId).get('start')) : null;
+    const nextEventDate = nextEventId ? moment.unix(this.props.events.get(nextEventId).get('start')).utc() : null;
     // month name of 1st event that will be used to selectively display month separators
-    let monthKey = moment.unix(this.props.events.get(0).get('start')).format('MMMM');
+    let monthKey = moment.unix(this.props.events.get(0).get('start')).utc().format('MMMM');
 
     this.props.events.forEach((event, index) => {
       // every time a month changes we show a visual separator inside the timeline
-      const month = moment.unix(event.get('start')).format('MMMM');
+      const month = moment.unix(event.get('start')).utc().format('MMMM');
       if (month !== monthKey) {
         monthKey = month;
         events.push(
