@@ -307,6 +307,11 @@ CELERY_QUEUES = (
 # Every measurement sent on the broadcast_measurement queue will be broadcasted to all the workers that listen on the cami.on_measurement_received task on it
 CELERY_ROUTES = {'cami.on_measurement_received': {'queue': 'broadcast_measurement'}}
 
+## STORE settings
+STORE_HOST = "cami-store"
+STORE_PORT = "8008"
+STORE_ENDPOINT_URI = "http://" + STORE_HOST + ":" + STORE_PORT
+
 try:
     from settings_local import *
 except:
