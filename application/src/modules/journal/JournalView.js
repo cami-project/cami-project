@@ -34,17 +34,17 @@ const JournalView = React.createClass({
   },
 
   render() {
-    const todayDateText = (this.props.events.length > 0) ? moment(new Date(this.props.events.get(0).get('timestamp') * 1000)).format(DATE_FORMAT) : '';
-    const firstEventDateText = (this.props.events.length > 0) ? moment(new Date(this.props.events.get(0).get('timestamp') * 1000)).format(DATE_FORMAT) : '';
+    const todayDateText = (this.props.events.length > 0) ? moment(new Date(this.props.events.get(0).get('timestamp') * 1000)).utc().format(DATE_FORMAT) : '';
+    const firstEventDateText = (this.props.events.length > 0) ? moment(new Date(this.props.events.get(0).get('timestamp') * 1000)).utc().format(DATE_FORMAT) : '';
     const headerDateText = (this.props.events.length > 0) ? (todayDateText == firstEventDateText ? 'Today ' + todayDateText : firstEventDateText) : '';
 
     const events = [];
     let dayKey = firstEventDateText;
     this.props.events.forEach((event, index) => {
-      const day = moment(new Date(event.get('timestamp') * 1000)).format(DATE_FORMAT);
+      const day = moment(new Date(event.get('timestamp') * 1000)).utc().format(DATE_FORMAT);
       if (day != dayKey) {
         dayKey = day;
-        const weekDayText = moment(new Date(event.get('timestamp') * 1000)).format(WEEK_DATE_FORMAT);
+        const weekDayText = moment(new Date(event.get('timestamp') * 1000)).utc().format(WEEK_DATE_FORMAT);
         events.push(
           <View key={'text' + index} style={[styles.dateContainer, {flex: 1}]}>
             <View style={styles.dateRuler}><View style={styles.dateBullet}/></View>
