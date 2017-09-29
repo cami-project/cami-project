@@ -96,14 +96,14 @@ public:
 private:
     struct DiscoveryTask {
         GDBusConnection *BusConnection;
-        gulong PropertiesChangedCallbackId;
-        gulong InterfacesAddedCallbackId;
+        guint PropertiesChangedCallbackId;
+        guint InterfacesAddedCallbackId;
         GMainLoop *Loop;
         std::thread Thread;
 
         DiscoveryTask() : BusConnection(nullptr),
-                          PropertiesChangedCallbackId(-1),
-                          InterfacesAddedCallbackId(-1),
+                          PropertiesChangedCallbackId(0),
+                          InterfacesAddedCallbackId(0),
                           Loop(nullptr) {}
 
         ~DiscoveryTask() {
@@ -115,12 +115,14 @@ private:
         }
 
         void Clean() {
-            if (this->Loop != nullptr) { g_main_loop_unref(this->Loop); }
-            if (this->InterfacesAddedCallbackId > 0) {
+            if (this->Loop != nullptr) {
+                g_main_loop_unref(this->Loop);
+            }
+            if (this->BusConnection != nullptr && this->InterfacesAddedCallbackId > 0) {
                 g_dbus_connection_signal_unsubscribe(this->BusConnection,
                                                      this->InterfacesAddedCallbackId);
             }
-            if (this->PropertiesChangedCallbackId > 0) {
+            if (this->BusConnection != nullptr && this->PropertiesChangedCallbackId > 0) {
                 g_dbus_connection_signal_unsubscribe(this->BusConnection,
                                                      this->PropertiesChangedCallbackId);
             }
