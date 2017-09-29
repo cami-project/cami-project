@@ -199,10 +199,10 @@ namespace DSS.FuzzyInference
                     obj.ok = false;
 				}                 else                  {                     obj.ok = true;                 }                  // first store measurement in CAMI Store                 storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));                  // if measurement was not ok generate appropriate alerts                 if (trend == "down")
                 {
-                    var endUserMsg = string.Format("There's a decrease of {0} kg in your weight.", Math.Abs(val - kg));
+                    var endUserMsg = string.Format("There's a decrease of {0} kg in your weight.", Math.Floor(Math.Abs(val - kg)));
                     var endUserDescription = "Please take your meals regularly.";
 
-                    var caregiverMsg = string.Format("Jim lost {0} kg.", Math.Abs(val - kg));
+                    var caregiverMsg = string.Format("Jim lost {0} kg.", Math.Floor(Math.Abs(val - kg)));
                     var caregiverDescription = "You can contact him and see what's wrong.";
 
                     // insert journal entry for end-user
@@ -214,10 +214,10 @@ namespace DSS.FuzzyInference
                     insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
                 }                 else if (trend == "up")
                 {
-                    var endUserMsg = string.Format("There's an increase of {0} kg in your weight.", Math.Abs(val - kg));
+                    var endUserMsg = string.Format("There's an increase of {0} kg in your weight.", Math.Floor(Math.Abs(val - kg)));
                     var endUserDescription = "Please be careful with your meals.";
 
-                    var caregiverMsg = string.Format("Jim gained {0} kg.", Math.Abs(val - kg));
+                    var caregiverMsg = string.Format("Jim gained {0} kg.", Math.Floor(Math.Abs(val - kg)));
                     var caregiverDescription = "Please check if this has to do with his diet.";
 
                     // insert journal entry for end-user
