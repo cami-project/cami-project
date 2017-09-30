@@ -137,11 +137,11 @@ namespace DSS.FuzzyInference
     
     public class Measurement
     {
-		public string measurement_type { get; set; }
-		public string unit_type { get; set; }
-		public int timestamp { get; set; }
-		public string user { get; set; }
-		public string device { get; set; }
+        public string measurement_type { get; set; }
+        public string unit_type { get; set; }
+        public int timestamp { get; set; }
+        public string user { get; set; }
+        public string device { get; set; }
 
         public ValueInfoBase value_info { get; set; }
 		public string gateway_id { get; set; }
@@ -160,16 +160,14 @@ namespace DSS.FuzzyInference
 
         public MeasurementHandler()
         {
-
             storeAPI = new StoreAPI("http://cami-store:8008/api/v1");
 			//storeAPI = new StoreAPI("http://141.85.241.224:8008/api/v1");
 
             insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
 			//insertionAPI = new RMQ.INS.InsertionAPI("http://141.85.241.224:8010/api/v1/insertion");
 
-
-		    settings = new JsonSerializerSettings();
-			settings.Converters.Add(new MeasurementConverter());
+            settings = new JsonSerializerSettings();
+            settings.Converters.Add(new MeasurementConverter());
 		}
 
         private int GetIdFromURI(string uri)
@@ -194,7 +192,7 @@ namespace DSS.FuzzyInference
             int userId = GetIdFromURI(obj.user);
 
             if (obj.measurement_type == "weight")
-			{
+            {
                 var weightValInfo = (WeightValueInfo)obj.value_info;
 
                 //var val = float.Parse( obj.value_info.Value);
@@ -203,7 +201,8 @@ namespace DSS.FuzzyInference
 
                 var trend = "normal";
 
-                if (Math.Abs(val - kg) > 2)                 {
+                if (Math.Abs(val - kg) > 2)
+                {
                     trend = val > kg ? "up" : "down";
                     obj.ok = false;
 				} 
