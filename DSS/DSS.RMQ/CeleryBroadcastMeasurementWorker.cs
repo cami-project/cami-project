@@ -37,7 +37,7 @@ namespace DSS.RMQ
 
             rmqChannel.BasicPublish(
                 exchange: exchangeName,
-                routingKey: "celery",
+                routingKey: "",
                 basicProperties: props,
                 body: body);
         }
