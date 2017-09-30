@@ -155,7 +155,11 @@ namespace DSS.FuzzyInference
     {
         private StoreAPI storeAPI;
         private RMQ.INS.InsertionAPI insertionAPI;
+        private CeleryBroadcastMeasurementWorker broadcastWorker;
+
         public string Name => "MEASUREMENT";
+        private string RMQ_BROKER => "amqp://cami:cami@cami-rabbitmq:5672/cami";
+
         private JsonSerializerSettings settings;
 
         public MeasurementHandler()
@@ -165,8 +169,9 @@ namespace DSS.FuzzyInference
 			//storeAPI = new StoreAPI("http://141.85.241.224:8008/api/v1");
 
             insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
-			//insertionAPI = new RMQ.INS.InsertionAPI("http://141.85.241.224:8010/api/v1/insertion");
+            //insertionAPI = new RMQ.INS.InsertionAPI("http://141.85.241.224:8010/api/v1/insertion");
 
+            broadcastWorker = new CeleryBroadcastMeasurementWorker(RMQ_BROKER);
 
 		    settings = new JsonSerializerSettings();
 			settings.Converters.Add(new MeasurementConverter());
@@ -206,7 +211,13 @@ namespace DSS.FuzzyInference
                 if (Math.Abs(val - kg) > 2)                 {
                     trend = val > kg ? "up" : "down";
                     obj.ok = false;
-				}                 else                  {                     obj.ok = true;                 }                  // first store measurement in CAMI Store                 storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
+				}                 else                  {                     obj.ok = true;                 }
+
+                // first store measurement in CAMI Store
+                string measurement_json = JsonConvert.SerializeObject(obj);
+
+                storeAPI.PushMeasurement(measurement_json);
+                broadcastWorker.SendTask("cami.on_measurement_received", "broadcast_measurement", measurement_json);
 
                 // TODO: currently we know that notification are handled client side only for the CamiDemo user (id = 2), so if we are not
                 // handling data for that user, do not send alerts
@@ -261,9 +272,11 @@ namespace DSS.FuzzyInference
                     obj.ok = false;
                 else
                     obj.ok = true;
-                
+
                 // first store the measurement in the CAMI Store
-                storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
+                string measurement_json = JsonConvert.SerializeObject(obj);
+                storeAPI.PushMeasurement(measurement_json);
+                broadcastWorker.SendTask("cami.on_measurement_received", "broadcast_measurement", measurement_json);
 
                 // TODO: currently we know that notification are handled client side only for the CamiDemo user (id = 2), so if we are not
                 // handling data for that user, do not send alerts
@@ -337,9 +350,11 @@ namespace DSS.FuzzyInference
                     else
                         pulseObj.ok = true;
 
-                    
+
                     // first store the measurement in the CAMI Store
-                    storeAPI.PushMeasurement(JsonConvert.SerializeObject(pulseObj));
+                    string measurement_json = JsonConvert.SerializeObject(pulseObj);
+                    storeAPI.PushMeasurement(measurement_json);
+                    broadcastWorker.SendTask("cami.on_measurement_received", "broadcast_measurement", measurement_json);
 
                     // TODO: currently we know that notification are handled client side only for the CamiDemo user (id = 2), so if we are not
                     // handling data for that user, do not send alerts
