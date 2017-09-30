@@ -328,6 +328,10 @@ namespace DSS.FuzzyInference
                     pulseObj.device = obj.device;
                     pulseObj.gateway_id = obj.gateway_id;
 
+                    var pulseValInfo = new PulseValueInfo();
+                    pulseValInfo.Value = val;
+                    pulseObj.value_info = pulseValInfo; 
+
                     if (val < min || val > max)
                         pulseObj.ok = false;
                     else
