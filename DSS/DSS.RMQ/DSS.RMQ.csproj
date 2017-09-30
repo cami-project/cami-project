@@ -52,6 +52,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CeleryBroadcastMeasurementWorker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rmq.cs" />
     <Compile Include="IWriteToBroker.cs" />
