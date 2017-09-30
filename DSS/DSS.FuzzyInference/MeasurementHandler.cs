@@ -206,7 +206,14 @@ namespace DSS.FuzzyInference
                 if (Math.Abs(val - kg) > 2)                 {
                     trend = val > kg ? "up" : "down";
                     obj.ok = false;
-				}                 else                  {                     obj.ok = true;                 }                  // first store measurement in CAMI Store                 storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
+				} 
+				else  
+				{ 
+				    obj.ok = true; 
+				}  
+
+				// first store measurement in CAMI Store 
+				storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
 
                 // TODO: currently we know that notification are handled client side only for the CamiDemo user (id = 2), so if we are not
                 // handling data for that user, do not send alerts
@@ -228,7 +235,8 @@ namespace DSS.FuzzyInference
                         // insert journal entry for caregiver
                         storeAPI.PushJournalEntry(CAREGIVER_URI, "weight", "medium", caregiverMsg, caregiverDescription);
                         insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
-                    }                     else if (trend == "up")
+                    }
+                    else if (trend == "up")
                     {
                         var endUserMsg = string.Format("There's an increase of {0} kg in your weight.", Math.Floor(Math.Abs(val - kg)));
                         var endUserDescription = "Please be careful with your meals.";
@@ -243,7 +251,8 @@ namespace DSS.FuzzyInference
                         // insert journal entry for caregiver
                         storeAPI.PushJournalEntry(CAREGIVER_URI, "weight", "medium", caregiverMsg, caregiverDescription);
                         insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
-                    }                 }
+                    } 
+                }
             }
             else if(obj.measurement_type == "pulse") 
             {
