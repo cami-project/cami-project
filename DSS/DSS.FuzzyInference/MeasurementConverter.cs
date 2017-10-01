@@ -52,7 +52,13 @@ class MeasurementConverter : JsonConverter
 						break;
 					}
 				default:
-					throw new ArgumentException("Invalid measurement type: " + measurementType);
+					{
+					    measurementVal = new DefaultValueInfo();
+						serializer.Populate(measurement["value_info"].CreateReader(), measurementVal);
+						convertedMeasurement.value_info = (DefaultValueInfo)measurementVal;
+						break;
+					}
+					//throw new ArgumentException("Invalid measurement type: " + measurementType);
 			}
 
 			return convertedMeasurement;
