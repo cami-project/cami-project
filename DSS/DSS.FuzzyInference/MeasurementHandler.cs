@@ -15,6 +15,12 @@ namespace DSS.FuzzyInference
         public ValueInfoBase () { }
     }
 
+    public class DefaultValueInfo : ValueInfoBase
+    {
+		[JsonProperty("value")]
+        public int Value { get; set; }
+    }
+
     public class PulseValueInfo : ValueInfoBase 
     {
 		[JsonProperty("value")]
@@ -187,7 +193,9 @@ namespace DSS.FuzzyInference
             string CAREGIVER_URI = "/api/v1/user/3/";
 
             var obj = JsonConvert.DeserializeObject<Measurement>(json, settings);
-            obj.timestamp = (int) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+
+            // use timestamp of incoming measurement instead of the setting one ourselves
+            //obj.timestamp = (int) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
             int userId = GetIdFromURI(obj.user);
 
