@@ -51,6 +51,13 @@ class MeasurementConverter : JsonConverter
 						convertedMeasurement.value_info = (BloodPressureValueInfo)measurementVal;
 						break;
 					}
+				case "steps":
+                    {
+                        measurementVal = new StepsValueInfo();
+						serializer.Populate(measurement["value_info"].CreateReader(), measurementVal);
+						convertedMeasurement.value_info = (StepsValueInfo)measurementVal;
+						break;
+                    }
 				default:
 					{
 					    measurementVal = new DefaultValueInfo();

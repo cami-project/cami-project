@@ -27,6 +27,15 @@ namespace DSS.FuzzyInference
         public int Value { get; set; }
     }
 
+    public class StepsValueInfo : ValueInfoBase
+    {
+        [JsonProperty("value")]
+        public int Value { get; set; }
+
+        public int start_timestamp { get; set; }
+
+        public int end_timestamp { get; set; }
+    }
 
     public class WeightValueInfo : ValueInfoBase
     {
