@@ -77,6 +77,8 @@ EnumDBusResult DBusGetManagedObjects(GVariant **objects) {
                                       nullptr,
                                       &error);
 
+    g_object_unref(proxyManager);
+
     return (*objects == nullptr ? DBUS_ERROR_NO_MANAGED_OBJECTS : DBUS_OK);
 }
 
@@ -98,7 +100,15 @@ EnumDBusResult DBusAdapterGetObjectPath(char **adapterPath) {
 
     /* Retrieve the HCI Bluetooth interface. The first one available is chosen. */
     if (DBusLookupAdapterPath(objects, adapterPath) != DBUS_OK) {
+        if (objects != nullptr) {
+            g_variant_unref(objects);
+        }
+
         return DBUS_ERROR_NO_ADAPTER;
+    }
+
+    if (objects != nullptr) {
+        g_variant_unref(objects);
     }
 
     /* If we didn't find any adapter, just return that information */
@@ -160,6 +170,7 @@ EnumDBusResult DBusAdapterStartDiscovery(const char *adapterPath) {
     /* When we arrive here, everything went well */
     free(adapter);
     g_object_unref(proxy_adapter);
+    g_variant_unref(values);
 
     return DBUS_OK;
 }
@@ -222,6 +233,7 @@ EnumDBusResult DBusAdapterStopDiscovery(const char *adapterPath) {
      * the strdup() function. */
     free(adapter);
     g_object_unref(proxy_adapter);
+    g_variant_unref(values);
 
     return DBUS_OK;
 }
@@ -478,7 +490,15 @@ EnumDBusResult DBusDeviceGetObjectPath(const char *deviceAddress, const char *ad
 
     /* Lookup for the device path based on the given address. */
     if (DBusLookupDevicePath(objects, deviceAddress, devicePath) != DBUS_OK) {
+        if (objects != nullptr) {
+            g_variant_unref(objects);
+        }
+
         return DBUS_ERROR_NO_DEVICE_FOUND;
+    }
+
+    if (objects != nullptr) {
+        g_variant_unref(objects);
     }
 
     return DBUS_OK;
@@ -650,6 +670,7 @@ EnumDBusResult DBusDeviceUuidsProperty(const char *devicePath, vector <string> *
         g_variant_iter_init(&it, value);
         while ((g_variant_iter_next(&it, "s", &uuid))) {
             uuids->push_back(string(uuid));
+            g_free(uuid);
         }
         return DBUS_OK;
     } else {
@@ -1275,7 +1296,7 @@ EnumDBusResult DBusLookupAdapterPath(GVariant *objects, char **adapterPath) {
 //        PRINT_DEBUG("ifaces = " << g_variant_print(ifaces, TRUE))
         if (g_variant_lookup_value(ifaces, BLUEZ5_ADAPTER_INTERFACE, G_VARIANT_TYPE_DICTIONARY)) {
             size_t length = strlen(path);
-            *adapterPath = new char[length + 1];
+            *adapterPath = static_cast<char *>(malloc(sizeof(char) * length + 1));//new char[length + 1];
             memcpy(*adapterPath, path, length);
             (*adapterPath)[length] = '\0';
         }
@@ -1289,7 +1310,7 @@ EnumDBusResult DBusLookupAdapterPath(GVariant *objects, char **adapterPath) {
 EnumDBusResult DBusLookupDevicePath(GVariant *objects, const char *address, char **path) {
     GVariant *ifaces = nullptr, *device = nullptr;
     GVariantIter i;
-    const char *devicePath, *deviceAddress;
+    /*const*/ char *devicePath, *deviceAddress;
     bool deviceFound = false;
 
 //    PRINT_DEBUG("objects = " << g_variant_print(objects, TRUE));
@@ -1299,15 +1320,17 @@ EnumDBusResult DBusLookupDevicePath(GVariant *objects, const char *address, char
         if ((device = g_variant_lookup_value(ifaces, BLUEZ5_DEVICE_INTERFACE, G_VARIANT_TYPE_DICTIONARY)) != nullptr) {
 //            PRINT_DEBUG("device = " << g_variant_print(device, TRUE))
             device = g_variant_lookup_value(device, BLUEZ5_DEVICE_PROPERTY_ADDRESS, G_VARIANT_TYPE_STRING);
-            deviceAddress = g_variant_get_string(device, nullptr);
+            deviceAddress = const_cast<char *>(g_variant_get_string(device, nullptr));
             if (strncmp(deviceAddress, address, strlen(deviceAddress)) == 0) {
                 size_t length = strlen(devicePath);
-                *path = new char[length + 1];
+                *path = static_cast<char *>(malloc(sizeof(char) * length + 1));//new char[length + 1];
                 memcpy(*path, devicePath, length);
                 (*path)[length] = '\0';
-                g_variant_unref(device);
+//                if (device != nullptr)
+//                    g_variant_unref(device);
                 deviceFound = true;
             }
+            g_free(deviceAddress);
         }
     }
 
@@ -1315,6 +1338,8 @@ EnumDBusResult DBusLookupDevicePath(GVariant *objects, const char *address, char
         g_variant_unref(ifaces);
     if (device != nullptr)
         g_variant_unref(device);
+    g_free(devicePath);
+
 
     return deviceFound ? DBUS_OK : DBUS_ERROR_NO_DEVICE_FOUND;
 }
@@ -1323,15 +1348,26 @@ EnumDBusResult DBusLookupDeviceProperties(GVariant *objects, BluetoothDeviceProp
     GVariant *varDevice = nullptr, *varProperties = nullptr;
     const char *path;
 
-    auto _GetStringFromVariant = [](const GVariant *variant, const char *name) -> const char * {
+//    auto _GetStringFromVariant = [](const GVariant *variant, const char *name, string *str) -> const char * {
+    auto _GetStringFromVariant = [](const GVariant *variant, const char *name, gchar **str) {
         gsize length;
         GVariant *varValue = g_variant_lookup_value(const_cast<GVariant *>(variant), name, G_VARIANT_TYPE_STRING);
-        return (varValue == nullptr) ? nullptr : g_variant_dup_string(varValue, &length);
+//        return (varValue == nullptr) ? nullptr : g_variant_dup_string(varValue, &length);
+        *str = (varValue == nullptr) ? nullptr : g_variant_dup_string(varValue, &length);
+
+        if (varValue != nullptr)
+            g_variant_unref(varValue);
     };
 
     auto _GetBoolFromVariant = [](const GVariant *variant, const char *name) -> bool {
         GVariant *varValue = g_variant_lookup_value(const_cast<GVariant *>(variant), name, G_VARIANT_TYPE_BOOLEAN);
-        return g_variant_get_boolean(varValue);
+        bool res = g_variant_get_boolean(varValue);
+
+        if (varValue != nullptr) {
+            g_variant_unref(varValue);
+        }
+
+        return res;
     };
 
     auto _GetListStringsFromVariant = [](const GVariant *variant, const char *name) -> vector <string> {
@@ -1345,8 +1381,13 @@ EnumDBusResult DBusLookupDeviceProperties(GVariant *objects, BluetoothDeviceProp
             while ((g_variant_iter_next(&it, "s", &str))) {
                 if (str != nullptr) {
                     list.push_back(string(str));
+                    g_free(str);
                 }
             }
+        }
+
+        if (value != nullptr) {
+            g_variant_unref(value);
         }
 
         return list;
@@ -1388,9 +1429,15 @@ EnumDBusResult DBusLookupDeviceProperties(GVariant *objects, BluetoothDeviceProp
      * } */
 
     device->ObjectPath = string(path);
-    device->Address = string(_GetStringFromVariant(varDevice, BLUEZ5_DEVICE_PROPERTY_ADDRESS));
-    const char *str = _GetStringFromVariant(varDevice, BLUEZ5_DEVICE_PROPERTY_NAME);
+    //device->Address = string(_GetStringFromVariant(varDevice, BLUEZ5_DEVICE_PROPERTY_ADDRESS));
+    gchar *str = nullptr;
+    _GetStringFromVariant(varDevice, BLUEZ5_DEVICE_PROPERTY_ADDRESS, &str);
+    device->Address = string(str != nullptr ? str : "(unknown)");
+    g_free(str);
+    //const char *str = _GetStringFromVariant(varDevice, BLUEZ5_DEVICE_PROPERTY_NAME);
+    _GetStringFromVariant(varDevice, BLUEZ5_DEVICE_PROPERTY_NAME, &str);
     device->Name = string((str == nullptr ? "(unknown)" : str));
+    g_free(str);
     device->Paired = _GetBoolFromVariant(varDevice, BLUEZ5_DEVICE_PROPERTY_PAIRED);
     device->UUIDs = _GetListStringsFromVariant(varDevice, BLUEZ5_DEVICE_PROPERTY_UUIDS);
 

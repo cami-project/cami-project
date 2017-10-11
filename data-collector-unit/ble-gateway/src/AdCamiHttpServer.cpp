@@ -255,12 +255,12 @@ char *AdCamiHttpServer::_LoadFile(const char *filename, char *data) {
     }
     /* Get file's size. */
     if ((0 != fseek(fp, 0, SEEK_END)) || (-1 == (size = ftell(fp)))) {
-        free(fp);
+        fclose(fp);
         return nullptr;
     }
     /* Reset file pointer to the begin of file. */
     if (fseek(fp, 0, SEEK_SET) != 0) {
-        free(fp);
+        fclose(fp);
         return nullptr;
     }
 

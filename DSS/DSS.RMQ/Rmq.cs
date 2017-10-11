@@ -56,30 +56,32 @@ namespace DSS.RMQ
 
             channel.ExchangeDeclare(exchange: exchange, type: "topic", durable: true);
 
-				var queueName = channel.QueueDeclare().QueueName;
-			
+            //var queueName = channel.QueueDeclare().QueueName;
+            var queueName = "dss-queue-" + exchange;
+            channel.QueueDeclare(queue: queueName);
 
-			    Console.WriteLine("Queue name: " + queueName);
+            Console.WriteLine("Queue name: " + queueName);
+
+			channel.QueueBind(queue: queueName,
+                                exchange: exchange,
+                                routingKey: routingKey);
+
+			var consumer = new EventingBasicConsumer(channel);
 
 
-				channel.QueueBind(queue: queueName,
-                                  exchange: exchange,
-                                  routingKey: routingKey);
+			consumer.Received += (model, ea) =>
+			{
+                //Console.WriteLine("Rmq response events: " + Encoding.UTF8.GetString(ea.Body));
+				onRecieve(Encoding.UTF8.GetString(ea.Body));
 
-				var consumer = new EventingBasicConsumer(channel);
+                // acknowledging the message
+                channel.BasicAck(ea.DeliveryTag, false);
+			};
 
+            //channel.BasicConsume(queue: queueName, noAck: true, consumer: consumer);
+            channel.BasicConsume(queue: queueName, noAck: false, consumer: consumer);
 
-				consumer.Received += (model, ea) =>
-				{
-                    //Console.WriteLine("Rmq response events: " + Encoding.UTF8.GetString(ea.Body));
-					onRecieve(Encoding.UTF8.GetString(ea.Body));
-				};
-
-				channel.BasicConsume(queue: queueName,
-				noAck: true,
-				consumer: consumer);
-            
-		}
+        }
     }
 
 
@@ -104,10 +106,17 @@ namespace DSS.RMQ
             writeQueue = queue;
 
 			var consumer = new EventingBasicConsumer(channel);
-			consumer.Received += (model, ea) => onRecieve(Encoding.UTF8.GetString(ea.Body));
-            channel.BasicConsume(queue: writeQueue, noAck: true, consumer: consumer);
+            consumer.Received += (model, ea) =>
+            {
+                onRecieve(Encoding.UTF8.GetString(ea.Body));
 
-		}
+                // acknowledging the message
+                channel.BasicAck(ea.DeliveryTag, false);
+            };
+
+            //channel.BasicConsume(queue: writeQueue, noAck: true, consumer: consumer);
+            channel.BasicConsume(queue: writeQueue, noAck: false, consumer: consumer);
+        }
 
 
 		public void Dispose()

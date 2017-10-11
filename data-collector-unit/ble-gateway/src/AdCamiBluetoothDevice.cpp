@@ -54,6 +54,9 @@ AdCamiBluetoothError AdCamiBluetoothDevice::Disconnect() {
     /* Connect to the device */
     DBusDeviceDisconnect(devicePath);
 
+    g_free(adapterPath);
+    g_free(devicePath);
+
     return BT_OK;
 }
 
@@ -81,6 +84,8 @@ std::unique_ptr <string> AdCamiBluetoothDevice::NameFromCache() const {
         DBusDeviceNameProperty(devicePath, name);
     }
 
+    g_free(devicePath);
+
     return std::unique_ptr<string>(std::move(name));
 }
 
@@ -107,6 +112,8 @@ bool AdCamiBluetoothDevice::PairedFromCache() const {
         }
 
     }
+
+    g_free(devicePath);
 
     return paired;
 }
@@ -181,12 +188,15 @@ AdCamiBluetoothError AdCamiBluetoothDevice::_GetDeviceObjectPath(char **devicePa
 
     /* Get the Bluetooth adapter path. */
     if (DBusAdapterGetObjectPath(&adapterPath) != DBUS_OK) {
+        free(adapterPath);
         return BT_ERROR_ADAPTER_NOT_FOUND;
     }
     /* Get device path based on the Bluetooth address. */
     if (DBusDeviceGetObjectPath(this->_address.c_str(), adapterPath, devicePath) != DBUS_OK) {
         return BT_ERROR_DEVICE_NOT_FOUND;
     }
+
+    free(adapterPath);
 
     return BT_OK;
 }

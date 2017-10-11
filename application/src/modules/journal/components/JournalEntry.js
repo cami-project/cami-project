@@ -101,7 +101,7 @@ const JournalEntry = React.createClass({
   },
 
   render() {
-    const time = moment(new Date(this.props.timestamp * 1000)).format('HH:mm');
+    const time = moment(new Date(this.props.timestamp * 1000)).utc().format('HH:mm');
 
     return (
       <View style={styles.journalEntry}>

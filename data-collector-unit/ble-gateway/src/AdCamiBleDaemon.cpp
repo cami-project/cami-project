@@ -53,8 +53,8 @@ void _SavePid() {
 
     pid_t pid = getpid();
     /* Write PID to file */
-    fprintf(fp, "%ld\n", (long)pid);
-    PRINT_LOG("Daemon created with PID " << (long)pid)
+    fprintf(fp, "%ld\n", (long) pid);
+    PRINT_LOG("Daemon created with PID " << (long) pid)
     fclose(fp);
 }
 
@@ -70,14 +70,27 @@ int main(int argc, char **argv) {
         string json;
         unsigned int timeout = 30;//seconds
 
-        if (device->RefreshCacheProperties() != BT_OK || device->Connect() != BT_OK) {
+        if (device->RefreshCacheProperties() == BT_OK && device->ConnectedFromCache() == false) {
+            if (device->Connect() != BT_OK) {
+                return;
+            }
+            PRINT_DEBUG("Connected to device " << device->Address() << "!");
+        }
+        else if (device->ConnectedFromCache() == true) {
+            PRINT_DEBUG("Already reading measurements!");
             return;
         }
 
-        PRINT_DEBUG("Connected to device " << device->Address() << "!");
+        PRINT_DEBUG("Reading measurements...");
         if ((error = device->ReadMeasurementNotifications(&measurements, timeout)) != BT_OK) {
             PRINT_LOG("Problem getting notifications from " << device->Address() << " [error = " << error << "]");
         } else if (measurements.size() > 0) {
+            if ((error = device->Disconnect()) != BT_OK) {
+                PRINT_DEBUG("Problem disconnecting from device " << device->Address() << " [error = " << error << "]");
+            } else {
+                PRINT_DEBUG("Disconnected from device " << device->Address() << ".");
+            }
+
             /* Save measurements to database. */
             AdCamiJsonConverter converter;
             AdCamiEventsStorage storage(AdCamiCommon::kAdCamiEventsDatabase);
