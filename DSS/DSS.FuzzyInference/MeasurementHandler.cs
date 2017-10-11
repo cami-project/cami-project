@@ -70,6 +70,12 @@ namespace DSS.FuzzyInference
             _additionalData = new Dictionary<string, JToken>();
         }
     }
+    public class DefaultValueInfo : ValueInfoBase
+	{
+		[JsonProperty("value")]
+		public float Value { get; set; }
+	}
+
     
 
     public class BloodPressureValueInfo : ValueInfoBase

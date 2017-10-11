@@ -7,7 +7,6 @@ namespace DSS.Delegate
 
     public interface IRouterHandler
     {
-		string Name { get; }
         void Handle(string json);
 
 	}
