@@ -24,6 +24,8 @@ namespace DSS.FuzzyInference
         public void Handle(string json)
         {
 
+			string END_USER_URI = "/api/v1/user/2/";
+
             Console.WriteLine("Sensor handler invoked");
 
             var deserialized = JsonConvert.DeserializeObject<dynamic>(json);
@@ -39,7 +41,7 @@ namespace DSS.FuzzyInference
 
 					var msg = "User has entered the" + Map[deserialized.annotations.source.sensor];
 
-                    storeAPI.PushJournalEntry(msg, msg, "location");
+                    storeAPI.PushJournalEntry(END_USER_URI, "location" ,"low", msg, msg);
 
                     Console.WriteLine("Sensor to location: " + msg);
 				}

@@ -70,11 +70,6 @@ namespace DSS.FuzzyInference
             _additionalData = new Dictionary<string, JToken>();
         }
     }
-    public class DefaultValueInfo : ValueInfoBase
-	{
-		[JsonProperty("value")]
-		public float Value { get; set; }
-	}
 
     
 
@@ -209,6 +204,7 @@ namespace DSS.FuzzyInference
 
             var obj = JsonConvert.DeserializeObject<Measurement>(json, settings);
 
+
             // use timestamp of incoming measurement instead of the setting one ourselves
             //obj.timestamp = (int) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
@@ -220,7 +216,8 @@ namespace DSS.FuzzyInference
 
                 //var val = float.Parse( obj.value_info.Value);
                 var val = weightValInfo.Value;
-                var kg = storeAPI.GetLatestWeightMeasurement(userId);
+				// The edge case where there is no previous weight measuremnt in the database is not covered
+				var kg = storeAPI.GetLatestWeightMeasurement(userId);
 
                 var trend = "normal";
 
@@ -229,51 +226,54 @@ namespace DSS.FuzzyInference
                     trend = val > kg ? "up" : "down";
                     obj.ok = false;
 				} 
-				else  
-				{ 
-				    obj.ok = true; 
-				}  
-
-				// first store measurement in CAMI Store 
+				else 
+				{
+				    obj.ok = true;
+				} 
+				// first store measurement in CAMI Store
 				storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
 
-                // TODO: currently we know that notification are handled client side only for the CamiDemo user (id = 2), so if we are not
-                // handling data for that user, do not send alerts
-                if (obj.user == END_USER_URI)
-                { 
-                    // if measurement was not ok generate appropriate alerts
-                    if (trend == "down")
-                    {
-                        var endUserMsg = string.Format("There's a decrease of {0} kg in your weight.", Math.Floor(Math.Abs(val - kg)));
-                        var endUserDescription = "Please take your meals regularly.";
+				// TODO: currently we know that notification are handled client side only for the CamiDemo user (id = 2), so if we are not
+				// handling data for that user, do not send alerts
+				//if (obj.user == END_USER_URI)
+                // I guess thi is going to be solved once different accounts added 
 
-                        var caregiverMsg = string.Format("Jim lost {0} kg.", Math.Floor(Math.Abs(val - kg)));
-                        var caregiverDescription = "You can contact him and see what's wrong.";
+               
+				if(!obj.ok) {
+                    
+						// if measurement was not ok generate appropriate alerts
+						if (trend == "down")
+						{
+							var endUserMsg = string.Format("There's a decrease of {0} kg in your weight.", Math.Floor(Math.Abs(val - kg)));
+							var endUserDescription = "Please take your meals regularly.";
 
-                        // insert journal entry for end-user
-                        storeAPI.PushJournalEntry(END_USER_URI, "weight", "medium", endUserMsg, endUserDescription);
-                        insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = endUserMsg, user_id = 2 }));
+							var caregiverMsg = string.Format("Jim lost {0} kg.", Math.Floor(Math.Abs(val - kg)));
+							var caregiverDescription = "You can contact him and see what's wrong.";
 
-                        // insert journal entry for caregiver
-                        storeAPI.PushJournalEntry(CAREGIVER_URI, "weight", "medium", caregiverMsg, caregiverDescription);
-                        insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
-                    }
-                    else if (trend == "up")
-                    {
-                        var endUserMsg = string.Format("There's an increase of {0} kg in your weight.", Math.Floor(Math.Abs(val - kg)));
-                        var endUserDescription = "Please be careful with your meals.";
+							// insert journal entry for end-user
+							storeAPI.PushJournalEntry(END_USER_URI, "weight", "medium", endUserMsg, endUserDescription);
+							insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = endUserMsg, user_id = 2 }));
 
-                        var caregiverMsg = string.Format("Jim gained {0} kg.", Math.Floor(Math.Abs(val - kg)));
-                        var caregiverDescription = "Please check if this has to do with his diet.";
+							// insert journal entry for caregiver
+							storeAPI.PushJournalEntry(CAREGIVER_URI, "weight", "medium", caregiverMsg, caregiverDescription);
+							insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
+						}
+						else if (trend == "up")
+						{
+							var endUserMsg = string.Format("There's an increase of {0} kg in your weight.", Math.Floor(Math.Abs(val - kg)));
+							var endUserDescription = "Please be careful with your meals.";
 
-                        // insert journal entry for end-user
-                        storeAPI.PushJournalEntry(END_USER_URI, "weight", "medium", endUserMsg, endUserDescription);
-                        insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = endUserMsg, user_id = 2 }));
+							var caregiverMsg = string.Format("Jim gained {0} kg.", Math.Floor(Math.Abs(val - kg)));
+							var caregiverDescription = "Please check if this has to do with his diet.";
 
-                        // insert journal entry for caregiver
-                        storeAPI.PushJournalEntry(CAREGIVER_URI, "weight", "medium", caregiverMsg, caregiverDescription);
-                        insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
-                    } 
+							// insert journal entry for end-user
+							storeAPI.PushJournalEntry(END_USER_URI, "weight", "medium", endUserMsg, endUserDescription);
+							insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = endUserMsg, user_id = 2 }));
+
+							// insert journal entry for caregiver
+							storeAPI.PushJournalEntry(CAREGIVER_URI, "weight", "medium", caregiverMsg, caregiverDescription);
+							insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
+						}
                 }
             }
             else if(obj.measurement_type == "pulse") 

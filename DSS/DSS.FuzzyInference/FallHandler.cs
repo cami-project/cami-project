@@ -30,6 +30,7 @@ namespace DSS.FuzzyInference
 
             var obj = JsonConvert.DeserializeObject<Event>(json);
 
+
             Queue.Refresh();
             Queue.Push(obj, 15);
 
