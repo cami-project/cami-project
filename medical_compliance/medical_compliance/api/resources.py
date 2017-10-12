@@ -115,17 +115,6 @@ class BloodPressureMeasurementResource(Resource):
             filter_dict['device'] = device
 
         status, measurements_result = get_measurements_from_store(**filter_dict)
-
-        if status == httplib.OK:
-            for i, meas in enumerate(measurements_result):
-                val = None
-                if 'Value' in meas['value_info']:
-                    val = meas['value_info']['Value']
-                else:
-                    val = meas['value_info']['value']
-
-                measurements_result[i]['value_info']['value'] = float(val)
-
         return status, measurements_result
 
 
