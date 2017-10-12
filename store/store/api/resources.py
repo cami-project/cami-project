@@ -22,7 +22,7 @@ from store.models import *
 
 class UserResource(ModelResource):
     devices = fields.ToManyField('store.api.resources.DeviceResource', 'used_devices')
-    end_user_profile = fields.ToOneField('store.api.resources.EndUserProfileResource', 'profile',
+    enduser_profile = fields.ToOneField('store.api.resources.EndUserProfileResource', 'enduser_profile',
                                          null=True, blank=True, full=True)
 
     class Meta:
@@ -33,7 +33,7 @@ class UserResource(ModelResource):
 
 
 class EndUserProfileResource(ModelResource):
-    user = fields.ToOneField(UserResource, 'user', 'profile')
+    user = fields.ToOneField(UserResource, 'user')
 
     class Meta:
         # we exclude the following fields because we don'really have any data, nor do we use them
@@ -41,7 +41,7 @@ class EndUserProfileResource(ModelResource):
 
         queryset = EndUserProfile.objects.all()
         allowed_methods = ['get']
-        collection_name = "end_user_profiles"
+        collection_name = "enduser_profiles"
 
 
 
