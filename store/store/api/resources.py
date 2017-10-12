@@ -245,7 +245,7 @@ class MeasurementResource(ModelResource):
         user_id = request.GET.get('user', None)
         device_id = request.GET.get('device', None)
 
-        filter_dict = dict( measurment_type = type, user__id = int(user_id) )
+        filter_dict = dict( measurement_type = type, user__id = int(user_id) )
         if device_id:
             filter_dict['device__id'] = int(device_id)
 
