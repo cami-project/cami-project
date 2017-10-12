@@ -70,6 +70,11 @@ class CaregiverProfile(UserProfileBase):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='caregiver_profile')
     caretaker = models.ForeignKey(User, related_name="caregivers")
 
+    def __str__(self):
+        return "[" + self.account_role + "]" + self.user.first_name + " " + self.user.last_name
+
+    __unicode__ = __str__
+
 
 class HealthProfessionalProfile(UserProfileBase):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='doctor_profile')

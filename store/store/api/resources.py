@@ -22,12 +22,28 @@ from store.models import *
 
 class UserResource(ModelResource):
     devices = fields.ToManyField('store.api.resources.DeviceResource', 'used_devices')
+    end_user_profile = fields.ToOneField('store.api.resources.EndUserProfileResource', 'profile',
+                                         null=True, blank=True, full=True)
 
     class Meta:
         excludes = ['password', 'is_staff', 'is_superuser', 'email']
         queryset = User.objects.all()
         allowed_methods = ['get']
         collection_name = "users"
+
+
+class EndUserProfileResource(ModelResource):
+    user = fields.ToOneField(UserResource, 'user', 'profile')
+
+    class Meta:
+        # we exclude the following fields because we don'really have any data, nor do we use them
+        excludes = ['marital_status', 'age', 'height', 'phone', 'address']
+
+        queryset = EndUserProfile.objects.all()
+        allowed_methods = ['get']
+        collection_name = "end_user_profiles"
+
+
 
 
 class DeviceResource(ModelResource):
