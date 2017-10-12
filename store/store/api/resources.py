@@ -242,15 +242,24 @@ class MeasurementResource(ModelResource):
             return self.create_response(request, json_error)
 
         type = request.GET.get('type', None)
+        user_id = request.GET.get('user', None)
+        device_id = request.GET.get('device', None)
+
+        filter_dict = dict( measurment_type = type, user__id = int(user_id) )
+        if device_id:
+            filter_dict['device__id'] = int(device_id)
 
         last_measurements = Measurement.objects.all().filter(
-            measurement_type = type
+            **filter_dict
         ).order_by('-timestamp')[:20]
 
         return self.create_response(request, list(last_measurements.values()))
 
+
     def check_get_params(self, request):
         type = request.GET.get('type', None)
+        user_id = request.GET.get('user', None)
+
         measurements = dict(Measurement.MEASUREMENTS).keys()
 
         if type == None:
@@ -261,6 +270,8 @@ class MeasurementResource(ModelResource):
             )
         elif type not in measurements:
             raise Exception("measurement type must be one of: %s" % ", ".join(measurements))
+        elif user_id == None:
+            raise Exception("user id is manadatory")
 
 
 class ActivityResource(ModelResource):

@@ -58,7 +58,7 @@ class WeightMeasurementResource(ModelResource):
         self.throttle_check(request)
 
         #last_weight_measurements = WeightMeasurement.objects.all().order_by('-timestamp')[:20]
-        last_weight_measurements = self.get_last_values_from_store()
+        last_weight_measurements = self.get_last_values_from_store(request)
 
         amount = []
         data_list = []
@@ -103,8 +103,19 @@ class WeightMeasurementResource(ModelResource):
         }
         return self.create_response(request, jsonResult)
 
-    def get_last_values_from_store(self):
-        latest_measurements = get_measurements_from_store(type ="weight")
+    def get_last_values_from_store(self, request):
+        filter_dict = dict(type = "weight")
+
+        user = request.GET.get("user", None)
+        device = request.GET.get("device", None)
+
+        if user:
+            filter_dict['user'] = user
+
+        if device:
+            filter_dict['device'] = device
+
+        latest_measurements = get_measurements_from_store(**filter_dict)
         for i, meas in enumerate(latest_measurements):
             val = None
             if 'Value' in meas['value_info']:
@@ -136,7 +147,7 @@ class HeartRateMeasurementResource(ModelResource):
         self.throttle_check(request)
 
         #last_hr_measurements = HeartRateMeasurement.objects.all().order_by('-timestamp')[:20]
-        last_hr_measurements = self.get_last_values_from_store()
+        last_hr_measurements = self.get_last_values_from_store(request)
         amount = []
         data_list = []
         
@@ -174,9 +185,19 @@ class HeartRateMeasurementResource(ModelResource):
         return self.create_response(request, jsonResult)
 
 
-    def get_last_values_from_store(self):
-        latest_measurements = get_measurements_from_store(type="pulse")
+    def get_last_values_from_store(self, request):
+        filter_dict = dict(type="pulse")
 
+        user = request.GET.get("user", None)
+        device = request.GET.get("device", None)
+
+        if user:
+            filter_dict['user'] = user
+
+        if device:
+            filter_dict['device'] = device
+
+        latest_measurements = get_measurements_from_store(**filter_dict)
         for i, meas in enumerate(latest_measurements):
             val = None
             if 'Value' in meas['value_info']:
@@ -245,7 +266,7 @@ class StepsMeasurementResource(ModelResource):
             start_to = frames[0].end_ts
 
             # last_steps_measurements = StepsMeasurement.objects.filter(start_timestamp__gte=start_from, start_timestamp__lte=start_to).order_by('-start_timestamp')
-            last_steps_measurements = self.get_steps_from_store(start_from, start_to)
+            last_steps_measurements = self.get_steps_from_store(request, start_from, start_to)
 
             logger.debug("[medical-compliance] Filtered steps measurements (%s, %s): %s" % (start_from, start_to, last_steps_measurements))
 
@@ -325,12 +346,23 @@ class StepsMeasurementResource(ModelResource):
         )
 
 
-    def get_steps_from_store(self, start_ts, end_ts):
-        steps_data = get_measurements_from_store(endpoint_path = "/api/v1/measurement/",
-                                           measurement_type = "steps",
-                                           value_info__start_timestamp__gte = start_ts,
-                                           value_info__start_timestamp__lte = end_ts,
-                                           order_by = "-timestamp")
+    def get_steps_from_store(self, request, start_ts, end_ts):
+        filter_dict = dict(endpoint_path = "/api/v1/measurement/",
+                           measurement_type = "steps",
+                           value_info__start_timestamp__gte = start_ts,
+                           value_info__start_timestamp__lte = end_ts,
+                           order_by = "-timestamp")
+
+        user = request.GET.get("user", None)
+        device = request.GET.get("device", None)
+
+        if user:
+            filter_dict['user'] = user
+
+        if device:
+            filter_dict['device'] = device
+
+        steps_data = get_measurements_from_store(**filter_dict)
         #logger.debug("[medical-compliance] Retrieved last steps data: %s " % str(steps_data))
         if 'measurements' in steps_data:
             return steps_data['measurements']
