@@ -22,7 +22,11 @@ from store.models import *
 
 class UserResource(ModelResource):
     devices = fields.ToManyField('store.api.resources.DeviceResource', 'used_devices')
-    enduser_profile = fields.ToOneField('store.api.resources.EndUserProfileResource', 'enduser_profile',
+    enduser_profile = fields.ToOneField('store.api.resources.EndUserProfileResource',
+                                        'enduser_profile',
+                                         null=True, blank=True, full=True)
+    caregiver_profile = fields.ToOneField('store.api.resources.CaregiverProfileResource',
+                                        'caregiver_profile',
                                          null=True, blank=True, full=True)
 
     class Meta:
@@ -34,6 +38,8 @@ class UserResource(ModelResource):
 
 class EndUserProfileResource(ModelResource):
     user = fields.ToOneField(UserResource, 'user')
+    caregivers = fields.ToManyField('store.api.resources.CaregiverProfileResource', 'caregivers',
+                                    related_name='caretaker')
 
     class Meta:
         # we exclude the following fields because we don'really have any data, nor do we use them
@@ -44,6 +50,17 @@ class EndUserProfileResource(ModelResource):
         collection_name = "enduser_profiles"
 
 
+class CaregiverProfileResource(ModelResource):
+    user = fields.ToOneField(UserResource, 'user')
+    caretaker = fields.ToOneField(EndUserProfileResource, 'caretaker')
+
+    class Meta:
+        # we exclude the following fields because we don'really have any data, nor do we use them
+        excludes = ['phone', 'address']
+
+        queryset = CaregiverProfile.objects.all()
+        allowed_methods = ['get']
+        collection_name = "caregiver_profiles"
 
 
 class DeviceResource(ModelResource):
