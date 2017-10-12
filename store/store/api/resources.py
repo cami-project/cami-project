@@ -11,6 +11,7 @@ from tastypie.paginator import Paginator
 from tastypie.exceptions import NotFound
 from tastypie.authorization import Authorization
 from tastypie.authentication import Authentication
+from tastypie.http import HttpBadRequest
 
 from django.core import serializers
 from django.conf.urls import url
@@ -239,7 +240,7 @@ class MeasurementResource(ModelResource):
                     "message": e
                 }
             }
-            return self.create_response(request, json_error)
+            return self.create_response(request, json_error, response_class=HttpBadRequest)
 
         type = request.GET.get('type', None)
         user_id = request.GET.get('user', None)

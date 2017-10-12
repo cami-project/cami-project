@@ -4,7 +4,9 @@ from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource
 from tastypie.paginator import Paginator
 from tastypie.utils import trailing_slash
+from tastypie.http import HttpBadRequest
 from django.conf import settings
+import httplib
 
 import numpy as np
 
@@ -27,8 +29,7 @@ def get_measurements_from_store(endpoint_path ="/api/v1/measurement/last_measure
     r = requests.get(endpoint, params=dict(kwargs))
 
     response_json = r.json()
-
-    return response_json
+    return r.status_code, response_json
 
 
 class MedicationPlanResource(ModelResource):
@@ -58,12 +59,14 @@ class WeightMeasurementResource(ModelResource):
         self.throttle_check(request)
 
         #last_weight_measurements = WeightMeasurement.objects.all().order_by('-timestamp')[:20]
-        last_weight_measurements = self.get_last_values_from_store(request)
+        status, weight_results = self.get_last_values_from_store(request)
+        if status != httplib.OK:
+            return self.create_response(request, weight_results, response_class=HttpBadRequest)
 
         amount = []
         data_list = []
         
-        for index, measurement in enumerate(last_weight_measurements):
+        for index, measurement in enumerate(weight_results):
             #amount = [measurement.value] + amount
             amount = [measurement['value_info']['value']] + amount
 
@@ -79,7 +82,7 @@ class WeightMeasurementResource(ModelResource):
                 #prev_measurement = last_weight_measurements[index - 1]
                 #if abs(measurement.value - prev_measurement.value) >= 2:
                 #    data_entry['status'] = "warning"
-                prev_measurement = last_weight_measurements[index - 1]
+                prev_measurement = weight_results[index - 1]
                 if abs(measurement['value_info']['value'] - prev_measurement['value_info']['value']) >= 2:
                    data_entry['status'] = "warning"
             data_list = [data_entry] + data_list
@@ -115,17 +118,19 @@ class WeightMeasurementResource(ModelResource):
         if device:
             filter_dict['device'] = device
 
-        latest_measurements = get_measurements_from_store(**filter_dict)
-        for i, meas in enumerate(latest_measurements):
-            val = None
-            if 'Value' in meas['value_info']:
-                val = meas['value_info']['Value']
-            else:
-                val = meas['value_info']['value']
+        status, measurements_result = get_measurements_from_store(**filter_dict)
 
-            latest_measurements[i]['value_info']['value'] = float(val)
+        if status == httplib.OK:
+            for i, meas in enumerate(measurements_result):
+                val = None
+                if 'Value' in meas['value_info']:
+                    val = meas['value_info']['Value']
+                else:
+                    val = meas['value_info']['value']
 
-        return latest_measurements
+                measurements_result[i]['value_info']['value'] = float(val)
+
+        return status, measurements_result
 
 
 class HeartRateMeasurementResource(ModelResource):
@@ -147,11 +152,14 @@ class HeartRateMeasurementResource(ModelResource):
         self.throttle_check(request)
 
         #last_hr_measurements = HeartRateMeasurement.objects.all().order_by('-timestamp')[:20]
-        last_hr_measurements = self.get_last_values_from_store(request)
+        status, heartrate_results = self.get_last_values_from_store(request)
+        if status != httplib.OK:
+            return self.create_response(request, heartrate_results, response_class=HttpBadRequest)
+
         amount = []
         data_list = []
         
-        for index, measurement in enumerate(last_hr_measurements):
+        for index, measurement in enumerate(heartrate_results):
             #amount = [measurement.value] + amount
             amount = [measurement['value_info']['value']] + amount
 
@@ -197,17 +205,19 @@ class HeartRateMeasurementResource(ModelResource):
         if device:
             filter_dict['device'] = device
 
-        latest_measurements = get_measurements_from_store(**filter_dict)
-        for i, meas in enumerate(latest_measurements):
-            val = None
-            if 'Value' in meas['value_info']:
-                val = meas['value_info']['Value']
-            else:
-                val = meas['value_info']['value']
+        status, measurements_results = get_measurements_from_store(**filter_dict)
 
-            latest_measurements[i]['value_info']['value'] = int(val)
+        if status == httplib.OK:
+            for i, meas in enumerate(measurements_results):
+                val = None
+                if 'Value' in meas['value_info']:
+                    val = meas['value_info']['Value']
+                else:
+                    val = meas['value_info']['value']
 
-        return latest_measurements
+                measurements_results[i]['value_info']['value'] = int(val)
+
+        return status, measurements_results
 
 
 class MeasurementTimeResolution(object):
@@ -266,9 +276,11 @@ class StepsMeasurementResource(ModelResource):
             start_to = frames[0].end_ts
 
             # last_steps_measurements = StepsMeasurement.objects.filter(start_timestamp__gte=start_from, start_timestamp__lte=start_to).order_by('-start_timestamp')
-            last_steps_measurements = self.get_steps_from_store(request, start_from, start_to)
+            status, steps_results = self.get_steps_from_store(request, start_from, start_to)
+            if status != httplib.OK:
+                return self.create_response(request, steps_results, response_class=HttpBadRequest)
 
-            logger.debug("[medical-compliance] Filtered steps measurements (%s, %s): %s" % (start_from, start_to, last_steps_measurements))
+            logger.debug("[medical-compliance] Filtered steps measurements (%s, %s): %s" % (start_from, start_to, steps_results))
 
             total_amount = 0
             for frame in frames:
@@ -279,7 +291,7 @@ class StepsMeasurementResource(ModelResource):
                 data_entry['end_timestamp'] = frame.end_ts
                 
                 frame_amount = 0
-                for measurement in last_steps_measurements:
+                for measurement in steps_results:
                     logger.debug("[medical-compliance] Check if measurement %s should be aggregated in frame %s" % (measurement, frame))
                     
                     # if measurement.start_timestamp < frame.start_ts or measurement.start_timestamp > frame.end_ts:
@@ -362,9 +374,14 @@ class StepsMeasurementResource(ModelResource):
         if device:
             filter_dict['device'] = device
 
-        steps_data = get_measurements_from_store(**filter_dict)
+        status, steps_data = get_measurements_from_store(**filter_dict)
+
         #logger.debug("[medical-compliance] Retrieved last steps data: %s " % str(steps_data))
-        if 'measurements' in steps_data:
-            return steps_data['measurements']
-        else:
-            return []
+
+        if status == httplib.OK:
+            if 'measurements' in steps_data:
+                return status, steps_data['measurements']
+            else:
+                return status, []
+
+        return status, steps_data
