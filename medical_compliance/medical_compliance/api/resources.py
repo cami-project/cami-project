@@ -66,7 +66,7 @@ class BloodPressureMeasurementResource(Resource):
 
         for index, measurement in enumerate(bp_results):
             # amount = [measurement.value] + amount
-            amount = [measurement['value_info']['value']] + amount
+            amount = [measurement['value_info'][bp_element]] + amount
 
             data_entry = {}
             # data_entry['timestamp'] = measurement.timestamp
