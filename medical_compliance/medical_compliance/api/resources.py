@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from tastypie.authentication import Authentication
 from tastypie.authorization import Authorization
-from tastypie.resources import ModelResource
+from tastypie.resources import ModelResource, Resource
 from tastypie.paginator import Paginator
 from tastypie.utils import trailing_slash
 from tastypie.http import HttpBadRequest
@@ -39,6 +39,181 @@ class MedicationPlanResource(ModelResource):
         authentication = Authentication()
         authorization = Authorization()
 
+class BloodPressureMeasurementResource(Resource):
+    class Meta:
+        resource_name = 'bloodpressure-measurements'
+        authentication = Authentication()
+        authorization = Authorization()
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/last_values/(?P<bp_element>systolic|diastolic|pulse)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_last_values'), name="api_last_values"),
+        ]
+
+    def get_last_values(self, request, **kwargs):
+        bp_element = kwargs.get("bp_element", None)
+
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        status, bp_results = self.get_last_values_from_store(request)
+        if status != httplib.OK:
+            return self.create_response(request, bp_results, response_class=HttpBadRequest)
+
+        amount = []
+        data_list = []
+
+        for index, measurement in enumerate(bp_results):
+            # amount = [measurement.value] + amount
+            amount = [measurement['value_info']['value']] + amount
+
+            data_entry = {}
+            # data_entry['timestamp'] = measurement.timestamp
+            # data_entry['value'] = measurement.value
+            data_entry['timestamp'] = measurement['timestamp']
+            data_entry['value'] = measurement['value_info'][bp_element]
+
+            data_entry['status'] = self.compute_bp_status(measurement['value_info'], bp_element)
+            data_list = [data_entry] + data_list
+
+        status = "ok"
+        threshold = 80
+
+        ## TODO: actual status check for measurement series
+        # if len(amount) > 0:
+        #     threshold = np.mean(amount)
+        #     if threshold < 60 or threshold > 100:
+        #         status = "warning"
+
+        jsonResult = {
+            "heart_rate": {
+                "status": status,
+                "amount": amount,
+                "data": data_list,
+                "threshold": threshold
+            }
+        }
+        return self.create_response(request, jsonResult)
+
+
+    def compute_bp_status(self, measurement, bp_element):
+        ## TODO: actual status check
+        return "ok"
+
+
+    def get_last_values_from_store(self, request):
+        filter_dict = dict(type="blood_pressure")
+
+        user = request.GET.get("user", None)
+        device = request.GET.get("device", None)
+
+        if user:
+            filter_dict['user'] = user
+
+        if device:
+            filter_dict['device'] = device
+
+        status, measurements_result = get_measurements_from_store(**filter_dict)
+
+        if status == httplib.OK:
+            for i, meas in enumerate(measurements_result):
+                val = None
+                if 'Value' in meas['value_info']:
+                    val = meas['value_info']['Value']
+                else:
+                    val = meas['value_info']['value']
+
+                measurements_result[i]['value_info']['value'] = float(val)
+
+        return status, measurements_result
+
+
+class HeartRateMeasurementResource(ModelResource):
+    class Meta:
+        queryset = HeartRateMeasurement.objects.all().order_by('-timestamp')
+        resource_name = 'heartrate-measurements'
+        paginator_class = Paginator
+        authentication = Authentication()
+        authorization = Authorization()
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/last_values%s$" % (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('get_last_values'), name="api_last_values"),
+        ]
+
+    def get_last_values(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        # last_hr_measurements = HeartRateMeasurement.objects.all().order_by('-timestamp')[:20]
+        status, heartrate_results = self.get_last_values_from_store(request)
+        if status != httplib.OK:
+            return self.create_response(request, heartrate_results, response_class=HttpBadRequest)
+
+        amount = []
+        data_list = []
+
+        for index, measurement in enumerate(heartrate_results):
+            # amount = [measurement.value] + amount
+            amount = [measurement['value_info']['value']] + amount
+
+            data_entry = {}
+            # data_entry['timestamp'] = measurement.timestamp
+            # data_entry['value'] = measurement.value
+            data_entry['timestamp'] = measurement['timestamp']
+            data_entry['value'] = measurement['value_info']['value']
+
+            data_entry['status'] = "ok"
+            if data_entry['value'] < 60 or data_entry['value'] > 100:
+                data_entry['status'] = "warning"
+            data_list = [data_entry] + data_list
+
+        status = "ok"
+        threshold = 80
+
+        if len(amount) > 0:
+            threshold = np.mean(amount)
+            if threshold < 60 or threshold > 100:
+                status = "warning"
+
+        jsonResult = {
+            "heart_rate": {
+                "status": status,
+                "amount": amount,
+                "data": data_list,
+                "threshold": threshold
+            }
+        }
+        return self.create_response(request, jsonResult)
+
+    def get_last_values_from_store(self, request):
+        filter_dict = dict(type="pulse")
+
+        user = request.GET.get("user", None)
+        device = request.GET.get("device", None)
+
+        if user:
+            filter_dict['user'] = user
+
+        if device:
+            filter_dict['device'] = device
+
+        status, measurements_results = get_measurements_from_store(**filter_dict)
+
+        if status == httplib.OK:
+            for i, meas in enumerate(measurements_results):
+                val = None
+                if 'Value' in meas['value_info']:
+                    val = meas['value_info']['Value']
+                else:
+                    val = meas['value_info']['value']
+
+                measurements_results[i]['value_info']['value'] = int(val)
+
+        return status, measurements_results
 
 class WeightMeasurementResource(ModelResource):
     class Meta:
@@ -132,92 +307,6 @@ class WeightMeasurementResource(ModelResource):
 
         return status, measurements_result
 
-
-class HeartRateMeasurementResource(ModelResource):
-    class Meta:
-        queryset = HeartRateMeasurement.objects.all().order_by('-timestamp')
-        resource_name = 'heartrate-measurements'
-        paginator_class = Paginator
-        authentication = Authentication()
-        authorization = Authorization()
-
-    def prepend_urls(self):
-        return [
-            url(r"^(?P<resource_name>%s)/last_values%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_last_values'), name="api_last_values"),
-        ]
-
-    def get_last_values(self, request, **kwargs):
-        self.method_check(request, allowed=['get'])
-        self.is_authenticated(request)
-        self.throttle_check(request)
-
-        #last_hr_measurements = HeartRateMeasurement.objects.all().order_by('-timestamp')[:20]
-        status, heartrate_results = self.get_last_values_from_store(request)
-        if status != httplib.OK:
-            return self.create_response(request, heartrate_results, response_class=HttpBadRequest)
-
-        amount = []
-        data_list = []
-        
-        for index, measurement in enumerate(heartrate_results):
-            #amount = [measurement.value] + amount
-            amount = [measurement['value_info']['value']] + amount
-
-            data_entry = {}
-            #data_entry['timestamp'] = measurement.timestamp
-            #data_entry['value'] = measurement.value
-            data_entry['timestamp'] = measurement['timestamp']
-            data_entry['value'] = measurement['value_info']['value']
-
-            data_entry['status'] = "ok"
-            if data_entry['value'] < 60 or data_entry['value'] > 100:
-                data_entry['status'] = "warning"
-            data_list = [data_entry] + data_list
-            
-        status = "ok"
-        threshold = 80
-        
-        if len(amount) > 0:
-            threshold = np.mean(amount)
-            if threshold < 60 or threshold > 100:
-                status = "warning"
-
-        jsonResult = {
-            "heart_rate": {
-                "status": status,
-                "amount": amount,
-                "data": data_list,
-                "threshold": threshold
-            }
-        }
-        return self.create_response(request, jsonResult)
-
-
-    def get_last_values_from_store(self, request):
-        filter_dict = dict(type="pulse")
-
-        user = request.GET.get("user", None)
-        device = request.GET.get("device", None)
-
-        if user:
-            filter_dict['user'] = user
-
-        if device:
-            filter_dict['device'] = device
-
-        status, measurements_results = get_measurements_from_store(**filter_dict)
-
-        if status == httplib.OK:
-            for i, meas in enumerate(measurements_results):
-                val = None
-                if 'Value' in meas['value_info']:
-                    val = meas['value_info']['Value']
-                else:
-                    val = meas['value_info']['value']
-
-                measurements_results[i]['value_info']['value'] = int(val)
-
-        return status, measurements_results
 
 
 class MeasurementTimeResolution(object):
