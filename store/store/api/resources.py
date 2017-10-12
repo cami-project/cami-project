@@ -37,9 +37,9 @@ class UserResource(ModelResource):
 
     def dehydrate(self, bundle):
         # clean out fields that have a null value from returned serialization
-        for key in bundle.keys():
-            if not bundle[key]:
-                del bundle[key]
+        for key in bundle.data:
+            if not bundle.data[key]:
+                del bundle.data[key]
 
         return bundle
 
