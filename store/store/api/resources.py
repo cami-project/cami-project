@@ -38,8 +38,8 @@ class UserResource(ModelResource):
 
 class EndUserProfileResource(ModelResource):
     user = fields.ToOneField(UserResource, 'user')
-    caregivers = fields.ToManyField('store.api.resources.CaregiverProfileResource', 'caregivers',
-                                    related_name='caretaker')
+    caregivers = fields.ToManyField(UserResource, 'user.caregivers', related_name='caretaker',
+                                    null=True, blank=True)
 
     class Meta:
         # we exclude the following fields because we don'really have any data, nor do we use them
@@ -52,7 +52,7 @@ class EndUserProfileResource(ModelResource):
 
 class CaregiverProfileResource(ModelResource):
     user = fields.ToOneField(UserResource, 'user')
-    caretaker = fields.ToOneField(EndUserProfileResource, 'caretaker')
+    caretaker = fields.ToOneField(UserResource, 'caretaker')
 
     class Meta:
         # we exclude the following fields because we don'really have any data, nor do we use them
