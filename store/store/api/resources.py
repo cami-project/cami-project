@@ -22,12 +22,54 @@ from store.models import *
 
 class UserResource(ModelResource):
     devices = fields.ToManyField('store.api.resources.DeviceResource', 'used_devices')
+    enduser_profile = fields.ToOneField('store.api.resources.EndUserProfileResource',
+                                        'enduser_profile',
+                                         null=True, blank=True, full=True)
+    caregiver_profile = fields.ToOneField('store.api.resources.CaregiverProfileResource',
+                                        'caregiver_profile',
+                                         null=True, blank=True, full=True)
 
     class Meta:
-        excludes = ['password', 'is_staff', 'is_superuser', 'email']
+        excludes = ['password', 'is_staff', 'is_superuser']
         queryset = User.objects.all()
         allowed_methods = ['get']
         collection_name = "users"
+
+    def dehydrate(self, bundle):
+        # clean out fields that have a null value from returned serialization
+        for key in bundle.data.keys():
+            if not bundle.data[key]:
+                del bundle.data[key]
+
+        return bundle
+
+
+
+class EndUserProfileResource(ModelResource):
+    user = fields.ToOneField(UserResource, 'user')
+    caregivers = fields.ToManyField(UserResource, 'user__caregivers', related_name='caretaker',
+                                    null=True, blank=True)
+
+    class Meta:
+        # we exclude the following fields because we don'really have any data, nor do we use them
+        excludes = ['marital_status', 'age', 'height', 'phone', 'address']
+
+        queryset = EndUserProfile.objects.all()
+        allowed_methods = ['get']
+        collection_name = "enduser_profiles"
+
+
+class CaregiverProfileResource(ModelResource):
+    user = fields.ToOneField(UserResource, 'user')
+    caretaker = fields.ToOneField(UserResource, 'caretaker')
+
+    class Meta:
+        # we exclude the following fields because we don'really have any data, nor do we use them
+        excludes = ['phone', 'address']
+
+        queryset = CaregiverProfile.objects.all()
+        allowed_methods = ['get']
+        collection_name = "caregiver_profiles"
 
 
 class DeviceResource(ModelResource):
