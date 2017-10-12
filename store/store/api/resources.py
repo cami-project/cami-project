@@ -30,16 +30,25 @@ class UserResource(ModelResource):
                                          null=True, blank=True, full=True)
 
     class Meta:
-        excludes = ['password', 'is_staff', 'is_superuser', 'email']
+        excludes = ['password', 'is_staff', 'is_superuser']
         queryset = User.objects.all()
         allowed_methods = ['get']
         collection_name = "users"
 
+    def dehydrate(self, bundle):
+        # clean out fields that have a null value from returned serialization
+        for key in bundle:
+            if not bundle[key]:
+                del bundle[key]
+
+        return bundle
+
+
 
 class EndUserProfileResource(ModelResource):
     user = fields.ToOneField(UserResource, 'user')
-    caregivers = fields.ToManyField('store.api.resources.CaregiverProfileResource', 'caregivers',
-                                    related_name='caretaker')
+    caregivers = fields.ToManyField(UserResource, 'user__caregivers', related_name='caretaker',
+                                    null=True, blank=True)
 
     class Meta:
         # we exclude the following fields because we don'really have any data, nor do we use them
@@ -52,7 +61,7 @@ class EndUserProfileResource(ModelResource):
 
 class CaregiverProfileResource(ModelResource):
     user = fields.ToOneField(UserResource, 'user')
-    caretaker = fields.ToOneField(EndUserProfileResource, 'caretaker')
+    caretaker = fields.ToOneField(UserResource, 'caretaker')
 
     class Meta:
         # we exclude the following fields because we don'really have any data, nor do we use them
