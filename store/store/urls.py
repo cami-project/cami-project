@@ -23,6 +23,9 @@ from store.api.resources import *
 
 v1_api = Api(api_name='v1')
 v1_api.register(UserResource())
+v1_api.register(EndUserProfileResource())
+v1_api.register(CaregiverProfileResource())
+
 v1_api.register(DeviceResource())
 v1_api.register(DeviceUsageResource())
 v1_api.register(MeasurementResource())
