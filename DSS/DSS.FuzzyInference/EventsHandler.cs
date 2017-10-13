@@ -32,7 +32,7 @@ namespace DSS.FuzzyInference
                 var obj = JsonConvert.DeserializeObject<Event>(json);
                 var result = "";
 
-                Console.WriteLine("Handling an event of type " : obj.category);
+                Console.WriteLine("Handling an event of type: " + obj.category);
 
                 Queue.Refresh();
 
