@@ -116,46 +116,6 @@ namespace DSS.FuzzyInference
 
     }
 
-
-    //public class BloodPressureValueConverter : JsonConverter
-    //{
-    //    private List<string> AcceptedPulsePropertyNames = new List<string> { "pulse", "pulserate", "heartrate" };
-
-    //    public override bool CanConvert(Type objectType)
-    //    {
-    //        return typeof(BloodPressureValueInfo).IsAssignableFrom(objectType);
-    //    }
-
-    //    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-    //    {
-    //        object instance = objectType.GetConstructor(Type.EmptyTypes).Invoke(null);
-    //        System.Reflection.PropertyInfo[] props = objectType.GetProperties();
-
-    //        JObject jo = JObject.Load(reader);
-    //        foreach (JProperty jp in jo.Properties())
-    //        {
-    //            if (AcceptedPulsePropertyNames.Contains<string>(jp.Name, StringComparer.OrdinalIgnoreCase))
-    //            {
-    //                PropertyInfo prop = props.FirstOrDefault(pi => pi.CanWrite && string.Equals(pi.Name, "pulse", StringComparison.OrdinalIgnoreCase));
-
-    //                if (prop != null)
-    //                    prop.SetValue(instance, jp.Value.ToObject(prop.PropertyType, serializer));
-    //            }
-    //        }
-
-    //        return instance;
-    //    }
-
-    //    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-    //    {
-    //        BloodPressureValueInfo bpInfo = (BloodPressureValueInfo)value;
-
-    //        JObject jObj = JObject.FromObject(bpInfo, serializer);
-    //        jObj.WriteTo(writer);
-    //    }
-    //}
-
-    
     public class Measurement
     {
         public string measurement_type { get; set; }
