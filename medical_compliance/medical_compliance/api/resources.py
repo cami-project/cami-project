@@ -40,6 +40,32 @@ class MedicationPlanResource(ModelResource):
         authorization = Authorization()
 
 class BloodPressureMeasurementResource(Resource):
+
+    def __init__(self):
+        super(BloodPressureMeasurementResource, self).__init__()
+
+        self.thresholds = {
+            "pulse": {
+                "alert_low": 50,
+                "alert_high": 140,
+                "warning_low": 60,
+                "warning_high": 100
+            },
+            "diastolic": {
+                "alert_low": 50,
+                "alert_high": 100,
+                "warning_low": 90,
+                "warning_high": 100
+            },
+            "systolic": {
+                "alert_low": 90,
+                "alert_high": 160,
+                "warning_low": 100,
+                "warning_high": 140
+            },
+        }
+
+
     class Meta:
         resource_name = 'bloodpressure-measurements'
         authentication = Authentication()
@@ -74,17 +100,21 @@ class BloodPressureMeasurementResource(Resource):
             data_entry['timestamp'] = measurement['timestamp']
             data_entry['value'] = measurement['value_info'][bp_element]
 
-            data_entry['status'] = self.compute_bp_status(measurement['value_info'], bp_element)
+            data_entry['status'] = self.compute_bp_status(data_entry['value'], bp_element)
             data_list = [data_entry] + data_list
 
         status = "ok"
         threshold = 80
 
-        ## TODO: actual status check for measurement series
-        # if len(amount) > 0:
-        #     threshold = np.mean(amount)
-        #     if threshold < 60 or threshold > 100:
-        #         status = "warning"
+        if len(amount) > 0:
+             threshold = np.mean(amount)
+
+             if threshold < self.thresholds[bp_element]['alert_low'] or threshold > self.thresholds[bp_element]['alert_high']:
+                 status = "alert"
+             elif threshold < self.thresholds[bp_element]['warning_low'] or threshold > self.thresholds[bp_element]['warning_high']:
+                 status = "warning"
+             else:
+                 status = "ok"
 
         jsonResult = {
             "heart_rate": {
@@ -99,6 +129,14 @@ class BloodPressureMeasurementResource(Resource):
 
     def compute_bp_status(self, measurement, bp_element):
         ## TODO: actual status check
+        if bp_element in self.thresholds:
+            if measurement < self.thresholds[bp_element]['alert_low'] or measurement > self.thresholds[bp_element]['alert_high']:
+                return "alert"
+            elif measurement < self.thresholds[bp_element]['warning_low'] or measurement > self.thresholds[bp_element]['warning_high']:
+                return "warning"
+            else:
+                return "ok"
+
         return "ok"
 
 
