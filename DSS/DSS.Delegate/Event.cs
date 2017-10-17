@@ -26,12 +26,20 @@ namespace DSS.Delegate
 
 	public class Content
 	{
-		public string name { get; set; }
-		public string value_type { get; set; }
+        [JsonProperty("uuid")]
+        public string uuid { get; set; }
 
-		[JsonProperty("value")]
-		//public Value val { get; set; }
-		public Dictionary<string, dynamic> val { get; set; }
+        public string name { get; set; }
+
+        [JsonProperty("in_reply_to")]
+        public string inReplyTo { get; set; }
+
+        public string value_type { get; set; }
+
+        [JsonProperty("value")]
+        //public Value val { get; set; }
+        public Dictionary<string, dynamic> val { get; set; }
+
 	}
 
 	public class TemporalValidity
@@ -45,6 +53,7 @@ namespace DSS.Delegate
 		public int timestamp { get; set; }
 		//public List<string> source { get; set; }
 		public Dictionary<string, dynamic> source { get; set; }
+
 		public int certainty { get; set; }
 		public TemporalValidity temporal_validity { get; set; }
 	}

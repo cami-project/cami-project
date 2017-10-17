@@ -20,7 +20,6 @@ namespace DSS.FuzzyInference
 			RequestManagableQueue = new List<Event>();
 
             api = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion"); 
-        
         }
 
         public void Handle(string json)

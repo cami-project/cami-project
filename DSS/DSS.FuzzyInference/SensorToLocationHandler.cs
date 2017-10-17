@@ -18,11 +18,12 @@ namespace DSS.FuzzyInference
             Map.Add("/api/v1/device/2/", "Kitchen");
             Map.Add("/api/v1/device/9/", "Living room");
 
-			storeAPI = new StoreAPI("http://cami-store:8008/api/v1");
+			storeAPI = new StoreAPI("http://cami-store:8008");
 		}
 
         public void Handle(string json)
         {
+            string END_USER_URI = "/api/v1/user/2/";
 
             string END_USER_URI = "/api/v1/user/2/";
 

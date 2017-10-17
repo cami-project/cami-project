@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace DSS.RMQ
 {
@@ -39,7 +40,7 @@ namespace DSS.RMQ
 			HttpContent content = new StringContent(json);
             content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
            
-            var response = new HttpClient().PostAsync( url +"/measurement/", content);
+            var response = new HttpClient().PostAsync( url + "/api/v1/measurement/", content);
 
 			//Console.WriteLine("PUSH MEASUREMNT:" + response.Result);
 			Console.WriteLine("Measurement inserted");
@@ -50,7 +51,7 @@ namespace DSS.RMQ
 
             //var urlVS = url + "/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp&user=2&device=2";
             // we want to get all pulse related data for the end-user (user=2), not just the ones from device 2
-            var urlVS = url + "/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp&user=2";
+            var urlVS = url + "/api/v1/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp&user=2";
 
             var response = new HttpClient().GetAsync(urlVS);
 
@@ -97,7 +98,7 @@ namespace DSS.RMQ
 
             //var response = new HttpClient().GetAsync(url +"/measurement/?limit=1&measurement_type=weight&order_by=-timestamp&user=2");
 
-            string queryPath = String.Format("/measurement/?limit=1&measurement_type=weight&order_by=-timestamp&user={0}", userId);
+            string queryPath = String.Format("/api/v1/measurement/?limit=1&measurement_type=weight&order_by=-timestamp&user={0}", userId);
             var response = new HttpClient().GetAsync(url + queryPath);
 
             if (response.Result.IsSuccessStatusCode)
@@ -131,12 +132,66 @@ namespace DSS.RMQ
 
             HttpContent content = new StringContent(JsonConvert.SerializeObject(obj));
 			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-			var response = new HttpClient().PostAsync(url +"/journal_entries/", content);
+			var response = new HttpClient().PostAsync(url + "/api/v1/journal_entries/", content);
 
 			//Console.WriteLine("JOURNAL ENTRTY: " + response.Result);
 			Console.WriteLine("Journal entry inserted");
 
 		}
 
+        public string getUserOfGateway(string gatewayURIPath)
+        {
+            Console.WriteLine("Retrieving the end-user URI of the owner of this gatewayURI: " + gatewayURIPath);
+
+            var response = new HttpClient().GetAsync(url + gatewayURIPath);
+
+            if (response.Result.IsSuccessStatusCode)
+            {
+                dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
+                return deserialized["user"];
+            }
+            else
+            {
+                Console.WriteLine("Could not retrieve the gateway referenced by the URI " + (url + gatewayURIPath) + ". Reason: " + response.Result);
+                return null;
+            }    
+        }
+
+
+        public Tuple<string, string> getUserLocale(string userURIPath, int userID)
+        {
+            Dictionary<string, string> timezoneMap = new Dictionary<string, string>()
+            {
+                { "en", "GMT Standard Time" },
+                { "ro", "GTB Standard Time" },
+                { "pl", "Central European Standard Time" },
+                { "dk", "Romance Standard Time" },
+            };
+
+            Console.WriteLine("Retrieving language and timezone for user: " + userURIPath);
+
+            string queryPath = String.Format("/api/v1/enduserprofile/?limit=1&user={0}", userID);
+            var response = new HttpClient().GetAsync(url + queryPath);
+
+            if (response.Result.IsSuccessStatusCode)
+            {
+                dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
+                string lang = deserialized["enduser_profiles"][0]["language"];
+
+                if (timezoneMap.ContainsKey(lang))
+                {
+                    return new Tuple<string, string>(lang, timezoneMap[lang]);
+                }
+                else
+                {
+                    return new Tuple<string, string>("en", timezoneMap["en"]);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Could not retrieve locales for user referenced by the URI " + (url + userURIPath) + ". Reason: " + response.Result);
+                return null;
+            }
+        }
     }
 }

@@ -120,16 +120,17 @@ namespace DSS.FuzzyInference
             {
                 //if(registredVariables.Contains( e2l.Do(e))) {
 
-					//fis.SetInput(e2l.Do(e), e.content.val.numVal);
-                    //Console.WriteLine(e2l.Do(e) +" - "+ e.content.val.numVal);
-                    fis.SetInput(e2l.Do(e), e.content.val["numVal"]);
-                    Console.WriteLine(e2l.Do(e) + " - " + e.content.val["numVal"]);
+
+                //fis.SetInput(e2l.Do(e), e.content.val.numVal);
+                //Console.WriteLine(e2l.Do(e) +" - "+ e.content.val.numVal);
+                fis.SetInput(e2l.Do(e), e.content.val["numVal"]);
+                Console.WriteLine(e2l.Do(e) +" - "+ e.content.val["numVal"]);
 
                 //}
-			}
+            }
 
             //Execute("HEART_RATE", results);
-			Execute("FALL", results);
+            Execute("FALL", results);
 
 			return results;
 		}
