@@ -54,8 +54,8 @@ class BloodPressureMeasurementResource(Resource):
             "diastolic": {
                 "alert_low": 50,
                 "alert_high": 100,
-                "warning_low": 90,
-                "warning_high": 100
+                "warning_low": 60,
+                "warning_high": 90
             },
             "systolic": {
                 "alert_low": 90,
