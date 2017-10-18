@@ -11,8 +11,6 @@ namespace DSS.FuzzyInference
 {
     public class MotionEventHandler : IRouterHandler
     {
-        public
-
         private StoreAPI storeAPI;
         private RMQ.INS.InsertionAPI insertionAPI;
 
