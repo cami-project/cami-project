@@ -32,84 +32,92 @@ namespace DSS.FuzzyInference
         public void Handle(string json)
         {
             Console.WriteLine("MOTION event handler invoked ...");
-            var eventObj = JsonConvert.DeserializeObject<Event>(json);
+            try {
+                var eventObj = JsonConvert.DeserializeObject<Event>(json);
+                Console.WriteLine("[MotionEventHandler] Handling eventObj: " + eventObj);
 
-            if (eventObj.category.ToLower() == "user_environment")
-            {
-                // if we are dealing with a presence sensor
-                if (eventObj.content.name == "presence")
+                if (eventObj.category.ToLower() == "user_environment")
                 {
-                    // see if it is a sensor activation
-                    if ((bool)eventObj.content.val["alarm_motion"] == true)
+                    // if we are dealing with a presence sensor
+                    if (eventObj.content.name == "presence")
                     {
-                        // retrieve the gateway and sensor URI from the source annotations
-                        var gatewayURIPath = eventObj.annotations.source["gateway"];
-                        var deviceURIPath = eventObj.annotations.source["sensor"];
-
-                        // make a call to the store API to get the user from the gateway
-                        var userURIPath = storeAPI.GetUserOfGateway(gatewayURIPath);
-
-                        if (userURIPath != null)
+                        // see if it is a sensor activation
+                        if ((bool)eventObj.content.val["alarm_motion"] == true)
                         {
-                            int userID = GetIdFromURI(userURIPath);
-                            Tuple<string, string> userLocales = storeAPI.GetUserLocale(userURIPath, userID);
+                            // retrieve the gateway and sensor URI from the source annotations
+                            var gatewayURIPath = eventObj.annotations.source["gateway"];
+                            var deviceURIPath = eventObj.annotations.source["sensor"];
 
-                            if (userLocales != null)
+                            // make a call to the store API to get the user from the gateway
+                            var userURIPath = storeAPI.GetUserOfGateway(gatewayURIPath);
+
+                            if (userURIPath != null)
                             {
-                                // retrieve timestamp from annotations
-                                long timestamp = eventObj.annotations.timestamp;
+                                int userID = GetIdFromURI(userURIPath);
+                                Tuple<string, string> userLocales = storeAPI.GetUserLocale(userURIPath, userID);
 
-                                // get localized datetime
-                                TimeZoneInfo localTz = TimeZoneInfo.FindSystemTimeZoneById(userLocales.Item2);
-                                DateTime dtime = UnixTimeStampToDateTime(timestamp, localTz);
-                                
-                                // get morning limits
-                                Tuple<DateTime, DateTime> morningLimits = getMorningLimits(localTz);
-
-                                // check if current dtime is within limits
-                                if (dtime >= morningLimits.Item1 || dtime <= morningLimits.Item2)
+                                if (userLocales != null)
                                 {
-                                    if (lastActivationMap.ContainsKey(userURIPath))
+                                    // retrieve timestamp from annotations
+                                    long timestamp = eventObj.annotations.timestamp;
+
+                                    // get localized datetime
+                                    TimeZoneInfo localTz = TimeZoneInfo.FindSystemTimeZoneById(userLocales.Item2);
+                                    DateTime dtime = UnixTimeStampToDateTime(timestamp, localTz);
+
+                                    // get morning limits
+                                    Tuple<DateTime, DateTime> morningLimits = getMorningLimits(localTz);
+
+                                    // check if current dtime is within limits
+                                    if (dtime >= morningLimits.Item1 || dtime <= morningLimits.Item2)
                                     {
-                                        long lastTs = lastActivationMap[userURIPath];
-                                        DateTime lastDt = UnixTimeStampToDateTime(lastTs, localTz);
-
-                                        // if the lastDt is outside of the morning limits
-                                        if (lastDt < morningLimits.Item1)
+                                        if (lastActivationMap.ContainsKey(userURIPath))
                                         {
-                                            Console.WriteLine("[MotionEventHandler] Identified first activation of motion sensor in morning at : " + dtime.ToString());
-                                            SendBPMeasurementNotification(userURIPath);
-                                        }
+                                            long lastTs = lastActivationMap[userURIPath];
+                                            DateTime lastDt = UnixTimeStampToDateTime(lastTs, localTz);
 
-                                        lastActivationMap[userURIPath] = timestamp;
+                                            // if the lastDt is outside of the morning limits
+                                            if (lastDt < morningLimits.Item1)
+                                            {
+                                                Console.WriteLine("[MotionEventHandler] Identified first activation of motion sensor in morning at : " + dtime.ToString());
+                                                SendBPMeasurementNotification(userURIPath);
+                                            }
+
+                                            lastActivationMap[userURIPath] = timestamp;
+                                        }
+                                        else
+                                        {
+                                            // if this is the first activation ever within morning limits
+                                            Console.WriteLine("[MotionEventHandler] First ever activation of motion sensor in morning at : " + dtime.ToString());
+                                            SendBPMeasurementNotification(userURIPath);
+
+                                            lastActivationMap[userURIPath] = timestamp;
+                                        }
                                     }
                                     else
                                     {
-                                        // if this is the first activation ever within morning limits
-                                        Console.WriteLine("[MotionEventHandler] First ever activation of motion sensor in morning at : " + dtime.ToString());
-                                        SendBPMeasurementNotification(userURIPath);
-
-                                        lastActivationMap[userURIPath] = timestamp;
+                                        // just mark as latest activation
+                                        Console.WriteLine("[MotionEventHandler] Motion event not within morning limits " + dtime.ToString());
+                                        lastActivationMap.Add(userURIPath, timestamp);
                                     }
+
                                 }
                                 else
                                 {
-                                    // just mark as latest activation
-                                    lastActivationMap.Add(userURIPath, timestamp);
+                                    Console.WriteLine("[MotionEventHandler] Insufficient locales information in enduser profile endpoint for user: " + userURIPath);
                                 }
-
                             }
                             else
                             {
-                                Console.WriteLine("[MotionEventHandler] Insufficient locales information in enduser profile endpoint for user: " + userURIPath);
+                                Console.WriteLine("[MotionEventHandler] Skipping motion event handling since no user can be retrieved for gateway: " + gatewayURIPath);
                             }
-                        }
-                        else
-                        {
-                            Console.WriteLine("[MotionEventHandler] Skipping motion event handling since no user can be retrieved for gateway: " + gatewayURIPath);
                         }
                     }
                 }
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine(ex);
             }
         }
 
