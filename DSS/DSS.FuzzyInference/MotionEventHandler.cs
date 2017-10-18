@@ -78,7 +78,7 @@ namespace DSS.FuzzyInference
                                         if (lastDt < morningLimits.Item1)
                                         {
                                             Console.WriteLine("[MotionEventHandler] Identified first activation of motion sensor in morning at : " + dtime.ToString());
-                                            // TODO: SEND THE NOTIFICATION FOR BP MEASUREMENTS
+                                            SendBPMeasurementNotification(userURIPath);
                                         }
 
                                         lastActivationMap[userURIPath] = timestamp;
@@ -87,7 +87,7 @@ namespace DSS.FuzzyInference
                                     {
                                         // if this is the first activation ever within morning limits
                                         Console.WriteLine("[MotionEventHandler] First ever activation of motion sensor in morning at : " + dtime.ToString());
-                                        // TODO: SEND THE NOTIFICATION FOR BP MEASUREMENTS
+                                        SendBPMeasurementNotification(userURIPath);
 
                                         lastActivationMap[userURIPath] = timestamp;
                                     }
