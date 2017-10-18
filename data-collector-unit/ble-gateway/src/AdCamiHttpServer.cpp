@@ -9,7 +9,7 @@ namespace AdCamiCommunications {
 
 AdCamiHttpServer::AdCamiHttpServer(const unsigned int port, const EnumConfiguration configuration) :
         _port(port), _daemon(NULL), _configuration(configuration),
-        _requests(map < tuple < AdCamiUrl, EnumHttpMethod > , const AdCamiRequest*> ()),
+        _requests(map < tuple < AdCamiUrl, EnumHttpMethod >, const AdCamiRequest*> ()),
         _certificatePemFile(nullptr), _certificateFilePath(nullptr), _keyPemFile(nullptr), _keyFilePath(nullptr),
         _rfds(new fd_set), _wfds(new fd_set), _efds(new fd_set), _maxfd(new int), _tv(new struct timeval) {
 
@@ -151,7 +151,8 @@ int AdCamiHttpServer::_AnswerRequest(void *cls, struct MHD_Connection *connectio
 
     /* In case the URL is invalid, return "404 not found request". */
     if (!handler) {
-        PRINT_LOG("404 Not Found for URL " << url);
+        PRINT_LOG("Request " << method << " " << url << " received.");
+        PRINT_LOG("\tHTTP code = 404");
         statusCode = MHD_HTTP_NOT_FOUND;
     }
 
@@ -160,7 +161,6 @@ int AdCamiHttpServer::_AnswerRequest(void *cls, struct MHD_Connection *connectio
                                strcmp(method, MHD_HTTP_METHOD_PUT) == 0 ||
                                strcmp(method, MHD_HTTP_METHOD_DELETE) == 0)) {
         request = new Request();
-
         *con_cls = request;
 #ifdef DEBUG
         const char* encoding = MHD_lookup_connection_value(connection,
@@ -194,8 +194,10 @@ int AdCamiHttpServer::_AnswerRequest(void *cls, struct MHD_Connection *connectio
      * The error message is only sent on the end of this function. That way all
      * messages, error or not, are sent on the same point of the function. */
     if (handler != nullptr) {
+        PRINT_LOG("Request "<< method << " " << url << " received.");
         handlerResult = handler(AdCamiUrl(url), *requestData, responseData, callbackArg);
         statusCode = GetHttpStatusCodeInt(handlerResult);
+        PRINT_LOG("\tHTTP code = " << statusCode);
     }
 
     /* Create response and fill headers. */

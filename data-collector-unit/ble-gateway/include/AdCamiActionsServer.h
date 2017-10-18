@@ -244,8 +244,6 @@ EnumHttpStatusCode AdCamiActionsServer::AddDevices(const AdCamiUrl &url,
                                                    const AdCamiHttpData &requestData,
                                                    AdCamiHttpData *responseData,
                                                    void *data) {
-    PRINT_DEBUG("POST /device request received")
-
     vector <string> devicesAddresses;
     vector <AdCamiBluetoothDevice> devices;
     AdCamiEventsStorage storage(AdCamiCommon::kAdCamiEventsDatabase);
@@ -274,8 +272,6 @@ EnumHttpStatusCode AdCamiActionsServer::DeleteDevices(const AdCamiUrl &url,
                                                       const AdCamiHttpData &requestData,
                                                       AdCamiHttpData *responseData,
                                                       void *data) {
-    PRINT_DEBUG("DELETE /device request received")
-
     vector <string> devicesAddresses;
     vector <AdCamiBluetoothDevice> devices;
     AdCamiEventsStorage storage(AdCamiCommon::kAdCamiEventsDatabase);
@@ -302,8 +298,6 @@ EnumHttpStatusCode AdCamiActionsServer::DiscoverAndPair(const AdCamiUrl &url,
                                                         const AdCamiHttpData &requestData,
                                                         AdCamiHttpData *responseData,
                                                         void *data) {
-    PRINT_LOG("GET /discover request received")
-
     IAdCamiBluetooth *bluetooth = static_cast<AdCamiBluetooth5 *>(data);
     vector <AdCamiBluetoothDevice> devices;
     AdCamiJsonConverter converter;
@@ -339,13 +333,15 @@ EnumHttpStatusCode AdCamiActionsServer::DiscoverAndPair(const AdCamiUrl &url,
                                          "Problem discovering devices [error = " + std::to_string(error) + "]",
                                          responseData);
     }
-#ifdef DEBUG
-    PRINT_DEBUG("Found " << devices.size() << " devices.")
+
+    string strDevices;
     for (auto d : devices) {
         PRINT_DEBUG(d);
+        strDevices += d.Address() + ", ";
     }
-#endif
+    PRINT_LOG("Found " << devices.size() << " devices: " << strDevices)
 
+    /* Pair devices. */
     AdCamiBluetoothDevice deviceToPair(address);
     auto it = devices.begin();
     if (!address.empty() && (it = find(devices.begin(), devices.end(), deviceToPair)) != devices.end()) {
@@ -386,12 +382,11 @@ EnumHttpStatusCode AdCamiActionsServer::DisableDevices(const AdCamiUrl &url,
                                                        const AdCamiHttpData &requestData,
                                                        AdCamiHttpData *responseData,
                                                        void *data) {
-    PRINT_DEBUG("PUT /device/disable request received")
-
     vector <string> devicesAddresses;
     AdCamiEventsStorage storage(AdCamiCommon::kAdCamiEventsDatabase);
     AdCamiJsonConverter converter;
     string invalidAddresses = "{ \"invalid\": [";
+    string devicesDisabled, devicesNotDisabled;
 
     if (converter.GetObjectValue<string>(requestData.GetDataAsString(),
                                          "devices",
@@ -401,8 +396,12 @@ EnumHttpStatusCode AdCamiActionsServer::DisableDevices(const AdCamiUrl &url,
             if (storage.GetDevice(addr, &device) == AdCamiEventsStorage::Ok) {
                 device.NotificationsEnabled(false);
                 storage.UpdateDevice(device);
+                if (devicesDisabled.compare("(none)") == 0)
+                    devicesDisabled.clear();
+                devicesDisabled.append(addr + ", ");
             } else {
                 invalidAddresses.append("\"" + addr + "\",");
+                devicesNotDisabled.append(addr + ", ");
             }
         }
 
@@ -418,6 +417,13 @@ EnumHttpStatusCode AdCamiActionsServer::DisableDevices(const AdCamiUrl &url,
                                          responseData);
     }
 
+    if (devicesDisabled.empty())
+        devicesDisabled.append("(none)");
+    if (devicesNotDisabled.empty())
+        devicesNotDisabled.append("(none)");
+    PRINT_LOG("\tDevices disabled = " << devicesDisabled << "");
+    PRINT_LOG("\tDevices not disabled = " << devicesNotDisabled << "");
+
     return EnumHttpStatusCode::Code200;
 }
 
@@ -425,12 +431,11 @@ EnumHttpStatusCode AdCamiActionsServer::EnableDevices(const AdCamiUrl &url,
                                                       const AdCamiHttpData &requestData,
                                                       AdCamiHttpData *responseData,
                                                       void *data) {
-    PRINT_DEBUG("PUT /device/enable request received")
-
     vector <string> devicesAddresses;
     AdCamiEventsStorage storage(AdCamiCommon::kAdCamiEventsDatabase);
     AdCamiJsonConverter converter;
     string invalidAddresses = "{ \"invalid\": [";
+    string devicesEnabled, devicesNotEnabled;
 
     if (converter.GetObjectValue<string>(requestData.GetDataAsString(),
                                          "devices",
@@ -440,8 +445,10 @@ EnumHttpStatusCode AdCamiActionsServer::EnableDevices(const AdCamiUrl &url,
             if (storage.GetDevice(addr, &device) == AdCamiEventsStorage::Ok) {
                 device.NotificationsEnabled(true);
                 storage.UpdateDevice(device);
+                devicesEnabled.append(addr + ", ");
             } else {
                 invalidAddresses.append("\"" + addr + "\",");
+                devicesNotEnabled.append(addr + ", ");
             }
         }
 
@@ -457,6 +464,13 @@ EnumHttpStatusCode AdCamiActionsServer::EnableDevices(const AdCamiUrl &url,
                                          responseData);
     }
 
+    if (devicesEnabled.empty())
+        devicesEnabled.append("(none)");
+    if (devicesNotEnabled.empty())
+        devicesNotEnabled.append("(none)");
+    PRINT_LOG("\tDevices enabled = " << devicesEnabled << "");
+    PRINT_LOG("\tDevices not enabled = " << devicesNotEnabled << "");
+
     return EnumHttpStatusCode::Code200;
 }
 
@@ -464,7 +478,6 @@ EnumHttpStatusCode AdCamiActionsServer::GetEvents(const AdCamiUrl &url,
                                                   const AdCamiHttpData &requestData,
                                                   AdCamiHttpData *responseData,
                                                   void *data) {
-    PRINT_LOG("GET /events request received")
     AdCamiConfiguration configuration(AdCamiCommon::kAdCamiConfigurationFile);
     AdCamiEventsStorage storage(AdCamiCommon::kAdCamiEventsDatabase);
     AdCamiJsonConverter converter;
@@ -496,7 +509,6 @@ EnumHttpStatusCode AdCamiActionsServer::GetPairedDevices(const AdCamiUrl &url,
                                                          const AdCamiHttpData &requestData,
                                                          AdCamiHttpData *responseData,
                                                          void *data) {
-    PRINT_LOG("GET /device/list request received")
     vector <AdCamiBluetoothDevice> devices;
 
     AdCamiEventsStorage storage(AdCamiCommon::kAdCamiEventsDatabase);
@@ -517,8 +529,6 @@ EnumHttpStatusCode AdCamiActionsServer::ReadDevice(const AdCamiUrl &url,
                                                    const AdCamiHttpData &requestData,
                                                    AdCamiHttpData *responseData,
                                                    void *data) {
-    PRINT_LOG("GET /device/read request received")
-
     string address, jsonMeasurements;
     vector < AdCamiEvent * > measurements;
     int timeout = 0;
@@ -567,12 +577,16 @@ EnumHttpStatusCode AdCamiActionsServer::ReadDevice(const AdCamiUrl &url,
     }
 #ifdef DEBUG
     else {
-        IAdCamiEventMeasurement<double> *event = nullptr;
+//        IAdCamiEventMeasurement<double> *event = nullptr;
+//        for (auto measurement : measurements) {
+//            if ((event = dynamic_cast<IAdCamiEventMeasurement<double> *>(measurement)) != nullptr) {
+//                for (auto m : event->Measurements())
+//                    PRINT_DEBUG(std::get<0>(m) << " = " << std::get<1>(m).Value() << " " << std::get<1>(m).Unit());
+//            }
+//        }
+
         for (auto measurement : measurements) {
-            if ((event = dynamic_cast<IAdCamiEventMeasurement<double> *>(measurement)) != nullptr) {
-                for (auto m : event->Measurements())
-                    PRINT_DEBUG(std::get<0>(m) << " = " << std::get<1>(m).Value() << " " << std::get<1>(m).Unit());
-            }
+            PRINT_LOG("\t" << *dynamic_cast<IAdCamiEventMeasurement<double>*>(measurement));
         }
     }
 #endif
@@ -597,8 +611,6 @@ EnumHttpStatusCode AdCamiActionsServer::SetCredentials(const AdCamiUrl &url,
                                                        const AdCamiHttpData &requestData,
                                                        AdCamiHttpData *responseData,
                                                        void *data) {
-    PRINT_DEBUG("PUT /management/credentials request received")
-
     string username, password;
     string errorJsonMessage;
 
@@ -608,17 +620,16 @@ EnumHttpStatusCode AdCamiActionsServer::SetCredentials(const AdCamiUrl &url,
         AdCamiJsonConverter().GetObjectValue<string>(requestData.GetDataAsString(),
                                                      "password",
                                                      &password) == AdCamiJsonConverter::Ok) {
-        PRINT_DEBUG("username = " << username)
-        PRINT_DEBUG("password = " << password)
-
         AdCamiConfiguration configuration(AdCamiCommon::kAdCamiConfigurationFile);
         configuration.SetCredentials(username, password);
         configuration.Save();
+        PRINT_LOG("\tCredentials set successfully.");
     } else {
         AdCamiJsonConverter().Error("Malformed JSON data: could not find 'username' or 'password'.",
                                     &errorJsonMessage);
         responseData->SetData(errorJsonMessage);
         responseData->SetMimeType(AdCamiJsonConverter::MimeType);
+        PRINT_LOG("\tFailed to set credentials.");
 
         return EnumHttpStatusCode::Code400;
     }
@@ -630,8 +641,6 @@ EnumHttpStatusCode AdCamiActionsServer::SetGatewayName(const AdCamiUrl &url,
                                                        const AdCamiHttpData &requestData,
                                                        AdCamiHttpData *responseData,
                                                        void *data) {
-    PRINT_DEBUG("PUT /management/gateway request received")
-
     string gatewayName;
     string errorJsonMessage;
 
@@ -643,11 +652,14 @@ EnumHttpStatusCode AdCamiActionsServer::SetGatewayName(const AdCamiUrl &url,
         AdCamiConfiguration configuration(AdCamiCommon::kAdCamiConfigurationFile);
         configuration.SetGatewayName(gatewayName);
         configuration.Save();
+        PRINT_LOG("\tHTTP code = 200")
+        PRINT_LOG("\tGateway name set to \"" << gatewayName << "\"");
     } else {
         AdCamiJsonConverter().Error("Malformed JSON data: could not find 'name'.",
                                     &errorJsonMessage);
         responseData->SetData(errorJsonMessage);
         responseData->SetMimeType(AdCamiJsonConverter::MimeType);
+        PRINT_LOG("\tFailed to set gateway name to " << gatewayName);
 
         return EnumHttpStatusCode::Code400;
     }
@@ -659,24 +671,22 @@ EnumHttpStatusCode AdCamiActionsServer::SetEndpoint(const AdCamiUrl &url,
                                                     const AdCamiHttpData &requestData,
                                                     AdCamiHttpData *responseData,
                                                     void *data) {
-    PRINT_DEBUG("PUT /management/endpoint request received")
-
     string remoteEndpoint;
     string errorJsonMessage;
 
     if (AdCamiJsonConverter().GetObjectValue<string>(requestData.GetDataAsString(),
                                                      "endpoint",
                                                      &remoteEndpoint) == AdCamiJsonConverter::Ok) {
-        PRINT_DEBUG("remoteEndpoint = " << remoteEndpoint)
-
         AdCamiConfiguration configuration(AdCamiCommon::kAdCamiConfigurationFile);
         configuration.SetRemoteEndpoint(remoteEndpoint);
         configuration.Save();
+        PRINT_LOG("\tEndpoint set to " << remoteEndpoint);
     } else {
         AdCamiJsonConverter().Error("Malformed JSON data: could not find 'endpoint'.",
                                     &errorJsonMessage);
         responseData->SetData(errorJsonMessage);
         responseData->SetMimeType(AdCamiJsonConverter::MimeType);
+        PRINT_LOG("\tFailed to set endpoint to " << remoteEndpoint);
 
         return EnumHttpStatusCode::Code400;
     }

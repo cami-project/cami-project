@@ -24,8 +24,8 @@ public:
     /**
      * Enumeration with the class different states and errors.
      */
-    enum EnumHttpClientState {
-        /** Action performed sucessfully */
+    enum EnumHttpClientState : int {
+        /** Action performed successfully */
 		OK = 0,
         /** Response body written to an object */
 		RESPONSE_WRITTEN = 1,

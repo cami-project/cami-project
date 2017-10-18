@@ -7,6 +7,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <ctime>
 #include <iomanip>
 #include <iostream>
 #include <iterator>
@@ -16,6 +17,9 @@
 #include <vector>
 #include "AdCamiCommon.h"
 
+using std::chrono::duration_cast;
+using std::chrono::milliseconds;
+using std::chrono::system_clock;
 using std::ostream;
 using std::string;
 
@@ -23,7 +27,7 @@ using std::string;
  * if the flag DEBUG is defined on compile time. */
 #ifdef DEBUG
 #define PRINT_DEBUG(message) \
-std::cout << "[" << __FILE__ << "::" << __FUNCTION__ << ":" << std::dec << __LINE__ << "] " << \
+std::cout << "[" << __FILENAME__ << "::" << __FUNCTION__ << ":" << std::dec << __LINE__ << "] " << \
 message << std::endl;
 #else
 #define PRINT_DEBUG(message)
@@ -31,7 +35,9 @@ message << std::endl;
 
 /* Macro that prints log messages to a log file defined on LOG_FILE.  */
 #define PRINT_LOG(message) \
-std::clog << message << std::endl;
+std::clog << "[" \
+          << AdCamiUtilities::GetDate(system_clock::now()) << "] " \
+          << message << std::endl;
 
 /* Macro that prints error messages to a log file defined on ERROR_FILE.  */
 #define PRINT_ERROR(message) \

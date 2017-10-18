@@ -21,6 +21,14 @@ public:
     virtual const AdCamiMeasurement<T> &GetMeasurement(const EnumMeasurementType &type) const = 0;
 
     virtual void SetMeasurement(const AdCamiMeasurement<T> &measurement) = 0;
+
+    friend std::ostream &operator<<(std::ostream &os, const IAdCamiEventMeasurement<T> &event) {
+        for (auto &measurement : event.Measurements()) {
+            os << std::get<0>(measurement) << ": " << std::get<1>(measurement) << ", ";
+        }
+
+        return os;
+    }
 };
 
 } //namespace

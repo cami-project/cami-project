@@ -127,7 +127,7 @@ AdCamiHttpClient::EnumHttpClientState AdCamiHttpClient::_ErrorMessage(const int 
             return AdCamiHttpClient::CONNECTING_SERVER_ERROR;
         }
         default:
-            return AdCamiHttpClient::UNKNOWN_ERROR;
+            return static_cast<EnumHttpClientState>(error);//AdCamiHttpClient::UNKNOWN_ERROR;
     }
 }
 

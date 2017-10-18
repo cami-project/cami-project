@@ -23,7 +23,6 @@ const map <EnumHttpHeader, AdCamiHttpHeaders::_HttpHeaderInfo> AdCamiHttpHeaders
 };
 
 AdCamiHttpHeaders::~AdCamiHttpHeaders() {
-    PRINT_DEBUG("destroying HTTP header...")
     this->_fields.clear();
 }
 

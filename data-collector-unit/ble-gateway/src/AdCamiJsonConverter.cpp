@@ -278,7 +278,7 @@ AdCamiJsonConverter::EnumState AdCamiJsonConverter::_GetMemberFromArray(const JS
 
     for (auto object : node) {
         if ((*value = object.find(name)) != node.end()) {
-            PRINT_DEBUG("object with name '" << name << "' found: " << (*value)->as_string())
+//            PRINT_DEBUG("object with name '" << name << "' found: " << (*value)->as_string())
             return EnumState::Ok;
         }
     }

@@ -83,8 +83,7 @@ public:
      * @return a stream with the attributes of the device
      */
     friend std::ostream &operator<<(std::ostream &os, const AdCamiMeasurement<TValue> &measurement) {
-        os << "Value: " << measurement.Value() << ", ";
-        os << "Unit: " << measurement.Unit();
+        os << measurement.Value() << " " << measurement.Unit();
 
         return os;
     }

@@ -28,7 +28,6 @@ using EnumHttpServerConfiguration = AdCamiCommunications::AdCamiHttpServer::Enum
 static const int kAdCamiHttpPort = 60773;
 static const int kAdCamiHttpSecurePort = 60774;
 static const int kAdCamiRemoteEndPointPort = 61773;
-//static const AdCamiUrl kMeasurementsEventsUrl("/events");
 
 /* Global variable for HTTP server. */
 AdCamiHttpServer server(kAdCamiHttpPort);
@@ -74,21 +73,24 @@ int main(int argc, char **argv) {
             if (device->Connect() != BT_OK) {
                 return;
             }
-            PRINT_DEBUG("Connected to device " << device->Address() << "!");
-        }
-        else if (device->ConnectedFromCache() == true) {
-            PRINT_DEBUG("Already reading measurements!");
+            PRINT_LOG("Connected to device " << device->Address() << ".");
+        } else if (device->ConnectedFromCache() == true) {
             return;
         }
 
-        PRINT_DEBUG("Reading measurements...");
         if ((error = device->ReadMeasurementNotifications(&measurements, timeout)) != BT_OK) {
             PRINT_LOG("Problem getting notifications from " << device->Address() << " [error = " << error << "]");
         } else if (measurements.size() > 0) {
             if ((error = device->Disconnect()) != BT_OK) {
-                PRINT_DEBUG("Problem disconnecting from device " << device->Address() << " [error = " << error << "]");
+                PRINT_LOG("Problem disconnecting from device " << device->Address() << " [error = " << error << "]");
             } else {
-                PRINT_DEBUG("Disconnected from device " << device->Address() << ".");
+                PRINT_LOG("Disconnected from device " << device->Address() << ".");
+            }
+
+            /* Print received measurements to log. */
+            PRINT_LOG("Received " << measurements.size() << " measurement(s) from device " << device->Address());
+            for (auto measurement : measurements) {
+                PRINT_LOG("\t" << *dynamic_cast<IAdCamiEventMeasurement<double>*>(measurement));
             }
 
             /* Save measurements to database. */
@@ -96,34 +98,33 @@ int main(int argc, char **argv) {
             AdCamiEventsStorage storage(AdCamiCommon::kAdCamiEventsDatabase);
             storage.AddEvent(measurements);
 
+            /* Create JSON string for sending to remote endpoint. */
             converter.ToJson(measurements, configFile.GetGatewayName(), &json);
 
             /* Load configuration file to get the remote endpoint. */
             configFile.Load();
 
+            /* Send measurements to remote server. */
             AdCamiHttpClient client(kAdCamiRemoteEndPointPort);
             string endpointAddress = configFile.GetRemoteEndpoint();
             AdCamiHttpData sendData(AdCamiJsonConverter::MimeType, json.size(), json.c_str());
             AdCamiHttpData response;
+            EnumHttpClientState error;
 
-            PRINT_DEBUG("sending to server " << endpointAddress);
-            if (client.Post(endpointAddress/* + kMeasurementsEventsUrl*/,
-                            &sendData,
-                            &response) != EnumHttpClientState::OK) {
-                PRINT_LOG("error sending HTTP packet...");
+            PRINT_DEBUG("Sending to server " << endpointAddress);
+            if ((error = client.Post(endpointAddress, &sendData, &response)) != EnumHttpClientState::OK) {
+                PRINT_LOG("Error sending HTTP request to " << endpointAddress << " (error " << error << ").");
                 return;
             } else {
-                PRINT_DEBUG("status code = " << response.Headers.GetValue(EnumHttpHeader::ResponseStatusCode));
-                PRINT_DEBUG(response.GetDataAsString());
+                PRINT_LOG("Request sent to POST " << endpointAddress);
+                PRINT_LOG("\tHTTP code = " << response.Headers.GetValue(EnumHttpHeader::ResponseStatusCode));
+                PRINT_DEBUG("Sent to server " << endpointAddress
+                                              << " with status code "
+                                              << response.Headers.GetValue(EnumHttpHeader::ResponseStatusCode));
             }
         }
 
-//        if ((error = device->Disconnect()) != BT_OK) {
-//            PRINT_DEBUG("Problem disconnecting from device " << device->Address() << " [error = " << error << "]");
-//        }
-//        else {
-//            PRINT_DEBUG("Disconnected from device " << device->Address() << ".");
-//        }
+        std::for_each(measurements.begin(), measurements.end(), [](AdCamiEvent *m) { delete m; });
     };
 
     auto UpdateBluetoothDevicesFilter = [&storage](vector <AdCamiBluetoothDevice> *devices) -> void {
