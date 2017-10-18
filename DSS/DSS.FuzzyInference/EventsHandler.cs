@@ -27,53 +27,62 @@ namespace DSS.FuzzyInference
         {
 			Console.WriteLine("EVENT handler invoked...");
 
-			var obj = JsonConvert.DeserializeObject<Event>(json);
-            var result = "";
-
-			Queue.Refresh();
-
-			if (obj.category == "USER_INPUT")
-			{
-                if(obj.content.name == "EXERCISE_MODE_ON")
-				    RequestManagableQueue.Add(obj);
-
-                if (obj.content.name == "EXERCISE_MODE_OFF") 
-                {
-					RequestManagableQueue.RemoveAll(x => x.content.name == "EXERCISE_MODE_ON");
-                    Queue.Push(new Event(){ category = "SYSTEM", content = new Content() { name = "POST_EXERCISE"}}, 10);
-                }
-            }
-            else  
+            try
             {
-                Queue.Push(obj, 1);
-            }
+                var obj = JsonConvert.DeserializeObject<Event>(json);
+                var result = "";
 
-            if (obj.category == "HEART_RATE")
-			{
-                result = "ABNORMAL_HEART_RATE";
+                Console.WriteLine("Handling an event of type: " + obj.category);
 
-				foreach (var item in RequestManagableQueue)
-				{
-					if (item.content.name == "EXERCISE_MODE_ON")
-					{
-                        result = "";
-					}
-				}
+                Queue.Refresh();
 
-                foreach (var item in Queue.Queue)
+                if (obj.category == "USER_INPUT")
                 {
-                    if(item.Value.content.name == "POST_EXERCISE") 
+                    if(obj.content.name == "EXERCISE_MODE_ON")
+                        RequestManagableQueue.Add(obj);
+
+                    if (obj.content.name == "EXERCISE_MODE_OFF")
                     {
-                        result = "";
+                        RequestManagableQueue.RemoveAll(x => x.content.name == "EXERCISE_MODE_ON");
+                        Queue.Push(new Event(){ category = "SYSTEM", content = new Content() { name = "POST_EXERCISE"}}, 10);
                     }
                 }
-            }
+                else
+                {
+                    Queue.Push(obj, 1);
+                }
 
-            if(result == "ABNORMAL_HEART_RATE") {
-                
-                api.InsertPushNotification( JsonConvert.SerializeObject( new DSS.RMQ.INS.PushNotification() { message = "Abnormal heart rate", user_id = 2}  ) );
-				Console.WriteLine("EVENT HANDLER RESULT: " + JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = "Abnormal heart rate", user_id = 2 }) );
-			}
+                if (obj.category == "HEART_RATE")
+                {
+                    result = "ABNORMAL_HEART_RATE";
+
+                    foreach (var item in RequestManagableQueue)
+                    {
+                        if (item.content.name == "EXERCISE_MODE_ON")
+                        {
+                            result = "";
+                        }
+                    }
+
+                    foreach (var item in Queue.Queue)
+                    {
+                        if(item.Value.content.name == "POST_EXERCISE")
+                        {
+                            result = "";
+                        }
+                    }
+                }
+
+                if(result == "ABNORMAL_HEART_RATE") {
+
+                    api.InsertPushNotification( JsonConvert.SerializeObject( new DSS.RMQ.INS.PushNotification() { message = "Abnormal heart rate", user_id = 2}  ) );
+                    Console.WriteLine("EVENT HANDLER RESULT: " + JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = "Abnormal heart rate", user_id = 2 }) );
+                }
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine(ex);
+            }
 
         }
     }

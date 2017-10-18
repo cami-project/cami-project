@@ -11,6 +11,7 @@ from tastypie.paginator import Paginator
 from tastypie.exceptions import NotFound
 from tastypie.authorization import Authorization
 from tastypie.authentication import Authentication
+from tastypie.http import HttpBadRequest
 
 from django.core import serializers
 from django.conf.urls import url
@@ -22,12 +23,54 @@ from store.models import *
 
 class UserResource(ModelResource):
     devices = fields.ToManyField('store.api.resources.DeviceResource', 'used_devices')
+    enduser_profile = fields.ToOneField('store.api.resources.EndUserProfileResource',
+                                        'enduser_profile',
+                                         null=True, blank=True, full=True)
+    caregiver_profile = fields.ToOneField('store.api.resources.CaregiverProfileResource',
+                                        'caregiver_profile',
+                                         null=True, blank=True, full=True)
 
     class Meta:
-        excludes = ['password', 'is_staff', 'is_superuser', 'email']
+        excludes = ['password', 'is_staff', 'is_superuser']
         queryset = User.objects.all()
         allowed_methods = ['get']
         collection_name = "users"
+
+    def dehydrate(self, bundle):
+        # clean out fields that have a null value from returned serialization
+        for key in bundle.data.keys():
+            if not bundle.data[key]:
+                del bundle.data[key]
+
+        return bundle
+
+
+
+class EndUserProfileResource(ModelResource):
+    user = fields.ToOneField(UserResource, 'user')
+    caregivers = fields.ToManyField(UserResource, 'user__caregivers', related_name='caretaker',
+                                    null=True, blank=True)
+
+    class Meta:
+        # we exclude the following fields because we don'really have any data, nor do we use them
+        excludes = ['marital_status', 'age', 'height', 'phone', 'address']
+
+        queryset = EndUserProfile.objects.all()
+        allowed_methods = ['get']
+        collection_name = "enduser_profiles"
+
+
+class CaregiverProfileResource(ModelResource):
+    user = fields.ToOneField(UserResource, 'user')
+    caretaker = fields.ToOneField(UserResource, 'caretaker')
+
+    class Meta:
+        # we exclude the following fields because we don'really have any data, nor do we use them
+        excludes = ['phone', 'address']
+
+        queryset = CaregiverProfile.objects.all()
+        allowed_methods = ['get']
+        collection_name = "caregiver_profiles"
 
 
 class DeviceResource(ModelResource):
@@ -197,18 +240,27 @@ class MeasurementResource(ModelResource):
                     "message": e
                 }
             }
-            return self.create_response(request, json_error)
+            return self.create_response(request, json_error, response_class=HttpBadRequest)
 
         type = request.GET.get('type', None)
+        user_id = request.GET.get('user', None)
+        device_id = request.GET.get('device', None)
+
+        filter_dict = dict( measurement_type = type, user__id = int(user_id) )
+        if device_id:
+            filter_dict['device__id'] = int(device_id)
 
         last_measurements = Measurement.objects.all().filter(
-            measurement_type = type
+            **filter_dict
         ).order_by('-timestamp')[:20]
 
         return self.create_response(request, list(last_measurements.values()))
 
+
     def check_get_params(self, request):
         type = request.GET.get('type', None)
+        user_id = request.GET.get('user', None)
+
         measurements = dict(Measurement.MEASUREMENTS).keys()
 
         if type == None:
@@ -219,6 +271,8 @@ class MeasurementResource(ModelResource):
             )
         elif type not in measurements:
             raise Exception("measurement type must be one of: %s" % ", ".join(measurements))
+        elif user_id == None:
+            raise Exception("user id is manadatory")
 
 
 class ActivityResource(ModelResource):

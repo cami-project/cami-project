@@ -92,10 +92,13 @@ namespace DSS.RMQ
             throw new Exception("Something went wrong on the server side while checking for pulse " + response.Result);
          }
 
-        public float GetLatestWeightMeasurement() 
+        public float GetLatestWeightMeasurement(int userId) 
         {
 
-            var response = new HttpClient().GetAsync(url +"/measurement/?limit=1&measurement_type=weight&order_by=-timestamp&user=2");
+            //var response = new HttpClient().GetAsync(url +"/measurement/?limit=1&measurement_type=weight&order_by=-timestamp&user=2");
+
+            string queryPath = String.Format("/measurement/?limit=1&measurement_type=weight&order_by=-timestamp&user={0}", userId);
+            var response = new HttpClient().GetAsync(url + queryPath);
 
             if (response.Result.IsSuccessStatusCode)
             {

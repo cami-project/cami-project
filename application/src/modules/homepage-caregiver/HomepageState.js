@@ -128,7 +128,7 @@ async function fetchPageData() {
 
       var weightApiUrl = env.WEIGHT_MEASUREMENTS_LAST_VALUES;
       var heartRateApiUrl = env.HEARTRATE_MEASUREMENTS_LAST_VALUES;
-      var stepsCountApiUrl = env.STEPS_MEASUREMENTS_LAST_VALUES;
+      var stepsCountApiUrl = env.STEPS_MEASUREMENTS_LAST_VALUES + '?units=7&resolution=days';
       var activitiesApiUrl = env.ACTIVITIES_LAST_EVENTS;
 
       return fetch(activitiesApiUrl).then((response) => response.json())

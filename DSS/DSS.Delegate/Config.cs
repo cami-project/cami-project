@@ -31,7 +31,7 @@ namespace DSS.Delegate
 
 			foreach (var channel in Channels)
 			{
-                router.RegisterChannel(channel, handlers.Last(x => x.Name == channel));
+               // router.RegisterChannel(channel, handlers.Last(x => x.Name == channel));
 			}
 
 			foreach (var channel in ChannelsEvents.Keys)

@@ -23,7 +23,7 @@ const ActivityEntry = React.createClass({
   },
 
   render() {
-    const eventTime = moment.unix(this.props.timestamp);
+    const eventTime = moment.unix(this.props.timestamp).utc();
 
     return (
       <View style={[
