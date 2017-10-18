@@ -38,7 +38,7 @@ namespace DSS.Delegate
 
         [JsonProperty("value")]
         //public Value val { get; set; }
-        public Dictionary<string, dynamic> val { get; set; }
+        public dynamic val { get; set; }
 
 	}
 
@@ -52,7 +52,7 @@ namespace DSS.Delegate
 	{
 		public long timestamp { get; set; }
 		//public List<string> source { get; set; }
-		public Dictionary<string, dynamic> source { get; set; }
+		public dynamic source { get; set; }
 
 		public int certainty { get; set; }
 		public TemporalValidity temporal_validity { get; set; }
