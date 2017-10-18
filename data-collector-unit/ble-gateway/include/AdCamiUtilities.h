@@ -25,7 +25,7 @@ using std::string;
 
 /* Debug macro that prints a message to the screen. This macro is only defined
  * if the flag DEBUG is defined on compile time. */
-#ifdef DEBUG
+#if defined(DEBUG) || defined(VERBOSE)
 #define PRINT_DEBUG(message) \
 std::cout << "[" << __FILENAME__ << "::" << __FUNCTION__ << ":" << std::dec << __LINE__ << "] " << \
 message << std::endl;
