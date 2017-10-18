@@ -38,9 +38,12 @@ namespace DSS.FuzzyInference
 
                 if (eventObj.category.ToLower() == "user_environment")
                 {
+                    Console.WriteLine("[MotionEventHandler] Handling eventObj of category: " + eventObj.category.ToLower());
+
                     // if we are dealing with a presence sensor
                     if (eventObj.content.name == "presence")
                     {
+                        Console.WriteLine("[MotionEventHandler] Handling eventObj of type: " + eventObj.content.name);
                         // see if it is a sensor activation
                         if ((bool)eventObj.content.val["alarm_motion"] == true)
                         {
@@ -113,7 +116,11 @@ namespace DSS.FuzzyInference
                             }
                         }
                     }
+
+                    Console.WriteLine("[MotionEventHandler] Handling eventObj of type: " + eventObj.content.name);
                 }
+
+                Console.WriteLine("[MotionEventHandler] Handling eventObj of category: " + eventObj.category.ToLower());
             }
             catch (JsonException ex)
             {
