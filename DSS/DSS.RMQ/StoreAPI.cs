@@ -2,6 +2,7 @@
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DSS.RMQ
 {
@@ -14,12 +15,16 @@ namespace DSS.RMQ
 
 	public class JournalEntry
 	{
-		public string user { get; set; }
+        [DefaultValue(-1)]
+        public int id { get; set; }
+        public string user { get; set; }
 		public string severity { get; set; }
-		public string timestamp { get; set; }
+		public long timestamp { get; set; }
 		public string description { get; set; }
 		public string message { get; set; }
-        public string reference_id { get; set; }
+
+        [DefaultValue(-1)]
+        public long reference_id { get; set; }
 		public string resource_uri { get; set; }
 		public string type { get; set; }
         public bool acknowledged { get; set; }
@@ -112,36 +117,47 @@ namespace DSS.RMQ
 
         }
 
-        public void PushJournalEntry(string user_uri, string notification_type, string severity, string msg, string desc) 
+        public JournalEntry PushJournalEntry(string user_uri, string notification_type, string severity, string msg, string desc, long reference_id = -1) 
         {
 
-            Console.WriteLine("Timestamp: " +  ((int) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString());
-
-
+            Console.WriteLine(string.Format("[StoreAPI] Attempting to send journal entry of type {0}, for user {1}, with msg {2} and desc {3}. Timestamp: {4}",
+                notification_type, user_uri, msg, desc, ((int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString())) ;
+            
             var obj = new JournalEntry()
             {
 				user = user_uri,
                 description = desc,
                 message = msg,
-                reference_id = null,
-                timestamp = ((int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString(),
+                timestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds,
                 acknowledged = false,
                 type = notification_type,
                 severity = severity
             };
 
-            HttpContent content = new StringContent(JsonConvert.SerializeObject(obj));
+            if (reference_id != -1)
+                obj.reference_id = reference_id;
+
+            HttpContent content = new StringContent(JsonConvert.SerializeObject(obj, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore }));
 			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 			var response = new HttpClient().PostAsync(url + "/api/v1/journal_entries/", content);
 
-			//Console.WriteLine("JOURNAL ENTRTY: " + response.Result);
-			Console.WriteLine("Journal entry inserted");
+            if (response.Result.IsSuccessStatusCode)
+            {
+                JournalEntry entry = JsonConvert.DeserializeObject<JournalEntry>(response.Result.Content.ReadAsStringAsync().Result);
+                Console.WriteLine("[StoreAPI] Journal entry inserted: " + entry);
 
+                return entry;
+            }
+            else
+            {
+                Console.WriteLine("[StoreAPI] Could not insert journal entry: " + obj + ". Reason: " + response.Result);
+                return null;
+            }
 		}
 
-        public string getUserOfGateway(string gatewayURIPath)
+        public string GetUserOfGateway(string gatewayURIPath)
         {
-            Console.WriteLine("Retrieving the end-user URI of the owner of this gatewayURI: " + gatewayURIPath);
+            Console.WriteLine("[StoreAPI] Retrieving the end-user URI of the owner of this gatewayURI: " + gatewayURIPath);
 
             var response = new HttpClient().GetAsync(url + gatewayURIPath);
 
@@ -152,13 +168,13 @@ namespace DSS.RMQ
             }
             else
             {
-                Console.WriteLine("Could not retrieve the gateway referenced by the URI " + (url + gatewayURIPath) + ". Reason: " + response.Result);
+                Console.WriteLine("[StoreAPI] Could not retrieve the gateway referenced by the URI " + (url + gatewayURIPath) + ". Reason: " + response.Result);
                 return null;
             }    
         }
 
 
-        public Tuple<string, string> getUserLocale(string userURIPath, int userID)
+        public Tuple<string, string> GetUserLocale(string userURIPath, int userID)
         {
             Dictionary<string, string> timezoneMap = new Dictionary<string, string>()
             {
@@ -190,6 +206,21 @@ namespace DSS.RMQ
             else
             {
                 Console.WriteLine("Could not retrieve locales for user referenced by the URI " + (url + userURIPath) + ". Reason: " + response.Result);
+                return null;
+            }
+        }
+
+        public dynamic GetUserData(string userURIPath)
+        {
+            var response = new HttpClient().GetAsync(url + userURIPath);
+            if (response.Result.IsSuccessStatusCode)
+            {
+                dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
+                return deserialized;
+            }
+            else
+            {
+                Console.WriteLine("[StoreAPI] Could not retrieve the user referenced by the URI " + (url + userURIPath) + ". Reason: " + response.Result);
                 return null;
             }
         }
