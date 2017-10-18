@@ -47,12 +47,12 @@ namespace DSS.FuzzyInference
                         var deviceURIPath = eventObj.annotations.source["sensor"];
 
                         // make a call to the store API to get the user from the gateway
-                        var userURIPath = storeAPI.getUserOfGateway(gatewayURIPath);
+                        var userURIPath = storeAPI.GetUserOfGateway(gatewayURIPath);
 
                         if (userURIPath != null)
                         {
                             int userID = GetIdFromURI(userURIPath);
-                            Tuple<string, string> userLocales = storeAPI.getUserLocale(userURIPath, userID);
+                            Tuple<string, string> userLocales = storeAPI.GetUserLocale(userURIPath, userID);
 
                             if (userLocales != null)
                             {
@@ -112,6 +112,75 @@ namespace DSS.FuzzyInference
                 }
             }
         }
+
+
+        private void SendBPMeasurementNotification(string userURIPath)
+        {
+            string enduser_msg = "Time for your morning blood pressure measurement!";
+            string enduser_desc = "Please take your blood pressure. Follow the instructions from the web interface on how to do so.";
+
+            string caregiver_msg = "Reminder for morning blood pressure measurement sent!";
+            string caregiver_desc = "Please check on your loved one to see that he took the recommended BP measurement.";
+
+            string notification_type = "medication";
+
+            // get the user data to retrieve caregiver uri as well
+            dynamic userData = storeAPI.GetUserData(userURIPath);
+
+            if (userData != null)
+            {
+                // send notification for end user
+                int enduserID = GetIdFromURI(userURIPath);
+                JournalEntry endUserJournalEntry = storeAPI.PushJournalEntry(userURIPath, notification_type, "low", enduser_msg, enduser_desc);
+                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = enduser_msg, user_id = enduserID }));
+
+                // send notification to all caregivers
+                List<int> caregiverJournalEntryIDs = new List<int>();
+                dynamic profile = userData["enduser_profile"];
+                if (((Dictionary<string, dynamic>) profile).ContainsKey("caregivers"))
+                {
+                    foreach (var caregiverURIPath in profile["caregivers"]) {
+                        int caregiverID = GetIdFromURI(caregiverURIPath);
+
+                        var caregiverJournalEntry = storeAPI.PushJournalEntry(caregiverURIPath, notification_type, "low", caregiver_msg, caregiver_desc);
+                        insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiver_msg, user_id = caregiverID}));
+
+                        caregiverJournalEntryIDs.Add(caregiverJournalEntry.id);
+                    }
+                }
+
+                // generate reminder event
+                var reminderEvent = new Event() {
+                    category = "USER_NOTIFICATIONS",
+                    content = new Content() {
+                        uuid = Guid.NewGuid().ToString(),
+                        name = "reminder_sent",
+                        value_type = "complex",
+                        val = new Dictionary<string, dynamic>()
+                        {
+                             { "user", new Dictionary<string, int>() { {"id", enduserID } } },
+                             { "journal", new Dictionary<string, dynamic>() {
+                                 { "id_enduser", endUserJournalEntry.id },
+                                 { "id_caregivers", caregiverJournalEntryIDs.ToArray<int>()}
+                             } },
+                        }
+                    },
+                    annotations = new Annotations()
+                    {
+                        timestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds,
+                        source = "DSS"
+                    }
+                };
+
+                Console.WriteLine("[MotionEventHandler] Inserting new reminderEvent: " + reminderEvent);
+                insertionAPI.InsertEvent(JsonConvert.SerializeObject(reminderEvent));
+            } 
+            else
+            {
+                Console.WriteLine("[MotionEventHandler] Error - no information available on user with uri: " + userURIPath + ". Cannot send notification to end user and caregivers.");
+            }
+        }
+
 
         private DateTime UnixTimeStampToDateTime(long unixTimeStamp, TimeZoneInfo tzInfo)
         {
