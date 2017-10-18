@@ -50,7 +50,7 @@ namespace DSS.Delegate
 
 	public class Annotations
 	{
-		public int timestamp { get; set; }
+		public long timestamp { get; set; }
 		//public List<string> source { get; set; }
 		public Dictionary<string, dynamic> source { get; set; }
 
