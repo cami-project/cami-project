@@ -45,8 +45,8 @@ namespace DSS.FuzzyInference
                         if ((bool)eventObj.content.val["alarm_motion"])
                         {
                             // retrieve the gateway and sensor URI from the source annotations
-                            var gatewayURIPath = eventObj.annotations.source["gateway"];
-                            var deviceURIPath = eventObj.annotations.source["sensor"];
+                            var gatewayURIPath = (string)eventObj.annotations.source["gateway"];
+                            var deviceURIPath = (string)eventObj.annotations.source["sensor"];
 
                             // make a call to the store API to get the user from the gateway
                             var userURIPath = storeAPI.GetUserOfGateway(gatewayURIPath);
@@ -121,6 +121,9 @@ namespace DSS.FuzzyInference
             }
             catch (JsonException ex)
             {
+                Console.WriteLine(ex);
+            }
+            catch (Exception ex) {
                 Console.WriteLine(ex);
             }
         }
