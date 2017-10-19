@@ -186,13 +186,13 @@ namespace DSS.RMQ
 
             Console.WriteLine("Retrieving language and timezone for user: " + userURIPath);
 
-            string queryPath = String.Format("/api/v1/enduserprofile/?limit=1&user={0}", userID);
-            var response = new HttpClient().GetAsync(url + queryPath);
+            //string queryPath = String.Format("/api/v1/enduserprofile/?limit=1&user={0}", userID);
+            var response = new HttpClient().GetAsync(url + userURIPath);
 
             if (response.Result.IsSuccessStatusCode)
             {
                 dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
-                string lang = deserialized["enduser_profiles"][0]["language"];
+                string lang = deserialized["enduser_profile"]["language"];
 
                 if (timezoneMap.ContainsKey(lang))
                 {
