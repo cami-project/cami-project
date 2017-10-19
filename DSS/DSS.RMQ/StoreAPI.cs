@@ -15,7 +15,7 @@ namespace DSS.RMQ
 
 	public class JournalEntry
 	{
-        [DefaultValue(-1)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int id { get; set; }
         public string user { get; set; }
 		public string severity { get; set; }
@@ -23,9 +23,11 @@ namespace DSS.RMQ
 		public string description { get; set; }
 		public string message { get; set; }
 
-        [DefaultValue(-1)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public long reference_id { get; set; }
-		public string resource_uri { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string resource_uri { get; set; }
 		public string type { get; set; }
         public bool acknowledged { get; set; }
 	}
@@ -70,8 +72,6 @@ namespace DSS.RMQ
 
                 if (n  == deserialized["measurements"].Count)
                 {
-
-
                     for (int i = 0; i < deserialized["measurements"].Count; i++)
                     {
                         var item = deserialized["measurements"][i];
@@ -117,7 +117,7 @@ namespace DSS.RMQ
 
         }
 
-        public JournalEntry PushJournalEntry(string user_uri, string notification_type, string severity, string msg, string desc, long reference_id = -1) 
+        public JournalEntry PushJournalEntry(string user_uri, string notification_type, string severity, string msg, string desc, long reference_id = 0) 
         {
 
             Console.WriteLine(string.Format("[StoreAPI] Attempting to send journal entry of type {0}, for user {1}, with msg {2} and desc {3}. Timestamp: {4}",
@@ -134,15 +134,18 @@ namespace DSS.RMQ
                 severity = severity
             };
 
-            if (reference_id != -1)
+            if (reference_id != 0)
                 obj.reference_id = reference_id;
 
-            HttpContent content = new StringContent(JsonConvert.SerializeObject(obj, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore }));
+            HttpContent content = new StringContent(JsonConvert.SerializeObject(obj));
+            //Console.WriteLine(content.ReadAsStringAsync().Result);
+
 			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 			var response = new HttpClient().PostAsync(url + "/api/v1/journal_entries/", content);
 
             if (response.Result.IsSuccessStatusCode)
             {
+
                 JournalEntry entry = JsonConvert.DeserializeObject<JournalEntry>(response.Result.Content.ReadAsStringAsync().Result);
                 Console.WriteLine("[StoreAPI] Journal entry inserted: " + entry);
 
@@ -178,10 +181,18 @@ namespace DSS.RMQ
         {
             Dictionary<string, string> timezoneMap = new Dictionary<string, string>()
             {
+                
                 { "en", "Europe/London" },
                 { "ro", "Europe/Bucharest" },
                 { "pl", "Europe/Warsaw" },
                 { "dk", "Europe/Copenhagen" },
+                
+                /*
+                { "en", "GMT Standard Time" },
+                { "ro", "E. Europe Standard Time" },
+                { "pl", "Central European Standard Time" },
+                { "dk", "Romance Standard Time" },
+                */
             };
 
             Console.WriteLine("Retrieving language and timezone for user: " + userURIPath);

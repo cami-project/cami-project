@@ -25,7 +25,6 @@ namespace DSS.FuzzyInference
         {
             string END_USER_URI = "/api/v1/user/2/";
 
-            string END_USER_URI = "/api/v1/user/2/";
 
             Console.WriteLine("Sensor handler invoked");
 

@@ -39,7 +39,7 @@ namespace RMQ.Playground.Serialization
                                      ""content"": 
                                         {""name"": ""presence"",
                                          ""value_type"": ""complex"",
-                                         ""value"": {""alarm_motion"":true, ""sensor_luminance"":64, ""sensor_temperature"":27.5, ""alarm_tamper"":false,""battery_level"":85}},
+                                         ""value"": {""alarm_motion"":false, ""sensor_luminance"":64, ""sensor_temperature"":27.5, ""alarm_tamper"":false,""battery_level"":85}},
                                      ""annotations"": {""timestamp"":1507902069, ""source"":{""gateway"":""/api/v1/gateway/1/"", ""sensor"": ""/api/v1/device/9/""}
                                     }}";
 

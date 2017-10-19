@@ -83,18 +83,27 @@ namespace DSS.Delegate
 		}
 
 
-		public bool Equals(Event obj)
+		public bool Equals(object obj)
 	    {
-            return obj.category == this.category ;
-	    }
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Event);
-        }
+            if (obj == null)
+                return false;
 
+            if (obj.GetType() != typeof(Event))
+                return false;
+
+            Event eventObj = (Event)obj;
+
+            return eventObj.category == this.category ;
+	    }
+        
 		public static bool operator== (Event a, Event b)
         {
-            return a.Equals(b);
+            if (a != null)
+                return a.Equals(b);
+            else if (b != null)
+                return b.Equals(a);
+            else
+                return false;
         }
 		public static bool operator !=(Event a, Event b)
         { 

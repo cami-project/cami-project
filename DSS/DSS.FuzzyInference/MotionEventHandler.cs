@@ -20,11 +20,14 @@ namespace DSS.FuzzyInference
         private Dictionary<string, long> lastActivationMap;
 
         public string Name => "EVENT";
-        
+
         public MotionEventHandler()
         {
-            storeAPI = new StoreAPI("http://cami-store:8008");
-            insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
+            //storeAPI = new StoreAPI("http://cami-store:8008");
+            //insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
+
+            storeAPI = new StoreAPI("http://141.85.241.224:8008");
+            insertionAPI = new RMQ.INS.InsertionAPI("http://141.85.241.224:8010/api/v1/insertion");
 
             lastActivationMap = new Dictionary<string, long>();
         }
@@ -32,7 +35,8 @@ namespace DSS.FuzzyInference
         public void Handle(string json)
         {
             Console.WriteLine("MOTION event handler invoked ...");
-            try {
+            try
+            {
                 var eventObj = JsonConvert.DeserializeObject<Event>(json);
                 Console.WriteLine("[MotionEventHandler] Handling eventObj: " + eventObj);
 
@@ -41,6 +45,7 @@ namespace DSS.FuzzyInference
                     // if we are dealing with a presence sensor
                     if (eventObj.content.name == "presence")
                     {
+                        Console.WriteLine((bool)eventObj.content.val["alarm_motion"]);
                         // see if it is a sensor activation
                         if ((bool)eventObj.content.val["alarm_motion"])
                         {
@@ -123,7 +128,8 @@ namespace DSS.FuzzyInference
             {
                 Console.WriteLine(ex);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex);
             }
         }
@@ -154,20 +160,23 @@ namespace DSS.FuzzyInference
                 var profile = userData["enduser_profile"];
                 if (profile["caregivers"] != null)
                 {
-                    foreach (var caregiverURIPath in profile["caregivers"]) {
+                    foreach (var caregiverURIPath in profile["caregivers"])
+                    {
                         int caregiverID = GetIdFromURI((string)caregiverURIPath);
 
                         var caregiverJournalEntry = storeAPI.PushJournalEntry((string)caregiverURIPath, notification_type, "low", caregiver_msg, caregiver_desc);
-                        insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiver_msg, user_id = caregiverID}));
+                        insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiver_msg, user_id = caregiverID }));
 
                         caregiverJournalEntryIDs.Add(caregiverJournalEntry.id);
                     }
                 }
 
                 // generate reminder event
-                var reminderEvent = new Event() {
+                var reminderEvent = new Event()
+                {
                     category = "USER_NOTIFICATIONS",
-                    content = new Content() {
+                    content = new Content()
+                    {
                         uuid = Guid.NewGuid().ToString(),
                         name = "reminder_sent",
                         value_type = "complex",
@@ -189,7 +198,7 @@ namespace DSS.FuzzyInference
 
                 Console.WriteLine("[MotionEventHandler] Inserting new reminderEvent: " + reminderEvent);
                 insertionAPI.InsertEvent(JsonConvert.SerializeObject(reminderEvent));
-            } 
+            }
             else
             {
                 Console.WriteLine("[MotionEventHandler] Error - no information available on user with uri: " + userURIPath + ". Cannot send notification to end user and caregivers.");
@@ -227,6 +236,5 @@ namespace DSS.FuzzyInference
 
             return new Tuple<DateTime, DateTime>(morningStart, morningEnd);
         }
-        
     }
 }
