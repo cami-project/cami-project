@@ -140,7 +140,7 @@ namespace DSS.FuzzyInference
             string notification_type = "medication";
 
             // get the user data to retrieve caregiver uri as well
-            dynamic userData = storeAPI.GetUserData(userURIPath);
+            var userData = storeAPI.GetUserData(userURIPath);
 
             if (userData != null)
             {
@@ -151,8 +151,8 @@ namespace DSS.FuzzyInference
 
                 // send notification to all caregivers
                 List<int> caregiverJournalEntryIDs = new List<int>();
-                dynamic profile = userData["enduser_profile"];
-                if (((Dictionary<string, dynamic>) profile).ContainsKey("caregivers"))
+                var profile = userData["enduser_profile"];
+                if (profile["caregivers"] != null)
                 {
                     foreach (var caregiverURIPath in profile["caregivers"]) {
                         int caregiverID = GetIdFromURI((string)caregiverURIPath);
