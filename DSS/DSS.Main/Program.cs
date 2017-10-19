@@ -9,6 +9,8 @@ using System.Threading;
 using log4net;
 using log4net.Config;
 using System.Xml;
+using System.Reflection;
+using System.IO;
 
 namespace DSS.Main
 {
@@ -16,10 +18,21 @@ namespace DSS.Main
     class Program
     {
 
+        private static readonly ILog log = LogManager.GetLogger(typeof(DSS.Main.Program));
 
 		public static void Main(string[] args)
         {
-            
+
+            string executableLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string xslLocation = Path.Combine(executableLocation, "log4net.config.xml");
+
+
+            XmlConfigurator.Configure(new System.IO.FileInfo(xslLocation));
+
+            log.Info("Entering application.");
+            log.Info("Exiting application.");
+
+
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...");
             Console.WriteLine("This is version 1.2");
