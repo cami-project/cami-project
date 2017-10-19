@@ -42,7 +42,7 @@ namespace DSS.FuzzyInference
                     if (eventObj.content.name == "presence")
                     {
                         // see if it is a sensor activation
-                        if ((bool)eventObj.content.val["alarm_motion"] == true)
+                        if ((bool)eventObj.content.val["alarm_motion"])
                         {
                             // retrieve the gateway and sensor URI from the source annotations
                             var gatewayURIPath = eventObj.annotations.source["gateway"];
@@ -117,11 +117,7 @@ namespace DSS.FuzzyInference
                             Console.WriteLine("[MotionEventHandler] The motion sensor has not been triggered: " + eventObj.content.val["alarm_motion"]);
                         }
                     }
-
-                    Console.WriteLine("[MotionEventHandler] Handling eventObj of type: " + eventObj.content.name);
                 }
-
-                Console.WriteLine("[MotionEventHandler] Handling eventObj of category: " + eventObj.category.ToLower());
             }
             catch (JsonException ex)
             {
@@ -156,9 +152,9 @@ namespace DSS.FuzzyInference
                 if (((Dictionary<string, dynamic>) profile).ContainsKey("caregivers"))
                 {
                     foreach (var caregiverURIPath in profile["caregivers"]) {
-                        int caregiverID = GetIdFromURI(caregiverURIPath);
+                        int caregiverID = GetIdFromURI((string)caregiverURIPath);
 
-                        var caregiverJournalEntry = storeAPI.PushJournalEntry(caregiverURIPath, notification_type, "low", caregiver_msg, caregiver_desc);
+                        var caregiverJournalEntry = storeAPI.PushJournalEntry((string)caregiverURIPath, notification_type, "low", caregiver_msg, caregiver_desc);
                         insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiver_msg, user_id = caregiverID}));
 
                         caregiverJournalEntryIDs.Add(caregiverJournalEntry.id);
@@ -203,7 +199,7 @@ namespace DSS.FuzzyInference
             System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
             dtDateTime = dtDateTime.AddSeconds(unixTimeStamp);
 
-            dtDateTime = TimeZoneInfo.ConvertTime(dtDateTime, TimeZoneInfo.Local, tzInfo);
+            dtDateTime = TimeZoneInfo.ConvertTime(dtDateTime, TimeZoneInfo.Utc, tzInfo);
             return dtDateTime;
         }
 
@@ -223,8 +219,8 @@ namespace DSS.FuzzyInference
             morningStart = morningStart.Date.Add(new TimeSpan(6, 0, 0));
             morningEnd = morningEnd.Date.Add(new TimeSpan(11, 0, 0));
 
-            morningStart = TimeZoneInfo.ConvertTime(morningStart, TimeZoneInfo.Local, tzInfo);
-            morningEnd = TimeZoneInfo.ConvertTime(morningEnd, TimeZoneInfo.Local, tzInfo);
+            morningStart = TimeZoneInfo.ConvertTime(morningStart, TimeZoneInfo.Utc, tzInfo);
+            morningEnd = TimeZoneInfo.ConvertTime(morningEnd, TimeZoneInfo.Utc, tzInfo);
 
             return new Tuple<DateTime, DateTime>(morningStart, morningEnd);
         }

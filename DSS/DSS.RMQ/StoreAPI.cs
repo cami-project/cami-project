@@ -178,10 +178,10 @@ namespace DSS.RMQ
         {
             Dictionary<string, string> timezoneMap = new Dictionary<string, string>()
             {
-                { "en", "GMT Standard Time" },
-                { "ro", "GTB Standard Time" },
-                { "pl", "Central European Standard Time" },
-                { "dk", "Romance Standard Time" },
+                { "en", "Europe/London" },
+                { "ro", "Europe/Bucharest" },
+                { "pl", "Europe/Warsaw" },
+                { "dk", "Europe/Copenhagen" },
             };
 
             Console.WriteLine("Retrieving language and timezone for user: " + userURIPath);
