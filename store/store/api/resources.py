@@ -58,6 +58,10 @@ class EndUserProfileResource(ModelResource):
         queryset = EndUserProfile.objects.all()
         allowed_methods = ['get']
         collection_name = "enduser_profiles"
+        filtering = {
+            'user': ('exact',),
+        }
+
 
 
 class CaregiverProfileResource(ModelResource):
@@ -71,7 +75,9 @@ class CaregiverProfileResource(ModelResource):
         queryset = CaregiverProfile.objects.all()
         allowed_methods = ['get']
         collection_name = "caregiver_profiles"
-
+        filtering = {
+            'user': ('exact',),
+        }
 
 class DeviceResource(ModelResource):
     class Meta:
@@ -353,6 +359,14 @@ class JournalEntryResource(ModelResource):
             "timestamp": ('gt'),
             "recipient_type": ('exact')
         }
+
+
+    def dehydrate(self, bundle):
+        ## remove reference_id from serialization if it doesn't have a value
+        if "reference_id" in bundle.data and not bundle.data["reference_id"]:
+            del bundle.data["reference_id"]
+
+        return bundle
 
 
 class PushNotificationDeviceResource(ModelResource):

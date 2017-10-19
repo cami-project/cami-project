@@ -22,6 +22,18 @@ channel.queue_bind(
     routing_key='measurement.*'
 )
 
+# channel.queue_bind(
+# 	# We want to get 'measurement' data, so we bind with
+# 	# the 'measurements' exchange
+#     exchange='events',
+#     queue=queue_name,
+#     # The 'measurements' exhange is of `topic` type
+#     # We can get the messages using wildcards
+#     # Using this routing key, we'll basically receive all
+#     # the measurements, no matter their type
+#     routing_key='event.*'
+# )
+
 print(' [*] Waiting for logs. To exit press CTRL+C')
 
 def callback(ch, method, properties, body):
