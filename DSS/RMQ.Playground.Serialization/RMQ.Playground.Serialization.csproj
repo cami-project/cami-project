@@ -38,7 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -60,6 +60,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DSS.Delegate\DSS.Delegate.csproj">
+      <Project>{1E221878-FB21-409A-A2DE-9318BF4710FC}</Project>
+      <Name>DSS.Delegate</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DSS.FuzzyInference\DSS.FuzzyInference.csproj">
       <Project>{6cdedf87-3acc-4bea-bc2f-95fb7d13a98a}</Project>
       <Name>DSS.FuzzyInference</Name>

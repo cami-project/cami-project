@@ -26,12 +26,20 @@ namespace DSS.Delegate
 
 	public class Content
 	{
-		public string name { get; set; }
-		public string value_type { get; set; }
+        [JsonProperty("uuid")]
+        public string uuid { get; set; }
 
-		[JsonProperty("value")]
-		//public Value val { get; set; }
-		public Dictionary<string, dynamic> val { get; set; }
+        public string name { get; set; }
+
+        [JsonProperty("in_reply_to")]
+        public string inReplyTo { get; set; }
+
+        public string value_type { get; set; }
+
+        [JsonProperty("value")]
+        //public Value val { get; set; }
+        public dynamic val { get; set; }
+
 	}
 
 	public class TemporalValidity
@@ -42,9 +50,10 @@ namespace DSS.Delegate
 
 	public class Annotations
 	{
-		public int timestamp { get; set; }
+		public long timestamp { get; set; }
 		//public List<string> source { get; set; }
-		public Dictionary<string, dynamic> source { get; set; }
+		public dynamic source { get; set; }
+
 		public int certainty { get; set; }
 		public TemporalValidity temporal_validity { get; set; }
 	}
@@ -74,18 +83,27 @@ namespace DSS.Delegate
 		}
 
 
-		public bool Equals(Event obj)
+		public bool Equals(object obj)
 	    {
-            return obj.category == this.category ;
-	    }
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Event);
-        }
+            if (obj == null)
+                return false;
 
+            if (obj.GetType() != typeof(Event))
+                return false;
+
+            Event eventObj = (Event)obj;
+
+            return eventObj.category == this.category ;
+	    }
+        
 		public static bool operator== (Event a, Event b)
         {
-            return a.Equals(b);
+            if (a != null)
+                return a.Equals(b);
+            else if (b != null)
+                return b.Equals(a);
+            else
+                return false;
         }
 		public static bool operator !=(Event a, Event b)
         { 

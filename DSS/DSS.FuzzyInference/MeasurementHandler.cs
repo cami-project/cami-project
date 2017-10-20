@@ -70,7 +70,7 @@ namespace DSS.FuzzyInference
             _additionalData = new Dictionary<string, JToken>();
         }
     }
-
+    
     public class BloodPressureValueInfo : ValueInfoBase
     {
         public int pulse { get; set; }
@@ -134,7 +134,7 @@ namespace DSS.FuzzyInference
 
         public MeasurementHandler()
         {
-            storeAPI = new StoreAPI("http://cami-store:8008/api/v1");
+            storeAPI = new StoreAPI("http://cami-store:8008");
 			//storeAPI = new StoreAPI("http://141.85.241.224:8008/api/v1");
 
             insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
@@ -181,13 +181,15 @@ namespace DSS.FuzzyInference
                 {
                     trend = val > kg ? "up" : "down";
                     obj.ok = false;
-				} 
-				else  
-				{ 
-				    obj.ok = true; 
-				}  
+				}
+				else 
+				{
+				    obj.ok = true;
+				}
 
-				// first store measurement in CAMI Store 
+
+
+				// first store measurement in CAMI Store
 				storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
 
                 // TODO: currently we know that notification are handled client side only for the CamiDemo user (id = 2), so if we are not
@@ -226,7 +228,8 @@ namespace DSS.FuzzyInference
                         // insert journal entry for caregiver
                         storeAPI.PushJournalEntry(CAREGIVER_URI, "weight", "medium", caregiverMsg, caregiverDescription);
                         insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
-                    } 
+                    }
+
                 }
             }
             else if(obj.measurement_type == "pulse") 

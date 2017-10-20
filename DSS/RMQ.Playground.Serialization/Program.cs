@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using DSS.FuzzyInference;
+using DSS.Delegate;
 
 namespace RMQ.Playground.Serialization
 {
@@ -34,6 +35,14 @@ namespace RMQ.Playground.Serialization
                                 ""device"": ""/api/v1/device/1/"", 
                                 ""value_info"": {""value"": 65 } }";
 
+            string eventJsonStr = @"{""category"": ""USER_ENVIRONMENT"",
+                                     ""content"": 
+                                        {""name"": ""presence"",
+                                         ""value_type"": ""complex"",
+                                         ""value"": {""alarm_motion"":false, ""sensor_luminance"":64, ""sensor_temperature"":27.5, ""alarm_tamper"":false,""battery_level"":85}},
+                                     ""annotations"": {""timestamp"":1507902069, ""source"":{""gateway"":""/api/v1/gateway/1/"", ""sensor"": ""/api/v1/device/9/""}
+                                    }}";
+
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.Converters.Add(new MeasurementConverter());
 
@@ -41,7 +50,16 @@ namespace RMQ.Playground.Serialization
             var weightObj = JsonConvert.DeserializeObject<Measurement>(jsonWeightStr, settings);
             var pulseObj = JsonConvert.DeserializeObject<Measurement>(jsonPulseStr, settings);
 
-            
+            try
+            {
+                var eventObj = JsonConvert.DeserializeObject<Event>(eventJsonStr);
+                Console.WriteLine("Sensor source is: " + eventObj.annotations.source["sensor"]);
+                Console.WriteLine("Motion detected status: " + eventObj.content.val["alarm_motion"]);
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine(ex);
+            }
 
 
             BloodPressureValueInfo bpVal = (BloodPressureValueInfo)bpObj.value_info;
