@@ -72,12 +72,20 @@ const HomepageView = React.createClass({
     this.props.dispatch(HomepageStateActions.ackReminder('ok', reference_id, entry_id));
   },
 
+  snoozeReminder() {
+    tapButtonSound.setVolume(1.0).play();
+
+    var reference_id = this.props.notification.get('reference_id'),
+        entry_id = this.props.notification.get('id');
+    this.props.dispatch(HomepageStateActions.ackReminder('snooze', reference_id, entry_id));
+  },
+
   matchButtons(type) {
     switch (type) {
       case 'exercise':
       case 'medication':
       case 'appointment':
-        if (!this.props.notification.get('acknowledged')) {
+        if (this.props.notification.get('acknowledged') == null) {
           console.log('[HomepageView] - Using button layout for ' + type + ' type Journal Entry, that hasn\'t been acknowledged.');
 
           return (
@@ -91,9 +99,9 @@ const HomepageView = React.createClass({
 
               <ElderButton
                 type="default"
-                action={this.defaultAction}
+                action={this.snoozeReminder}
                 severity={this.matchSeverity()}
-                text="Cancel"
+                text="Snooze"
               />
             </View>
           );
