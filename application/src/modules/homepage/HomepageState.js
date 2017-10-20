@@ -81,7 +81,7 @@ async function postReminderAcknowledgement(ack, reference_id, entry_id) {
           "name": "reminder_acknowledged",
           "value_type": "complex",
           "value": {
-            "ack": "ok",
+            "ack": ack,
             "user": { "id": user_id },
             "activity": { "id": reference_id }
           },
