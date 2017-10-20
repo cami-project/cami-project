@@ -5,7 +5,8 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -58,10 +59,26 @@ const HomepageView = React.createClass({
 
   defaultAction() {
     tapButtonSound.setVolume(1.0).play();
+
+    Alert.alert(
+      'Default Action',
+      'This action hasn\'t been implemented yet.',
+      [
+        {text: 'OK', onPress: () => console.log('[HomepageView] - Elder triggered the default button action.')}
+      ]
+    );
   },
 
   callCaregiver() {
     tapButtonSound.setVolume(1.0).play();
+
+    Alert.alert(
+      'Help is on the way!',
+      'The Caregiver has been informed of your emergency.',
+      [
+        {text: 'OK', onPress: () => console.log('[HomepageView] - Elder pressed the HELP button.')}
+      ]
+    );
   },
 
   acknowledgeReminder() {
@@ -70,6 +87,14 @@ const HomepageView = React.createClass({
     var reference_id = this.props.notification.get('reference_id'),
         entry_id = this.props.notification.get('id');
     this.props.dispatch(HomepageStateActions.ackReminder('ok', reference_id, entry_id));
+
+    Alert.alert(
+      'Reminder was acknowledged',
+      'Thank you for your input!',
+      [
+        {text: 'OK', onPress: () => console.log('[HomepageView] - Elder acknowledged the event.')}
+      ]
+    );
   },
 
   snoozeReminder() {
@@ -78,6 +103,14 @@ const HomepageView = React.createClass({
     var reference_id = this.props.notification.get('reference_id'),
         entry_id = this.props.notification.get('id');
     this.props.dispatch(HomepageStateActions.ackReminder('snooze', reference_id, entry_id));
+
+    Alert.alert(
+      'Reminder was snoozed',
+      'Thank you for your input!',
+      [
+        {text: 'Ok', onPress: () => console.log('[HomepageView] - Elder snoozed the event.')}
+      ]
+    );
   },
 
   matchButtons(type) {
