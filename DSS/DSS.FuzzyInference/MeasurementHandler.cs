@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using System.Reflection;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Timers;
 
 namespace DSS.FuzzyInference
 {
@@ -132,6 +133,8 @@ namespace DSS.FuzzyInference
         public string Name => "MEASUREMENT";
         private JsonSerializerSettings settings;
 
+        private Dictionary<string, Timer> stepCountAnalysisTimers;
+
         public MeasurementHandler()
         {
             storeAPI = new StoreAPI("http://cami-store:8008");
@@ -142,14 +145,8 @@ namespace DSS.FuzzyInference
 
             settings = new JsonSerializerSettings();
             settings.Converters.Add(new MeasurementConverter());
-		}
 
-        private int GetIdFromURI(string uri)
-        {
-            string idStr = uri.TrimEnd('/').Split('/').Last();
-
-            int id = Int32.Parse(idStr);
-            return id;
+            stepCountAnalysisTimers = new Dictionary<string, Timer>();
         }
 
         public void Handle(string json) 
@@ -165,7 +162,7 @@ namespace DSS.FuzzyInference
             // use timestamp of incoming measurement instead of the setting one ourselves
             //obj.timestamp = (int) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
-            int userId = GetIdFromURI(obj.user);
+            int userId = storeAPI.GetIdFromURI(obj.user);
 
             if (obj.measurement_type == "weight")
             {
@@ -336,6 +333,14 @@ namespace DSS.FuzzyInference
                     }
                 }
             }
+            else if (obj.measurement_type == "steps")
+            {
+                obj.ok = true;
+                storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
+
+                // start the step count timer for this user if not already done so
+                StartStepsTimer(obj.user);
+            }
             else
             {
                 // for measurements for which there is no analysis, just mark the measurement as ok and insert it in the CAMI Store
@@ -343,6 +348,37 @@ namespace DSS.FuzzyInference
                 storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
             }
 		}
+        
+        /**
+         * Starts a daily timer task for the stepCountAnalysis if one does not exist for the given user
+        */
+        private void StartStepsTimer(string userURIPath)
+        {
+            if (!stepCountAnalysisTimers.ContainsKey(userURIPath))
+            {
+                // set the moment to run the timer at 19:00 localized time
+                // TODO
+
+                // TODO: create a scheduling timer, whose sole job is that of 
+                //  - calling the AnalyzeStepCount the first time
+                //  - launch the timer that is responsible for the daily re-calling of AnalyzeStepCount
+                
+
+                // TODO: add the recurring Timer to the dictionary
+            }
+        }
+
+        private void AnalyzeStepCount(string userURIPath)
+        {
+            // get today's timestamp limits
+            DateTime now = DateTime.UtcNow;
+            long startTs = (long)now.Date.Add(new TimeSpan(0, 0, 0)).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            long endTs = (long)now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds; ;
+
+            int userStepCount = storeAPI.GetUserStepCount(userURIPath, startTs, endTs);
+
+            // TODO generate notifications based on the step count value -- see scenario indications
+        }
 
         private void AnalyzePulseValue(int val, int min, int midLow, int midHigh, int max)
         {

@@ -3,6 +3,8 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace DSS.RMQ
 {
@@ -234,6 +236,40 @@ namespace DSS.RMQ
                 Console.WriteLine("[StoreAPI] Could not retrieve the user referenced by the URI " + (url + userURIPath) + ". Reason: " + response.Result);
                 return null;
             }
+        }
+
+        public int GetUserStepCount(string userURIPath, long startTs, long endTs)
+        {
+            int userID = GetIdFromURI(userURIPath);
+
+            string queryPath = String.Format("/api/v1/measurement/?measurement_type=steps&user={0}&timestamp__gte={1}&timestamp__lte={2}&order_by=-timestamp", userID, startTs, endTs);
+
+            var response = new HttpClient().GetAsync(url + queryPath);
+            if (response.Result.IsSuccessStatusCode)
+            {
+                dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
+
+                JArray measurements = (JArray)deserialized["measurements"];
+                int totalCount = 0;
+
+                for (int i = 0; i < measurements.Count; i++)
+                {
+                    var meas = (JObject)measurements[i];
+                    totalCount += (int)meas["value_info"]["value"];
+                }
+
+                return totalCount;
+            }
+
+            return 0;
+        }
+
+        public int GetIdFromURI(string uri)
+        {
+            string idStr = uri.TrimEnd('/').Split('/').Last();
+
+            int id = Int32.Parse(idStr);
+            return id;
         }
     }
 }
