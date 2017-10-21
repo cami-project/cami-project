@@ -356,8 +356,8 @@ class JournalEntryResource(ModelResource):
 
         filtering = {
             "user": ALL_WITH_RELATIONS,
-            "timestamp": ('gt'),
-            "recipient_type": ('exact')
+            "timestamp": ("exact", "gt", "gte", "lt", "lte",),
+            "type": ('exact',)
         }
 
 
