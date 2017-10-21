@@ -265,6 +265,7 @@ class JournalEntry(models.Model):
     ENTRY_TYPES = (
         ('weight', 'weight'),
         ('heart', 'heart'),
+        ('steps', 'steps'),
         ('sleep', 'sleep'),
         ('exercise', 'exercise'),
         ('medication', 'medication'),
