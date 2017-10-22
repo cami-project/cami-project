@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Timers;
 
+
 namespace DSS.FuzzyInference
 {
 
@@ -354,18 +355,50 @@ namespace DSS.FuzzyInference
         */
         private void StartStepsTimer(string userURIPath)
         {
-            if (!stepCountAnalysisTimers.ContainsKey(userURIPath))
+            //For now timer has to be refreshed every day 
+            //This will be fixed int he future
+            var key = userURIPath + DateTime.Now.ToShortDateString();
+
+            if (!stepCountAnalysisTimers.ContainsKey(key))
             {
                 // set the moment to run the timer at 19:00 localized time
                 // TODO
+                var localHour = 19;
+                var localMin = 0;
+
+				// TODO: add the recurring Timer to the dictionary
+                var timer = new Timer();
+                stepCountAnalysisTimers.Add(key, timer);
 
                 // TODO: create a scheduling timer, whose sole job is that of 
                 //  - calling the AnalyzeStepCount the first time
                 //  - launch the timer that is responsible for the daily re-calling of AnalyzeStepCount
-                
 
-                // TODO: add the recurring Timer to the dictionary
+                StartTimer(ChangeTime(DateTime.Now, localHour, localMin), timer, userURIPath);
             }
+        }
+
+        public DateTime ChangeTime(DateTime date, int hour, int min)
+        {
+            return date.Date + new TimeSpan(hour, min, 0);
+        }
+
+        public void StartTimer(DateTime time, Timer timer, string userURI)
+        {
+
+            if (time < DateTime.Now)
+                return;
+            
+            var interval = (time - DateTime.Now).TotalMilliseconds;
+            Console.WriteLine(interval);
+
+            timer.Interval = interval;
+            timer.Enabled = true;
+            timer.AutoReset = false;
+            timer.Elapsed += (sender, args) =>
+            {
+                AnalyzeStepCount(userURI);        
+            };
         }
 
         private void AnalyzeStepCount(string userURIPath)
@@ -378,6 +411,9 @@ namespace DSS.FuzzyInference
             int userStepCount = storeAPI.GetUserStepCount(userURIPath, startTs, endTs);
 
             // TODO generate notifications based on the step count value -- see scenario indications
+
+            insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = string.Format( "Good job, {0} steps so far", userStepCount), user_id = 2 }));
+
         }
 
         private void AnalyzePulseValue(int val, int min, int midLow, int midHigh, int max)
