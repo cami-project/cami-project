@@ -55,6 +55,7 @@
     <Compile Include="EventsHandler.cs" />
     <Compile Include="MeasurementConverter.cs" />
     <Compile Include="SensorToLocationHandler.cs" />
+    <Compile Include="ReminderHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

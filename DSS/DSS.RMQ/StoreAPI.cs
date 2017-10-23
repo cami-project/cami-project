@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace DSS.RMQ
 {
@@ -42,21 +43,22 @@ namespace DSS.RMQ
         public StoreAPI(string baseUrl)
         {
             this.url = baseUrl;
-		}
+        }
 
-        public void PushMeasurement( string json )
+        public void PushMeasurement(string json)
         {
-			HttpContent content = new StringContent(json);
+            HttpContent content = new StringContent(json);
             content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-           
-            var response = new HttpClient().PostAsync( url + "/api/v1/measurement/", content);
 
-			//Console.WriteLine("PUSH MEASUREMNT:" + response.Result);
-			Console.WriteLine("Measurement inserted");
+            var response = new HttpClient().PostAsync(url + "/api/v1/measurement/", content);
 
-		}
+            //Console.WriteLine("PUSH MEASUREMNT:" + response.Result);
+            Console.WriteLine("Measurement inserted");
 
-        public bool AreLastNHeartRateCritical(int n, int low, int high){
+        }
+
+        public bool AreLastNHeartRateCritical(int n, int low, int high)
+        {
 
             //var urlVS = url + "/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp&user=2&device=2";
             // we want to get all pulse related data for the end-user (user=2), not just the ones from device 2
@@ -72,35 +74,35 @@ namespace DSS.RMQ
 
                 //Console.WriteLine(deserialized);
 
-                if (n  == deserialized["measurements"].Count)
+                if (n == deserialized["measurements"].Count)
                 {
                     for (int i = 0; i < deserialized["measurements"].Count; i++)
                     {
                         var item = deserialized["measurements"][i];
 
-                        var hr =  (int) (item["value_info"]["value"] ?? item["value_info"]["Value"]);
+                        var hr = (int)(item["value_info"]["value"] ?? item["value_info"]["Value"]);
 
                         Console.WriteLine("HR: " + hr);
 
-                        if ( hr > low && hr < high)
+                        if (hr > low && hr < high)
                         {
                             isCritical = false;
-						}
+                        }
                     }
 
-					Console.WriteLine("IS critical: " + isCritical);
-				}
+                    Console.WriteLine("IS critical: " + isCritical);
+                }
 
-                else 
+                else
                 {
                     throw new Exception("Server response doesn't match requested number of pulse items " + deserialized);
-				}
+                }
                 return isCritical;
             }
             throw new Exception("Something went wrong on the server side while checking for pulse " + response.Result);
-         }
+        }
 
-        public float GetLatestWeightMeasurement(int userId) 
+        public float GetLatestWeightMeasurement(int userId)
         {
 
             //var response = new HttpClient().GetAsync(url +"/measurement/?limit=1&measurement_type=weight&order_by=-timestamp&user=2");
@@ -112,22 +114,22 @@ namespace DSS.RMQ
             {
                 dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
 
-                return deserialized["measurements"][0]["value_info"]["value"] ?? deserialized["measurements"][0]["value_info"]["Value"] ;
+                return deserialized["measurements"][0]["value_info"]["value"] ?? deserialized["measurements"][0]["value_info"]["Value"];
             }
 
-			throw new Exception("Something went wrong on the server side while geting last wight measurement " + response.Result);
+            throw new Exception("Something went wrong on the server side while geting last wight measurement " + response.Result);
 
         }
 
-        public JournalEntry PushJournalEntry(string user_uri, string notification_type, string severity, string msg, string desc, long reference_id = 0) 
+        public JournalEntry PushJournalEntry(string user_uri, string notification_type, string severity, string msg, string desc, long reference_id = 0)
         {
 
             Console.WriteLine(string.Format("[StoreAPI] Attempting to send journal entry of type {0}, for user {1}, with msg {2} and desc {3}. Timestamp: {4}",
-                notification_type, user_uri, msg, desc, ((int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString())) ;
-            
+                notification_type, user_uri, msg, desc, ((int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString()));
+
             var obj = new JournalEntry()
             {
-				user = user_uri,
+                user = user_uri,
                 description = desc,
                 message = msg,
                 timestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds,
@@ -142,8 +144,8 @@ namespace DSS.RMQ
             HttpContent content = new StringContent(JsonConvert.SerializeObject(obj));
             //Console.WriteLine(content.ReadAsStringAsync().Result);
 
-			content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-			var response = new HttpClient().PostAsync(url + "/api/v1/journal_entries/", content);
+            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            var response = new HttpClient().PostAsync(url + "/api/v1/journal_entries/", content);
 
             if (response.Result.IsSuccessStatusCode)
             {
@@ -158,7 +160,7 @@ namespace DSS.RMQ
                 Console.WriteLine("[StoreAPI] Could not insert journal entry: " + obj + ". Reason: " + response.Result);
                 return null;
             }
-		}
+        }
 
         public string GetUserOfGateway(string gatewayURIPath)
         {
@@ -175,7 +177,7 @@ namespace DSS.RMQ
             {
                 Console.WriteLine("[StoreAPI] Could not retrieve the gateway referenced by the URI " + (url + gatewayURIPath) + ". Reason: " + response.Result);
                 return null;
-            }    
+            }
         }
 
 
@@ -183,7 +185,7 @@ namespace DSS.RMQ
         {
             Dictionary<string, string> timezoneMap = new Dictionary<string, string>()
             {
-                
+
                 { "en", "Europe/London" },
                 { "ro", "Europe/Bucharest" },
                 { "pl", "Europe/Warsaw" },
@@ -271,5 +273,38 @@ namespace DSS.RMQ
             int id = Int32.Parse(idStr);
             return id;
         }
+
+        public void PatchJournalEntry(string id, bool ack)
+        {
+
+            HttpContent content = new StringContent(JsonConvert.SerializeObject(new { acknowledged = ack}));
+            var response = new HttpClient().PatchAsync( new Uri( url + "/api/v1/journal_entries/"+ id + "/"), content );
+
+        }
+    }
+}
+
+
+public static class HttpClientExtensions
+{
+    public static async Task<HttpResponseMessage> PatchAsync(this HttpClient client, Uri requestUri, HttpContent iContent)
+    {
+        var method = new HttpMethod("PATCH");
+        var request = new HttpRequestMessage(method, requestUri)
+        {
+            Content = iContent
+        };
+
+        HttpResponseMessage response = new HttpResponseMessage();
+        try
+        {
+            response = await client.SendAsync(request);
+        }
+        catch (TaskCanceledException e)
+        {
+            Console.WriteLine("ERROR: " + e.ToString());
+        }
+
+        return response;
     }
 }
