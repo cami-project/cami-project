@@ -240,6 +240,40 @@ namespace DSS.RMQ
             }
         }
 
+
+
+        public bool CheckForMeasuremntInLastNMinutes(string type, int min, int userId) {
+
+
+            DateTime now = DateTime.Now.AddMinutes(min);
+            long startTs = (long)now.Date.Add(new TimeSpan(0, 0, 0)).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            var timeStamp = "";
+
+
+            //1477413397
+            string queryPath = String.Format("/api/v1/measurement/?measurement_type={0}&user={1}&timestamp__gte={2}", type, userId, timeStamp);
+
+
+            var response = new HttpClient().GetAsync(url + queryPath);
+            if (response.Result.IsSuccessStatusCode)
+            {
+                dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
+
+
+                Console.WriteLine(deserialized);
+
+                if (deserialized.measurements.Count() == 0)
+                    return false;
+
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("[StoreAPI] Could not retrieve the user referenced by the URI " + (url + queryPath) + ". Reason: " + response.Result);
+                return false;
+            }
+        }
+
         public int GetUserStepCount(string userURIPath, long startTs, long endTs)
         {
             int userID = GetIdFromURI(userURIPath);
