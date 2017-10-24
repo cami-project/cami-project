@@ -11,29 +11,29 @@ namespace DSS.RMQ
 {
 
 
-	public class ValueInfo
-	{
-		public int val { get; set; }
-	}
+    public class ValueInfo
+    {
+        public int val { get; set; }
+    }
 
-	public class JournalEntry
-	{
+    public class JournalEntry
+    {
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int id { get; set; }
         public string user { get; set; }
-		public string severity { get; set; }
-		public long timestamp { get; set; }
-		public string description { get; set; }
-		public string message { get; set; }
+        public string severity { get; set; }
+        public long timestamp { get; set; }
+        public string description { get; set; }
+        public string message { get; set; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public long reference_id { get; set; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string resource_uri { get; set; }
-		public string type { get; set; }
-        public bool acknowledged { get; set; }
-	}
+        public string type { get; set; }
+        public bool? acknowledged { get; set; }
+    }
 
     public class StoreAPI
     {
@@ -277,34 +277,51 @@ namespace DSS.RMQ
         public void PatchJournalEntry(string id, bool ack)
         {
 
-            HttpContent content = new StringContent(JsonConvert.SerializeObject(new { acknowledged = ack}));
-            var response = new HttpClient().PatchAsync( new Uri( url + "/api/v1/journal_entries/"+ id + "/"), content );
+            HttpContent content = new StringContent(JsonConvert.SerializeObject(new { acknowledged = ack }));
+            var response = new HttpClient().PatchAsync(new Uri(url + "/api/v1/journal_entries/" + id + "/"), content);
 
+        }
+
+        public JournalEntry GetJournalEntryById(string id)
+        {
+
+            var response = new HttpClient().GetAsync(url + "/api/v1/journal_entries/" + id);
+
+            if (response.Result.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<JournalEntry>(response.Result.Content.ReadAsStringAsync().Result);
+
+            }
+            else
+            {
+
+                throw new Exception("Couldn't get a journal entry with the ID  of " + id);
+            }
         }
     }
-}
 
 
-public static class HttpClientExtensions
-{
-    public static async Task<HttpResponseMessage> PatchAsync(this HttpClient client, Uri requestUri, HttpContent iContent)
+    public static class HttpClientExtensions
     {
-        var method = new HttpMethod("PATCH");
-        var request = new HttpRequestMessage(method, requestUri)
+        public static async Task<HttpResponseMessage> PatchAsync(this HttpClient client, Uri requestUri, HttpContent iContent)
         {
-            Content = iContent
-        };
+            var method = new HttpMethod("PATCH");
+            var request = new HttpRequestMessage(method, requestUri)
+            {
+                Content = iContent
+            };
 
-        HttpResponseMessage response = new HttpResponseMessage();
-        try
-        {
-            response = await client.SendAsync(request);
-        }
-        catch (TaskCanceledException e)
-        {
-            Console.WriteLine("ERROR: " + e.ToString());
-        }
+            HttpResponseMessage response = new HttpResponseMessage();
+            try
+            {
+                response = await client.SendAsync(request);
+            }
+            catch (TaskCanceledException e)
+            {
+                Console.WriteLine("ERROR: " + e.ToString());
+            }
 
-        return response;
+            return response;
+        }
     }
 }

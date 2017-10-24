@@ -131,7 +131,6 @@ namespace DSS.FuzzyInference
     {
         private StoreAPI storeAPI;
         private RMQ.INS.InsertionAPI insertionAPI;
-        public string Name => "MEASUREMENT";
         private JsonSerializerSettings settings;
 
         private Dictionary<string, Timer> stepCountAnalysisTimers;
