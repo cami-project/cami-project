@@ -245,7 +245,9 @@ namespace DSS.RMQ
         public bool CheckForMeasuremntInLastNMinutes(string type, int min, int userId) {
 
 
-            DateTime now = DateTime.Now.AddMinutes(min);
+            Console.WriteLine("Check for mesurements in last 6 minutes");
+
+            DateTime now = DateTime.Now.AddMinutes(-min);
             long startTs = (long)now.Date.Add(new TimeSpan(0, 0, 0)).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             var timeStamp = "";
 
@@ -262,7 +264,7 @@ namespace DSS.RMQ
 
                 Console.WriteLine(deserialized);
 
-                if (deserialized.measurements.Count() == 0)
+                if (((JArray)deserialized.measurements).Count() == 0)
                     return false;
 
                 return true;
@@ -319,7 +321,7 @@ namespace DSS.RMQ
         public JournalEntry GetJournalEntryById(string id)
         {
 
-            var response = new HttpClient().GetAsync(url + "/api/v1/journal_entries/" + id);
+            var response = new HttpClient().GetAsync(url + "/api/v1/journal_entries/" + id +"/");
 
             if (response.Result.IsSuccessStatusCode)
             {

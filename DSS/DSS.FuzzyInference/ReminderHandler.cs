@@ -12,7 +12,7 @@ namespace DSS.FuzzyInference
         private RMQ.INS.InsertionAPI insertionAPI;
         private StoreAPI storeAPI;
         private Dictionary<string, dynamic> userReminderMap;
-        private Dictionary<string, List<int>> userCareGiversMap;
+        private Dictionary<string, int []> userCareGiversMap;
 
 
         private const int WAIT_MS = 60 * 1000;
@@ -24,6 +24,7 @@ namespace DSS.FuzzyInference
             insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
             storeAPI = new StoreAPI("http://cami-store:8008");
             userReminderMap = new Dictionary<string, dynamic>();
+            userCareGiversMap = new Dictionary<string, int[]>();
         }
 
 
@@ -34,9 +35,9 @@ namespace DSS.FuzzyInference
 
             var reminder = JsonConvert.DeserializeObject<dynamic>(json);
 
-            if(reminder.category.ToLower() == "user_notifications"){
+            if(reminder.category.ToString().ToLower() == "user_notifications"){
                 
-                var key = reminder.content.value.user.id;
+                var key = reminder.content.value.user.id.ToString();
 
                 if(userReminderMap.ContainsKey(key)){
 
@@ -47,25 +48,28 @@ namespace DSS.FuzzyInference
                 //Reminder issued
                 if (reminder.content.name == "reminder_sent")
                 {
+                    Console.WriteLine("reminder sent entered");
 
+                    userCareGiversMap.Add(key, reminder.content.value.journal.id_caregivers.ToObject<int[]>());
 
-                    Console.WriteLine("Reminder sent event handled");
                     //Check if reminder is acknowledged after 6 mins
                     var aTimer = new System.Timers.Timer(WAIT_MS);
+                    aTimer.Start();
+                    aTimer.AutoReset = false;
                     aTimer.Elapsed += (x, y) =>
                     {
                         //This is in case user didn't respond 
                         if(userReminderMap[key].content.name == "reminder_sent"){
 
 
+
                             Console.WriteLine("Reminder wasn't acknowledged after 6 min");
 
-
-                            userCareGiversMap.Add(key, Enumerable.ToList(userCareGiversMap[key].content.value.journal.id_caregivers));
-
+     
                             foreach (int item in userCareGiversMap[key])
                             {
                                 insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = "Jim didn't respond to the reminder!", user_id = item }));
+                                Console.WriteLine("sending notification for " + item);
                             }
 
                             userReminderMap.Remove(key);
@@ -76,16 +80,17 @@ namespace DSS.FuzzyInference
 
                 //Reminder acknowledged 
                 if(reminder.content.name == "reminder_acknowledged") {
-                    
-                    var ack = reminder.content.value == "ok" ? true : false;
-                    var journalId = reminder.content.value.journal.id;
-                    storeAPI.PatchJournalEntry(reminder.content.value.journal.id, ack);
+
+
+                    var ack = reminder.content.value.ack.ToString() == "ok" ? true : false;
+                    var journalId = reminder.content.value.journal.id.ToString();
+
+                    Console.WriteLine(journalId);
+                    storeAPI.PatchJournalEntry(journalId, ack);
 
                     if(ack) {
 
-
                         Console.WriteLine("Reminder acknowledged");
-
 
                         var journalEntry = storeAPI.GetJournalEntryById(journalId);
 
@@ -93,38 +98,48 @@ namespace DSS.FuzzyInference
                         //there is a new value in weight measurements and ignore if it's not possible 
                         //for example medication
 
-                        if(journalEntry.type == "weight"){
+                        if(journalEntry.type.ToString() == "blood_pressure"){
                             
                             var aTimer = new System.Timers.Timer(WAIT_MS);
+                            aTimer.AutoReset = false;
+                            aTimer.Start();
                             aTimer.Elapsed += (x, y) =>
                             {
-                                if(storeAPI.CheckForMeasuremntInLastNMinutes(journalEntry.type, 6, int.Parse(key)))
+
+                                Console.WriteLine("Blood pressure");
+
+                                if(!storeAPI.CheckForMeasuremntInLastNMinutes(journalEntry.type, 6, int.Parse(key)))
                                 {
+                                    Console.WriteLine("Blood pressure (true)");
 
                                     foreach (int item in userCareGiversMap[key])
                                     {
                                         insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = "Jim didn't respond to the reminder!", user_id = item }));
                                     }
+                                }else{
+                                    Console.WriteLine("Blood pressure (false)");
 
-                                    userReminderMap.Remove(key);
-                                    userCareGiversMap.Remove(key);
+
                                 }
                             };
-
                         }
 
+                        userReminderMap.Remove(key);
+                        userCareGiversMap.Remove(key);
 
                     }
                     else {
 
                         Console.WriteLine("Reminder snoozed");
 
-
-                        foreach (int item in Enumerable.ToList(reminder.content.value.journal.id_caregivers))
+                        foreach (int item in userCareGiversMap[key])
                         {
                             insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = "Jim postponed the reminder!", user_id = item }));
 
                         }
+
+                        userReminderMap.Remove(key);
+                        userCareGiversMap.Remove(key);
                         
                     }
                 }
