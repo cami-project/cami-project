@@ -248,8 +248,7 @@ namespace DSS.RMQ
             Console.WriteLine("Check for mesurements in last 6 minutes");
 
             DateTime now = DateTime.Now.AddMinutes(-min);
-            long startTs = (long)now.Date.Add(new TimeSpan(0, 0, 0)).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-            var timeStamp = "";
+            long timeStamp = (long)now.Date.Add(new TimeSpan(0, 0, 0)).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 
 
             //1477413397
