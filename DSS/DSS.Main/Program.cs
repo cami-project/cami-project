@@ -26,7 +26,11 @@ namespace DSS.Main
             Console.WriteLine("This is version 1.2");
 
 
+            var store = new StoreAPI("http://cami-store:8008");
 
+            var je = store.PushJournalEntry("/api/v1/user/2/", "blood_pressure", "low", "blood pressure", "blood_pressure");
+
+        
             var reminderEvent = new Event()
             {
                 category = "USER_NOTIFICATIONS",
@@ -40,7 +44,7 @@ namespace DSS.Main
                              { "user", new Dictionary<string, int>() { {"id", 2 } } },
                              { "journal", new Dictionary<string, dynamic>() {
                                  { "id_enduser", 2 },
-                                { "id_caregivers", new [] {2}}
+                                 { "id_caregivers", new [] {2}}
                              } },
                         }
                 },
@@ -63,7 +67,7 @@ namespace DSS.Main
                     val = new Dictionary<string, dynamic>()
                     {   { "ack" , "ok"},
                         { "user", new Dictionary<string, int>() { {"id", 2 } } },
-                        { "journal", new Dictionary<string, dynamic>() {{ "id", 2 }} },
+                        { "journal", new Dictionary<string, dynamic>() {{ "id", je.id }} },
                     }
                 },
                 annotations = new Annotations()
@@ -72,6 +76,8 @@ namespace DSS.Main
                     source = "ios_app"
                 }
             };
+
+
 
 
             var mesuremtent = new Measurement()
@@ -92,11 +98,14 @@ namespace DSS.Main
 
             };
 
-            new StoreAPI("http://cami-store:8008").PushMeasurement(JsonConvert.SerializeObject(mesuremtent));
+       
 
             var handler = new ReminderHandler();
             handler.Handle(JsonConvert.SerializeObject(reminderEvent));
             handler.Handle(JsonConvert.SerializeObject(reminderACK));
+
+
+            store.PushMeasurement(JsonConvert.SerializeObject(mesuremtent));
 
 
             Console.ReadLine();
