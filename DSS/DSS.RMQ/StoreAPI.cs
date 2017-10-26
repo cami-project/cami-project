@@ -320,6 +320,7 @@ namespace DSS.RMQ
 
         public JournalEntry GetJournalEntryById(string id)
         {
+            Console.WriteLine("Get yournal entry by id" + id);
 
             var response = new HttpClient().GetAsync(url + "/api/v1/journal_entries/" + id +"/");
 

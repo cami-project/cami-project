@@ -98,6 +98,9 @@ namespace DSS.FuzzyInference
                         //there is a new value in weight measurements and ignore if it's not possible 
                         //for example medication
 
+
+                        Console.WriteLine("Type" + journalEntry.type.ToString());
+
                         if(journalEntry.type.ToString() == "blood_pressure"){
                             
                             var aTimer = new System.Timers.Timer(WAIT_MS);
