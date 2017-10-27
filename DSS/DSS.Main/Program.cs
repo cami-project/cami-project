@@ -26,6 +26,13 @@ namespace DSS.Main
             Console.WriteLine("This is version 1.2");
 
 
+
+            new MeasurementHandler();
+
+
+            Console.ReadLine();
+            return;
+
             var store = new StoreAPI("http://cami-store:8008");
 
             var je = store.PushJournalEntry("/api/v1/user/2/", "blood_pressure", "low", "blood pressure", "blood_pressure");

@@ -99,7 +99,7 @@ namespace DSS.FuzzyInference
                         //for example medication
 
 
-                        Console.WriteLine("Type" + journalEntry.type.ToString());
+                        Console.WriteLine("Type: " + journalEntry.type.ToString());
 
                         if(journalEntry.type.ToString() == "blood_pressure"){
                             
@@ -113,14 +113,14 @@ namespace DSS.FuzzyInference
 
                                 if(!storeAPI.CheckForMeasuremntInLastNMinutes(journalEntry.type, 6, int.Parse(key)))
                                 {
-                                    Console.WriteLine("Blood pressure (true)");
+                                    Console.WriteLine("Blood pressure (fase)");
 
                                     foreach (int item in userCareGiversMap[key])
                                     {
                                         insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = "Jim didn't respond to the reminder!", user_id = item }));
                                     }
                                 }else{
-                                    Console.WriteLine("Blood pressure (false)");
+                                    Console.WriteLine("Blood pressure (true)");
 
 
                                 }
@@ -149,10 +149,4 @@ namespace DSS.FuzzyInference
             }
         }
     }
-
-
-
-
-
 }
-

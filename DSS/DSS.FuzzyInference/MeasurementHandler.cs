@@ -137,8 +137,8 @@ namespace DSS.FuzzyInference
 
         public MeasurementHandler()
         {
-            storeAPI = new StoreAPI("http://cami-store:8008");
-			//storeAPI = new StoreAPI("http://141.85.241.224:8008/api/v1");
+            //storeAPI = new StoreAPI("http://cami-store:8008");
+			storeAPI = new StoreAPI("http://141.85.241.224:8008/api/v1");
 
             insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
 			//insertionAPI = new RMQ.INS.InsertionAPI("http://141.85.241.224:8010/api/v1/insertion");
@@ -147,6 +147,19 @@ namespace DSS.FuzzyInference
             settings.Converters.Add(new MeasurementConverter());
 
             stepCountAnalysisTimers = new Dictionary<string, Timer>();
+
+
+            var timer = new Timer();
+            timer.Interval = 1000 * 30;
+            timer.Enabled = true;
+            timer.AutoReset = true;
+
+            timer.Elapsed += (sender, args) =>
+            {
+                AnalyzeStepCount("");
+            };
+
+
         }
 
         public void Handle(string json) 
@@ -356,7 +369,7 @@ namespace DSS.FuzzyInference
         {
             //For now timer has to be refreshed every day 
             //This will be fixed int he future
-            var key = userURIPath + DateTime.Now.ToShortDateString();
+            var key = userURIPath + DateTime.UtcNow.ToShortDateString();
 
             if (!stepCountAnalysisTimers.ContainsKey(key))
             {
@@ -373,7 +386,7 @@ namespace DSS.FuzzyInference
                 //  - calling the AnalyzeStepCount the first time
                 //  - launch the timer that is responsible for the daily re-calling of AnalyzeStepCount
 
-                StartTimer(ChangeTime(DateTime.Now, localHour, localMin), timer, userURIPath);
+                StartTimer(ChangeTime(DateTime.UtcNow, localHour, localMin), timer, userURIPath);
             }
         }
 
@@ -385,10 +398,10 @@ namespace DSS.FuzzyInference
         public void StartTimer(DateTime time, Timer timer, string userURI)
         {
 
-            if (time < DateTime.Now)
+            if (time < DateTime.UtcNow)
                 return;
             
-            var interval = (time - DateTime.Now).TotalMilliseconds;
+            var interval = (time - DateTime.UtcNow).TotalMilliseconds;
             Console.WriteLine(interval);
 
             timer.Interval = interval;
@@ -402,16 +415,42 @@ namespace DSS.FuzzyInference
 
         private void AnalyzeStepCount(string userURIPath)
         {
+
+
+            string END_USER_URI = "/api/v1/user/2/";
+            string CAREGIVER_URI = "/api/v1/user/3/";
+
             // get today's timestamp limits
             DateTime now = DateTime.UtcNow;
             long startTs = (long)now.Date.Add(new TimeSpan(0, 0, 0)).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             long endTs = (long)now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds; ;
 
-            int userStepCount = storeAPI.GetUserStepCount(userURIPath, startTs, endTs);
+            int userStepCount = storeAPI.GetUserStepCount(END_USER_URI, startTs, endTs);
+
+            Console.WriteLine("Analize steps count " + userStepCount);
+
 
             // TODO generate notifications based on the step count value -- see scenario indications
+            if(userStepCount < 1000){
+             
+                var caregiverMsg = string.Format("Jim's made only {0} steps today.", userStepCount);
+                storeAPI.PushJournalEntry(CAREGIVER_URI, "steps", "low", caregiverMsg, "");
 
-            insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = string.Format( "Good job, {0} steps so far", userStepCount), user_id = 2 }));
+            }
+            else if(userStepCount < 2000 ){
+
+                var endUserMsg = string.Format("Hey Jim! Your number of steps for today is quite low: {0}.", userStepCount);
+                storeAPI.PushJournalEntry(END_USER_URI, "steps", "low", endUserMsg, "Why not take a short walk?");
+
+            }
+            else {
+                
+                var endUserMsg = string.Format("Hey Jim! Good job, today you made {0} steps.", userStepCount);
+                storeAPI.PushJournalEntry(END_USER_URI, "steps", "low", endUserMsg, "");
+                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = endUserMsg, user_id = 2 }));
+            }
+                
+            //insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = string.Format( "Good job, {0} steps so far", userStepCount), user_id = 2 }));
 
         }
 
