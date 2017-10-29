@@ -434,16 +434,21 @@ namespace DSS.FuzzyInference
             if(userStepCount < 1000){
              
                 var caregiverMsg = string.Format("Jim's made only {0} steps today.", userStepCount);
-                storeAPI.PushJournalEntry(CAREGIVER_URI, "steps", "low", caregiverMsg, "");
+                storeAPI.PushJournalEntry(CAREGIVER_URI, "steps", "high", caregiverMsg, "");
+
+                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 2 }));
+                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
 
             }
             else if(userStepCount < 2000 ){
 
                 var endUserMsg = string.Format("Hey Jim! Your number of steps for today is quite low: {0}.", userStepCount);
-                storeAPI.PushJournalEntry(END_USER_URI, "steps", "low", endUserMsg, "Why not take a short walk?");
+                storeAPI.PushJournalEntry(END_USER_URI, "steps", "medium", endUserMsg, "Why not take a short walk?");
 
+
+                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = endUserMsg, user_id = 2 }));
             }
-            else {
+            else if(userStepCount > 6000) {
                 
                 var endUserMsg = string.Format("Hey Jim! Good job, today you made {0} steps.", userStepCount);
                 storeAPI.PushJournalEntry(END_USER_URI, "steps", "low", endUserMsg, "");
