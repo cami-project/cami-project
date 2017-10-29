@@ -21,10 +21,10 @@ namespace DSS.FuzzyInference
 
         public ReminderHandler()
         {
-            //insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
-            //storeAPI = new StoreAPI("http://cami-store:8008");
-            storeAPI = new StoreAPI("http://141.85.241.224:8008");
             insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
+            storeAPI = new StoreAPI("http://cami-store:8008");
+            //storeAPI = new StoreAPI("http://141.85.241.224:8008");
+            //insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
 
 
             userReminderMap = new Dictionary<string, dynamic>();
