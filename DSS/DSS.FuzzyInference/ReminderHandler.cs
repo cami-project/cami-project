@@ -64,11 +64,8 @@ namespace DSS.FuzzyInference
                     {
                         //This is in case user didn't respond 
                         if(userReminderMap[key].content.name == "reminder_sent"){
-
-
-
+                            
                             Console.WriteLine("Reminder wasn't acknowledged after 6 min");
-
      
                             foreach (int item in userCareGiversMap[key])
                             {
