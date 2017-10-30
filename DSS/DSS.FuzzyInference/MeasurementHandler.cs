@@ -156,7 +156,7 @@ namespace DSS.FuzzyInference
 
             timer.Elapsed += (sender, args) =>
             {
-                AnalyzeStepCount("");
+                AnalyzeStepCount("/api/v1/user/2/");
             };
 
         }
