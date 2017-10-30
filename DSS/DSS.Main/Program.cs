@@ -26,18 +26,6 @@ namespace DSS.Main
             Console.WriteLine("This is version 1.2");
 
 
-
-           var mh = new MeasurementHandler();
-            //Console.ReadLine();
-            //return;
-
-           // Console.ReadLine();
-
-            while (true)
-            {
-
-            }
-
             var router = new Router<Event>();
 			IRouterHandler[] handlers =
             {
@@ -60,12 +48,6 @@ namespace DSS.Main
             {
                 Console.WriteLine("Something went wrong with the rmq exchange: " +  ex);
             }
-
-
-
-            //var store = new StoreAPI("http://141.85.241.224:8008/api/v1");
-
-            //store.AreLastNHeartRateCritical(3, 50, 180);
 
 
 			while (true)

@@ -149,15 +149,15 @@ namespace DSS.FuzzyInference
             stepCountAnalysisTimers = new Dictionary<string, Timer>();
 
 
-            var timer = new Timer();
-            timer.Interval = 1000 * 30;
-            timer.Enabled = true;
-            timer.AutoReset = true;
+            //var timer = new Timer();
+            //timer.Interval = 1000 * 30;
+            //timer.Enabled = true;
+            //timer.AutoReset = true;
 
-            timer.Elapsed += (sender, args) =>
-            {
-                AnalyzeStepCount("/api/v1/user/2/");
-            };
+            //timer.Elapsed += (sender, args) =>
+            //{
+            //    AnalyzeStepCount("/api/v1/user/2/");
+            //};
 
         }
 
@@ -195,7 +195,6 @@ namespace DSS.FuzzyInference
 				{
 				    obj.ok = true;
 				}
-
 
 
 				// first store measurement in CAMI Store
@@ -401,7 +400,7 @@ namespace DSS.FuzzyInference
                 return;
             
             var interval = (time - DateTime.UtcNow).TotalMilliseconds;
-            Console.WriteLine(interval);
+            Console.WriteLine("Interval until next invication :" + interval);
 
             timer.Interval = interval;
             timer.Enabled = true;
