@@ -21,6 +21,7 @@ const ACK_RESPONSE = 'HomepageState/ACK_RESPONSE';
 
 // Action creators
 export async function requestNotification() {
+  console.log('[HomepageState] - Requesting [elder] data fetch.');
   // Do an async fetch fot the latest notification.
   return {
     type: NOTIFICATION_RESPONSE,
@@ -53,7 +54,7 @@ async function fetchNotification() {
           return initialState.getIn(['notification']);
         }
 
-        console.log('[HomepageState] - sucessfully fetched [elder] data');
+        console.log('[HomepageState] - sucessfully fetched [elder] data: ' + JSON.stringify(json.objects[0]));
         return json.objects[0];
       });
     })
@@ -120,7 +121,7 @@ async function postReminderAcknowledgement(ack, reference_id, journal_entry_id) 
           }
 
         }).catch((error) => {
-          console.log('[HomepageState] - There was a problem patching the Joournal Entry acknowledged field: ' + JSON.stringify(error));
+          console.log('[HomepageState] - There was a problem patching the Journal Entry acknowledged field: ' + JSON.stringify(error));
         });
 
       } else {
@@ -129,13 +130,15 @@ async function postReminderAcknowledgement(ack, reference_id, journal_entry_id) 
         throw error;
       }
     }).catch((error) => {
-      console.log('[HomepageState] - There was a problem with acknowledging reminder: ' + JSON.stringify(error));
+      console.log('[HomepageState] - There was a problem posting a [' + ack + '] ack on the insertion queue: ' + JSON.stringify(error));
     });
 }
 
 // Simulates a periodic timer. This is for experimental purposes only, a proper
 // timer should be used instead in production.
 async function triggerFetchNotification() {
+  console.log('[HomepageState] - Triggered data fetch for [elder] in ' + (env.POLL_INTERVAL_MILLIS / 1000) + ' seconds.');
+
   return Promise.delay(env.POLL_INTERVAL_MILLIS).then(() => ({
     type: TRIGGER_REQUEST
   }))

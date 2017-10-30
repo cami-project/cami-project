@@ -22,7 +22,7 @@ import {logout} from '../auth/AuthState';
 
 const tapButtonSound = new Sound('sounds/knuckle.mp3', Sound.MAIN_BUNDLE, (error) => {
   if (error) {
-    console.log('failed to load the sound', error);
+    console.log('[HomepageState] - Failed to load the button tap sound', error);
   }
 });
 
