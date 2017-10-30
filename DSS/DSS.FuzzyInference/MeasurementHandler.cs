@@ -149,15 +149,15 @@ namespace DSS.FuzzyInference
             stepCountAnalysisTimers = new Dictionary<string, Timer>();
 
 
-            //var timer = new Timer();
-            //timer.Interval = 1000 * 3;
-            //timer.Enabled = true;
-            ////timer.AutoReset = true;
+            var timer = new Timer();
+            timer.Interval = 1000 * 30;
+            timer.Enabled = true;
+            timer.AutoReset = true;
 
-            //timer.Elapsed += (sender, args) =>
-            //{
-            //    AnalyzeStepCount("");
-            //};
+            timer.Elapsed += (sender, args) =>
+            {
+                AnalyzeStepCount("");
+            };
 
         }
 

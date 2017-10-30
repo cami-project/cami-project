@@ -27,13 +27,18 @@ namespace DSS.Main
 
 
 
-           //var mh = new MeasurementHandler();
+           var mh = new MeasurementHandler();
             //Console.ReadLine();
             //return;
 
            // Console.ReadLine();
 
-			var router = new Router<Event>();
+            while (true)
+            {
+
+            }
+
+            var router = new Router<Event>();
 			IRouterHandler[] handlers =
             {
                 new EventsHandler(),
