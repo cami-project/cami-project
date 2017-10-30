@@ -28,10 +28,10 @@ export async function requestNotification() {
   };
 }
 
-export async function ackReminder(ack, reference_id, entry_id) {
+export async function ackReminder(ack, reference_id, journal_entry_id) {
   return {
     type: ACK_RESPONSE,
-    payload: await postReminderAcknowledgement(ack, reference_id, entry_id)
+    payload: await postReminderAcknowledgement(ack, reference_id, journal_entry_id)
   }
 }
 
@@ -63,7 +63,7 @@ async function fetchNotification() {
     });
 }
 
-async function postReminderAcknowledgement(ack, reference_id, entry_id) {
+async function postReminderAcknowledgement(ack, reference_id, journal_entry_id) {
   var user_id = store.getState().get('auth').get('currentUser').get('userMetadata').get('user_id');
   var timestamp = moment().format('X');
 
@@ -83,6 +83,7 @@ async function postReminderAcknowledgement(ack, reference_id, entry_id) {
           "value": {
             "ack": ack,
             "user": { "id": user_id },
+            "journal": { "id": journal_entry_id },
             "activity": { "id": reference_id }
           },
           "annotations": {
@@ -98,7 +99,7 @@ async function postReminderAcknowledgement(ack, reference_id, entry_id) {
         // Changing status of acknowledged field of the Journal Entry
         // - We need to remember the acknowledged state of a reminder so that we
         // no longer allow users to re-ack it
-        return fetch(env.NOTIFICATIONS_REST_API + entry_id + '/', {
+        return fetch(env.NOTIFICATIONS_REST_API + journal_entry_id + '/', {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json'

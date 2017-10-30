@@ -85,8 +85,8 @@ const HomepageView = React.createClass({
     tapButtonSound.setVolume(1.0).play();
 
     var reference_id = this.props.notification.get('reference_id'),
-        entry_id = this.props.notification.get('id');
-    this.props.dispatch(HomepageStateActions.ackReminder('ok', reference_id, entry_id));
+        journal_entry_id = this.props.notification.get('id');
+    this.props.dispatch(HomepageStateActions.ackReminder('ok', reference_id, journal_entry_id));
 
     Alert.alert(
       'Reminder was acknowledged',
@@ -101,8 +101,8 @@ const HomepageView = React.createClass({
     tapButtonSound.setVolume(1.0).play();
 
     var reference_id = this.props.notification.get('reference_id'),
-        entry_id = this.props.notification.get('id');
-    this.props.dispatch(HomepageStateActions.ackReminder('snooze', reference_id, entry_id));
+        journal_entry_id = this.props.notification.get('id');
+    this.props.dispatch(HomepageStateActions.ackReminder('snooze', reference_id, journal_entry_id));
 
     Alert.alert(
       'Reminder was snoozed',
