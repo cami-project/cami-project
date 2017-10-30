@@ -21,6 +21,7 @@ const ACK_RESPONSE = 'HomepageState/ACK_RESPONSE';
 
 // Action creators
 export async function requestNotification() {
+  console.log('[HomepageState] - Requesting [elder] data fetch.');
   // Do an async fetch fot the latest notification.
   return {
     type: NOTIFICATION_RESPONSE,
@@ -28,10 +29,10 @@ export async function requestNotification() {
   };
 }
 
-export async function ackReminder(ack, reference_id, entry_id) {
+export async function ackReminder(ack, reference_id, journal_entry_id) {
   return {
     type: ACK_RESPONSE,
-    payload: await postReminderAcknowledgement(ack, reference_id, entry_id)
+    payload: await postReminderAcknowledgement(ack, reference_id, journal_entry_id)
   }
 }
 
@@ -53,7 +54,7 @@ async function fetchNotification() {
           return initialState.getIn(['notification']);
         }
 
-        console.log('[HomepageState] - sucessfully fetched [elder] data');
+        console.log('[HomepageState] - sucessfully fetched [elder] data: ' + JSON.stringify(json.objects[0]));
         return json.objects[0];
       });
     })
@@ -63,7 +64,7 @@ async function fetchNotification() {
     });
 }
 
-async function postReminderAcknowledgement(ack, reference_id, entry_id) {
+async function postReminderAcknowledgement(ack, reference_id, journal_entry_id) {
   var user_id = store.getState().get('auth').get('currentUser').get('userMetadata').get('user_id');
   var timestamp = moment().format('X');
 
@@ -83,6 +84,7 @@ async function postReminderAcknowledgement(ack, reference_id, entry_id) {
           "value": {
             "ack": ack,
             "user": { "id": user_id },
+            "journal": { "id": journal_entry_id },
             "activity": { "id": reference_id }
           },
           "annotations": {
@@ -98,7 +100,7 @@ async function postReminderAcknowledgement(ack, reference_id, entry_id) {
         // Changing status of acknowledged field of the Journal Entry
         // - We need to remember the acknowledged state of a reminder so that we
         // no longer allow users to re-ack it
-        return fetch(env.NOTIFICATIONS_REST_API + entry_id + '/', {
+        return fetch(env.NOTIFICATIONS_REST_API + journal_entry_id + '/', {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json'
@@ -119,7 +121,7 @@ async function postReminderAcknowledgement(ack, reference_id, entry_id) {
           }
 
         }).catch((error) => {
-          console.log('[HomepageState] - There was a problem patching the Joournal Entry acknowledged field: ' + JSON.stringify(error));
+          console.log('[HomepageState] - There was a problem patching the Journal Entry acknowledged field: ' + JSON.stringify(error));
         });
 
       } else {
@@ -128,13 +130,15 @@ async function postReminderAcknowledgement(ack, reference_id, entry_id) {
         throw error;
       }
     }).catch((error) => {
-      console.log('[HomepageState] - There was a problem with acknowledging reminder: ' + JSON.stringify(error));
+      console.log('[HomepageState] - There was a problem posting a [' + ack + '] ack on the insertion queue: ' + JSON.stringify(error));
     });
 }
 
 // Simulates a periodic timer. This is for experimental purposes only, a proper
 // timer should be used instead in production.
 async function triggerFetchNotification() {
+  console.log('[HomepageState] - Triggered data fetch for [elder] in ' + (env.POLL_INTERVAL_MILLIS / 1000) + ' seconds.');
+
   return Promise.delay(env.POLL_INTERVAL_MILLIS).then(() => ({
     type: TRIGGER_REQUEST
   }))
