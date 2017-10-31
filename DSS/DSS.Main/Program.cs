@@ -18,12 +18,19 @@ namespace DSS.Main
     {
 
 
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public static void Main(string[] args)
         {
             
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...");
             Console.WriteLine("This is version 1.2");
+
+
+            log.Info("Hello logging world!");
+
+            Console.ReadLine();
 
 
             var router = new Router<Event>();
