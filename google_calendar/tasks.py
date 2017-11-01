@@ -114,10 +114,7 @@ def send_reminder(activity, timestamp):
 
     user_data = _get_user_data(activity_user)
     user_id = int(user_data["id"])
-
-    # hardcode the fact that there is one and only one caregiver
-    caregiver_id = user_data["enduser_profile"]["caregivers"][0]
-
+    
     # Caregiver Journal Entry
     caregiver_journal_ids = []
     if "caregivers" in user_data["enduser_profile"]:
