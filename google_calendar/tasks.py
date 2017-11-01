@@ -84,6 +84,11 @@ def send_reminder(activity, timestamp):
     activity_type = activity['activity_type']
     activity_user = activity['user']
 
+    logger.debug(
+        "[google_calendar] Preparing to send reminder for user %s. ",
+        activity_user
+    )
+
     caregiver_message_format = "Your loved one has %s at %s"
 
     if activity_type == 'personal':
@@ -112,8 +117,19 @@ def send_reminder(activity, timestamp):
     caregiver_message = caregiver_message_format % activity_start
     caregiver_description = activity['title'] + '\n' + activity['description']
 
-    user_data = _get_user_data(activity_user)
+    call_status, user_data = _get_user_data(activity_user)
+    if call_status != 200:
+        logger.debug(
+            "[google_calendar] Error. Call to user endpoint for %s failed. Reason: %s" % activity_user, user_data
+        )
+
+        return
+
     user_id = int(user_data["id"])
+    
+    logger.debug(
+        "[google_calendar] Retrieved data for user that needs to be reminded: %s" % user_data
+    )
 
     # Caregiver Journal Entry
     caregiver_journal_ids = []
@@ -128,7 +144,17 @@ def send_reminder(activity, timestamp):
                 description=caregiver_description
             )
 
+            logger.debug(
+                "[google_calendar] Journal entry created for caregiver: %s",
+                entry
+            )
+
             caregiver_journal_ids.append(int(entry["id"]))
+
+    logger.debug(
+        "[google_calendar] Retrieved data for user that needs to be reminded: %s",
+        user_data
+    )
 
     # Elder Journal Entry
     enduser_entry = store_utils.insert_journal_entry(
@@ -138,6 +164,11 @@ def send_reminder(activity, timestamp):
         timestamp=timestamp,
         message=elder_message,
         description=activity['description']
+    )
+
+    logger.debug(
+        "[google_calendar] Journal entry created for enduser: %s",
+        enduser_entry
     )
 
     with Connection(settings.BROKER_URL) as conn:
