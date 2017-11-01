@@ -1,6 +1,7 @@
 import json, httplib
 import logging
 import settings
+import requests
 
 from kombu import Connection, Producer
 
@@ -20,8 +21,6 @@ def _get_id_from_uri_path(uriPath):
 
 
 def _get_user_for_gateway(gatewayURIPath):
-    import requests
-
     endpoint = settings.STORE_ENDPOINT_URI + gatewayURIPath
     r = requests.get(endpoint)
 
@@ -29,8 +28,6 @@ def _get_user_for_gateway(gatewayURIPath):
     return r.status_code, response_json
 
 def _get_user_data(userURIPath):
-    import requests
-
     endpoint = settings.STORE_ENDPOINT_URI + userURIPath
     r = requests.get(endpoint)
 
