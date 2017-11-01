@@ -354,10 +354,12 @@ class JournalEntryResource(ModelResource):
         resource_name = 'journal_entries'
         paginator_class = Paginator
 
+        ordering = ["timestamp"]
         filtering = {
             "user": ALL_WITH_RELATIONS,
             "timestamp": ("exact", "gt", "gte", "lt", "lte",),
-            "type": ('exact',)
+            "type": ('exact',),
+            "acknowledged": ('exact', "in")
         }
 
 
