@@ -57,14 +57,14 @@ def log_environment_event_metrics(event_data):
             if s == httplib.OK:
                 event_metric_tags["username"] = d["username"]
             else:
-                logger.error("[insertion] Could not retrieve data from CAMI Store for user: " + user_uri_path +
-                             ". Reason: " + str(d))
+                logger.error("[insertion] Could not retrieve data from CAMI Store for user: %s" +
+                             ". Reason: %s" % user_uri_path , d)
         else:
             logger.error("[insertion] Could not retrieve data from CAMI Store for gateway: "
-                         + event_data["annotations"]["source"]["gateway"] + ". Reason: " + str(gateway_data))
+                         + event_data["annotations"]["source"]["gateway"] + ". Reason: %s" % gateway_data)
 
         logger.info("[insertion] Submitting motion_triggered metric to Librato with the following tags: %s" % event_metric_tags)
-        librato_api.submit("motion_triggered", 1, event_metric_tags)
+        librato_api.submit("cami.motion.triggered", 1, type="counter", tags = event_metric_tags)
 
 
 
