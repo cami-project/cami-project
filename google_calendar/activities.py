@@ -7,7 +7,9 @@ import dateutil.parser
 
 # Local imports
 import store_utils
+import settings
 from google_calendar_backend import *
+
 
 
 logging.config.dictConfig(settings.LOGGING)
@@ -16,12 +18,13 @@ logger = logging.getLogger("google_calendar")
 def sync_for_user(user):
     logger.debug("[google_calendar] Synchronizing activities for user '%s' ... " % user['username'])
 
-    # Hardcode calendars for demo
-    calendars = {
-        "personal": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
-        "exercise": "8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
-        "medication": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com"
-    }
+    # Hardcoded calendars for demo
+    # calendars = {
+    #     "personal": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
+    #     "exercise": "8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
+    #     "medication": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com"
+    # }
+    calendars = settings.CALENDAR_IDs[int(user["id"])]
 
     logger.debug("[google_calendar] Getting the Google Calendar service... ")
 

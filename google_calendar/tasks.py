@@ -2,6 +2,8 @@ import json
 import time
 import logging
 import datetime
+import requests
+import uuid
 
 from kombu import Producer, Exchange, Connection
 from celery import Celery
@@ -18,13 +20,41 @@ logger = logging.getLogger("google_calendar")
 app = Celery('tasks', broker=settings.BROKER_URL)
 app.config_from_object(settings)
 
+"""
+================ Auxiliary functions ================
+"""
+def _get_id_from_uri_path(uriPath):
+    res = uriPath.rstrip("/")
+    return int(res.split("/")[-1])
+
+def _get_user_data(userURIPath):
+    endpoint = settings.STORE_ENDPOINT_URI + userURIPath
+    r = requests.get(endpoint)
+
+    response_json = r.json()
+    return r.status_code, response_json
+
+
 @app.task(name='google_calendar.sync_activities')
 def sync_activities():
     logger.debug("[google_calendar] Synchronizing all users activities with Google Calendar. Number of users: %d" % 1)
 
     # Hardcode user for demo
-    user = store_utils.user_get(2)
+    user = store_utils.user_get(settings.CAMI_DEMO_USER_ID)
     app.send_task('google_calendar.sync_activities_for_user', [user])
+
+    # Hardcode user for DK user
+    user = store_utils.user_get(settings.TRIAL_USER_DK_ID)
+    app.send_task('google_calendar.sync_activities_for_user', [user])
+
+    # Hardcode user for PL user
+    user = store_utils.user_get(settings.TRIAL_USER_PL_ID)
+    app.send_task('google_calendar.sync_activities_for_user', [user])
+
+    # Hardcode user for RO user
+    user = store_utils.user_get(settings.TRIAL_USER_RO_ID)
+    app.send_task('google_calendar.sync_activities_for_user', [user])
+
 
 @app.task(name='google_calendar.sync_activities_for_user')
 def sync_activities_for_user(user):
@@ -52,7 +82,9 @@ def process_reminders():
 @app.task(name='google_calendar.send_reminder')
 def send_reminder(activity, timestamp):
     activity_type = activity['activity_type']
-    caregiver_message_format = "Jim has %s at %s"
+    activity_user = activity['user']
+
+    caregiver_message_format = "Your loved one has %s at %s"
 
     if activity_type == 'personal':
         journal_entry_type = 'appointment'
@@ -80,19 +112,30 @@ def send_reminder(activity, timestamp):
     caregiver_message = caregiver_message_format % activity_start
     caregiver_description = activity['title'] + '\n' + activity['description']
 
+    user_data = _get_user_data(activity_user)
+    user_id = int(user_data["id"])
+
+    # hardcode the fact that there is one and only one caregiver
+    caregiver_id = user_data["enduser_profile"]["caregivers"][0]
+
     # Caregiver Journal Entry
-    store_utils.insert_journal_entry(
-        user="/api/v1/user/%d/" % 3,
-        type=journal_entry_type,
-        severity='none',
-        timestamp=timestamp,
-        message=caregiver_message,
-        description=caregiver_description
-    )
+    caregiver_journal_ids = []
+    if "caregivers" in user_data["enduser_profile"]:
+        for caregiver_id in user_data["enduser_profile"]["caregivers"]:
+            entry = store_utils.insert_journal_entry(
+                user="/api/v1/user/%d/" % int(caregiver_id),
+                type=journal_entry_type,
+                severity='none',
+                timestamp=timestamp,
+                message=caregiver_message,
+                description=caregiver_description
+            )
+
+            caregiver_journal_ids.append(int(entry["id"]))
 
     # Elder Journal Entry
-    store_utils.insert_journal_entry(
-        user="/api/v1/user/%d/" % 2,
+    enduser_entry = store_utils.insert_journal_entry(
+        user="/api/v1/user/%d/" % user_id,
         type=journal_entry_type,
         severity='none',
         timestamp=timestamp,
@@ -105,7 +148,7 @@ def send_reminder(activity, timestamp):
 
         # Elder Push Notification
         payload = {
-            "user_id": 2,
+            "user_id": user_id,
             "message": elder_message
         }
         inserter = Producer(
@@ -117,13 +160,18 @@ def send_reminder(activity, timestamp):
 
         # reminder_sent event
         payload = {
-            "category": "user_notifications",
+            "category": "USER_NOTIFICATIONS",
             "content": {
+                "uuid": uuid.uuid4(),
                 "name": "reminder_sent",
                 "value_type": "complex",
                 "value": {
-                    "user": { "id": 2 },
-                    "activity": activity
+                    "user": { "id": user_id },
+                    "activity": activity,
+                     "journal": {
+                        "id_enduser": int(enduser_entry["id"]),
+                        "id_caregivers": caregiver_journal_ids
+                     },
                 },
                 "annotations": {
                     "timestamp": timestamp,
