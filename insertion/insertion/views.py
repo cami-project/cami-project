@@ -112,18 +112,10 @@ def insert_event(request):
     try:
         content = json.loads(request.body)
         if 'category' in content:
-            # log into librato
-            logger.info("[insertion] Preparing to send librato metrics for event: %s" % content)
-
-            ## filter by the category of user event
-            event_category = content["category"].lower()
-            if event_category == USER_ENVIRONMENT:
-                log_environment_event_metrics(content)
-            elif event_category == USER_NOTIFICATIONS:
-                log_notifications_event_metrics(content)
 
             # get a connection to RabbitMQ broker, create a channel and create a producer for pushing the message to the appropriate CAMI event exchange
-            with Connection(settings.BROKER_URL) as conn:
+            try:
+                conn = Connection(settings.BROKER_URL)
                 channel = conn.channel()
 
                 inserter = Producer(
@@ -134,8 +126,25 @@ def insert_event(request):
                 inserter.publish(request.body)
 
                 logger.debug("[insertion] New event was enqueued: %s", str(content))
+            except Exception as ex:
+                logger.error("[insertion] Error inserting event %s into RabbitMQ exchange: %s", content, ex)
+                return HttpResponse(json.dumps({"error": "Could not insert event %s to RabbitMQ events exchange" % content}),
+                                    status=500, content_type="application/json")
 
-                return HttpResponse(status=201)
+            # log into librato
+            logger.info("[insertion] Preparing to send librato metrics for event: %s" % content)
+
+            ## filter by the category of user event
+            try:
+                event_category = content["category"].lower()
+                if event_category == USER_ENVIRONMENT:
+                    log_environment_event_metrics(content)
+                elif event_category == USER_NOTIFICATIONS:
+                    log_notifications_event_metrics(content)
+            except Exception as ex:
+                logger.error("[insertion] Error! Exception thrown when logging event metric. Reason: %s" % ex)
+
+            return HttpResponse(status=201)
     except Exception as e:
         logger.debug("[insertion] ERROR! Exception caught in insert_event method: %s", e.message)
 
