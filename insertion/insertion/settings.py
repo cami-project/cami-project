@@ -211,3 +211,12 @@ BROKER_EXCHANGES = [
     EVENTS_EXCHANGE,
     PUSH_NOTIFICATIONS_EXCHANGE,
 ]
+
+## STORE settings
+STORE_HOST = "cami-store"
+STORE_PORT = "8008"
+STORE_ENDPOINT_URI = "http://" + STORE_HOST + ":" + STORE_PORT
+
+# Librato account credentials
+LIBRATO_EMAIL = "proiect.cami@gmail.com"
+LIBRATO_TOKEN = "14a8816700f5e42443e593720b24eecb8fa3fddc4786dce640ee551556d7e484"
