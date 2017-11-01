@@ -35,10 +35,10 @@ connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
 
 # Create a temporary queue only for receiving data from the exchange
-result = channel.queue_declare(queue_name = "librato-event-monitoring", exclusive=True)
+result = channel.queue_declare(queue = "librato-event-monitoring", exclusive=True)
 event_queue_name = result.method.queue
 
-result = channel.queue_declare(queue_name = "librato-measurement-monitoring", exclusive=True)
+result = channel.queue_declare(queue = "librato-measurement-monitoring", exclusive=True)
 measurement_queue_name = result.method.queue
 
 
