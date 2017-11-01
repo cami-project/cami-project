@@ -114,7 +114,7 @@ def send_reminder(activity, timestamp):
 
     user_data = _get_user_data(activity_user)
     user_id = int(user_data["id"])
-    
+
     # Caregiver Journal Entry
     caregiver_journal_ids = []
     if "caregivers" in user_data["enduser_profile"]:
