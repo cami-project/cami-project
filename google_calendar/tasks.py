@@ -185,7 +185,7 @@ def send_reminder(activity, timestamp):
         payload = {
             "category": "USER_NOTIFICATIONS",
             "content": {
-                "uuid": uuid.uuid4(),
+                "uuid": str(uuid.uuid4()),
                 "name": "reminder_sent",
                 "value_type": "complex",
                 "value": {

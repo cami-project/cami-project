@@ -94,35 +94,58 @@ TRIAL_USER_DK_ID = 5
 TRIAL_USER_PL_ID = 6
 TRIAL_USER_RO_ID = 7
 
+
+
 ## Hardcoded calendar IDs for each user ID in the field trial
 CALENDAR_IDs = {
     # cami demo
-    2 : {
+    CAMI_DEMO_USER_ID : {
         "personal": "7eh6qnivid6430dl79ei89k26g@group.calendar.google.com",
         "exercise": "8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
         "medication": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com"
     },
     # trial user DK
-    5 : {
+    TRIAL_USER_DK_ID : {
         "personal": "ai8jdd4j5tnrkpg4pdh5evqi7s@group.calendar.google.com",
         "exercise": "nh3uiqj91onn8nf8id9g2vl40g@group.calendar.google.com",
         "medication": "63peuih1pd85qf4hk5tj8jpktg@group.calendar.google.com"
     },
     # trial user PL
-    6 : {
+    TRIAL_USER_PL_ID : {
         "personal": "v8mkc24kpui19llr3gs9s515jk@group.calendar.google.com",
         "exercise": "0gvlkcke3jeqm5f0otatf83fvg@group.calendar.google.com",
         "medication": "j76o5e59ufmn9bh1ggjokh261c@group.calendar.google.com"
     },
     # trial user RO
-    7 : {
+    TRIAL_USER_RO_ID : {
         "personal": "oiu2qp85kvjegp9dgiqg9bsp08@group.calendar.google.com",
         "exercise": "66jp8d442fom00odg27jhvudg4@group.calendar.google.com",
         "medication": "5splak5bt78vd9n27qe3irsgv0@group.calendar.google.com"
     }
 }
 
-
+CALENDAR_CREDENTIALS = {
+    # cami demo
+    CAMI_DEMO_USER_ID : {
+        "client_secret_file": 'client_secret.json',
+        "credentials_file": "cami-calendar-quickstart.json"
+    },
+    # trial user DK
+    TRIAL_USER_DK_ID : {
+        "client_secret_file": 'client_secret_dk.json',
+        "credentials_file": "cami-calendar-quickstart-dk.json"
+    },
+    # trial user PL
+    TRIAL_USER_PL_ID : {
+        "client_secret_file": 'client_secret_pl.json',
+        "credentials_file": "cami-calendar-quickstart-pl.json"
+    },
+    # trial user RO
+    TRIAL_USER_RO_ID : {
+        "client_secret_file": 'client_secret_ro.json',
+        "credentials_file": "cami-calendar-quickstart-ro.json"
+    }
+}
 
 try:
     from settings_local import *
