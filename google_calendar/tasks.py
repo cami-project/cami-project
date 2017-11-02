@@ -134,9 +134,14 @@ def send_reminder(activity, timestamp):
     # Caregiver Journal Entry
     caregiver_journal_ids = []
     if "caregivers" in user_data["enduser_profile"]:
-        for caregiver_id in user_data["enduser_profile"]["caregivers"]:
+        for caregiver_uri in user_data["enduser_profile"]["caregivers"]:
+            logger.debug(
+                "[google_calendar] Creating journal entry for caregiver: %s",
+                caregiver_uri
+            )
+
             entry = store_utils.insert_journal_entry(
-                user="/api/v1/user/%d/" % int(caregiver_id),
+                user=caregiver_uri,
                 type=journal_entry_type,
                 severity='none',
                 timestamp=timestamp,
@@ -144,17 +149,7 @@ def send_reminder(activity, timestamp):
                 description=caregiver_description
             )
 
-            logger.debug(
-                "[google_calendar] Journal entry created for caregiver: %s",
-                entry
-            )
-
             caregiver_journal_ids.append(int(entry["id"]))
-
-    logger.debug(
-        "[google_calendar] Retrieved data for user that needs to be reminded: %s",
-        user_data
-    )
 
     # Elder Journal Entry
     enduser_entry = store_utils.insert_journal_entry(
