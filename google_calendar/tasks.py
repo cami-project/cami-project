@@ -165,7 +165,8 @@ def send_reminder(activity, timestamp):
         "[google_calendar] Journal entry created for enduser: %s" % enduser_entry
     )
 
-    with Connection(settings.BROKER_URL) as conn:
+    try:
+        conn = Connection(settings.BROKER_URL)
         channel = conn.channel()
 
         # Elder Push Notification
@@ -207,6 +208,8 @@ def send_reminder(activity, timestamp):
             routing_key="event.user_notifications"
         )
         inserter.publish(json.dumps(payload))
+    except Exception as ex:
+        logger.error("[google_calendar] Error sending reminder push notification or event. Reason: %s" % ex)
 
     logger.debug(
         "[google_calendar] Successfully sent reminder for activity (%s)." % str(activity)
