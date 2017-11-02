@@ -12,14 +12,14 @@ import settings
 
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
-CLIENT_SECRET_FILE = 'client_secret.json'
-CREDENTIALS_FILE = 'cami-calendar-quickstart.json'
+#CLIENT_SECRET_FILE = 'client_secret.json'
+#CREDENTIALS_FILE = 'cami-calendar-quickstart.json'
 APPLICATION_NAME = 'CAMI Google Calendar API'
 
 logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger("google_calendar")
 
-def get_credentials():
+def get_credentials(user_id):
     """Gets valid user credentials from storage.
 
     If nothing has been stored, or if the stored credentials are invalid,
@@ -29,17 +29,20 @@ def get_credentials():
         Credentials, the obtained credential.
     """
 
+    credentials_file = settings.CALENDAR_CREDENTIALS[user_id]["credentials_file"]
+    client_secret_file = settings.CALENDAR_CREDENTIALS[user_id]["client_secret_file"]
+
     project_dir = os.path.dirname(os.path.realpath(__file__))
     credential_dir = project_dir
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
-    credential_path = os.path.join(credential_dir, CREDENTIALS_FILE)
+    credential_path = os.path.join(credential_dir, credentials_file)
 
     store = Storage(credential_path)
     credentials = store.get()
 
     if not credentials or credentials.invalid:
-        client_secret_file_path = os.path.join(project_dir, CLIENT_SECRET_FILE)
+        client_secret_file_path = os.path.join(project_dir, client_secret_file)
         flow = client.flow_from_clientsecrets(client_secret_file_path, SCOPES)
         flow.user_agent = APPLICATION_NAME
 

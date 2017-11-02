@@ -28,8 +28,8 @@ def sync_for_user(user):
 
     logger.debug("[google_calendar] Getting the Google Calendar service... ")
 
-    # Get calendar service
-    calendar_credentials = get_credentials()
+    # Get calendar service for the current user
+    calendar_credentials = get_credentials(int(user["id"]))
     calendar_service = get_calendar_service(calendar_credentials)
 
     logger.debug("[google_calendar] Successfully got Google Calendar service!")
