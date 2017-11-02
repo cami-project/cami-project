@@ -29,9 +29,11 @@ namespace DSS.Main
 
 
 
-            new MeasurementHandler();
-
             //log.Info("Hello logging world!");
+            log.Error("Hello error logging DSS");
+            log.Warn("Hello warn logging DSS");
+
+
 
             Console.ReadLine();
 

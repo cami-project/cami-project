@@ -42,6 +42,9 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Mono.CSharp" />
+    <Reference Include="librato4net">
+      <HintPath>..\packages\librato4net.1.2.0.1651\lib\net45\librato4net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MotionEventHandler.cs" />

@@ -137,8 +137,8 @@ namespace DSS.FuzzyInference
 
         public MeasurementHandler()
         {
-            //storeAPI = new StoreAPI("http://cami-store:8008");
-			storeAPI = new StoreAPI("http://141.85.241.224:8008");
+            storeAPI = new StoreAPI("http://cami-store:8008");
+			//storeAPI = new StoreAPI("http://141.85.241.224:8008");
 
             insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
 			//insertionAPI = new RMQ.INS.InsertionAPI("http://141.85.241.224:8010/api/v1/insertion");
@@ -147,12 +147,6 @@ namespace DSS.FuzzyInference
             settings.Converters.Add(new MeasurementConverter());
 
             stepCountAnalysisTimers = new Dictionary<string, Timer>();
-
-
-
-            //InformCaregivers("/api/v1/user/2/", "weight", "medium", "Porucica", "Opisic");
-
-
         }
 
         private void InformCaregivers(string enduserURI, string type, string severity, string msg, string desc ) 
@@ -392,7 +386,7 @@ namespace DSS.FuzzyInference
                 return;
             
             var interval = (time - DateTime.UtcNow).TotalMilliseconds;
-            Console.WriteLine("Interval until next invication :" + interval);
+            Console.WriteLine("Interval until the next invication :" + interval);
 
             timer.Interval = interval;
             timer.Enabled = true;

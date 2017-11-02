@@ -4,6 +4,7 @@ using DSS.Delegate;
 using System.Linq;
 using DSS.RMQ;
 using Newtonsoft.Json;
+using librato4net;
 
 namespace DSS.FuzzyInference
 {
@@ -15,9 +16,9 @@ namespace DSS.FuzzyInference
         private Dictionary<string, int []> userCareGiversMap;
 
 
-        private const int WAIT_MS = 60 * 1000;
+       // private const int WAIT_MS = 60 * 1000;
 
-        //private const int WAIT_MS = 6 * 60 * 1000;
+        private const int WAIT_MS = 6 * 60 * 1000;
 
         public ReminderHandler()
         {
@@ -29,6 +30,13 @@ namespace DSS.FuzzyInference
 
             userReminderMap = new Dictionary<string, dynamic>();
             userCareGiversMap = new Dictionary<string, int[]>();
+
+
+            LibratoSettings.Settings.Username = "proiect.cami@gmail.com";
+            LibratoSettings.Settings.ApiKey = "14a8816700f5e42443e593720b24eecb8fa3fddc4786dce640ee551556d7e484";
+
+            MetricsPublisher.Start();
+
         }
 
 
@@ -52,6 +60,8 @@ namespace DSS.FuzzyInference
                 //Reminder issued
                 if (reminder.content.name == "reminder_sent")
                 {
+                    MetricsPublisher.Current.Increment("cami.event.reminder.sent", 1);
+
                     Console.WriteLine("reminder sent entered");
 
                     userCareGiversMap.Add(key, reminder.content.value.journal.id_caregivers.ToObject<int[]>());
@@ -64,9 +74,16 @@ namespace DSS.FuzzyInference
                     {
                         //This is in case user didn't respond 
                         if(userReminderMap[key].content.name == "reminder_sent"){
-                            
+
+
+                           // MetricsPublisher.Current.Annotate();
+                            MetricsPublisher.Current.Increment("cami.event.reminder.ignored", 1);
+
+
                             Console.WriteLine("Reminder wasn't acknowledged after 6 min");
-     
+
+
+                            //TODO: Change this with the impelemntation done in MeasurementHandler
                             foreach (int item in userCareGiversMap[key])
                             {
                                 insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = "Jim didn't respond to the reminder!", user_id = item }));
@@ -93,6 +110,9 @@ namespace DSS.FuzzyInference
 
                     if(ack) {
 
+
+                        MetricsPublisher.Current.Increment("cami.event.reminder.ack", 1);
+
                         Console.WriteLine("Reminder acknowledged");
 
                         var journalEntry = storeAPI.GetJournalEntryById(journalId);
@@ -100,7 +120,6 @@ namespace DSS.FuzzyInference
                         //Do this just in case it's possible to check if user did something for example 
                         //there is a new value in weight measurements and ignore if it's not possible 
                         //for example medication
-
 
                         Console.WriteLine("Type: " + journalEntry.type.ToString());
 
@@ -132,6 +151,9 @@ namespace DSS.FuzzyInference
 
                     }
                     else {
+
+                        MetricsPublisher.Current.Increment("cami.event.reminder.snoozed", 1);
+
 
                         Console.WriteLine("Reminder snoozed");
 

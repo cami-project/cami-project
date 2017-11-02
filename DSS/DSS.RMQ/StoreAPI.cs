@@ -257,7 +257,6 @@ namespace DSS.RMQ
         }
 
 
-
         public bool CheckForMeasuremntInLastNMinutes(string type, int min, int userId) {
 
 
