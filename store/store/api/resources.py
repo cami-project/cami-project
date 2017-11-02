@@ -48,8 +48,10 @@ class UserResource(ModelResource):
 
 class EndUserProfileResource(ModelResource):
     user = fields.ToOneField(UserResource, 'user')
-    caregivers = fields.ToManyField(UserResource, 'user__caregivers', related_name='caretaker',
-                                    null=True, blank=True)
+    caregivers = fields.ToManyField(UserResource,
+            attribute = lambda bundle: User.objects.filter(id__in=map(lambda q: q.user.id, bundle.obj.user.caregivers.all())),
+            related_name='caretaker',
+            null=True, blank=True)
 
     class Meta:
         # we exclude the following fields because we don'really have any data, nor do we use them

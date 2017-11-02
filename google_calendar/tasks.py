@@ -162,8 +162,7 @@ def send_reminder(activity, timestamp):
     )
 
     logger.debug(
-        "[google_calendar] Journal entry created for enduser: %s",
-        enduser_entry
+        "[google_calendar] Journal entry created for enduser: %s" % enduser_entry
     )
 
     with Connection(settings.BROKER_URL) as conn:
@@ -210,6 +209,5 @@ def send_reminder(activity, timestamp):
         inserter.publish(json.dumps(payload))
 
     logger.debug(
-        "[google_calendar] Successfully sent reminder for activity (%s).",
-        str(activity)
+        "[google_calendar] Successfully sent reminder for activity (%s)." % str(activity)
     )
