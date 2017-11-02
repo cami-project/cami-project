@@ -16,7 +16,7 @@ SCOPES = 'https://www.googleapis.com/auth/calendar'
 #CREDENTIALS_FILE = 'cami-calendar-quickstart.json'
 APPLICATION_NAME = 'CAMI Google Calendar API'
 
-logging.config.dictConfig(settings.LOGGING)
+#logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger("google_calendar")
 
 def get_credentials(user_id):
@@ -28,7 +28,6 @@ def get_credentials(user_id):
     Returns:
         Credentials, the obtained credential.
     """
-
     credentials_file = settings.CALENDAR_CREDENTIALS[user_id]["credentials_file"]
     client_secret_file = settings.CALENDAR_CREDENTIALS[user_id]["client_secret_file"]
 
