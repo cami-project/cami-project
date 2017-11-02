@@ -28,7 +28,10 @@ namespace DSS.Main
             Console.WriteLine("This is version 1.2");
 
 
-            log.Info("Hello logging world!");
+
+            new MeasurementHandler();
+
+            //log.Info("Hello logging world!");
 
             Console.ReadLine();
 

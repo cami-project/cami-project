@@ -70,7 +70,9 @@ namespace DSS.FuzzyInference
                             foreach (int item in userCareGiversMap[key])
                             {
                                 insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = "Jim didn't respond to the reminder!", user_id = item }));
-                                Console.WriteLine("sending notification for " + item);
+                                storeAPI.PushJournalEntry("/api/v1/user/" + item + "/", "reminder", "high", "Jim didn't respond to the reminder!", "Jim didn't respond to the reminder!");
+
+                                Console.WriteLine("sending notification and journal entry for " + item);
                             }
 
                             userReminderMap.Remove(key);
@@ -114,16 +116,13 @@ namespace DSS.FuzzyInference
 
                                 if(!storeAPI.CheckForMeasuremntInLastNMinutes(journalEntry.type, 6, int.Parse(key)))
                                 {
-                                    Console.WriteLine("Blood pressure (fase)");
+                                    Console.WriteLine("Blood pressure wasn't measured");
 
                                     foreach (int item in userCareGiversMap[key])
                                     {
                                         insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = "Jim didn't respond to the reminder!", user_id = item }));
+                                        storeAPI.PushJournalEntry("/api/v1/user/" + item + "/", "reminder", "high", "Jim didn't respond to the reminder!", "Jim didn't respond to the reminder!");
                                     }
-                                }else{
-                                    Console.WriteLine("Blood pressure (true)");
-
-
                                 }
                             };
                         }
@@ -139,6 +138,7 @@ namespace DSS.FuzzyInference
                         foreach (int item in userCareGiversMap[key])
                         {
                             insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = "Jim postponed the reminder!", user_id = item }));
+                            storeAPI.PushJournalEntry("/api/v1/user/" + item + "/", "reminder", "high", "Jim postponed the reminder!", "Jim postponed the reminder!");
 
                         }
 

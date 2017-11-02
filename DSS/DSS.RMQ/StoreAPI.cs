@@ -240,6 +240,22 @@ namespace DSS.RMQ
             }
         }
 
+        public dynamic GetCaregivers(string userURIPath)
+        {
+            var response = new HttpClient().GetAsync(url + userURIPath);
+            if (response.Result.IsSuccessStatusCode)
+            {
+                dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
+                return deserialized["enduser_profile"]["caregivers"];
+            }
+            else
+            {
+                Console.WriteLine("[StoreAPI] Could not retrieve the user referenced by the URI " + (url + userURIPath) + ". Reason: " + response.Result);
+                return null;
+            }
+
+        }
+
 
 
         public bool CheckForMeasuremntInLastNMinutes(string type, int min, int userId) {

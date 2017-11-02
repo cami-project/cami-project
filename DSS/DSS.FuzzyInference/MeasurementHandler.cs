@@ -137,8 +137,8 @@ namespace DSS.FuzzyInference
 
         public MeasurementHandler()
         {
-            storeAPI = new StoreAPI("http://cami-store:8008");
-			//storeAPI = new StoreAPI("http://141.85.241.224:8008");
+            //storeAPI = new StoreAPI("http://cami-store:8008");
+			storeAPI = new StoreAPI("http://141.85.241.224:8008");
 
             insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
 			//insertionAPI = new RMQ.INS.InsertionAPI("http://141.85.241.224:8010/api/v1/insertion");
@@ -149,15 +149,31 @@ namespace DSS.FuzzyInference
             stepCountAnalysisTimers = new Dictionary<string, Timer>();
 
 
-            //var timer = new Timer();
-            //timer.Interval = 1000 * 30;
-            //timer.Enabled = true;
-            //timer.AutoReset = true;
 
-            //timer.Elapsed += (sender, args) =>
-            //{
-            //    AnalyzeStepCount("/api/v1/user/2/");
-            //};
+            //InformCaregivers("/api/v1/user/2/", "weight", "medium", "Porucica", "Opisic");
+
+
+        }
+
+        private void InformCaregivers(string enduserURI, string type, string severity, string msg, string desc ) 
+        {
+            var caregivers = storeAPI.GetCaregivers(enduserURI);
+
+            foreach (string caregiverURIPath in caregivers)
+            {
+                int caregiverID = GetIdFromURI(caregiverURIPath);
+
+                storeAPI.PushJournalEntry(caregiverURIPath, type, severity, msg, desc);
+                insertionAPI.InsertPushNotification(msg, caregiverID);
+            }
+
+        }
+
+        private void InformUser(string enduserURI, string type, string severity, string msg, string desc)
+        {
+
+            storeAPI.PushJournalEntry(enduserURI, type,severity, msg, desc);
+            insertionAPI.InsertPushNotification(enduserURI, GetIdFromURI(enduserURI));
 
         }
 
@@ -165,14 +181,9 @@ namespace DSS.FuzzyInference
         {
             Console.WriteLine("Measurement handler invoked");
 
-            // TODO: This will have to change to dynamic handling of end-user and caregiver URIs, as obtained from the measurement that is actually being handled.
-            string END_USER_URI = "/api/v1/user/2/";
-            string CAREGIVER_URI = "/api/v1/user/3/";
-
             var obj = JsonConvert.DeserializeObject<Measurement>(json, settings);
-
-            // use timestamp of incoming measurement instead of the setting one ourselves
-            //obj.timestamp = (int) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+			
+            string END_USER_URI = obj.user;
 
             int userId = storeAPI.GetIdFromURI(obj.user);
 
@@ -180,31 +191,25 @@ namespace DSS.FuzzyInference
             {
                 var weightValInfo = (WeightValueInfo)obj.value_info;
 
-                //var val = float.Parse( obj.value_info.Value);
                 var val = weightValInfo.Value;
                 var kg = storeAPI.GetLatestWeightMeasurement(userId);
 
                 var trend = "normal";
 
-                if (Math.Abs(val - kg) > 2)
-                {
-                    trend = val > kg ? "up" : "down";
-                    obj.ok = false;
-				}
-				else 
-				{
-				    obj.ok = true;
-				}
+                    if (Math.Abs(val - kg) > 2)
+                    {
+                        trend = val > kg ? "up" : "down";
+                        obj.ok = false;
+    				}
+    				else 
+    				{
+    				    obj.ok = true;
+    				}
 
 
-				// first store measurement in CAMI Store
-				storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
+				    storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
 
-                // TODO: currently we know that notification are handled client side only for the CamiDemo user (id = 2), so if we are not
-                // handling data for that user, do not send alerts
-                if (obj.user == END_USER_URI)
-                { 
-                    // if measurement was not ok generate appropriate alerts
+                 
                     if (trend == "down")
                     {
                         var endUserMsg = string.Format("There's a decrease of {0} kg in your weight.", Math.Floor(Math.Abs(val - kg)));
@@ -213,13 +218,11 @@ namespace DSS.FuzzyInference
                         var caregiverMsg = string.Format("Jim lost {0} kg.", Math.Floor(Math.Abs(val - kg)));
                         var caregiverDescription = "You can contact him and see what's wrong.";
 
-                        // insert journal entry for end-user
-                        storeAPI.PushJournalEntry(END_USER_URI, "weight", "medium", endUserMsg, endUserDescription);
-                        insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = endUserMsg, user_id = 2 }));
 
-                        // insert journal entry for caregiver
-                        storeAPI.PushJournalEntry(CAREGIVER_URI, "weight", "medium", caregiverMsg, caregiverDescription);
-                        insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
+                        InformUser(END_USER_URI, "weight", "medium", endUserMsg, endUserDescription);
+                        InformCaregivers(END_USER_URI, "weight", "medium", caregiverMsg, caregiverDescription);
+
+         
                     }
                     else if (trend == "up")
                     {
@@ -229,22 +232,17 @@ namespace DSS.FuzzyInference
                         var caregiverMsg = string.Format("Jim gained {0} kg.", Math.Floor(Math.Abs(val - kg)));
                         var caregiverDescription = "Please check if this has to do with his diet.";
 
-                        // insert journal entry for end-user
-                        storeAPI.PushJournalEntry(END_USER_URI, "weight", "medium", endUserMsg, endUserDescription);
-                        insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = endUserMsg, user_id = 2 }));
+                        InformUser(END_USER_URI, "weight", "medium", endUserMsg, endUserDescription);
+                        InformCaregivers(END_USER_URI, "weight", "medium", caregiverMsg, caregiverDescription);
 
-                        // insert journal entry for caregiver
-                        storeAPI.PushJournalEntry(CAREGIVER_URI, "weight", "medium", caregiverMsg, caregiverDescription);
-                        insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
                     }
 
-                }
+
             }
             else if(obj.measurement_type == "pulse") 
             {
 
                 var pulseValInfo = (PulseValueInfo)obj.value_info;
-                //var val = float.Parse(obj.value_info.Value);
                 var val = pulseValInfo.Value;
 
                 var min = 50;
@@ -257,15 +255,10 @@ namespace DSS.FuzzyInference
                 else
                     obj.ok = true;
                 
-                // first store the measurement in the CAMI Store
-                storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
 
-                // TODO: currently we know that notification are handled client side only for the CamiDemo user (id = 2), so if we are not
-                // handling data for that user, do not send alerts
-                if (obj.user == END_USER_URI)
-                {
-                    AnalyzePulseValue(val, min, midLow, midHigh, max);
-                }
+                storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
+                AnalyzePulseValue(val, min, midLow, midHigh, max, END_USER_URI);
+
 
                 /*
                 if (val < min || val > max) 
@@ -327,7 +320,7 @@ namespace DSS.FuzzyInference
                     pulseValInfo.Value = val;
                     pulseObj.value_info = pulseValInfo; 
 
-                    if (val < min || val > max)
+                    if (val < min || val > max) 
                         pulseObj.ok = false;
                     else
                         pulseObj.ok = true;
@@ -338,10 +331,9 @@ namespace DSS.FuzzyInference
 
                     // TODO: currently we know that notification are handled client side only for the CamiDemo user (id = 2), so if we are not
                     // handling data for that user, do not send alerts
-                    if (pulseObj.user == END_USER_URI)
-                    {
-                        AnalyzePulseValue(val, min, midLow, midHigh, max);
-                    }
+
+                     AnalyzePulseValue(val, min, midLow, midHigh, max, END_USER_URI);
+
                 }
             }
             else if (obj.measurement_type == "steps")
@@ -365,7 +357,7 @@ namespace DSS.FuzzyInference
         */
         private void StartStepsTimer(string userURIPath)
         {
-            //For now timer has to be refreshed every day 
+            //For now, the timer has to be refreshed every day 
             //This will be fixed int he future
             var key = userURIPath + DateTime.UtcNow.ToShortDateString();
 
@@ -411,20 +403,20 @@ namespace DSS.FuzzyInference
             };
         }
 
+        private int GetIdFromURI(string uri)
+        {
+            string idStr = uri.TrimEnd('/').Split('/').Last();
+
+            int id = Int32.Parse(idStr);
+            return id;
+        }
+
+
         private void AnalyzeStepCount(string userURIPath)
         {
-            
-            ///string END_USER_URI = "/api/v1/user/2/";
-            string CAREGIVER_URI = "/api/v1/user/3/";
-
-            // get today's timestamp limits
-            DateTime now = DateTime.UtcNow;
-            //long startTs = (long)now.Date.Add(new TimeSpan(0, 0, 0)).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-
-            long startTs = (long)ChangeTime(now,0,0).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-            long endTs = (long)now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds; ;
-
-            Console.WriteLine("{0} - {1}", startTs, endTs);
+            var now = DateTime.UtcNow;
+            var startTs = (long)ChangeTime(now,0,0).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            var endTs = (long)now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds; ;
 
             int userStepCount = storeAPI.GetUserStepCount(userURIPath, startTs, endTs);
 
@@ -433,36 +425,26 @@ namespace DSS.FuzzyInference
             if(userStepCount < 1000){
              
                 var caregiverMsg = string.Format("Jim's made only {0} steps today.", userStepCount);
-                storeAPI.PushJournalEntry(CAREGIVER_URI, "steps", "high", caregiverMsg, "");
+                var caregiverDescription = "Your loved one has walked very few steps today. Call them to ask they move more.";
 
-                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 2 }));
-                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
-
+                InformCaregivers(userURIPath, "steps", "high", caregiverMsg, caregiverDescription);
             }
             else if(userStepCount < 2000 ){
 
-                var endUserMsg = string.Format("Hey Jim! Your number of steps for today is quite low: {0}.", userStepCount);
-                storeAPI.PushJournalEntry(userURIPath, "steps", "medium", endUserMsg, "Why not take a short walk?");
-
-
-                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = endUserMsg, user_id = 2 }));
+                var endUserMsg = string.Format("Hey! Your number of steps for today is quite low: {0}.", userStepCount);
+                InformUser(userURIPath, "steps", "medium", endUserMsg, "Why not take a short walk?" );
             }
             else if(userStepCount > 6000) {
                 
-                var endUserMsg = string.Format("Hey Jim! Good job, today you made {0} steps.", userStepCount);
-                storeAPI.PushJournalEntry(userURIPath, "steps", "low", endUserMsg, "");
-                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = endUserMsg, user_id = 2 }));
+                var endUserMsg = string.Format("Hey! Good job, today you made {0} steps.", userStepCount);                        
+                InformUser(userURIPath, "steps", "low", endUserMsg, string.Format("Today you made {0} steps.", userStepCount));
             }
                 
         }
 
-        private void AnalyzePulseValue(int val, int min, int midLow, int midHigh, int max)
+        private void AnalyzePulseValue(int val, int min, int midLow, int midHigh, int max, string END_USER_URI)
         {
-            // TODO: This will have to change to dynamic handling of end-user and caregiver URIs, as obtained from the measurement that is actually being handled.
-            string END_USER_URI = "/api/v1/user/2/";
-            string CAREGIVER_URI = "/api/v1/user/3/";
 
-            // then perform detailed analysis to generate alerts if needed
             if (val < min)
             {
                 var endUserMsg = string.Format("Hey Jim! Your heart rate is quite low: {0}.", val);
@@ -471,13 +453,9 @@ namespace DSS.FuzzyInference
                 var endUserDescription = "I have contacted your caregiver.";
                 var caregiverDescription = "Please take action now!";
 
-                // insert journal entry for end-user
-                storeAPI.PushJournalEntry(END_USER_URI, "heart", "high", endUserMsg, endUserDescription);
-                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = endUserMsg, user_id = 2 }));
-
-                // insert journal entry for caregiver
-                storeAPI.PushJournalEntry(CAREGIVER_URI, "heart", "high", caregiverMsg, caregiverDescription);
-                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
+                InformUser(END_USER_URI, "heart", "high", endUserMsg, endUserDescription);
+                InformCaregivers(END_USER_URI, "heart", "high", caregiverMsg, caregiverDescription);
+            
             }
             else if (val < midLow)
             {
@@ -487,15 +465,10 @@ namespace DSS.FuzzyInference
                 var endUserDescription = "How about some exercise?";
                 var caregiverDescription = "Please make sure he's all right.";
 
-                // insert journal entry for end-user
-                storeAPI.PushJournalEntry(END_USER_URI, "heart", "medium", endUserMsg, endUserDescription);
-                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = endUserMsg, user_id = 2 }));
+                InformUser(END_USER_URI, "heart", "medium", endUserMsg, endUserDescription);
+                InformCaregivers(END_USER_URI, "heart", "medium", caregiverMsg, caregiverDescription);
 
-                // insert journal entry for caregiver
-                storeAPI.PushJournalEntry(CAREGIVER_URI, "heart", "medium", caregiverMsg, caregiverDescription);
-                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
             }
-
             if (val > max)
             {
                 var endUserMsg = string.Format("Hey Jim! Your heart rate is quite high: {0}.", val);
@@ -504,14 +477,9 @@ namespace DSS.FuzzyInference
                 var endUserDescription = "I have contacted your caregiver.";
                 var caregiverDescription = "Please take action now!";
 
-                // insert journal entry for end-user
-                storeAPI.PushJournalEntry(END_USER_URI, "heart", "high", endUserMsg, endUserDescription);
-                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = endUserMsg, user_id = 2 }));
-
-                // insert journal entry for caregiver
-                storeAPI.PushJournalEntry(CAREGIVER_URI, "heart", "high", caregiverMsg, caregiverDescription);
-                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
-            }
+                InformUser(END_USER_URI, "heart", "high", endUserMsg, endUserDescription);
+                InformCaregivers(END_USER_URI, "heart", "high", caregiverMsg, caregiverDescription);
+             }
             else if (val > midHigh)
             {
                 var endUserMsg = string.Format("Hey Jim! Your heart rate is just a bit high: {0}.", val);
@@ -520,13 +488,9 @@ namespace DSS.FuzzyInference
                 var endUserDescription = "Why not rest for a bit?";
                 var caregiverDescription = "Please make sure he's alright.";
 
-                // insert journal entry for end-user
-                storeAPI.PushJournalEntry(END_USER_URI, "heart", "medium", endUserMsg, endUserDescription);
-                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = endUserMsg, user_id = 2 }));
+                InformUser(END_USER_URI, "heart", "medium", endUserMsg, endUserDescription);
+                InformCaregivers(END_USER_URI, "heart", "medium", caregiverMsg, caregiverDescription);
 
-                // insert journal entry for caregiver
-                storeAPI.PushJournalEntry(CAREGIVER_URI, "heart", "medium", caregiverMsg, caregiverDescription);
-                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = caregiverMsg, user_id = 3 }));
             }
         }
 	}

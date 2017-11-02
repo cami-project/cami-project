@@ -98,7 +98,12 @@ namespace DSS.RMQ.INS
 			//Console.WriteLine("INSERT NOTIFICATION:" + response.Result);
 			Console.WriteLine("Notification inserted");
 
-
 		} 
+
+        public void InsertPushNotification(string msg, int userId){
+        
+            InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = msg, user_id = userId }));
+
+        }
 	}
 }
