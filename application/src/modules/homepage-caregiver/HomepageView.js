@@ -51,7 +51,7 @@ const HomepageView = React.createClass({
           >
             <Image style={styles.avatar} source={require('../../../images/old-man.jpg')}/>
             <View style={styles.headerTextContainer}>
-              <Text style={[styles.headerText, {fontWeight: 'bold'}]}>{'Jim'}</Text>
+              <Text style={[styles.headerText, {fontWeight: 'bold'}]}>{'Your loved one'}</Text>
               <Text style={[styles.headerText, {fontSize: 18}]}>
                 {
                   !this.props.actionability.get('visible')

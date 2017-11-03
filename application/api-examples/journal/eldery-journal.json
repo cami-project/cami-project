@@ -3,49 +3,49 @@
     "type": "weight",
     "status": "warning",
     "timestamp": 1468753380,
-    "title": "Jim has lost weight for 5 days in a row.",
+    "title": "Your loved one has lost weight for 5 days in a row.",
     "message": "He has been reminded to have a more consistent breakfast and he confirmed."
   }, {
     "type": "heart",
     "status": "ok",
     "timestamp": 1468742400,
-    "title": "It's time for Jim to take his Accupril medicine.",
+    "title": "It's time for your loved one to take his Accupril medicine.",
     "message": "He has been reminded reminded a second time to take 1 pill and he confirmed."
   }, {
     "type": "sleep",
     "status": "wakeup",
     "timestamp": 1468742400,
-    "title": "Jim woke up.",
+    "title": "Your loved one just woke up.",
     "message": ""
   }, {
     "type": "heart",
     "status": "warning",
     "timestamp": 1468700100,
-    "title": "Jim is still awake and his heartrate is rising.",
+    "title": "Your love one is still awake and his heartrate is rising.",
     "message": ""
   }, {
     "type": "sleep",
     "status": "wakeup",
     "timestamp": 1468653720,
-    "title": "Jim woke up.",
+    "title": "Your loved one just woke up.",
     "message": ""
   }, {
     "type": "sleep",
     "status": "wakeup",
     "timestamp": 1468565220,
-    "title": "Jim woke up.",
+    "title": "Your loved one just woke up.",
     "message": ""
   }, {
     "type": "sleep",
     "status": "wakeup",
     "timestamp": 1468478820,
-    "title": "Jim woke up.",
+    "title": "Your loved one just woke up.",
     "message": ""
   }, {
     "type": "sleep",
     "status": "wakeup",
     "timestamp": 1468390200,
-    "title": "Jim woke up.",
+    "title": "Your loved one just woke up.",
     "message": ""
   }]
 }

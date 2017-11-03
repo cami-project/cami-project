@@ -5,7 +5,7 @@ import store from '../../redux/store';
 import moment from 'moment';
 import * as env from '../../../env';
 
-var json = require('../../../api-examples/homepage/severity.medium.json');
+var json = require('../../../api-examples/homepage/default-severity.medium.json');
 
 // Initial state
 const initialState = Map({

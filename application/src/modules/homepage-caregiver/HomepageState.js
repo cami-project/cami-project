@@ -106,7 +106,7 @@ async function fetchPageData() {
 
         result.notification = {
           id: receivedNotification.id,
-          name: "Jim",
+          name: "Loved one",
           icon: icons[receivedNotification.type],
           timestamp: parseInt(receivedNotification.timestamp),
           message: receivedNotification.message,

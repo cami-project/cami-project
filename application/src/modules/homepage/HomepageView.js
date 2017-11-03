@@ -230,7 +230,7 @@ const HomepageView = React.createClass({
         >
           <View style={styles.textContainer}>
             <Text style={[styles.text, {fontWeight: 'bold'}]}>
-              Hey Jim
+              Hello!
             </Text>
             <Text style={[styles.text, {paddingTop: 20}]}>
               {this.props.notification.get('message')}
