@@ -1,8 +1,8 @@
 {
   "notification": {
-     "description":"Welcome to the CAMI iOS app!",
+     "description":"",
      "id":87,
-     "message":"The gateway to the CAMI Cloud.",
+     "message":"Welcome to CAMI",
      "reference_id":null,
      "resource_uri":"/api/v1/journal_entries/87/",
      "severity":"medium",
