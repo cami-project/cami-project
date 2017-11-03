@@ -29,7 +29,6 @@ namespace DSS.FuzzyInference
 
 
             userReminderMap = new Dictionary<string, dynamic>();
-            userCareGiversMap = new Dictionary<string, int[]>();
 
 
             LibratoSettings.Settings.Username = "proiect.cami@gmail.com";
@@ -40,8 +39,24 @@ namespace DSS.FuzzyInference
             MetricsPublisher.Start();
 
         }
+        private void InformCaregivers(string enduserURI, string type, string severity, string msg, string desc)
+        {
+            var caregivers = storeAPI.GetCaregivers(enduserURI);
 
+            foreach (string caregiverURIPath in caregivers)
+            {
+                int caregiverID = GetIdFromURI(caregiverURIPath);
 
+                storeAPI.PushJournalEntry(caregiverURIPath, type, severity, msg, desc);
+                insertionAPI.InsertPushNotification(msg, caregiverID);
+            }
+
+        }
+        private int GetIdFromURI(string uri)
+        {
+            var idStr = uri.TrimEnd('/').Split('/').Last();
+            return Int32.Parse(idStr);
+        }
 
         public void Handle(string json)
         {
@@ -66,7 +81,6 @@ namespace DSS.FuzzyInference
 
                     Console.WriteLine("reminder sent entered");
 
-                    userCareGiversMap.Add(key, reminder.content.value.journal.id_caregivers.ToObject<int[]>());
 
                     //Check if reminder is acknowledged after 6 mins
                     var aTimer = new System.Timers.Timer(WAIT_MS);
@@ -76,26 +90,12 @@ namespace DSS.FuzzyInference
                     {
                         //This is in case user didn't respond 
                         if(userReminderMap[key].content.name == "reminder_sent"){
-
-
-                           // MetricsPublisher.Current.Annotate();
+                            
                             MetricsPublisher.Current.Increment("cami.event.reminder.ignored", 1);
-
-
                             Console.WriteLine("Reminder wasn't acknowledged after 6 min");
 
-
-                            //TODO: Change this with the impelemntation done in MeasurementHandler
-                            foreach (int item in userCareGiversMap[key])
-                            {
-                                insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = "Jim didn't respond to the reminder!", user_id = item }));
-                                storeAPI.PushJournalEntry("/api/v1/user/" + item + "/", "reminder", "high", "Jim didn't respond to the reminder!", "Jim didn't respond to the reminder!");
-
-                                Console.WriteLine("sending notification and journal entry for " + item);
-                            }
-
+                            InformCaregivers(key, "reminder", "high", "Your loved one didn't respond to the reminder", "Your loved one didn't respond to the reminder");
                             userReminderMap.Remove(key);
-                            userCareGiversMap.Remove(key);
                         }
                     };
                 }
@@ -138,37 +138,23 @@ namespace DSS.FuzzyInference
                                 if(!storeAPI.CheckForMeasuremntInLastNMinutes(journalEntry.type, 6, int.Parse(key)))
                                 {
                                     Console.WriteLine("Blood pressure wasn't measured");
-
-                                    foreach (int item in userCareGiversMap[key])
-                                    {
-                                        insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = "Jim didn't respond to the reminder!", user_id = item }));
-                                        storeAPI.PushJournalEntry("/api/v1/user/" + item + "/", "reminder", "high", "Jim didn't respond to the reminder!", "Jim didn't respond to the reminder!");
-                                    }
+                                    InformCaregivers(key, "reminder", "high", "Your loved one didn't measure the blood pressure", "Your loved one didn't measure the blood pressure");
                                 }
                             };
                         }
 
                         userReminderMap.Remove(key);
-                        userCareGiversMap.Remove(key);
 
                     }
                     else {
 
                         MetricsPublisher.Current.Increment("cami.event.reminder.snoozed", 1);
 
-
                         Console.WriteLine("Reminder snoozed");
-
-                        foreach (int item in userCareGiversMap[key])
-                        {
-                            insertionAPI.InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = "Jim postponed the reminder!", user_id = item }));
-                            storeAPI.PushJournalEntry("/api/v1/user/" + item + "/", "reminder", "high", "Jim postponed the reminder!", "Jim postponed the reminder!");
-
-                        }
+                        InformCaregivers(key, "reminder", "high", "Your loved one postpone the reminder", "Your loved one postpone the reminder");
 
                         userReminderMap.Remove(key);
-                        userCareGiversMap.Remove(key);
-                        
+
                     }
                 }
             }

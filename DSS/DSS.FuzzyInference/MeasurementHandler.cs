@@ -148,7 +148,7 @@ namespace DSS.FuzzyInference
 
             stepCountAnalysisTimers = new Dictionary<string, Timer>();
         }
-
+        //TODO: Make this a util methods since it's inside of a two files
         private void InformCaregivers(string enduserURI, string type, string severity, string msg, string desc ) 
         {
             var caregivers = storeAPI.GetCaregivers(enduserURI);
@@ -162,6 +162,8 @@ namespace DSS.FuzzyInference
             }
 
         }
+
+
 
         private void InformUser(string enduserURI, string type, string severity, string msg, string desc)
         {
@@ -209,7 +211,7 @@ namespace DSS.FuzzyInference
                         var endUserMsg = string.Format("There's a decrease of {0} kg in your weight.", Math.Floor(Math.Abs(val - kg)));
                         var endUserDescription = "Please take your meals regularly.";
 
-                        var caregiverMsg = string.Format("Jim lost {0} kg.", Math.Floor(Math.Abs(val - kg)));
+                        var caregiverMsg = string.Format("Your loved one lost {0} kg.", Math.Floor(Math.Abs(val - kg)));
                         var caregiverDescription = "You can contact him and see what's wrong.";
 
 
@@ -223,7 +225,7 @@ namespace DSS.FuzzyInference
                         var endUserMsg = string.Format("There's an increase of {0} kg in your weight.", Math.Floor(Math.Abs(val - kg)));
                         var endUserDescription = "Please be careful with your meals.";
 
-                        var caregiverMsg = string.Format("Jim gained {0} kg.", Math.Floor(Math.Abs(val - kg)));
+                        var caregiverMsg = string.Format("Your loved one gained {0} kg.", Math.Floor(Math.Abs(val - kg)));
                         var caregiverDescription = "Please check if this has to do with his diet.";
 
                         InformUser(END_USER_URI, "weight", "medium", endUserMsg, endUserDescription);
@@ -418,7 +420,7 @@ namespace DSS.FuzzyInference
 
             if(userStepCount < 1000){
              
-                var caregiverMsg = string.Format("Jim's made only {0} steps today.", userStepCount);
+                var caregiverMsg = string.Format("Hey! You made only {0} steps today.", userStepCount);
                 var caregiverDescription = "Your loved one has walked very few steps today. Call them to ask they move more.";
 
                 InformCaregivers(userURIPath, "steps", "high", caregiverMsg, caregiverDescription);
@@ -441,8 +443,8 @@ namespace DSS.FuzzyInference
 
             if (val < min)
             {
-                var endUserMsg = string.Format("Hey Jim! Your heart rate is quite low: {0}.", val);
-                var caregiverMsg = string.Format("Jim's heart rate is dangerously low: only {0}.", val);
+                var endUserMsg = string.Format("Hey! Your heart rate is quite low: {0}.", val);
+                var caregiverMsg = string.Format("Your loved ones's heart rate is dangerously low: only {0}.", val);
 
                 var endUserDescription = "I have contacted your caregiver.";
                 var caregiverDescription = "Please take action now!";
@@ -453,8 +455,8 @@ namespace DSS.FuzzyInference
             }
             else if (val < midLow)
             {
-                var endUserMsg = string.Format("Hey Jim! Your heart rate is just a bit low: {0}.", val);
-                var caregiverMsg = string.Format("Jim's heart rate is a bit low: only {0}.", val);
+                var endUserMsg = string.Format("Hey! Your heart rate is just a bit low: {0}.", val);
+                var caregiverMsg = string.Format("Your loved ones's heart rate is a bit low: only {0}.", val);
 
                 var endUserDescription = "How about some exercise?";
                 var caregiverDescription = "Please make sure he's all right.";
@@ -465,8 +467,8 @@ namespace DSS.FuzzyInference
             }
             if (val > max)
             {
-                var endUserMsg = string.Format("Hey Jim! Your heart rate is quite high: {0}.", val);
-                var caregiverMsg = string.Format("Jim's heart rate is dangerously high: over {0}.", val);
+                var endUserMsg = string.Format("Hey! Your heart rate is quite high: {0}.", val);
+                var caregiverMsg = string.Format("Your loved one's heart rate is dangerously high: over {0}.", val);
 
                 var endUserDescription = "I have contacted your caregiver.";
                 var caregiverDescription = "Please take action now!";
@@ -476,8 +478,8 @@ namespace DSS.FuzzyInference
              }
             else if (val > midHigh)
             {
-                var endUserMsg = string.Format("Hey Jim! Your heart rate is just a bit high: {0}.", val);
-                var caregiverMsg = string.Format("Jim's heart rate is a bit high: over {0}.", val);
+                var endUserMsg = string.Format("Hey! Your heart rate is just a bit high: {0}.", val);
+                var caregiverMsg = string.Format("Your loved one's heart rate is a bit high: over {0}.", val);
 
                 var endUserDescription = "Why not rest for a bit?";
                 var caregiverDescription = "Please make sure he's alright.";
