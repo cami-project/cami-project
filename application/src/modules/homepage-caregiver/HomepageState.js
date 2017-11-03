@@ -64,6 +64,8 @@ export async function requestCaregiverData() {
 async function fetchPageData() {
   // getting the user id from state after auth0 signin
   var user_id = store.getState().get('auth').get('currentUser').get('userMetadata').get('user_id');
+  // getting the elder's id that's associated w/ the current caregiver
+  var elder_id = store.getState().get('auth').get('currentUser').get('userMetadata').get('elder_id');
   var notificationsUrl = env.NOTIFICATIONS_REST_API + "?user=" + user_id;
   // override caching issues
   notificationsUrl += '&r=' + Math.floor(Math.random() * 10000);
@@ -126,28 +128,35 @@ async function fetchPageData() {
         result.hasNotification = true;
       }
 
-      var weightApiUrl = env.WEIGHT_MEASUREMENTS_LAST_VALUES;
-      var heartRateApiUrl = env.HEARTRATE_MEASUREMENTS_LAST_VALUES;
-      var stepsCountApiUrl = env.STEPS_MEASUREMENTS_LAST_VALUES + '?units=7&resolution=days';
-      var activitiesApiUrl = env.ACTIVITIES_LAST_EVENTS;
+      var weightApiUrl = env.WEIGHT_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id;
+      var heartRateApiUrl = env.HEARTRATE_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id;
+      var stepsCountApiUrl = env.STEPS_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id + '&units=7&resolution=days';
+      var activitiesApiUrl = env.ACTIVITIES_LAST_EVENTS + '?user=' + user_id;
 
       return fetch(activitiesApiUrl).then((response) => response.json())
         .then((activitiesJson) => {
+
+          console.log('[HomepageState] - Activities Payload: ' + JSON.stringify(activitiesJson));
           result.lastActivities = activitiesJson;
 
           return fetch(weightApiUrl).then((response) => response.json())
             .then((weightsJson) => {
+
+              console.log('[HomepageState] - Weight Payload: ' + JSON.stringify(weightsJson));
               result.weight = weightsJson.weight;
 
               return fetch(heartRateApiUrl).then((response) => response.json())
                 .then((heartRateJson) => {
+
+                  console.log('[HomepageState] - Heart Rate Payload: ' + JSON.stringify(heartRateJson));
                   result.heart_rate = heartRateJson.heart_rate;
 
                   return fetch(stepsCountApiUrl).then((response) => response.json())
                     .then((stepsCountJson) => {
                       result.steps = stepsCountJson.steps;
 
-                      console.log('[HomepageState] - successfully fetched [caregiver] data');
+                      console.log('[HomepageState] - Steps Count Payload: ' + JSON.stringify(stepsCountJson));
+                      console.log('[HomepageState] - Successfully fetched the [caregiver] data');
 
                       return result;
 
