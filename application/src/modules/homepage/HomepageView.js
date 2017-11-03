@@ -281,18 +281,18 @@ const styles = StyleSheet.create({
   },
   outerRing: {
     borderWidth: 2,
-    borderRadius: 90,
-    width: 180,
-    height: 180,
+    borderRadius: 75,
+    width: 150,
+    height: 150,
     borderColor: Color('white').clearer(.75).rgbaString(),
     marginBottom: -75,
     justifyContent: 'center'
   },
   iconRing: {
     borderWidth: 0,
-    borderRadius: 75,
-    width: 150,
-    height: 150,
+    borderRadius: 65,
+    width: 130,
+    height: 130,
     backgroundColor: Color('white').clearer(.05).rgbaString(),
     alignSelf: 'center',
     justifyContent: 'center'
@@ -302,12 +302,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 4,
     backgroundColor: 'transparent',
-    marginTop: 50
+    marginTop: 150,
+    justifyContent: 'flex-end'
   },
   textContainer: {
     paddingTop: 40,
     width: variables.dimensions.width*.8,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginBottom: 160,
   },
   text: {
     fontSize: 26,
@@ -320,7 +322,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: variables.dimensions.width*.8,
     position: 'absolute',
-    bottom: variables.dimensions.width*.1,
+    bottom: variables.dimensions.height*.005,
     left: variables.dimensions.width*.1
   }
 });
