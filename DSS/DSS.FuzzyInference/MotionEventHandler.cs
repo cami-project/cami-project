@@ -104,7 +104,7 @@ namespace DSS.FuzzyInference
                                     {
                                         // just mark as latest activation
                                         Console.WriteLine("[MotionEventHandler] Motion event not within morning limits " + dtime.ToString());
-                                        lastActivationMap.Add(userURIPath, timestamp);
+                                        lastActivationMap[userURIPath] = timestamp;
                                     }
 
                                 }
