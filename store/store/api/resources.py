@@ -337,12 +337,30 @@ class ActivityResource(ModelResource):
         date_start = datetime.datetime.now() - datetime.timedelta(days=7)
         date_end = datetime.datetime.now() + datetime.timedelta(days=7)
 
-        last_activities = Activity.objects.all().filter(
-            start__gte=time.mktime(date_start.timetuple()),
-            end__lte=time.mktime(date_end.timetuple())
-        ).order_by('start')
+        user_id = None
+        if "user" in request.GET:
+            user_id = int(request.GET["user"])
+        elif "user" in kwargs:
+            user_id = int(kwargs["user"])
 
-        return self.create_response(request, list(last_activities.values()))
+
+        if user_id:
+            last_activities = Activity.objects.all().filter(
+                user=user_id,
+                start__gte=time.mktime(date_start.timetuple()),
+                end__lte=time.mktime(date_end.timetuple())
+            ).order_by('start')
+
+            return self.create_response(request, list(last_activities.values()))
+        else:
+            last_activities = Activity.objects.all().filter(
+                start__gte=time.mktime(date_start.timetuple()),
+                end__lte=time.mktime(date_end.timetuple())
+            ).order_by('start')
+
+            return self.create_response(request, list(last_activities.values()))
+
+
 
 
 class JournalEntryResource(ModelResource):
