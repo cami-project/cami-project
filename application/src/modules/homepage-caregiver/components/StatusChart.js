@@ -75,26 +75,37 @@ const StatusChart = React.createClass({
             <Icon name={this.props.icon} size={34} color={variables.colors.status[this.props.status]}/>
           </View>
           <View style={chartStyles.infoContainer}>
-            <Text style={chartStyles.value}>
-              {
-                this.props.decimals > 0
-                  ? currentValue.toFixed(this.props.decimals)
-                  : currentValue
-              } <Text style={chartStyles.unit}>{this.props.unit}</Text>
-            </Text>
+            {
+              this.props.data.size > 0 ?
+                <Text style={chartStyles.value}>
+                  {
+                    this.props.decimals > 0
+                      ? currentValue.toFixed(this.props.decimals)
+                      : currentValue
+                  } <Text style={chartStyles.unit}>{this.props.unit}</Text>
+                </Text>
+                :
+                <Text style={chartStyles.value}>
+                  <Text>N/A</Text> <Text style={chartStyles.unit}>{this.props.unit}</Text>
+                </Text>
+            }
             <Text style={chartStyles.description}>{this.props.text}</Text>
           </View>
         </View>
         <View style={chartStyles.chartContainer}>
-          <Chart
-            style={chartStyles.chart}
-            data={arrayData}
-            type="line"
-            showGrid={false}
-            showAxis={false}
-            color="#999999"
-            lineWidth={2}
-          />
+          {
+            this.props.data.size > 0 ?
+              <Chart
+                style={chartStyles.chart}
+                data={arrayData}
+                type="line"
+                showGrid={false}
+                showAxis={false}
+                color="#999999"
+                lineWidth={2}
+              />
+              : <Text style={chartStyles.description}>No weight information</Text>
+          }
         </View>
       </View>
     );
