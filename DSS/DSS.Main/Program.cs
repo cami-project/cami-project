@@ -26,6 +26,7 @@ namespace DSS.Main
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...");
 
+
 			IRouterHandler[] handlers =
             {
                 new EventsHandler(),

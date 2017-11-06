@@ -138,11 +138,14 @@ namespace DSS.FuzzyInference
 
         private void SendBPMeasurementNotification(string userURIPath)
         {
-            string enduser_msg = "Time for your morning blood pressure measurement!";
-            string enduser_desc = "Please take your blood pressure. Follow the instructions from the web interface on how to do so.";
 
-            string caregiver_msg = "Reminder for morning blood pressure measurement sent!";
-            string caregiver_desc = "Please check on your loved one to see that he took the recommended BP measurement.";
+            var LANG = "EN";
+
+            string enduser_msg = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.USR);
+            string enduser_desc =  Loc.Get(LANG, Loc.DES, Loc.REMINDER_SENT, Loc.USR);
+
+            string caregiver_msg = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.CAREGVR);
+            string caregiver_desc = Loc.Get(LANG, Loc.DES, Loc.REMINDER_SENT, Loc.CAREGVR);
 
             string notification_type = "medication";
 
