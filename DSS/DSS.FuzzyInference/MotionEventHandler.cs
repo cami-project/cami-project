@@ -69,12 +69,13 @@ namespace DSS.FuzzyInference
                                     // get localized datetime
                                     TimeZoneInfo localTz = TimeZoneInfo.FindSystemTimeZoneById(userLocales.Item2);
                                     DateTime dtime = UnixTimeStampToDateTime(timestamp, localTz);
+                                    DateTime currentTime = UnixTimeStampToDateTime((long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds, localTz);
 
                                     // get morning limits
                                     Tuple<DateTime, DateTime> morningLimits = getMorningLimits(localTz);
 
                                     // check if current dtime is within limits
-                                    if (dtime >= morningLimits.Item1 && dtime <= morningLimits.Item2)
+                                    if (dtime >= morningLimits.Item1 && currentTime >= morningLimits.Item1 && dtime <= morningLimits.Item2 && currentTime <= morningLimits.Item2)
                                     {
                                         if (lastActivationMap.ContainsKey(userURIPath))
                                         {
@@ -103,7 +104,7 @@ namespace DSS.FuzzyInference
                                     {
                                         // just mark as latest activation
                                         Console.WriteLine("[MotionEventHandler] Motion event not within morning limits " + dtime.ToString());
-                                        lastActivationMap.Add(userURIPath, timestamp);
+                                        lastActivationMap[userURIPath] = timestamp;
                                     }
 
                                 }
