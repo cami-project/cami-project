@@ -169,7 +169,7 @@ namespace DSS.FuzzyInference
         {
 
             storeAPI.PushJournalEntry(enduserURI, type,severity, msg, desc);
-            insertionAPI.InsertPushNotification(enduserURI, GetIdFromURI(enduserURI));
+            insertionAPI.InsertPushNotification(msg, GetIdFromURI(enduserURI));
 
         }
 
@@ -359,9 +359,9 @@ namespace DSS.FuzzyInference
 
             if (!stepCountAnalysisTimers.ContainsKey(key))
             {
-                // set the moment to run the timer at 19:00 localized time
+                // set the moment to run the timer at 18:00 localized time
                 // TODO
-                var localHour = 19;
+                var localHour = 18;
                 var localMin = 0;
 
 				// TODO: add the recurring Timer to the dictionary
@@ -387,8 +387,9 @@ namespace DSS.FuzzyInference
             if (time < DateTime.UtcNow)
                 return;
             
-            var interval = (time - DateTime.UtcNow).TotalMilliseconds;
-            Console.WriteLine("Interval until the next invication :" + interval);
+            //var interval = (time - DateTime.UtcNow).TotalMilliseconds;
+            var interval = 600000;
+            Console.WriteLine("Interval until the next indication :" + interval);
 
             timer.Interval = interval;
             timer.Enabled = true;

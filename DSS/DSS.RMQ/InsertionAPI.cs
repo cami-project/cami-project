@@ -103,7 +103,7 @@ namespace DSS.RMQ.INS
         public void InsertPushNotification(string msg, int userId){
         
             InsertPushNotification(JsonConvert.SerializeObject(new DSS.RMQ.INS.PushNotification() { message = msg, user_id = userId }));
-
+            Console.WriteLine("Notification with message: " + msg + " inserted for user: " + userId);
         }
 	}
 }
