@@ -60,6 +60,8 @@ namespace DSS.FuzzyInference
 
         public void Handle(string json)
         {
+
+
             Console.WriteLine("Reminder invoked...");
 
             var reminder = JsonConvert.DeserializeObject<dynamic>(json);
@@ -67,6 +69,7 @@ namespace DSS.FuzzyInference
             if(reminder.category.ToString().ToLower() == "user_notifications"){
                 
                 var key = reminder.content.value.user.id.ToString();
+                var LANG = storeAPI.GetLang(key);
 
                 if(userReminderMap.ContainsKey(key)){
 
@@ -94,7 +97,7 @@ namespace DSS.FuzzyInference
                             MetricsPublisher.Current.Increment("cami.event.reminder.ignored", 1);
                             Console.WriteLine("Reminder wasn't acknowledged after 6 min");
 
-                            InformCaregivers(key, "reminder", "high", "Your loved one didn't respond to the reminder", "Your loved one didn't respond to the reminder");
+                            InformCaregivers(key, "reminder", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_IGNORED, Loc.CAREGVR));
                             userReminderMap.Remove(key);
                         }
                     };
@@ -138,7 +141,7 @@ namespace DSS.FuzzyInference
                                 if(!storeAPI.CheckForMeasuremntInLastNMinutes(journalEntry.type, 6, int.Parse(key)))
                                 {
                                     Console.WriteLine("Blood pressure wasn't measured");
-                                    InformCaregivers(key, "reminder", "high", "Your loved one didn't measure the blood pressure", "Your loved one didn't measure the blood pressure");
+                                    InformCaregivers(key, "reminder", "high", Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR));
                                 }
                             };
                         }
@@ -151,7 +154,7 @@ namespace DSS.FuzzyInference
                         MetricsPublisher.Current.Increment("cami.event.reminder.snoozed", 1);
 
                         Console.WriteLine("Reminder snoozed");
-                        InformCaregivers(key, "reminder", "high", "Your loved one postpone the reminder", "Your loved one postpone the reminder");
+                        InformCaregivers(key, "reminder", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_POSTPONED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_POSTPONED, Loc.CAREGVR));
 
                         userReminderMap.Remove(key);
 

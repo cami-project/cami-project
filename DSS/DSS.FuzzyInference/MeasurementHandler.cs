@@ -180,8 +180,8 @@ namespace DSS.FuzzyInference
             var obj = JsonConvert.DeserializeObject<Measurement>(json, settings);
 			
             string END_USER_URI = obj.user;
-
             int userId = storeAPI.GetIdFromURI(obj.user);
+            var LANG = storeAPI.GetLang(obj.user);
 
             if (obj.measurement_type == "weight")
             {
@@ -202,37 +202,20 @@ namespace DSS.FuzzyInference
     				    obj.ok = true;
     				}
 
-
 				    storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
 
-                 
-                    if (trend == "down")
-                    {
-                        var endUserMsg = string.Format("There's a decrease of {0} kg in your weight.", Math.Floor(Math.Abs(val - kg)));
-                        var endUserDescription = "Please take your meals regularly.";
 
-                        var caregiverMsg = string.Format("Your loved one lost {0} kg.", Math.Floor(Math.Abs(val - kg)));
-                        var caregiverDescription = "You can contact him and see what's wrong.";
+                if(trend == "down" || trend == "up") {
 
+                    var category = trend == "up" ? Loc.WEIGHT_INC : Loc.WEIGHT_DEC;
 
-                        InformUser(END_USER_URI, "weight", "medium", endUserMsg, endUserDescription);
-                        InformCaregivers(END_USER_URI, "weight", "medium", caregiverMsg, caregiverDescription);
+                    var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, category, Loc.USR), Math.Floor(Math.Abs(val - kg)));
+                    var caregiverMsg = string.Format(Loc.Get(LANG, Loc.MSG, category, Loc.CAREGVR), Math.Floor(Math.Abs(val - kg)));
 
-         
-                    }
-                    else if (trend == "up")
-                    {
-                        var endUserMsg = string.Format("There's an increase of {0} kg in your weight.", Math.Floor(Math.Abs(val - kg)));
-                        var endUserDescription = "Please be careful with your meals.";
+                    InformUser(END_USER_URI, "weight", "medium", endUserMsg, Loc.Get(LANG, Loc.DES, category, Loc.USR));
+                    InformCaregivers(END_USER_URI, "weight", "medium", caregiverMsg, Loc.Get(LANG, Loc.DES, category, Loc.CAREGVR));
 
-                        var caregiverMsg = string.Format("Your loved one gained {0} kg.", Math.Floor(Math.Abs(val - kg)));
-                        var caregiverDescription = "Please check if this has to do with his diet.";
-
-                        InformUser(END_USER_URI, "weight", "medium", endUserMsg, endUserDescription);
-                        InformCaregivers(END_USER_URI, "weight", "medium", caregiverMsg, caregiverDescription);
-
-                    }
-
+                }
 
             }
             else if(obj.measurement_type == "pulse") 
@@ -359,9 +342,9 @@ namespace DSS.FuzzyInference
 
             if (!stepCountAnalysisTimers.ContainsKey(key))
             {
-                // set the moment to run the timer at 18:00 localized time
+                // set the moment to run the timer at 19:00 localized time
                 // TODO
-                var localHour = 18;
+                var localHour = 19;
                 var localMin = 0;
 
 				// TODO: add the recurring Timer to the dictionary
@@ -387,8 +370,8 @@ namespace DSS.FuzzyInference
             if (time < DateTime.UtcNow)
                 return;
             
-            //var interval = (time - DateTime.UtcNow).TotalMilliseconds;
-            var interval = 600000;
+            var interval = (time - DateTime.UtcNow).TotalMilliseconds;
+            //var interval = 600000;
             Console.WriteLine("Interval until the next indication :" + interval);
 
             timer.Interval = interval;
@@ -411,6 +394,8 @@ namespace DSS.FuzzyInference
 
         private void AnalyzeStepCount(string userURIPath)
         {
+            var LANG = storeAPI.GetLang(userURIPath);
+
             var now = DateTime.UtcNow;
             var startTs = (long)ChangeTime(now,0,0).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             var endTs = (long)now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds; ;
@@ -421,20 +406,18 @@ namespace DSS.FuzzyInference
 
             if(userStepCount < 1000){
              
-                var caregiverMsg = string.Format("Hey! You made only {0} steps today.", userStepCount);
-                var caregiverDescription = "Your loved one has walked very few steps today. Call them to ask they move more.";
-
-                InformCaregivers(userURIPath, "steps", "high", caregiverMsg, caregiverDescription);
+                var caregiverMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.STEPS_LESS_1000, Loc.CAREGVR), userStepCount);
+                InformCaregivers(userURIPath, "steps", "high", caregiverMsg, Loc.Get(LANG, Loc.DES, Loc.STEPS_LESS_1000, Loc.CAREGVR));
             }
             else if(userStepCount < 2000 ){
 
-                var endUserMsg = string.Format("Hey! Your number of steps for today is quite low: {0}.", userStepCount);
-                InformUser(userURIPath, "steps", "medium", endUserMsg, "Why not take a short walk?" );
+                var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.STEPS_BETWEEN_1000_2000, Loc.USR), userStepCount);
+                InformUser(userURIPath, "steps", "medium", endUserMsg, Loc.Get(LANG, Loc.DES, Loc.STEPS_BETWEEN_1000_2000, Loc.USR) );
             }
             else if(userStepCount > 6000) {
                 
-                var endUserMsg = string.Format("Hey! Good job, today you made {0} steps.", userStepCount);                        
-                InformUser(userURIPath, "steps", "low", endUserMsg, string.Format("Today you made {0} steps.", userStepCount));
+                var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.STEPS_BIGGER_6000, Loc.USR), userStepCount);
+                InformUser(userURIPath, "steps", "low", endUserMsg, string.Format(Loc.Get(LANG, Loc.DES, Loc.STEPS_BIGGER_6000, Loc.USR), userStepCount));
             }
                 
         }
@@ -442,52 +425,39 @@ namespace DSS.FuzzyInference
         private void AnalyzePulseValue(int val, int min, int midLow, int midHigh, int max, string END_USER_URI)
         {
 
+            var LANG = storeAPI.GetLang(END_USER_URI);
+
             if (val < min)
             {
-                var endUserMsg = string.Format("Hey! Your heart rate is quite low: {0}.", val);
-                var caregiverMsg = string.Format("Your loved ones's heart rate is dangerously low: only {0}.", val);
+                var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_LOW, Loc.USR), val);
+                var caregiverMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_LOW, Loc.CAREGVR), val);
 
-                var endUserDescription = "I have contacted your caregiver.";
-                var caregiverDescription = "Please take action now!";
-
-                InformUser(END_USER_URI, "heart", "high", endUserMsg, endUserDescription);
-                InformCaregivers(END_USER_URI, "heart", "high", caregiverMsg, caregiverDescription);
-            
+                InformUser(END_USER_URI, "heart", "high", endUserMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_LOW, Loc.USR));
+                InformCaregivers(END_USER_URI, "heart", "high", caregiverMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_LOW, Loc.CAREGVR));
             }
             else if (val < midLow)
             {
-                var endUserMsg = string.Format("Hey! Your heart rate is just a bit low: {0}.", val);
-                var caregiverMsg = string.Format("Your loved ones's heart rate is a bit low: only {0}.", val);
+                var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_MID_LOW, Loc.USR), val);
+                var caregiverMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_MID_LOW, Loc.CAREGVR), val);
 
-                var endUserDescription = "How about some exercise?";
-                var caregiverDescription = "Please make sure he's all right.";
-
-                InformUser(END_USER_URI, "heart", "medium", endUserMsg, endUserDescription);
-                InformCaregivers(END_USER_URI, "heart", "medium", caregiverMsg, caregiverDescription);
-
+                InformUser(END_USER_URI, "heart", "medium", endUserMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_MID_LOW, Loc.USR));
+                InformCaregivers(END_USER_URI, "heart", "medium", caregiverMsg,Loc.Get(LANG, Loc.DES, Loc.PULSE_MID_LOW, Loc.CAREGVR));
             }
             if (val > max)
             {
-                var endUserMsg = string.Format("Hey! Your heart rate is quite high: {0}.", val);
-                var caregiverMsg = string.Format("Your loved one's heart rate is dangerously high: over {0}.", val);
+                var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_MEDIUM, Loc.USR), val);
+                var caregiverMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_MEDIUM, Loc.CAREGVR), val);
 
-                var endUserDescription = "I have contacted your caregiver.";
-                var caregiverDescription = "Please take action now!";
-
-                InformUser(END_USER_URI, "heart", "high", endUserMsg, endUserDescription);
-                InformCaregivers(END_USER_URI, "heart", "high", caregiverMsg, caregiverDescription);
+                InformUser(END_USER_URI, "heart", "high", endUserMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_MEDIUM, Loc.USR));
+                InformCaregivers(END_USER_URI, "heart", "high", caregiverMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_MEDIUM, Loc.CAREGVR));
              }
             else if (val > midHigh)
             {
-                var endUserMsg = string.Format("Hey! Your heart rate is just a bit high: {0}.", val);
-                var caregiverMsg = string.Format("Your loved one's heart rate is a bit high: over {0}.", val);
+                var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_HIGH, Loc.USR), val);
+                var caregiverMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_HIGH, Loc.CAREGVR), val);
 
-                var endUserDescription = "Why not rest for a bit?";
-                var caregiverDescription = "Please make sure he's alright.";
-
-                InformUser(END_USER_URI, "heart", "medium", endUserMsg, endUserDescription);
-                InformCaregivers(END_USER_URI, "heart", "medium", caregiverMsg, caregiverDescription);
-
+                InformUser(END_USER_URI, "heart", "medium", endUserMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_HIGH, Loc.USR));
+                InformCaregivers(END_USER_URI, "heart", "medium", caregiverMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_HIGH, Loc.CAREGVR));
             }
         }
 	}

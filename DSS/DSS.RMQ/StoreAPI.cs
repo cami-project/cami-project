@@ -181,6 +181,25 @@ namespace DSS.RMQ
         }
 
 
+        public string GetLang(string userURI) 
+        {
+            Console.WriteLine("Retrieving language for user: " + userURI);
+
+            var response = new HttpClient().GetAsync(url + userURI);
+
+            if (response.Result.IsSuccessStatusCode)
+            {
+                dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
+                return deserialized["enduser_profile"]["language"].ToString().ToUpper();
+
+            }
+            else
+            {
+                Console.WriteLine("Could not retrieve locales for user referenced by the URI " + (url + userURI) + ". Reason: " + response.Result);
+                return null;
+            }
+        }
+
         public Tuple<string, string> GetUserLocale(string userURIPath, int userID)
         {
             Dictionary<string, string> timezoneMap = new Dictionary<string, string>()
