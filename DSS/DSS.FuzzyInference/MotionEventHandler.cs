@@ -139,7 +139,7 @@ namespace DSS.FuzzyInference
         private void SendBPMeasurementNotification(string userURIPath)
         {
 
-            var LANG = "EN";
+            var LANG = storeAPI.GetLang(userURIPath);
 
             string enduser_msg = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.USR);
             string enduser_desc =  Loc.Get(LANG, Loc.DES, Loc.REMINDER_SENT, Loc.USR);

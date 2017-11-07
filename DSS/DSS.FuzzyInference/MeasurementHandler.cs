@@ -181,9 +181,7 @@ namespace DSS.FuzzyInference
 			
             string END_USER_URI = obj.user;
             int userId = storeAPI.GetIdFromURI(obj.user);
-
-
-            string LANG = "EN";
+            var LANG = storeAPI.GetLang(obj.user);
 
             if (obj.measurement_type == "weight")
             {
@@ -396,7 +394,7 @@ namespace DSS.FuzzyInference
 
         private void AnalyzeStepCount(string userURIPath)
         {
-            var LANG = "EN";
+            var LANG = storeAPI.GetLang(userURIPath);
 
             var now = DateTime.UtcNow;
             var startTs = (long)ChangeTime(now,0,0).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
@@ -427,7 +425,7 @@ namespace DSS.FuzzyInference
         private void AnalyzePulseValue(int val, int min, int midLow, int midHigh, int max, string END_USER_URI)
         {
 
-            var LANG = "EN";
+            var LANG = storeAPI.GetLang(END_USER_URI);
 
             if (val < min)
             {

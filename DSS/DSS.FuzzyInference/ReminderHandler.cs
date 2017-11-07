@@ -61,7 +61,6 @@ namespace DSS.FuzzyInference
         public void Handle(string json)
         {
 
-            var LANG = "EN";
 
             Console.WriteLine("Reminder invoked...");
 
@@ -70,6 +69,7 @@ namespace DSS.FuzzyInference
             if(reminder.category.ToString().ToLower() == "user_notifications"){
                 
                 var key = reminder.content.value.user.id.ToString();
+                var LANG = storeAPI.GetLang(key);
 
                 if(userReminderMap.ContainsKey(key)){
 
