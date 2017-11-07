@@ -236,8 +236,14 @@ namespace DSS.FuzzyInference
                 
 
                 storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
-                AnalyzePulseValue(val, min, midLow, midHigh, max, END_USER_URI);
 
+
+                DateTime pulseDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(obj.timestamp);
+
+                if( pulseDateTime.AddHours(1) > DateTime.UtcNow && pulseDateTime.Hour > 6) {
+
+                    AnalyzePulseValue(val, min, midLow, midHigh, max, END_USER_URI);
+                }
 
                 /*
                 if (val < min || val > max) 
