@@ -31,11 +31,11 @@ namespace DSS.FuzzyInference
 
             //STEPS
             { EN + MSG + STEPS_LESS_1000, "Low step count alert!" },
-            { EN + DES + STEPS_LESS_1000, "Your loved one has walked very few steps today. Call them to ask they move more." },
+            { EN + DES + STEPS_LESS_1000, "The person under your care has walked very few steps today. Call them to ask they move more." },
             { PL + MSG + STEPS_LESS_1000, "Alert o małej liczbie kroków!" },
             { PL + DES + STEPS_LESS_1000, "Osoba, którą się opiekujesz, zrobiła dziś niewielką liczbę kroków. Skontaktuj się z nią i poproś, żeby zrobiła ich więcej." },
             { RO + MSG + STEPS_LESS_1000, "Alerta numar de pasi scazut!" },
-            { RO + DES + STEPS_LESS_1000, "Persoana draga voua a facut un numar scazut de pasi astazi. Sunati pentru a o ruga sa fie mai activa." },
+            { RO + DES + STEPS_LESS_1000, "Persoana in grija dvs. a facut un numar scazut de pasi astazi. Sunati pentru a o ruga sa fie mai activa." },
             { DK + MSG + STEPS_LESS_1000, "Alarm - få skridt registreret!" },
             { DK + DES + STEPS_LESS_1000, "Vi har registreret et lavt aktivitetsniveau. Tag venligst kontakt og spørg ind." },
 
@@ -62,7 +62,7 @@ namespace DSS.FuzzyInference
             { EN + USR + MSG + REMINDER_SENT, "Time for your morning blood pressure measurement!" },
             { EN + USR + DES + REMINDER_SENT, "Please take your blood pressure before breakfast." },
             { EN + CAREGVR + MSG + REMINDER_SENT, "Reminder for morning blood pressure measurement sent!" },
-            { EN + CAREGVR + DES + REMINDER_SENT, "Check on your loved one to see that he took the recommended blood pressure measurement." },
+            { EN + CAREGVR + DES + REMINDER_SENT, "Check on the person under your care to see that he took the recommended blood pressure measurement." },
 
             { PL + USR + MSG + REMINDER_SENT, "Czas na Twój poranny pomiar ciśnienia!" },
             { PL + USR + DES + REMINDER_SENT, "Zmierz ciśnienie zanim zjesz śniadanie." },
@@ -72,7 +72,7 @@ namespace DSS.FuzzyInference
             { RO + USR + MSG + REMINDER_SENT, "E timpul pentru a-ti masura tensiunea de dimineata!" },
             { RO + USR + DES + REMINDER_SENT, "Te rugam sa-ti masori tensiunea inainte de micul dejun." },
             { RO + CAREGVR + MSG + REMINDER_SENT, "Notificare trimisa pentru masurarea tensiunii de dimineata!" },
-            { RO + CAREGVR + DES + REMINDER_SENT, "Verificati ca persoana draga voua sa efectueze masuratoarea de tensiune." },
+            { RO + CAREGVR + DES + REMINDER_SENT, "Verificati ca Persoana in grija dvs. sa efectueze masuratoarea de tensiune." },
 
             { DK + USR + MSG + REMINDER_SENT, "Det er tid til at tage din morgenmåling af blodtrykket!" },
             { DK + USR + DES + REMINDER_SENT, "Husk venligst at tage dit blodtryk før morgenmaden." },
@@ -81,33 +81,33 @@ namespace DSS.FuzzyInference
 
 
             //REMINDER-SNOOZED
-            { EN + CAREGVR + MSG + REMINDER_POSTPONED, "Your loved one postponed the blood pressure measurements." },
+            { EN + CAREGVR + MSG + REMINDER_POSTPONED, "The person under your care postponed the blood pressure measurements." },
             { EN + CAREGVR + DES + REMINDER_POSTPONED, "Please take action and call to remind them of the measurement." },
             { PL + CAREGVR + MSG + REMINDER_POSTPONED, "Osoba, którą się opiekujesz, przełożyła pomiar ciśnienia na później." },
             { PL + CAREGVR + DES + REMINDER_POSTPONED, "Skontaktuj się z nią i przypomnij o pomiarze." },
-            { RO + CAREGVR + MSG + REMINDER_POSTPONED, "Persoana draga voua a amanat masuratoarea de tensiune." },
+            { RO + CAREGVR + MSG + REMINDER_POSTPONED, "Persoana in grija dvs. a amanat masuratoarea de tensiune." },
             { RO + CAREGVR + DES + REMINDER_POSTPONED, "Va rugam sa sunati pentru a-i aduce aminte de masuratoare." },
             { DK + CAREGVR + MSG + REMINDER_POSTPONED, "Blodtryksmålingen blev udsat til et senere tidspunkt." },
             { DK + CAREGVR + DES + REMINDER_POSTPONED, "Vil du venligst ringe og give en påmindelse om målingen?" },
 
 
             //REMINDER IGNORED
-            { EN + CAREGVR + MSG + REMINDER_IGNORED, "Your loved one ignored the reminder for blood pressure measurement." },
+            { EN + CAREGVR + MSG + REMINDER_IGNORED, "The person under your care ignored the reminder for blood pressure measurement." },
             { EN + CAREGVR + DES + REMINDER_IGNORED, "Please take action and call to remind them of the measurement." },
             { PL + CAREGVR + MSG + REMINDER_IGNORED, "Osoba, którą się opiekujesz, zignorowała przypomnienie o pomiarze ciśnienia." },
             { PL + CAREGVR + DES + REMINDER_IGNORED, "Skontaktuj się z nią i przypomnij o pomiarze." },
-            { RO + CAREGVR + MSG + REMINDER_IGNORED, "Persoana draga voua a ignorat notificarea pentru masurarea tensiunii." },
+            { RO + CAREGVR + MSG + REMINDER_IGNORED, "Persoana in grija dvs. a ignorat notificarea pentru masurarea tensiunii." },
             { RO + CAREGVR + DES + REMINDER_IGNORED, "Va rugam sa sunati pentru a-i aduce aminte de masuratoare." },
             { DK + CAREGVR + MSG + REMINDER_IGNORED, "Påmindelsen om at tage blodtryksmålingen blev ignoreret." },
             { DK + CAREGVR + DES + REMINDER_IGNORED, "Vil du være så venlig at ringe og give en påmindelse om målingen?" },
 
 
             //MEASUREMENT IGNORED
-            { EN + CAREGVR + MSG + MEASUREMENT_IGNORED, "Your loved one did not take the blood pressure measurement." },
+            { EN + CAREGVR + MSG + MEASUREMENT_IGNORED, "The person under your care did not take the blood pressure measurement." },
             { EN + CAREGVR + DES + MEASUREMENT_IGNORED, "Please take action and call to remind them of the measurement." },
             { PL + CAREGVR + MSG + MEASUREMENT_IGNORED, "Osoba, którą się opiekujesz, nie zmierzyła ciśnienia." },
             { PL + CAREGVR + DES + MEASUREMENT_IGNORED, "Skontaktuj się z nią i przypomnij o pomiarze" },
-            { RO + CAREGVR + MSG + MEASUREMENT_IGNORED, "Persoana draga voua nu a efectuat masuratoarea de tensiune." },
+            { RO + CAREGVR + MSG + MEASUREMENT_IGNORED, "Persoana in grija dvs. nu a efectuat masuratoarea de tensiune." },
             { RO + CAREGVR + DES + MEASUREMENT_IGNORED, "Va rugam interveniti si sunati pentru a-i aduce aminte de acest lucru." },
             { DK + CAREGVR + MSG + MEASUREMENT_IGNORED, "Blodtryksmålingen blev ikke taget" },
             { DK + CAREGVR + DES + MEASUREMENT_IGNORED, "Vil du være så venlig at ringe og give en påmindelse om målingen?" },
@@ -115,7 +115,7 @@ namespace DSS.FuzzyInference
             //WEIGHT ANALYSIS - DEC
             { EN + USR + MSG + WEIGHT_DEC, "There's a decrease of {0} kg in your weight." },
             { EN + USR + DES + WEIGHT_DEC, "Please take your meals regularly." },
-            { EN + CAREGVR + MSG + WEIGHT_DEC, "Your loved one lost {0} kg." },
+            { EN + CAREGVR + MSG + WEIGHT_DEC, "The person under your care lost {0} kg." },
             { EN + CAREGVR + DES + WEIGHT_DEC, "You can contact him and see what's wrong." },
 
             { PL + USR + MSG + WEIGHT_DEC, "Twoja waga spadła o {0} kg" },
@@ -125,7 +125,7 @@ namespace DSS.FuzzyInference
 
             { RO + USR + MSG + WEIGHT_DEC, "Ai scazut {0} kg in greutate" },
             { RO + USR + DES + WEIGHT_DEC, "Te rugam sa mananci regulat." },
-            { RO + CAREGVR + MSG + WEIGHT_DEC, "Persoana draga voua a slabit {0} kg!" },
+            { RO + CAREGVR + MSG + WEIGHT_DEC, "Persoana in grija dvs. a slabit {0} kg!" },
             { RO + CAREGVR + DES + WEIGHT_DEC, "Va rugam contactati-o pentru a afla ce se intampla." },
 
             { DK + USR + MSG + WEIGHT_DEC, "Du har tabt dig {0} kg i vægt." },
@@ -136,7 +136,7 @@ namespace DSS.FuzzyInference
             // INC
             { EN + USR + MSG + WEIGHT_INC, "There's a increase of {0} kg in your weight." },
             { EN + USR + DES + WEIGHT_INC, "Please be careful with your meals." },
-            { EN + CAREGVR + MSG + WEIGHT_INC, "Your loved one gained {0} kg." },
+            { EN + CAREGVR + MSG + WEIGHT_INC, "The person under your care gained {0} kg." },
             { EN + CAREGVR + DES + WEIGHT_INC, "Please check if this has to do with his diet." },
 
             { PL + USR + MSG + WEIGHT_INC, "Twoja waga wzrosła o {0} kg." },
@@ -146,7 +146,7 @@ namespace DSS.FuzzyInference
 
             { RO + USR + MSG + WEIGHT_INC, "Ai luat {0} kg in greutate." },
             { RO + USR + DES + WEIGHT_INC, "Te rugam sa ai grija cu mesele." },
-            { RO + CAREGVR + MSG + WEIGHT_INC, "Persoana draga voua a luat {0} kg in greutate." },
+            { RO + CAREGVR + MSG + WEIGHT_INC, "Persoana in grija dvs. a luat {0} kg in greutate." },
             { RO + CAREGVR + DES + WEIGHT_INC, "Va rugam verificati daca este din cauza dietei." },
 
             { DK + USR + MSG + WEIGHT_INC, "Du har taget {0} kg på i væg" },
@@ -157,7 +157,7 @@ namespace DSS.FuzzyInference
             //PULSE LOW
             { EN + USR + MSG + PULSE_LOW, "Hey! Your heart rate is quite low: {0}." },
             { EN + USR + DES + PULSE_LOW, "I have contacted your caregiver." },
-            { EN + CAREGVR + MSG + PULSE_LOW, "Your loved ones's heart rate is dangerously low: only {0}!" },
+            { EN + CAREGVR + MSG + PULSE_LOW, "The heart rate of the person under your cares is dangerously low: only {0}!" },
             { EN + CAREGVR + DES + PULSE_LOW, "Please take action now!" },
 
             { PL + USR + MSG + PULSE_LOW, "Hej! Twoje tętno jest dość niskie: {0}." },
@@ -167,7 +167,7 @@ namespace DSS.FuzzyInference
 
             { RO + USR + MSG + PULSE_LOW, "Buna! Pulsul tau este destul de scazut: {0}." },
             { RO + USR + DES + PULSE_LOW, "Am notificat persoanele tale de contact." },
-            { RO + CAREGVR + MSG + PULSE_LOW, "Persoana draga voua are pulsul extem de scazut: doar {0}!" },
+            { RO + CAREGVR + MSG + PULSE_LOW, "Persoana in grija dvs. are pulsul extem de scazut: doar {0}!" },
             { RO + CAREGVR + DES + PULSE_LOW, "Va rugam interveniti acum!" },
 
             { DK + USR + MSG + PULSE_LOW, "Hej! Din hjerterytme er temmelig lav: {0}." },
@@ -178,7 +178,7 @@ namespace DSS.FuzzyInference
             //PULSE MID_LOW
             { EN + USR + MSG + PULSE_MID_LOW, "Hey! Your heart rate is just a bit low: {0}." },
             { EN + USR + DES + PULSE_MID_LOW, "How about some exercise?" },
-            { EN + CAREGVR + MSG + PULSE_MID_LOW, "Your loved ones's heart rate is a bit low: only {0}!" },
+            { EN + CAREGVR + MSG + PULSE_MID_LOW, "The heart rate of the person under your care a bit low: only {0}!" },
             { EN + CAREGVR + DES + PULSE_MID_LOW, "Please make sure they are all right." },
 
             { PL + USR + MSG + PULSE_MID_LOW, "Hej! Twoje tętno jest trochę za niskie: {0}." },
@@ -188,7 +188,7 @@ namespace DSS.FuzzyInference
 
             { RO + USR + MSG + PULSE_MID_LOW, "Buna! Pulsul tau este putin scazut: {0}." },
             { RO + USR + DES + PULSE_MID_LOW, "Ce ai zice de putina miscare?" },
-            { RO + CAREGVR + MSG + PULSE_MID_LOW, "Persoana draga voua are pulsul putin scazut: doar {0}!" },
+            { RO + CAREGVR + MSG + PULSE_MID_LOW, "Persoana in grija dvs. are pulsul putin scazut: doar {0}!" },
             { RO + CAREGVR + DES + PULSE_MID_LOW, "Va rugam verificati ca este in regula." },
 
             { DK + USR + MSG + PULSE_MID_LOW, "Hej! Din puls er lidt lav: {0}." },
@@ -200,7 +200,7 @@ namespace DSS.FuzzyInference
             //PULSE MEDIUM
             { EN + USR + MSG + PULSE_MEDIUM, "Hey! Your heart rate is just a bit high:  {0}." },
             { EN + USR + DES + PULSE_MEDIUM, "Why not rest for a bit" },
-            { EN + CAREGVR + MSG + PULSE_MEDIUM, "Your loved ones's heart rate is a bit high: over {0}!" },
+            { EN + CAREGVR + MSG + PULSE_MEDIUM, "The heart rate of the person under your care is a bit high: over {0}!" },
             { EN + CAREGVR + DES + PULSE_MEDIUM, "Please make sure they are all right." },
 
             { PL + USR + MSG + PULSE_MEDIUM, " Hej! Twoje tętno jest trochę za wysokie:  {0}." },
@@ -210,7 +210,7 @@ namespace DSS.FuzzyInference
 
             { RO + USR + MSG + PULSE_MEDIUM, "Buna! Pulsul tau este putin ridicat:  {0}." },
             { RO + USR + DES + PULSE_MEDIUM, "Ce ai zice de putina odihna?" },
-            { RO + CAREGVR + MSG + PULSE_MEDIUM, "Persoana draga voua are pulsul putin ridicat: peste  {0}!" },
+            { RO + CAREGVR + MSG + PULSE_MEDIUM, "Persoana in grija dvs. are pulsul putin ridicat: peste  {0}!" },
             { RO + CAREGVR + DES + PULSE_MEDIUM, "Va rugam verificati ca este in regula." },
 
             { DK + USR + MSG + PULSE_MEDIUM, "Hej! Din puls er lidt til den høje side:  {0}." },
@@ -222,7 +222,7 @@ namespace DSS.FuzzyInference
             //HIGH
             { EN + USR + MSG + PULSE_HIGH, "Hey! Your heart rate is just a quite high:  {0}." },
             { EN + USR + DES + PULSE_HIGH, "I have contacted your caregiver." },
-            { EN + CAREGVR + MSG + PULSE_HIGH, "Your loved one's heart rate is dangerously high: over {0}!" },
+            { EN + CAREGVR + MSG + PULSE_HIGH, "The heart rate of the person under your care is dangerously high: over {0}!" },
             { EN + CAREGVR + DES + PULSE_HIGH, "Please take action now!" },
 
             { PL + USR + MSG + PULSE_HIGH, "Hej! Twoje tętno jest dość wysokie:  {0}." },
@@ -232,7 +232,7 @@ namespace DSS.FuzzyInference
 
             { RO + USR + MSG + PULSE_HIGH, "Buna! Pulsul tau este destul de ridicat:  {0}." },
             { RO + USR + DES + PULSE_HIGH, "Am notificat persoanele tale de contact." },
-            { RO + CAREGVR + MSG + PULSE_HIGH, "Persoana draga voua are pulsul extrem de ridicat: peste {0}!" },
+            { RO + CAREGVR + MSG + PULSE_HIGH, "Persoana in grija dvs. are pulsul extrem de ridicat: peste {0}!" },
             { RO + CAREGVR + DES + PULSE_HIGH, "Va rugam interveniti acum!" },
 
             { DK + USR + MSG + PULSE_HIGH, "Hej! Din puls er meget høj:  {0}." },
