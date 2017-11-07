@@ -342,9 +342,9 @@ namespace DSS.FuzzyInference
 
             if (!stepCountAnalysisTimers.ContainsKey(key))
             {
-                // set the moment to run the timer at 18:00 localized time
+                // set the moment to run the timer at 19:00 localized time
                 // TODO
-                var localHour = 18;
+                var localHour = 19;
                 var localMin = 0;
 
 				// TODO: add the recurring Timer to the dictionary
@@ -370,8 +370,8 @@ namespace DSS.FuzzyInference
             if (time < DateTime.UtcNow)
                 return;
             
-            //var interval = (time - DateTime.UtcNow).TotalMilliseconds;
-            var interval = 600000;
+            var interval = (time - DateTime.UtcNow).TotalMilliseconds;
+            //var interval = 600000;
             Console.WriteLine("Interval until the next indication :" + interval);
 
             timer.Interval = interval;
