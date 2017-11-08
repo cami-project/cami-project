@@ -69,7 +69,9 @@ namespace DSS.FuzzyInference
             if(reminder.category.ToString().ToLower() == "user_notifications"){
                 
                 var key = reminder.content.value.user.id.ToString();
-                var LANG = storeAPI.GetLang(key);
+                var userURIPath = "/api/v1/user/" + key + "/";
+
+                var LANG = storeAPI.GetLang(userURIPath);
 
                 if(userReminderMap.ContainsKey(key)){
 
@@ -114,8 +116,6 @@ namespace DSS.FuzzyInference
                     storeAPI.PatchJournalEntry(journalId, ack);
 
                     if(ack) {
-
-
                         MetricsPublisher.Current.Increment("cami.event.reminder.ack", 1);
 
                         Console.WriteLine("Reminder acknowledged");
@@ -127,8 +127,11 @@ namespace DSS.FuzzyInference
                         //for example medication
 
                         Console.WriteLine("Type: " + journalEntry.type.ToString());
+                        Console.WriteLine("[reminder_handler] Acknowledged journal entry message: " + journalEntry.message.ToString())
 
-                        if(journalEntry.type.ToString() == "blood_pressure"){
+                        var expectedMessage = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.USR);
+
+                        if(journalEntry.message.ToString() == expectedMessage) {
                             
                             var aTimer = new System.Timers.Timer(WAIT_MS);
                             aTimer.AutoReset = false;
