@@ -181,7 +181,12 @@ namespace DSS.FuzzyInference
 			
             string END_USER_URI = obj.user;
             int userId = storeAPI.GetIdFromURI(obj.user);
-            var LANG = storeAPI.GetLang(obj.user);
+
+            Tuple<string, string> userLocales = storeAPI.GetUserLocale(END_USER_URI, userId);
+            var LANG = userLocales.Item1;
+            var tZone = userLocales.Item2;
+
+            //var LANG = storeAPI.GetLang(obj.user);
 
             if (obj.measurement_type == "weight")
             {
@@ -237,11 +242,11 @@ namespace DSS.FuzzyInference
 
                 storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
 
-
+                TimeZoneInfo localTz = TimeZoneInfo.FindSystemTimeZoneById(tZone);
                 DateTime pulseDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(obj.timestamp);
+                DateTime localizedPulseDateTime = UnixTimeStampToDateTime(obj.timestamp, localTz);
 
-                if( pulseDateTime.AddHours(1) > DateTime.UtcNow && pulseDateTime.Hour > 6) {
-
+                if( pulseDateTime.AddHours(1) > DateTime.UtcNow && localizedPulseDateTime.Hour >= 6) {
                     AnalyzePulseValue(val, min, midLow, midHigh, max, END_USER_URI);
                 }
 
@@ -465,6 +470,16 @@ namespace DSS.FuzzyInference
                 InformUser(END_USER_URI, "heart", "medium", endUserMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_HIGH, Loc.USR));
                 InformCaregivers(END_USER_URI, "heart", "medium", caregiverMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_HIGH, Loc.CAREGVR));
             }
+        }
+
+
+        private DateTime UnixTimeStampToDateTime(long unixTimeStamp, TimeZoneInfo tzInfo)
+        {
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp);
+
+            dtDateTime = TimeZoneInfo.ConvertTime(dtDateTime, TimeZoneInfo.Utc, tzInfo);
+            return dtDateTime;
         }
 	}
 }
