@@ -45,9 +45,9 @@ namespace DSS.FuzzyInference
                     // if we are dealing with a presence sensor
                     if (eventObj.content.name == "presence")
                     {
-                        Console.WriteLine((bool)eventObj.content.val["alarm_motion"]);
+
                         // see if it is a sensor activation
-                        if ((bool)eventObj.content.val["alarm_motion"])
+                        if (eventObj.content.val["alarm_motion"] != null && (bool)eventObj.content.val["alarm_motion"])
                         {
                             // retrieve the gateway and sensor URI from the source annotations
                             var gatewayURIPath = (string)eventObj.annotations.source["gateway"];
