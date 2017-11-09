@@ -127,7 +127,7 @@ namespace DSS.FuzzyInference
                         //for example medication
 
                         Console.WriteLine("Type: " + journalEntry.type.ToString());
-                        Console.WriteLine("[reminder_handler] Acknowledged journal entry message: " + journalEntry.message.ToString())
+                        Console.WriteLine("[reminder_handler] Acknowledged journal entry message: " + journalEntry.message.ToString());
 
                         var expectedMessage = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.USR);
 
