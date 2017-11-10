@@ -75,7 +75,8 @@ namespace DSS.FuzzyInference
                                     Tuple<DateTime, DateTime> morningLimits = getMorningLimits(localTz);
 
                                     // check if current dtime is within limits
-                                    if (dtime >= morningLimits.Item1 && currentTime >= morningLimits.Item1 && dtime <= morningLimits.Item2 && currentTime <= morningLimits.Item2)
+                                    //if (dtime >= morningLimits.Item1 && currentTime >= morningLimits.Item1 && dtime <= morningLimits.Item2 && currentTime <= morningLimits.Item2)
+                                    if (dtime >= morningLimits.Item1 && dtime <= morningLimits.Item2)
                                     {
                                         if (lastActivationMap.ContainsKey(userURIPath))
                                         {
@@ -147,7 +148,7 @@ namespace DSS.FuzzyInference
             string caregiver_msg = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.CAREGVR);
             string caregiver_desc = Loc.Get(LANG, Loc.DES, Loc.REMINDER_SENT, Loc.CAREGVR);
 
-            string notification_type = "medication";
+            string notification_type = "appointment";
 
             // get the user data to retrieve caregiver uri as well
             var userData = storeAPI.GetUserData(userURIPath);

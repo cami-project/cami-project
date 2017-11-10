@@ -99,7 +99,7 @@ namespace DSS.FuzzyInference
                             MetricsPublisher.Current.Increment("cami.event.reminder.ignored", 1);
                             Console.WriteLine("Reminder wasn't acknowledged after 6 min");
 
-                            InformCaregivers(key, "reminder", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_IGNORED, Loc.CAREGVR));
+                            InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_IGNORED, Loc.CAREGVR));
                             userReminderMap.Remove(key);
                         }
                     };
@@ -144,7 +144,7 @@ namespace DSS.FuzzyInference
                                 if(!storeAPI.CheckForMeasuremntInLastNMinutes(journalEntry.type, 6, int.Parse(key)))
                                 {
                                     Console.WriteLine("Blood pressure wasn't measured");
-                                    InformCaregivers(key, "reminder", "high", Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR));
+                                    InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR));
                                 }
                             };
                         }
