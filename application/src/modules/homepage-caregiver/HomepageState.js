@@ -131,7 +131,7 @@ async function fetchPageData() {
       var weightApiUrl = env.WEIGHT_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id;
       var heartRateApiUrl = env.HEARTRATE_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id;
       var stepsCountApiUrl = env.STEPS_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id + '&units=7&resolution=days';
-      var activitiesApiUrl = env.ACTIVITIES_LAST_EVENTS + '?user=' + user_id;
+      var activitiesApiUrl = env.ACTIVITIES_LAST_EVENTS + '?user=' + elder_id;
 
       return fetch(activitiesApiUrl).then((response) => response.json())
         .then((activitiesJson) => {
