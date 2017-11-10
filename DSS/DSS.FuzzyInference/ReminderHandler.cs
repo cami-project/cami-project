@@ -141,7 +141,7 @@ namespace DSS.FuzzyInference
 
                                 Console.WriteLine("Blood pressure");
 
-                                if(!storeAPI.CheckForMeasuremntInLastNMinutes(journalEntry.type, 6, int.Parse(key)))
+                                if(!storeAPI.CheckForMeasuremntInLastNMinutes("blood_pressure", 6, int.Parse(key)))
                                 {
                                     Console.WriteLine("Blood pressure wasn't measured");
                                     InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR));

@@ -75,8 +75,8 @@ namespace DSS.FuzzyInference
                                     Tuple<DateTime, DateTime> morningLimits = getMorningLimits(localTz);
 
                                     // check if current dtime is within limits
-                                    //if (dtime >= morningLimits.Item1 && currentTime >= morningLimits.Item1 && dtime <= morningLimits.Item2 && currentTime <= morningLimits.Item2)
-                                    if (dtime >= morningLimits.Item1 && dtime <= morningLimits.Item2)
+                                    if (dtime >= morningLimits.Item1 && currentTime >= morningLimits.Item1 && dtime <= morningLimits.Item2 && currentTime <= morningLimits.Item2)
+                                    //if (dtime >= morningLimits.Item1 && dtime <= morningLimits.Item2)
                                     {
                                         if (lastActivationMap.ContainsKey(userURIPath))
                                         {
