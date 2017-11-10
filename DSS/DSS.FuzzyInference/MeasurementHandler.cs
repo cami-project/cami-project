@@ -456,19 +456,19 @@ namespace DSS.FuzzyInference
             }
             if (val > max)
             {
-                var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_MEDIUM, Loc.USR), val);
-                var caregiverMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_MEDIUM, Loc.CAREGVR), val);
-
-                InformUser(END_USER_URI, "heart", "high", endUserMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_MEDIUM, Loc.USR));
-                InformCaregivers(END_USER_URI, "heart", "high", caregiverMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_MEDIUM, Loc.CAREGVR));
-             }
-            else if (val > midHigh)
-            {
                 var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_HIGH, Loc.USR), val);
                 var caregiverMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_HIGH, Loc.CAREGVR), val);
 
-                InformUser(END_USER_URI, "heart", "medium", endUserMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_HIGH, Loc.USR));
-                InformCaregivers(END_USER_URI, "heart", "medium", caregiverMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_HIGH, Loc.CAREGVR));
+                InformUser(END_USER_URI, "heart", "high", endUserMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_HIGH, Loc.USR));
+                InformCaregivers(END_USER_URI, "heart", "high", caregiverMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_HIGH, Loc.CAREGVR));
+             }
+            else if (val > midHigh)
+            {
+                var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_MEDIUM, Loc.USR), val);
+                var caregiverMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_MEDIUM, Loc.CAREGVR), val);
+
+                InformUser(END_USER_URI, "heart", "medium", endUserMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_MEDIUM, Loc.USR));
+                InformCaregivers(END_USER_URI, "heart", "medium", caregiverMsg, Loc.Get(LANG, Loc.DES, Loc.PULSE_MEDIUM, Loc.CAREGVR));
             }
         }
 

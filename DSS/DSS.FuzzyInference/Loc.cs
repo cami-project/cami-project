@@ -39,7 +39,6 @@ namespace DSS.FuzzyInference
             { DK + MSG + STEPS_LESS_1000, "Alarm - få skridt registreret!" },
             { DK + DES + STEPS_LESS_1000, "Vi har registreret et lavt aktivitetsniveau. Tag venligst kontakt og spørg ind." },
 
-
             { EN + MSG + STEPS_BETWEEN_1000_2000, "Hey! Your number of steps for today is quite low: {0}" },
             { EN + DES + STEPS_BETWEEN_1000_2000, "Why not take a short walk?" },
             { PL + MSG + STEPS_BETWEEN_1000_2000, "Hej! Liczba kroków, które dziś zrobiłeś, jest dość mała: {0}" },
@@ -220,7 +219,7 @@ namespace DSS.FuzzyInference
 
 
             //HIGH
-            { EN + USR + MSG + PULSE_HIGH, "Hey! Your heart rate is just a quite high:  {0}." },
+            { EN + USR + MSG + PULSE_HIGH, "Hey! Your heart rate is quite high:  {0}." },
             { EN + USR + DES + PULSE_HIGH, "I have contacted your caregiver." },
             { EN + CAREGVR + MSG + PULSE_HIGH, "The heart rate of the person under your care is dangerously high: over {0}!" },
             { EN + CAREGVR + DES + PULSE_HIGH, "Please take action now!" },
