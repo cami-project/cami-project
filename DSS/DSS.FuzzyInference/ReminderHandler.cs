@@ -157,7 +157,7 @@ namespace DSS.FuzzyInference
                         MetricsPublisher.Current.Increment("cami.event.reminder.snoozed", 1);
 
                         Console.WriteLine("Reminder snoozed");
-                        InformCaregivers(key, "reminder", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_POSTPONED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_POSTPONED, Loc.CAREGVR));
+                        InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_POSTPONED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_POSTPONED, Loc.CAREGVR));
 
                         userReminderMap.Remove(key);
 
