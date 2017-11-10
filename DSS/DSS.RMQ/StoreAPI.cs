@@ -133,7 +133,7 @@ namespace DSS.RMQ
                 description = desc,
                 message = msg,
                 timestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds,
-                acknowledged = false,
+                //acknowledged = false,
                 type = notification_type,
                 severity = severity
             };
