@@ -196,35 +196,45 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
       return state.setIn(['actionability', 'visible'], false);
 
     case CAREGIVER_DATA_REQUEST:
-      return loop(
-        state,
-        Effects.promise(requestCaregiverData)
-      );
-
-    case CAREGIVER_DATA_RESPONSE:
-      var chartValuesJson = json;
-      chartValuesJson['weight'] = action.payload.weight;
-      chartValuesJson['heart_rate'] = action.payload.heart_rate;
-      chartValuesJson['steps'] = action.payload.steps;
-
-      var isVisible = state.getIn(['actionability', 'visible']);
-      if (!isVisible) {
-        isVisible = action.payload.hasNotification && previousNotificationId !== action.payload.notification.id;
-        previousNotificationId = action.payload.hasNotification ? action.payload.notification.id : previousNotificationId;
+      // - checking if a user is still logged to see if a new fetch should be triggered
+      if (store.getState().get('auth').get('isLoggedIn')) {
+        return loop(
+          state,
+          Effects.promise(requestCaregiverData)
+        );
+      } else {
+        return state;
       }
 
-      return loop(
-        state.setIn(['actionability', 'visible'], isVisible)
-          .setIn(['actionability', 'params'], Map(fromJS(action.payload.notification)))
-          .setIn(['status', 'visible'], true)
-          .setIn(['status', 'values'], fromJS(chartValuesJson))
-          .setIn(['weight'], fromJS(action.payload.weight))
-          .setIn(['heart_rate'], fromJS(action.payload.heart_rate))
-          .setIn(['steps'], fromJS(action.payload.steps))
-          .setIn(['lastEvents'], fromJS(action.payload.lastEvents))
-          .setIn(['lastActivities'], fromJS(action.payload.lastActivities)),
-        Effects.promise(triggerFetchPageData)
-      );
+    case CAREGIVER_DATA_RESPONSE:
+      // - checking if a user is still logged to see if a new fetch should be triggered
+      if (store.getState().get('auth').get('isLoggedIn')) {
+        var chartValuesJson = json;
+        chartValuesJson['weight'] = action.payload.weight;
+        chartValuesJson['heart_rate'] = action.payload.heart_rate;
+        chartValuesJson['steps'] = action.payload.steps;
+
+        var isVisible = state.getIn(['actionability', 'visible']);
+        if (!isVisible) {
+          isVisible = action.payload.hasNotification && previousNotificationId !== action.payload.notification.id;
+          previousNotificationId = action.payload.hasNotification ? action.payload.notification.id : previousNotificationId;
+        }
+
+        return loop(
+          state.setIn(['actionability', 'visible'], isVisible)
+            .setIn(['actionability', 'params'], Map(fromJS(action.payload.notification)))
+            .setIn(['status', 'visible'], true)
+            .setIn(['status', 'values'], fromJS(chartValuesJson))
+            .setIn(['weight'], fromJS(action.payload.weight))
+            .setIn(['heart_rate'], fromJS(action.payload.heart_rate))
+            .setIn(['steps'], fromJS(action.payload.steps))
+            .setIn(['lastEvents'], fromJS(action.payload.lastEvents))
+            .setIn(['lastActivities'], fromJS(action.payload.lastActivities)),
+          Effects.promise(triggerFetchPageData)
+        );
+      } else {
+        return state;
+      }
 
     default:
       return state;
