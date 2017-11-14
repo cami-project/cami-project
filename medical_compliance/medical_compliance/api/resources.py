@@ -115,18 +115,18 @@ class BloodPressureMeasurementResource(Resource):
 
             if threshold_systolic < self.thresholds['systolic']['alert_low'] or threshold_systolic > \
                     self.thresholds['systolic']['alert_high']:
-                return "alert"
+                status = "alert"
             elif threshold_diastolic < self.thresholds['diastolic']['alert_low'] or threshold_diastolic > \
                     self.thresholds['diastolic']['alert_high']:
-                return "alert"
+                status = "alert"
             elif threshold_systolic < self.thresholds['systolic']['warning_low'] or threshold_systolic > \
                     self.thresholds['systolic']['warning_high']:
-                return "warning"
+                status = "warning"
             elif threshold_diastolic < self.thresholds['diastolic']['warning_low'] or threshold_diastolic > \
                     self.thresholds['diastolic']['warning_high']:
-                return "warning"
+                status = "warning"
             else:
-                return "ok"
+                status = "ok"
 
         jsonResult = {
             "heart_rate": {
