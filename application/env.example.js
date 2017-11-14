@@ -10,6 +10,9 @@ module.exports = {
   ACTIVITIES_LAST_EVENTS: 'http://cami.vitaminsoftware.com:8008/api/v1/activity/last_activities/',
   WEIGHT_MEASUREMENTS_LAST_VALUES: 'http://cami.vitaminsoftware.com:8000/api/v1/weight-measurements/last_values/',
   HEARTRATE_MEASUREMENTS_LAST_VALUES: 'http://cami.vitaminsoftware.com:8000/api/v1/heartrate-measurements/last_values/',
+  BP_DIASTOLIC_MEASUREMENTS_LAST_VALUES: 'http://cami.vitaminsoftware.com:8000/api/v1/bloodpressure-measurements/last_values/diastolic/',
+  BP_SYSTOLIC_MEASUREMENTS_LAST_VALUES: 'http://cami.vitaminsoftware.com:8000/api/v1/bloodpressure-measurements/last_values/systolic/',
+  BP_PULSE_MEASUREMENTS_LAST_VALUES: 'http://cami.vitaminsoftware.com:8000/api/v1/bloodpressure-measurements/last_values/pulse/',
   STEPS_MEASUREMENTS_LAST_VALUES: 'http://cami.vitaminsoftware.com:8000/api/v1/steps-measurements/last_values/',
   NOTIFICATIONS_SUBSCRIPTION_API: 'http://cami.vitaminsoftware.com:8000/subscribe_notifications/',
   MOBILE_NOTIFICATION_KEY_API: 'http://cami.vitaminsoftware.com:8001/api/v1/push-notification-subscribe/'
