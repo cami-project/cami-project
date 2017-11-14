@@ -73,8 +73,85 @@ class BloodPressureMeasurementResource(Resource):
 
     def prepend_urls(self):
         return [
+            url(r"^(?P<resource_name>%s)/last_values%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_last_values_aggregated'), name="api_last_values_aggregated"),
             url(r"^(?P<resource_name>%s)/last_values/(?P<bp_element>systolic|diastolic|pulse)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_last_values'), name="api_last_values"),
         ]
+
+    def get_last_values_aggregated(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        status, bp_results = self.get_last_values_from_store(request)
+        if status != httplib.OK:
+            return self.create_response(request, bp_results, response_class=HttpBadRequest)
+
+        amount_systolic = []
+        amount_diastolic = []
+        data_list = []
+
+        for index, measurement in enumerate(bp_results):
+            # amount = [measurement.value] + amount
+            amount_systolic = [measurement['value_info']['systolic']] + amount_systolic
+            amount_diastolic = [measurement['value_info']['diastolic']] + amount_diastolic
+
+            data_entry = {}
+            # data_entry['timestamp'] = measurement.timestamp
+            # data_entry['value'] = measurement.value
+            data_entry['timestamp'] = measurement['timestamp']
+            data_entry['value'] = str(measurement['value_info']['systolic']) + "/" \
+                                  + str(measurement['value_info']['diastolic'])
+
+            data_entry['status'] = self._compute_agg_bp_status(measurement['value_info'])
+            data_list = [data_entry] + data_list
+
+        status = "ok"
+        threshold_systolic = 110
+        threshold_diastolic = 70
+
+        if len(amount_systolic) > 0:
+            threshold_systolic = np.mean(amount_systolic)
+            threshold_diastolic = np.mean(amount_diastolic)
+
+            if threshold_systolic < self.thresholds['systolic']['alert_low'] or threshold_systolic > \
+                    self.thresholds['systolic']['alert_high']:
+                status = "alert"
+            elif threshold_diastolic < self.thresholds['diastolic']['alert_low'] or threshold_diastolic > \
+                    self.thresholds['diastolic']['alert_high']:
+                status = "alert"
+            elif threshold_systolic < self.thresholds['systolic']['warning_low'] or threshold_systolic > \
+                    self.thresholds['systolic']['warning_high']:
+                status = "warning"
+            elif threshold_diastolic < self.thresholds['diastolic']['warning_low'] or threshold_diastolic > \
+                    self.thresholds['diastolic']['warning_high']:
+                status = "warning"
+            else:
+                status = "ok"
+
+        jsonResult = {
+            "heart_rate": {
+                "status": status,
+                "amount": amount_systolic,
+                "data": data_list,
+                "threshold": str(threshold_systolic) + "/" + str(threshold_diastolic)
+            }
+        }
+        return self.create_response(request, jsonResult)
+
+
+    def _compute_agg_bp_status(self, meas):
+        if meas['systolic'] < self.thresholds['systolic']['alert_low'] or meas['systolic'] > self.thresholds['systolic']['alert_high']:
+            return "alert"
+        elif meas['diastolic'] < self.thresholds['diastolic']['alert_low'] or meas['diastolic'] > self.thresholds['diastolic']['alert_high']:
+            return "alert"
+        elif meas['systolic'] < self.thresholds['systolic']['warning_low'] or meas['systolic'] > self.thresholds['systolic']['warning_high']:
+            return "warning"
+        elif meas['diastolic'] < self.thresholds['diastolic']['warning_low'] or meas['diastolic'] > self.thresholds['diastolic']['warning_high']:
+            return "warning"
+        else:
+            return "ok"
+
+
 
     def get_last_values(self, request, **kwargs):
         bp_element = kwargs.get("bp_element", None)
