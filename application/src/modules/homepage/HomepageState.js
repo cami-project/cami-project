@@ -149,17 +149,27 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
   switch (action.type) {
     case TRIGGER_REQUEST:
       // State doesn't change, we just want to trigger a notification fetch.
-      return loop(
-        state,
-        Effects.promise(requestNotification)
-      );
+      // - checking if a user is still logged to see if a new fetch should be triggered
+      if (store.getState().get('auth').get('isLoggedIn')) {
+        return loop(
+          state,
+          Effects.promise(requestNotification)
+        );
+      } else {
+        return state;
+      }
     case NOTIFICATION_RESPONSE:
       // We got a notification update so let's update the state and then restart the timer.
-      return loop(
-        // TODO(@iprunache) stop triggering a render for every poll when the payload does not change; happens with immutable too.
-        state.setIn(['notification'], fromJS(action.payload)),
-        Effects.promise(triggerFetchNotification)
-      );
+      // - checking if a user is still logged to see if a new fetch should be triggered
+      if (store.getState().get('auth').get('isLoggedIn')) {
+        return loop(
+          // TODO(@iprunache) stop triggering a render for every poll when the payload does not change; happens with immutable too.
+          state.setIn(['notification'], fromJS(action.payload)),
+          Effects.promise(triggerFetchNotification)
+        );
+      } else {
+        return state;
+      }
     case ACK_RESPONSE:
       return state.setIn(['notification', 'acknowledged'], true);
     default:
