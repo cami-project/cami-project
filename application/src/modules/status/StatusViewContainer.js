@@ -8,6 +8,9 @@ export default connect(
     status: state.getIn(['status']),
     weight: state.getIn(['homepageCaregiver', 'weight']),
     heart_rate: state.getIn(['homepageCaregiver', 'heart_rate']),
-    steps: state.getIn(['homepageCaregiver', 'steps'])
+    steps: state.getIn(['homepageCaregiver', 'steps']),
+    bp_diastolic: state.getIn(['homepageCaregiver', 'bp_diastolic']),
+    bp_systolic: state.getIn(['homepageCaregiver', 'bp_systolic']),
+    bp_pulse: state.getIn(['homepageCaregiver', 'bp_pulse'])
   })
 )(StatusView);
