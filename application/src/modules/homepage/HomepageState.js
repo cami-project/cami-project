@@ -69,14 +69,8 @@ async function postReminderAcknowledgement(ack, reference_id, journal_entry_id) 
   var timestamp = moment().format('X');
 
   // Posting an event on the Insertion queue on acknowledgement
-  // - This can be picked up by any services that are listening to the it, and
-  //   trigger custom actions based on the User Input
-  return fetch(env.INSERTION_ENDPOINT + 'events/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+
+  var ackBody = JSON.stringify({
         "category": "user_notifications",
         "content": {
           "name": "reminder_acknowledged",
@@ -92,7 +86,18 @@ async function postReminderAcknowledgement(ack, reference_id, journal_entry_id) 
             "source": "ios_app"
           }
         }
-      })
+      });
+
+  console.log('[HomepageState] - Preparing to post [' + ack + '] ack on the insertion queue: ' + ackBody);
+
+  // - This can be picked up by any services that are listening to the it, and
+  //   trigger custom actions based on the User Input
+  return fetch(env.INSERTION_ENDPOINT + 'events/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: ackBody
     }).then((response) => {
       if (response.status >= 200 && response.status < 300) {
         console.log('[HomepageState] - Successful send of reminder acknowledgement event: ' + JSON.stringify(response));
@@ -105,12 +110,10 @@ async function postReminderAcknowledgement(ack, reference_id, journal_entry_id) 
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            "acknowledged": ack === 'ok' ? true : false
-          })
+          body: JSON.stringify({"acknowledged": ack === 'ok' ? true : false})
         }).then((response) => {
           if (response.status >= 200 && response.status < 300) {
-            console.log('[HomepageState] - Journal entry acknowledge field patched successfully: ' + JSON.stringify(response));
+            console.log('[HomepageState] - Journal entry acknowledged field was patched successfully: ' + JSON.stringify(response));
 
             return response;
 
@@ -121,7 +124,7 @@ async function postReminderAcknowledgement(ack, reference_id, journal_entry_id) 
           }
 
         }).catch((error) => {
-          console.log('[HomepageState] - There was a problem patching the Journal Entry acknowledged field: ' + JSON.stringify(error));
+          console.log('[HomepageState] - There was a problem patching the Journal Entry acknowledged field: ' + error);
         });
 
       } else {
@@ -130,7 +133,7 @@ async function postReminderAcknowledgement(ack, reference_id, journal_entry_id) 
         throw error;
       }
     }).catch((error) => {
-      console.log('[HomepageState] - There was a problem posting a [' + ack + '] ack on the insertion queue: ' + JSON.stringify(error));
+      console.log('[HomepageState] - There was a problem posting [' + ack + '] ack on the insertion queue: ' + error + '. RESPONSE: ' + JSON.stringify(error));
     });
 }
 
