@@ -11,6 +11,7 @@ export default connect(
     steps: state.getIn(['homepageCaregiver', 'steps']),
     bp_diastolic: state.getIn(['homepageCaregiver', 'bp_diastolic']),
     bp_systolic: state.getIn(['homepageCaregiver', 'bp_systolic']),
-    bp_pulse: state.getIn(['homepageCaregiver', 'bp_pulse'])
+    bp_pulse: state.getIn(['homepageCaregiver', 'bp_pulse']),
+    bp_aggregated: state.getIn(['homepageCaregiver', 'bp_aggregated'])
   })
 )(StatusView);
