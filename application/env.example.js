@@ -13,6 +13,7 @@ module.exports = {
   BP_DIASTOLIC_MEASUREMENTS_LAST_VALUES: 'http://cami.vitaminsoftware.com:8000/api/v1/bloodpressure-measurements/last_values/diastolic/',
   BP_SYSTOLIC_MEASUREMENTS_LAST_VALUES: 'http://cami.vitaminsoftware.com:8000/api/v1/bloodpressure-measurements/last_values/systolic/',
   BP_PULSE_MEASUREMENTS_LAST_VALUES: 'http://cami.vitaminsoftware.com:8000/api/v1/bloodpressure-measurements/last_values/pulse/',
+  BP_AGGREGATED_MEASUREMENTS_LAST_VALUES: 'http://cami.vitaminsoftware.com:8000/api/v1/bloodpressure-measurements/last_values/',
   STEPS_MEASUREMENTS_LAST_VALUES: 'http://cami.vitaminsoftware.com:8000/api/v1/steps-measurements/last_values/',
   NOTIFICATIONS_SUBSCRIPTION_API: 'http://cami.vitaminsoftware.com:8000/subscribe_notifications/',
   MOBILE_NOTIFICATION_KEY_API: 'http://cami.vitaminsoftware.com:8001/api/v1/push-notification-subscribe/'
