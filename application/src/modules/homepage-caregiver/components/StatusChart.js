@@ -36,7 +36,7 @@ const chartStyles = StyleSheet.create({
     paddingLeft: 10
   },
   value: {
-    fontSize: 24,
+    fontSize: 20,
     color: variables.colors.gray.darker,
     lineHeight: 24
   },
@@ -60,13 +60,14 @@ const StatusChart = React.createClass({
     unit: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
-    decimals: PropTypes.number
+    decimals: PropTypes.number,
+    currentValue: PropTypes.any
   },
 
   render() {
     const arrayData = [];
     this.props.data.forEach((value, index) => arrayData.push([index, value]));
-    const currentValue = this.props.data.get(this.props.data.size - 1);
+    const currentValue = this.props.currentValue ? this.props.currentValue : this.props.data.get(this.props.data.size - 1);
 
     return (
       <View style={chartStyles.container}>
