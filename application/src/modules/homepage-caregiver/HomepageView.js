@@ -97,7 +97,7 @@ const HomepageView = React.createClass({
               }
             ]}
           >
-            <Image style={styles.avatar} source={require('../../../images/old-man.jpg')}/>
+            <Image style={styles.avatar} source={require('../../../images/cami-ios-app-icon-512.png')}/>
             <View style={styles.headerTextContainer}>
               <Text style={[styles.headerText, {fontWeight: 'bold'}]}>
                 {
