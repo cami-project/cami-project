@@ -157,6 +157,7 @@ namespace DSS.FuzzyInference
             {
                 int caregiverID = GetIdFromURI(caregiverURIPath);
 
+                Console.WriteLine("[MeasurmentHandler] Informing caregiver: " + caregiverURIPath + " of: " + msg);
                 storeAPI.PushJournalEntry(caregiverURIPath, type, severity, msg, desc);
                 insertionAPI.InsertPushNotification(msg, caregiverID);
             }
@@ -167,7 +168,7 @@ namespace DSS.FuzzyInference
 
         private void InformUser(string enduserURI, string type, string severity, string msg, string desc)
         {
-
+            Console.WriteLine("[MeasurmentHandler] Informing enduser: " + enduserURI + " of: " + msg);
             storeAPI.PushJournalEntry(enduserURI, type,severity, msg, desc);
             insertionAPI.InsertPushNotification(msg, GetIdFromURI(enduserURI));
 
@@ -382,7 +383,7 @@ namespace DSS.FuzzyInference
                 return;
             
             //var interval = (time - DateTime.UtcNow).TotalMilliseconds;
-            var interval = 600000;
+            var interval = 120000;
             Console.WriteLine("Interval until the next indication :" + interval);
 
             timer.Interval = interval;
@@ -416,17 +417,17 @@ namespace DSS.FuzzyInference
             Console.WriteLine("Analize steps count " + userStepCount);
 
             if(userStepCount < 1000){
-             
+                Console.WriteLine("Case < 1000");
                 var caregiverMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.STEPS_LESS_1000, Loc.CAREGVR), userStepCount);
                 InformCaregivers(userURIPath, "steps", "high", caregiverMsg, Loc.Get(LANG, Loc.DES, Loc.STEPS_LESS_1000, Loc.CAREGVR));
             }
             else if(userStepCount < 2000 ){
-
+                Console.WriteLine("Case > 1000 && < 2000");
                 var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.STEPS_BETWEEN_1000_2000, Loc.USR), userStepCount);
                 InformUser(userURIPath, "steps", "medium", endUserMsg, Loc.Get(LANG, Loc.DES, Loc.STEPS_BETWEEN_1000_2000, Loc.USR) );
             }
             else if(userStepCount > 6000) {
-                
+                Console.WriteLine("Case > 6000");
                 var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.STEPS_BIGGER_6000, Loc.USR), userStepCount);
                 InformUser(userURIPath, "steps", "low", endUserMsg, string.Format(Loc.Get(LANG, Loc.DES, Loc.STEPS_BIGGER_6000, Loc.USR), userStepCount));
             }
