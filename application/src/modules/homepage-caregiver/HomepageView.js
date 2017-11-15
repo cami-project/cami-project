@@ -33,6 +33,54 @@ const HomepageView = React.createClass({
   componentDidMount() {
   },
 
+  displayChartWidgets() {
+    return(
+      <View style={{flexDirection: 'row'}}>
+        {
+          this.props.status.get('values').get('heart_rate').get('amount').size > 0
+            ? <StatusChart
+                data={this.props.status.get('values').get('heart_rate').get('amount')}
+                text="Heart rate"
+                icon={icons.heart}
+                unit="bpm"
+                status={this.props.status.get('values').get('heart_rate').get('status')}
+                decimals={0}
+              />
+            : null
+        }
+
+        {
+          this.props.status.get('values').get('weight').get('amount').size > 0
+            ? <StatusChart
+                data={this.props.status.get('values').get('weight').get('amount')}
+                text="Weight"
+                icon={icons.weight}
+                unit="kg"
+                status={this.props.status.get('values').get('weight').get('status')}
+                decimals={2}
+              />
+            : null
+        }
+
+        {
+          this.props.status.get('values').get('weight').get('amount').size == 0
+          && this.props.status.get('values').get('bp_aggregated').get('amount').size > 0
+          && this.props.status.get('values').get('bp_systolic').get('amount').size > 0
+            ? <StatusChart
+                data={this.props.status.get('values').get('bp_systolic').get('amount')}
+                text="Blood Pressure"
+                icon={icons.blood}
+                unit="mmHg"
+                status={this.props.status.get('values').get('bp_aggregated').get('status')}
+                decimals={0}
+                currentValue={this.props.status.get('values').get('bp_aggregated').get('data').get(this.props.status.get('values').get('bp_aggregated').get('amount').size - 1).get('value')}
+              />
+            : null
+        }
+      </View>
+    );
+  },
+
   render() {
     return (
       <View style={styles.container}>
@@ -49,14 +97,13 @@ const HomepageView = React.createClass({
               }
             ]}
           >
-            <Image style={styles.avatar} source={require('../../../images/old-man.jpg')}/>
+            <Image style={styles.avatar} source={require('../../../images/cami-ios-app-icon-512.png')}/>
             <View style={styles.headerTextContainer}>
-              <Text style={[styles.headerText, {fontWeight: 'bold'}]}>{'Your loved one'}</Text>
-              <Text style={[styles.headerText, {fontSize: 18}]}>
+              <Text style={[styles.headerText, {fontWeight: 'bold'}]}>
                 {
                   !this.props.actionability.get('visible')
-                    ? 'is doing fine'
-                    : 'needs help'
+                    ? 'All is fine'
+                    : 'Help needed!'
                 }
               </Text>
             </View>
@@ -80,31 +127,8 @@ const HomepageView = React.createClass({
           null
         }
         {
-          this.props.status.get('visible')
-          ?
-            <View style={{flexDirection: 'row'}}>
-              <StatusChart
-                data={this.props.status.get('values').get('heart_rate').get('amount')}
-                text="Heart rate"
-                icon={icons.heart}
-                unit="bpm"
-                status={this.props.status.get('values').get('heart_rate').get('status')}
-                decimals={0}
-              />
-
-              <StatusChart
-                data={this.props.status.get('values').get('weight').get('amount')}
-                text="Weight"
-                icon={icons.weight}
-                unit="kg"
-                status={this.props.status.get('values').get('weight').get('status')}
-                decimals={2}
-              />
-            </View>
-          :
-          null
+          this.props.status.get('visible') ? this.displayChartWidgets() : null
         }
-
           <View style={{flex: 1}}>
             <Text style={[variables.h2, {marginTop: 20, color: variables.colors.gray.neutral}]}>
               Latest Journal Entries

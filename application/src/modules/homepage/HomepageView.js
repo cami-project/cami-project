@@ -229,11 +229,18 @@ const HomepageView = React.createClass({
           ]}
         >
           <View style={styles.textContainer}>
-            <Text style={[styles.text, {fontWeight: 'bold'}]}>
+            <Text style={styles.heading}>
               Hello!
             </Text>
-            <Text style={[styles.text, {paddingTop: 20}]}>
-              {this.props.notification.get('message')}
+            <Text style={styles.text}>
+              {
+                this.props.notification.get('message') +
+                (
+                  this.props.notification.get('description')
+                    ? '. ' + this.props.notification.get('description')
+                    : null
+                )
+              }
             </Text>
           </View>
 
@@ -311,10 +318,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 160,
   },
-  text: {
-    fontSize: 26,
+  heading: {
+    fontSize: 28,
+    fontWeight: 'bold',
     color: variables.colors.text,
     lineHeight: 1.3*26
+  },
+  text: {
+    fontSize: 20,
+    color: variables.colors.text,
+    lineHeight: 1.3*20,
+    paddingTop: 18
   },
   buttonContainer: {
     flexDirection: 'row',

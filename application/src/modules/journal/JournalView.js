@@ -67,7 +67,7 @@ const JournalView = React.createClass({
     return (
       <View style={variables.container}>
         <View style={styles.headerContainer}>
-          <Image style={styles.avatar} source={require('../../../images/old-man.jpg')}/>
+          <Image style={styles.avatar} source={require('../../../images/cami-ios-app-icon-512.png')}/>
           <Text style={styles.headerDate}>
             {headerDateText}
           </Text>
