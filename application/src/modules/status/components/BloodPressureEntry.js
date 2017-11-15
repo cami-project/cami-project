@@ -35,7 +35,7 @@ const BloodPressureEntry = React.createClass({
         threshold={this.props.aggregated.get('threshold')}
         units="mmHg"
         timeUnits="Day"
-        timeFormat="DD"
+        timestampFormat="DD"
         formatValue={this.formatValue}
       />
     );
