@@ -322,7 +322,7 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
         chartValuesJson['heart_rate'] = action.payload.heart_rate;
         chartValuesJson['bp_diastolic'] = action.payload.bp_diastolic;
         chartValuesJson['bp_systolic'] = action.payload.bp_systolic;
-        chartValuesJson['bp_pulse'] = action.payload.bp_systolic;
+        chartValuesJson['bp_pulse'] = action.payload.bp_pulse;
         chartValuesJson['bp_aggregated'] = action.payload.bp_aggregated;
         chartValuesJson['steps'] = action.payload.steps;
 
