@@ -57,7 +57,13 @@ const initialState = Map({
     "amount": [],
     "data": [],
     "threshold": 69.45
-  })
+  }),
+  bp_aggregated: fromJS({
+    "status": "ok",
+    "amount": [],
+    "data": [],
+    "threshold": "117.8/77.1"
+  }),
 });
 
 
@@ -126,6 +132,12 @@ async function fetchPageData() {
       "data": [],
       "threshold": 69.45
     },
+    bp_aggregated: {
+      "status": "ok",
+      "amount": [],
+      "data": [],
+      "threshold": "117.8/77.1"
+    },
     lastEvents: [],
     lastActivities: []
   };
@@ -167,6 +179,7 @@ async function fetchPageData() {
         bpDiastolicApiUrl = env.BP_DIASTOLIC_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id,
         bpSystolicApiUrl = env.BP_SYSTOLIC_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id,
         bpPulseApiUrl = env.BP_PULSE_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id,
+        bpAggregatedApiUrl = env.BP_AGGREGATED_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id,
         stepsCountApiUrl = env.STEPS_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id + '&units=7&resolution=days',
         activitiesApiUrl = env.ACTIVITIES_LAST_EVENTS + '?user=' + elder_id;
 
@@ -219,8 +232,21 @@ async function fetchPageData() {
                   console.log('[HomepageState] - BP Pulse Payload: ' + JSON.stringify(pulseJson));
                   result.bp_pulse = pulseJson.heart_rate;
 
-                  console.log('[HomepageState] - Successfully fetched the [caregiver] data');
-                  return result;
+                  return fetch(bpAggregatedApiUrl)
+                    .then((response) => response.json())
+                    .then((bpJson) => {
+
+                    console.log('[HomepageState] - BP Aggregated Payload: ' + JSON.stringify(bpJson));
+                    result.bp_aggregated = bpJson.heart_rate;
+
+                    console.log('[HomepageState] - Successfully fetched the [caregiver] data');
+                    return result;
+
+                  }).catch((error) => {
+                    console.log('[HomepageState] - encountered error while fetching [caregiver] bp aggregated data: ' + error);
+
+                    return result;
+                  });
 
                 }).catch((error) => {
                   console.log('[HomepageState] - encountered error while fetching [caregiver] bp pulse: ' + error);
@@ -297,6 +323,7 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
         chartValuesJson['bp_diastolic'] = action.payload.bp_diastolic;
         chartValuesJson['bp_systolic'] = action.payload.bp_systolic;
         chartValuesJson['bp_pulse'] = action.payload.bp_systolic;
+        chartValuesJson['bp_aggregated'] = action.payload.bp_aggregated;
         chartValuesJson['steps'] = action.payload.steps;
 
         var isVisible = state.getIn(['actionability', 'visible']);
@@ -315,6 +342,7 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
             .setIn(['bp_diastolic'], fromJS(action.payload.bp_diastolic))
             .setIn(['bp_systolic'], fromJS(action.payload.bp_systolic))
             .setIn(['bp_pulse'], fromJS(action.payload.bp_pulse))
+            .setIn(['bp_aggregated'], fromJS(action.payload.bp_systolic))
             .setIn(['steps'], fromJS(action.payload.steps))
             .setIn(['lastEvents'], fromJS(action.payload.lastEvents))
             .setIn(['lastActivities'], fromJS(action.payload.lastActivities)),
