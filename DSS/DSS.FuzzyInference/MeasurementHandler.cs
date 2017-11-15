@@ -381,8 +381,8 @@ namespace DSS.FuzzyInference
             if (time < DateTime.UtcNow)
                 return;
             
-            var interval = (time - DateTime.UtcNow).TotalMilliseconds;
-            //var interval = 600000;
+            //var interval = (time - DateTime.UtcNow).TotalMilliseconds;
+            var interval = 600000;
             Console.WriteLine("Interval until the next indication :" + interval);
 
             timer.Interval = interval;
