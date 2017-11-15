@@ -39,7 +39,31 @@ const initialState = Map({
     "amount": [],
     "data": [],
     "threshold": 150
-  })
+  }),
+  bp_systolic: fromJS({
+    "status": "ok",
+    "amount": [],
+    "data": [],
+    "threshold": 118.2
+  }),
+  bp_diastolic: fromJS({
+    "status": "ok",
+    "amount": [],
+    "data": [],
+    "threshold": 77.25
+  }),
+  bp_pulse: fromJS({
+    "status": "ok",
+    "amount": [],
+    "data": [],
+    "threshold": 69.45
+  }),
+  bp_aggregated: fromJS({
+    "status": "ok",
+    "amount": [],
+    "data": [],
+    "threshold": "117.8/77.1"
+  }),
 });
 
 
@@ -90,96 +114,180 @@ async function fetchPageData() {
       "data": [],
       "threshold": 150
     },
+    bp_systolic: {
+      "status": "ok",
+      "amount": [],
+      "data": [],
+      "threshold": 118.2
+    },
+    bp_diastolic: {
+      "status": "ok",
+      "amount": [],
+      "data": [],
+      "threshold": 77.25
+    },
+    bp_pulse: {
+      "status": "ok",
+      "amount": [],
+      "data": [],
+      "threshold": 69.45
+    },
+    bp_aggregated: {
+      "status": "ok",
+      "amount": [],
+      "data": [],
+      "threshold": "117.8/77.1"
+    },
     lastEvents: [],
     lastActivities: []
   };
 
   console.log("[HomepageState] - fetching data for the [careviger] with id: " + user_id);
 
-  return fetch(notificationsUrl)
-    .then((response) => response.json())
-    .then((notificationJson) => {
+  return fetch(notificationsUrl).then((response) => response.json()).then((notificationJson) => {
 
-      var notificationList = notificationJson.objects;
+    var notificationList = notificationJson.objects;
 
-      if (notificationList.length > 0) {
+    if (notificationList.length > 0) {
 
-        var receivedNotification = notificationList[0];
+      var receivedNotification = notificationList[0];
 
-        result.notification = {
-          id: receivedNotification.id,
-          name: "Loved one",
-          icon: icons[receivedNotification.type],
-          timestamp: parseInt(receivedNotification.timestamp),
-          message: receivedNotification.message,
-          description: receivedNotification.description
-        }
-
-        notificationList.forEach((notification) => {
-          result.lastEvents.push({
-            type: notification.type,
-            status: notification.severity,
-            timestamp: parseInt(notification.timestamp),
-            title: notification.message,
-            message: notification.description
-          });
-        });
-
-        result.hasNotification = true;
+      result.notification = {
+        id: receivedNotification.id,
+        name: "Loved one",
+        icon: icons[receivedNotification.type],
+        timestamp: parseInt(receivedNotification.timestamp),
+        message: receivedNotification.message,
+        description: receivedNotification.description
       }
 
-      var weightApiUrl = env.WEIGHT_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id;
-      var heartRateApiUrl = env.HEARTRATE_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id;
-      var stepsCountApiUrl = env.STEPS_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id + '&units=7&resolution=days';
-      var activitiesApiUrl = env.ACTIVITIES_LAST_EVENTS + '?user=' + elder_id;
+      notificationList.forEach((notification) => {
+        result.lastEvents.push({
+          type: notification.type,
+          status: notification.severity,
+          timestamp: parseInt(notification.timestamp),
+          title: notification.message,
+          message: notification.description
+        });
+      });
 
-      return fetch(activitiesApiUrl).then((response) => response.json())
-        .then((activitiesJson) => {
+      result.hasNotification = true;
+    }
 
-          console.log('[HomepageState] - Activities Payload: ' + JSON.stringify(activitiesJson));
-          result.lastActivities = activitiesJson;
+    var weightApiUrl = env.WEIGHT_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id,
+        heartRateApiUrl = env.HEARTRATE_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id,
+        bpDiastolicApiUrl = env.BP_DIASTOLIC_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id,
+        bpSystolicApiUrl = env.BP_SYSTOLIC_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id,
+        bpPulseApiUrl = env.BP_PULSE_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id,
+        bpAggregatedApiUrl = env.BP_AGGREGATED_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id,
+        stepsCountApiUrl = env.STEPS_MEASUREMENTS_LAST_VALUES + '?user=' + elder_id + '&units=7&resolution=days',
+        activitiesApiUrl = env.ACTIVITIES_LAST_EVENTS + '?user=' + elder_id;
 
-          return fetch(weightApiUrl).then((response) => response.json())
-            .then((weightsJson) => {
+    return fetch(activitiesApiUrl)
+      .then((response) => response.json())
+      .then((activitiesJson) => {
 
-              console.log('[HomepageState] - Weight Payload: ' + JSON.stringify(weightsJson));
-              result.weight = weightsJson.weight;
+      console.log('[HomepageState] - Activities Payload: ' + JSON.stringify(activitiesJson));
+      result.lastActivities = activitiesJson;
 
-              return fetch(heartRateApiUrl).then((response) => response.json())
-                .then((heartRateJson) => {
+      return fetch(weightApiUrl)
+        .then((response) => response.json())
+        .then((weightsJson) => {
 
-                  console.log('[HomepageState] - Heart Rate Payload: ' + JSON.stringify(heartRateJson));
-                  result.heart_rate = heartRateJson.heart_rate;
+        console.log('[HomepageState] - Weight Payload: ' + JSON.stringify(weightsJson));
+        result.weight = weightsJson.weight;
 
-                  return fetch(stepsCountApiUrl).then((response) => response.json())
-                    .then((stepsCountJson) => {
-                      result.steps = stepsCountJson.steps;
+        return fetch(heartRateApiUrl)
+          .then((response) => response.json())
+          .then((heartRateJson) => {
 
-                      console.log('[HomepageState] - Steps Count Payload: ' + JSON.stringify(stepsCountJson));
-                      console.log('[HomepageState] - Successfully fetched the [caregiver] data');
+          console.log('[HomepageState] - Heart Rate Payload: ' + JSON.stringify(heartRateJson));
+          result.heart_rate = heartRateJson.heart_rate;
 
-                      return result;
+          return fetch(stepsCountApiUrl)
+            .then((response) => response.json())
+            .then((stepsCountJson) => {
+
+            console.log('[HomepageState] - Steps Count Payload: ' + JSON.stringify(stepsCountJson));
+            result.steps = stepsCountJson.steps;
+
+            return fetch(bpDiastolicApiUrl)
+              .then((response) => response.json())
+              .then((diastolicJson) => {
+
+              console.log('[HomepageState] - BP Diastolic Payload: ' + JSON.stringify(diastolicJson));
+              result.bp_diastolic = diastolicJson.heart_rate;
+
+              return fetch(bpSystolicApiUrl)
+                .then((response) => response.json())
+                .then((systolicJson) => {
+
+                console.log('[HomepageState] - BP Systolic Payload: ' + JSON.stringify(systolicJson));
+                result.bp_systolic = systolicJson.heart_rate;
+
+                return fetch(bpPulseApiUrl)
+                  .then((response) => response.json())
+                  .then((pulseJson) => {
+
+                  console.log('[HomepageState] - BP Pulse Payload: ' + JSON.stringify(pulseJson));
+                  result.bp_pulse = pulseJson.heart_rate;
+
+                  return fetch(bpAggregatedApiUrl)
+                    .then((response) => response.json())
+                    .then((bpJson) => {
+
+                    console.log('[HomepageState] - BP Aggregated Payload: ' + JSON.stringify(bpJson));
+                    result.bp_aggregated = bpJson.heart_rate;
+
+                    console.log('[HomepageState] - Successfully fetched the [caregiver] data');
+                    return result;
 
                   }).catch((error) => {
-                    console.warning('[HomepageState] - encountered error while fetching [caregiver] step count: ' + error);
+                    console.log('[HomepageState] - encountered error while fetching [caregiver] bp aggregated data: ' + error);
 
                     return result;
                   });
+
+                }).catch((error) => {
+                  console.log('[HomepageState] - encountered error while fetching [caregiver] bp pulse: ' + error);
+
+                  return result;
+                });
+
               }).catch((error) => {
-                console.warning('[HomepageState] - encountered error while fetching [caregiver] heart rate: ' + error);
+                console.log('[HomepageState] - encountered error while fetching [caregiver] bp systolic: ' + error);
 
                 return result;
               });
+            }).catch((error) => {
+              console.log('[HomepageState] - encountered error while fetching [caregiver] bp diastolic: ' + error);
+
+              return result;
+            });
           }).catch((error) => {
-            console.warning('[HomepageState] - encountered error while fetching [caregiver] weight: ' + error);
+            console.log('[HomepageState] - encountered error while fetching [caregiver] step count: ' + error);
 
             return result;
           });
+        }).catch((error) => {
+          console.log('[HomepageState] - encountered error while fetching [caregiver] heart rate: ' + error);
+
+          return result;
+        });
       }).catch((error) => {
-        console.warning('[HomepageState] - encountered error while fetching [caregiver] activities: ' + error);
+        console.log('[HomepageState] - encountered error while fetching [caregiver] weight: ' + error);
 
         return result;
       });
+    }).catch((error) => {
+      console.log('[HomepageState] - encountered error while fetching [caregiver] activities: ' + error);
+
+      return result;
+    });
+  }).catch((error) => {
+    console.log('[HomepageState] - encountered error while fetching [caregiver] journal entries: ' + error);
+
+    return result;
   });
 }
 
@@ -212,6 +320,10 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
         var chartValuesJson = json;
         chartValuesJson['weight'] = action.payload.weight;
         chartValuesJson['heart_rate'] = action.payload.heart_rate;
+        chartValuesJson['bp_diastolic'] = action.payload.bp_diastolic;
+        chartValuesJson['bp_systolic'] = action.payload.bp_systolic;
+        chartValuesJson['bp_pulse'] = action.payload.bp_pulse;
+        chartValuesJson['bp_aggregated'] = action.payload.bp_aggregated;
         chartValuesJson['steps'] = action.payload.steps;
 
         var isVisible = state.getIn(['actionability', 'visible']);
@@ -227,6 +339,10 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
             .setIn(['status', 'values'], fromJS(chartValuesJson))
             .setIn(['weight'], fromJS(action.payload.weight))
             .setIn(['heart_rate'], fromJS(action.payload.heart_rate))
+            .setIn(['bp_diastolic'], fromJS(action.payload.bp_diastolic))
+            .setIn(['bp_systolic'], fromJS(action.payload.bp_systolic))
+            .setIn(['bp_pulse'], fromJS(action.payload.bp_pulse))
+            .setIn(['bp_aggregated'], fromJS(action.payload.bp_aggregated))
             .setIn(['steps'], fromJS(action.payload.steps))
             .setIn(['lastEvents'], fromJS(action.payload.lastEvents))
             .setIn(['lastActivities'], fromJS(action.payload.lastActivities)),
