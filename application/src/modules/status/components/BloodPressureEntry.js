@@ -5,7 +5,11 @@ import StatusEntry from './StatusEntry';
 
 const BloodPressureEntry = React.createClass({
   propTypes: {
-    statusItem: PropTypes.instanceOf(Map).isRequired
+    aggregated: PropTypes.instanceOf(Map).isRequired,
+    systolic: PropTypes.instanceOf(Map).isRequired,
+    diastolic: PropTypes.instanceOf(Map).isRequired,
+    aggregated: PropTypes.instanceOf(Map).isRequired,
+    pulse: PropTypes.instanceOf(Map).isRequired
   },
 
   formatValue(status, value, threshold) {
@@ -27,10 +31,11 @@ const BloodPressureEntry = React.createClass({
       <StatusEntry
         title="Blood Pressure"
         type="blood"
-        data={this.props.statusItem.get('data')}
-        threshold={this.props.statusItem.get('threshold')}
+        data={this.props.aggregated.get('data')}
+        threshold={this.props.aggregated.get('threshold')}
         units="mmHg"
-        timeUnits="Hrs"
+        timeUnits="Day"
+        timeFormat="DD"
         formatValue={this.formatValue}
       />
     );
