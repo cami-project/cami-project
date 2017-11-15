@@ -54,7 +54,7 @@ namespace DSS.FuzzyInference
             { PL + USR + DES + STEPS_BIGGER_6000, "Dziś zrobiłeś {0} kroków! Tak trzymaj" },
             { RO + USR + MSG + STEPS_BIGGER_6000, "Buna! Foarte bine, azi ai facut {0} pasi." },
             { RO + USR + DES + STEPS_BIGGER_6000, "Azi ai facut {0} pasi! Tine-o tot asa!" },
-            { DK + USR + MSG + STEPS_BIGGER_6000, "Hej. Godt gået, i dag har du gået  {0} skridt." }, 
+            { DK + USR + MSG + STEPS_BIGGER_6000, "Hej. Godt gået, i dag har du gået  {0} skridt." },
             { DK + USR + DES + STEPS_BIGGER_6000, "I dag har du gået {0} skridt! Bliv ved!" },
              
             //BLOOD PRESSURE - REMINDER SENT
