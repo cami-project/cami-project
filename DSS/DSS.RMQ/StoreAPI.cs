@@ -104,17 +104,21 @@ namespace DSS.RMQ
 
         public float GetLatestWeightMeasurement(int userId)
         {
-
             //var response = new HttpClient().GetAsync(url +"/measurement/?limit=1&measurement_type=weight&order_by=-timestamp&user=2");
-
             string queryPath = String.Format("/api/v1/measurement/?limit=1&measurement_type=weight&order_by=-timestamp&user={0}", userId);
             var response = new HttpClient().GetAsync(url + queryPath);
 
             if (response.Result.IsSuccessStatusCode)
             {
                 dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
+                measurements = deserialized["measurements"];
 
-                return deserialized["measurements"][0]["value_info"]["value"] ?? deserialized["measurements"][0]["value_info"]["Value"];
+                if (measurements.Count > 0) {
+                    return measurements[0]["value_info"]["value"] ?? measurements[0]["value_info"]["Value"];
+                }
+                else {
+                    return 0;
+                }
             }
 
             throw new Exception("Something went wrong on the server side while geting last wight measurement " + response.Result);

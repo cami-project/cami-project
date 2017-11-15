@@ -197,19 +197,17 @@ namespace DSS.FuzzyInference
                 var kg = storeAPI.GetLatestWeightMeasurement(userId);
 
                 var trend = "normal";
+                obj.ok = true;
 
+                if (kg != 0) {
                     if (Math.Abs(val - kg) > 2)
                     {
                         trend = val > kg ? "up" : "down";
                         obj.ok = false;
-    				}
-    				else 
-    				{
-    				    obj.ok = true;
-    				}
+                    }
+                }
 
-				    storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
-
+                storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
 
                 if(trend == "down" || trend == "up") {
 
@@ -220,9 +218,7 @@ namespace DSS.FuzzyInference
 
                     InformUser(END_USER_URI, "weight", "medium", endUserMsg, Loc.Get(LANG, Loc.DES, category, Loc.USR));
                     InformCaregivers(END_USER_URI, "weight", "medium", caregiverMsg, Loc.Get(LANG, Loc.DES, category, Loc.CAREGVR));
-
                 }
-
             }
             else if(obj.measurement_type == "pulse") 
             {
