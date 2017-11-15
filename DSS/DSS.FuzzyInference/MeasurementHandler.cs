@@ -427,11 +427,15 @@ namespace DSS.FuzzyInference
                 InformUser(userURIPath, "steps", "medium", endUserMsg, Loc.Get(LANG, Loc.DES, Loc.STEPS_BETWEEN_1000_2000, Loc.USR) );
             }
             else if(userStepCount > 6000) {
-                Console.WriteLine("Case > 6000");
-                var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.STEPS_BIGGER_6000, Loc.USR), userStepCount);
-                InformUser(userURIPath, "steps", "low", endUserMsg, string.Format(Loc.Get(LANG, Loc.DES, Loc.STEPS_BIGGER_6000, Loc.USR), userStepCount));
+                try{
+                    Console.WriteLine("Case > 6000");
+                    var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.STEPS_BIGGER_6000, Loc.USR), userStepCount);
+                    InformUser(userURIPath, "steps", "low", endUserMsg, string.Format(Loc.Get(LANG, Loc.DES, Loc.STEPS_BIGGER_6000, Loc.USR), userStepCount));
+                }
+                catch (Exception e) {
+                    Console.WriteLine("ERROR: " + e.ToString());
+                }
             }
-                
         }
 
         private void AnalyzePulseValue(int val, int min, int midLow, int midHigh, int max, string END_USER_URI)
