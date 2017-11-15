@@ -111,7 +111,7 @@ namespace DSS.RMQ
             if (response.Result.IsSuccessStatusCode)
             {
                 dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
-                measurements = deserialized["measurements"];
+                var measurements = deserialized["measurements"];
 
                 if (measurements.Count > 0) {
                     return measurements[0]["value_info"]["value"] ?? measurements[0]["value_info"]["Value"];
