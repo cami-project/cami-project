@@ -342,7 +342,7 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
             .setIn(['bp_diastolic'], fromJS(action.payload.bp_diastolic))
             .setIn(['bp_systolic'], fromJS(action.payload.bp_systolic))
             .setIn(['bp_pulse'], fromJS(action.payload.bp_pulse))
-            .setIn(['bp_aggregated'], fromJS(action.payload.bp_systolic))
+            .setIn(['bp_aggregated'], fromJS(action.payload.bp_aggregated))
             .setIn(['steps'], fromJS(action.payload.steps))
             .setIn(['lastEvents'], fromJS(action.payload.lastEvents))
             .setIn(['lastActivities'], fromJS(action.payload.lastActivities)),
