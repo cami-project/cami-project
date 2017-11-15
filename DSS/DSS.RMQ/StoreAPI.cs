@@ -126,7 +126,7 @@ namespace DSS.RMQ
 
             //Console.WriteLine(string.Format("[StoreAPI] Attempting to send journal entry of type {0}, for user {1}, with msg {2} and desc {3}. Timestamp: {4}",
             //    notification_type, user_uri, msg, desc, ((int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString()));
-            Console.WriteLine("[StoreAPI] Sending journal entry of type " + type + " for user " + user_uri + " with msg: " + msg);
+            Console.WriteLine("[StoreAPI] Sending journal entry of type " + notification_type + " for user " + user_uri + " with msg: " + msg);
             var obj = new JournalEntry()
             {
                 user = user_uri,
