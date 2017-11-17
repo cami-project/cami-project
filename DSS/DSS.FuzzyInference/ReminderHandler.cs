@@ -118,6 +118,7 @@ namespace DSS.FuzzyInference
 
                     var ack = reminder.content.value.ack.ToString() == "ok" ? true : false;
                     var journalId = reminder.content.value.journal.id.ToString();
+                    var journalEntry = storeAPI.GetJournalEntryById(journalId);
 
                     Console.WriteLine(journalId);
                     storeAPI.PatchJournalEntry(journalId, ack);
@@ -126,8 +127,6 @@ namespace DSS.FuzzyInference
                         MetricsPublisher.Current.Increment("cami.event.reminder.ack", 1);
 
                         Console.WriteLine("Reminder acknowledged");
-
-                        var journalEntry = storeAPI.GetJournalEntryById(journalId);
 
                         //Do this just in case it's possible to check if user did something for example 
                         //there is a new value in weight measurements and ignore if it's not possible 
@@ -162,12 +161,16 @@ namespace DSS.FuzzyInference
                     else {
 
                         MetricsPublisher.Current.Increment("cami.event.reminder.snoozed", 1);
-
                         Console.WriteLine("Reminder snoozed");
-                        InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_POSTPONED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_POSTPONED, Loc.CAREGVR));
+
+                        var expectedMessage = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.USR);
+
+                        if(journalEntry.message.ToString() == expectedMessage) {
+                            // send the BP snoozed notification only if it is relating to a BP reminder journal entry
+                            InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_POSTPONED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_POSTPONED, Loc.CAREGVR));
+                        }
 
                         userReminderMap.Remove(key);
-
                     }
                 }
             }
