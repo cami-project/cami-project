@@ -23,6 +23,35 @@ app.config_from_object(settings)
 """
 ================ Auxiliary functions ================
 """
+translation_dict = {
+    "enduser" : {
+        "en" : "%s at %s",
+        "ro" : "%s la ora %s",
+        "dk" : "%s klokken %s",
+        "pl" : "%s o %s"
+    },
+    "caregiver" : {
+        "appointment" : {
+            "en": "The person under your care has an appointment at %s",
+            "ro": "Persoana in grija dvs. are o activitate la %s",
+            "dk": "Personen du er plejer for har en aftale klokken %s",
+            "pl": "Osoba, którą się opiekujesz ma wizytę o %s",
+        },
+        "exercise" : {
+            "en": "The person under your care has an exercise at %s",
+            "ro": "Persoana in grija dvs. are un exercitiu la %s",
+            "dk": "Personen du er plejer for har en øvelse klokken %s",
+            "pl": "Osoba, którą się opiekujesz ma ćwiczenia o %s",
+        },
+        "medication" : {
+            "en": "The person under your care has to take their medicine at %s",
+            "ro": "Persoana in grija dvs. trebuie sa-si ia medicamentele la %s",
+            "dk": "Personen du er plejer for har skal tage sin medicin klokken %s",
+            "pl": "Osoba, którą się opiekujesz ma wsiąść lekarstwa o %s",
+        }
+    }
+}
+
 def _get_id_from_uri_path(uriPath):
     res = uriPath.rstrip("/")
     return int(res.split("/")[-1])
@@ -89,34 +118,6 @@ def send_reminder(activity, timestamp):
         activity_user
     )
 
-    caregiver_message_format = "Your loved one has %s at %s"
-
-    if activity_type == 'personal':
-        journal_entry_type = 'appointment'
-        caregiver_message_format = caregiver_message_format % (
-            "an appointment",
-            "%s"
-        )
-    elif activity_type == 'exercise':
-        journal_entry_type = 'exercise'
-        caregiver_message_format = caregiver_message_format % (
-            "to exercise",
-            "%s"
-        )
-    elif activity_type == 'medication':
-        journal_entry_type = 'medication'
-        caregiver_message_format = caregiver_message_format % (
-            "to take his medicine",
-            "%s"
-        )
-    else:
-        return
-
-    activity_start = datetime.datetime.fromtimestamp(activity['start']).strftime('%H:%M')
-    elder_message = activity['title'] + " at " + activity_start
-    caregiver_message = caregiver_message_format % activity_start
-    caregiver_description = activity['title'] + '\n' + activity['description']
-
     call_status, user_data = _get_user_data(activity_user)
     if call_status != 200:
         logger.debug(
@@ -125,8 +126,42 @@ def send_reminder(activity, timestamp):
 
         return
 
+    user_lang = user_data["enduser_profile"]["language"]
     user_id = int(user_data["id"])
-    
+
+    enduser_message_format = translation_dict["enduser"][user_lang]
+    caregiver_message_format = "The person under your care has an activity at %s"
+
+    if activity_type == 'personal':
+        journal_entry_type = 'appointment'
+        caregiver_message_format = translation_dict["caregiver"]["appointment"][user_lang]
+        # caregiver_message_format = caregiver_message_format % (
+        #     "an appointment",
+        #     "%s"
+        # )
+    elif activity_type == 'exercise':
+        journal_entry_type = 'exercise'
+        caregiver_message_format = translation_dict["caregiver"]["exercise"][user_lang]
+        # caregiver_message_format = caregiver_message_format % (
+        #     "to exercise",
+        #     "%s"
+        # )
+    elif activity_type == 'medication':
+        journal_entry_type = 'medication'
+        caregiver_message_format = translation_dict["caregiver"]["medication"][user_lang]
+        # caregiver_message_format = caregiver_message_format % (
+        #     "to take his medicine",
+        #     "%s"
+        # )
+    else:
+        caregiver_message_format = "The person under your care has an activity at %s"
+        # return
+
+    activity_start = datetime.datetime.fromtimestamp(activity['start']).strftime('%H:%M')
+    elder_message = enduser_message_format % (activity['title'], activity_start)
+    caregiver_message = caregiver_message_format % activity_start
+    caregiver_description = activity['title'] + '\n' + activity['description']
+
     logger.debug(
         "[google_calendar] Retrieved data for user that needs to be reminded: %s" % user_data
     )
