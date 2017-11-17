@@ -84,25 +84,32 @@ namespace DSS.FuzzyInference
                 {
                     MetricsPublisher.Current.Increment("cami.event.reminder.sent", 1);
 
-                    Console.WriteLine("reminder sent entered");
+                    Console.WriteLine("[reminder_handler] reminder sent entered");
+                    var journalId = reminder.content.value.journal.id_enduser.ToString();
+                    var journalEntry = storeAPI.GetJournalEntryById(journalId);
 
+                    Console.WriteLine("[reminder_handler] Sent journal entry message for reminder: " + journalEntry.message.ToString());
+                    var expectedMessage = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.USR);
 
-                    //Check if reminder is acknowledged after 6 mins
-                    var aTimer = new System.Timers.Timer(WAIT_MS);
-                    aTimer.Start();
-                    aTimer.AutoReset = false;
-                    aTimer.Elapsed += (x, y) =>
-                    {
-                        //This is in case user didn't respond 
-                        if(userReminderMap[key].content.name == "reminder_sent"){
-                            
-                            MetricsPublisher.Current.Increment("cami.event.reminder.ignored", 1);
-                            Console.WriteLine("Reminder wasn't acknowledged after 6 min");
+                    // if it is a reminder_sent event for a BP measurement in the morning
+                    if(journalEntry.message.ToString() == expectedMessage) {
+                        //Check if reminder is acknowledged after 6 mins
+                        var aTimer = new System.Timers.Timer(WAIT_MS);
+                        aTimer.Start();
+                        aTimer.AutoReset = false;
+                        aTimer.Elapsed += (x, y) =>
+                        {
+                            //This is in case user didn't respond
+                            if(userReminderMap[key].content.name == "reminder_sent"){
 
-                            InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_IGNORED, Loc.CAREGVR));
-                            userReminderMap.Remove(key);
-                        }
-                    };
+                                MetricsPublisher.Current.Increment("cami.event.reminder.ignored", 1);
+                                Console.WriteLine("Reminder wasn't acknowledged after 6 min");
+
+                                InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_IGNORED, Loc.CAREGVR));
+                                userReminderMap.Remove(key);
+                            }
+                        };
+                    }
                 }
 
                 //Reminder acknowledged 
