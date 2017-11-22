@@ -37,6 +37,63 @@ namespace DSS.Main
                 new MotionEventHandler()
 			};
 
+
+            // generate reminder event
+            var reminderEvent = new Event()
+            {
+                category = "USER_NOTIFICATIONS",
+                content = new Content()
+                {
+                    uuid = Guid.NewGuid().ToString(),
+                    name = "exercise_started",
+                    value_type = "complex",
+                    val = new Dictionary<string, dynamic>()
+                        {
+                             { "user", new Dictionary<string, int>() { {"id", 1 } } },
+                             { "exercise_type", "arm_gymnastics" },
+                             { "session_uuid", "session 100" }
+                        }
+                },
+                annotations = new Annotations()
+                {
+                    timestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds,
+                    source = "DSS"
+                }
+            };
+
+            var reminderEventEND = new Event()
+            {
+                category = "USER_NOTIFICATIONS",
+                content = new Content()
+                {
+                    uuid = Guid.NewGuid().ToString(),
+                    name = "exercise_ended",
+                    value_type = "complex",
+                    val = new Dictionary<string, dynamic>()
+                        {
+                             { "user", new Dictionary<string, int>() { {"id", 1 } } },
+                             { "exercise_type", "arm_gymnastics" },
+                             { "session_uuid", "session 100" }
+                        }
+                },
+                annotations = new Annotations()
+                {
+                    timestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds,
+                    source = "DSS"
+                }
+            };
+
+
+
+
+            handlers[4].Handle(JsonConvert.SerializeObject(reminderEvent));
+            handlers[4].Handle(JsonConvert.SerializeObject(reminderEventEND));
+
+
+
+            return;
+
+
             var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
             try
             {
