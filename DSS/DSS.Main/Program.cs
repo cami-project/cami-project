@@ -49,7 +49,7 @@ namespace DSS.Main
                     value_type = "complex",
                     val = new Dictionary<string, dynamic>()
                         {
-                             { "user", new Dictionary<string, int>() { {"id", 1 } } },
+                             { "user", new Dictionary<string, int>() { {"id", 2 } } },
                              { "exercise_type", "arm_gymnastics" },
                              { "session_uuid", "session 100" }
                         }
@@ -71,7 +71,7 @@ namespace DSS.Main
                     value_type = "complex",
                     val = new Dictionary<string, dynamic>()
                         {
-                             { "user", new Dictionary<string, int>() { {"id", 1 } } },
+                             { "user", new Dictionary<string, int>() { {"id", 2 } } },
                              { "exercise_type", "arm_gymnastics" },
                              { "session_uuid", "session 100" }
                         }
