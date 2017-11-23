@@ -96,11 +96,7 @@ namespace DSS.FuzzyInference
                     userActiveExerciseMap.Add(key, reminder);
                     string exerciseType = reminder.content.value.exercise_type.ToString();
 
-                    //TODO: ALEX 
-                    //I wasn't sure if should keep "reminder" type or change it to "exercise",
-                    //I know there is something in the iOS app
-                    //depending on something from dss
-                    InformCaregivers(userURIPath, "reminder", "low", Loc.Get(LANG, Loc.MSG, Loc.EXERCISE_STARTED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, string.Format(Loc.EXERCISE_STARTED, exerciseType), Loc.CAREGVR));
+                    InformCaregivers(userURIPath, "exercise", "none", Loc.Get(LANG, Loc.MSG, Loc.EXERCISE_STARTED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, string.Format(Loc.EXERCISE_STARTED, exerciseType), Loc.CAREGVR));
                     return;
                 }
                 else if (reminder.content.name == "exercise_ended")
@@ -118,15 +114,9 @@ namespace DSS.FuzzyInference
                         float score = float.Parse(reminder.content.value.score.ToString());
                         string exerciseType = reminder.content.value.exercise_type.ToString();
 
-
-                        //TODO: ALEX
-                        //In the issue bullet point you are saying I need to push notification but there is nothing regarding 
-                        //journal entry, however the line bellow adds it into Journal Entry
-                        //pleas tell me if I need to remove it :) 
-
                         InformCaregivers(userURIPath,
-                                         "reminder",
-                                         "low",
+                                         "exercise",
+                                         "none",
                                          Loc.Get(LANG, Loc.MSG, Loc.EXERCISE_ENDED, Loc.CAREGVR),
                                          Loc.Get(LANG, Loc.DES, string.Format(Loc.EXERCISE_ENDED, exerciseType, score), Loc.CAREGVR));
 
@@ -139,15 +129,11 @@ namespace DSS.FuzzyInference
                             desc = Loc.EXERCISE_ENDED_MID;
 
 
-                        InformUser(userURIPath, "reminder", "low", Loc.Get(LANG, Loc.MSG, Loc.EXERCISE_ENDED_LOW, Loc.USR), Loc.Get(LANG, Loc.DES, desc, Loc.USR));
+                        InformUser(userURIPath, "exercise", "low", Loc.Get(LANG, Loc.MSG, Loc.EXERCISE_ENDED_LOW, Loc.USR), Loc.Get(LANG, Loc.DES, desc, Loc.USR));
                         userActiveExerciseMap.Remove(key);
                     }
                     return;
                 }
-
-
-
-
 
 
 
