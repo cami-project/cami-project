@@ -135,6 +135,20 @@ target_link_libraries(adcamid
 # ###########################
 # Bluetooth tests
 # ###########################
+add_executable(test-adproximity
+        ${TEST_DIR}/TestAdCamiProximity.cpp
+        ${SOURCE_DIR}/AdCamiBluetooth5.cpp
+        ${SOURCE_DIR}/AdCamiBluetoothDefinitions.cpp
+        ${SOURCE_DIR}/AdCamiBluetoothDevice.cpp
+        ${SOURCE_DIR}/AdCamiUtilities.cpp
+        ${SOURCE_DIR}/dbus/dbus_helper_5.cpp)
+target_link_libraries(test-adproximity
+        ${DBUS_LIBRARIES}
+        ${DBUS_GLIB_LIBRARIES}
+        ${GLIB_LIBRARIES}
+        -lglib-2.0 -lgobject-2.0 -lgio-2.0
+        pthread)
+
 add_executable(test-discovery
         ${TEST_DIR}/TestDiscovery.cpp
         ${SOURCE_DIR}/AdCamiBluetooth5.cpp
@@ -245,8 +259,8 @@ target_link_libraries(test-asyncdiscovery
 
 add_executable(test-discoverreaddevice
         ${TEST_DIR}/TestDiscoverReadDevice.cpp
-        ${SOURCE_DIR}/AdCamiBluetoothDefinitions.cpp
         ${SOURCE_DIR}/AdCamiBluetooth5.cpp
+        ${SOURCE_DIR}/AdCamiBluetoothDefinitions.cpp
         ${SOURCE_DIR}/AdCamiBluetoothDevice.cpp
         ${SOURCE_DIR}/AdCamiJsonConverter.cpp
         ${SOURCE_DIR}/AdCamiUtilities.cpp

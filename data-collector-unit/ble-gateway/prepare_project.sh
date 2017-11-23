@@ -37,13 +37,13 @@ function install_tools {
 }
 
 function install_bluez {
-    BLUEZ_VERSION=5.43
-    BLUEZ_ORIG_FILE_URL=http://http.debian.net/debian/pool/main/b/bluez/bluez_5.43.orig.tar.gz
-    BLUEZ_ORIG_FILE=bluez_5.43.orig.tar.gz
-    BLUEZ_DEBIAN_FILE_URL=http://http.debian.net/debian/pool/main/b/bluez/bluez_5.43-1.debian.tar.xz
-    BLUEZ_DEBIAN_FILE=bluez_5.43-1.debian.tar.xz
+    BLUEZ_VERSION=5.47
+    BLUEZ_ORIG_FILE_URL=http://http.debian.net/debian/pool/main/b/bluez/bluez_$BLUEZ_VERSION.orig.tar.gz
+    BLUEZ_ORIG_FILE=bluez_$BLUEZ_VERSION.orig.tar.gz
+    BLUEZ_DEBIAN_FILE_URL=http://http.debian.net/debian/pool/main/b/bluez/bluez_$BLUEZ_VERSION-1.debian.tar.xz
+    BLUEZ_DEBIAN_FILE=bluez_$BLUEZ_VERSION-1.debian.tar.xz
     BLUEZ_DIR="$CONTRIB_DIR"/bluez-"$BLUEZ_VERSION"
-    BLUEZ_DEBIAN_PACKAGE_FILE=bluez_5.43-1_i386.deb
+    BLUEZ_DEBIAN_PACKAGE_FILE=bluez_$BLUEZ_VERSION-1_i386.deb
     BLUEZ_PACKAGES_DIR="$BLUEZ_DIR"/packages
     INITIAL_PATH=$(pwd)
 

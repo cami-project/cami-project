@@ -9,7 +9,7 @@ namespace AdCamiCommunications {
 
 AdCamiHttpServer::AdCamiHttpServer(const unsigned int port, const EnumConfiguration configuration) :
         _port(port), _daemon(NULL), _configuration(configuration),
-        _requests(map < tuple < AdCamiUrl, EnumHttpMethod >, const AdCamiRequest*> ()),
+        _requests(map < tuple < AdCamiUrl, EnumHttpMethod > , const AdCamiRequest*> ()),
         _certificatePemFile(nullptr), _certificateFilePath(nullptr), _keyPemFile(nullptr), _keyFilePath(nullptr),
         _rfds(new fd_set), _wfds(new fd_set), _efds(new fd_set), _maxfd(new int), _tv(new struct timeval) {
 

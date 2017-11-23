@@ -67,12 +67,29 @@ int FromHexString(const std::string &input, byte *output) {
 }
 
 std::string GetDate(std::chrono::system_clock::time_point t) {
+    auto _GetMilliseconds = [&t]() -> const char* {
+        auto seconds = std::chrono::time_point_cast<std::chrono::seconds>(t);
+        auto fraction = t - seconds;
+        auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(fraction).count();
+
+        return std::to_string(milliseconds).c_str();
+    };
+
     auto as_time_t = std::chrono::system_clock::to_time_t(t);
     struct tm tm;
     char timeBuffer[64];
 
     if (::gmtime_r(&as_time_t, &tm)) {
         if (std::strftime(timeBuffer, sizeof(timeBuffer), "%F %T", &tm)) {
+            size_t timeBufferLength = std::strlen(timeBuffer);
+            const char *millisecondsStr = _GetMilliseconds();
+
+            timeBuffer[timeBufferLength] = '.';
+            memcpy(&timeBuffer[timeBufferLength + 1],
+                   millisecondsStr,
+                   strlen(millisecondsStr));
+            timeBuffer[std::strlen(timeBuffer) + strlen(millisecondsStr)] = '\0';
+
             return std::string{timeBuffer};
         }
     }

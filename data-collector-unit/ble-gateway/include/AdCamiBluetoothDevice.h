@@ -237,6 +237,7 @@ public:
                                         handle.CharacteristicHandle<const char *>(),
                                         &notifications, timeout) == DBUS_OK) {
             if (notifications.size() > 0) {
+                measurements->reserve(notifications.size());
                 for (auto n : notifications) {
                     measurementCharacteristic = GetCharacteristicFromUuid(n.UUID);
                     measurements->push_back(&AdCamiEventFactory::Parse(

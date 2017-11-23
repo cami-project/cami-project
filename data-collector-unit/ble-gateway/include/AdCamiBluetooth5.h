@@ -54,6 +54,10 @@ public:
     AdCamiBluetoothError DiscoverDevices(vector <AdCamiBluetoothDevice> *devices,
                                          const unsigned int timeout = 10);
 
+    inline void FilterDevices(bool filter) {
+        this->_filterDevices = filter;
+    }
+
     /**
      * This method allows to get all devices that are paired.
      * @param devices vector with the information from the found Bluetooth devices.
@@ -136,6 +140,8 @@ private:
     DiscoveryTask *_discoveryTask;
     /* Discovery callback invoked when a new device is discovered by the background discovery thread. */
     DiscoveryClbk _discoveryCallback;
+    /* Flag to filter discovered devices. */
+    bool _filterDevices;
     /* List with the devices that are trusted to receive notifications. */
     vector <AdCamiBluetoothDevice> _devicesFilter;
     /* Callback that is invoked to update the list of devices that are trusted. */

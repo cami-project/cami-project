@@ -7,7 +7,7 @@ namespace AdCamiHardware {
 AdCamiBluetooth5::AdCamiBluetooth5() :
         _bluetoothAdapterPath(nullptr),
         _discoveryTask(new DiscoveryTask()), _discoveryCallback(nullptr),
-        _storeDiscoveredDevices(false), _discoveredDevices(nullptr) {}
+        _filterDevices(true), _storeDiscoveredDevices(false), _discoveredDevices(nullptr) {}
 
 AdCamiBluetooth5::~AdCamiBluetooth5() {
     /* Free the Adapter Path */
@@ -539,8 +539,8 @@ void AdCamiBluetooth5::_AsyncDiscoveryInterfaceAddedClbk(GDBusConnection *connec
     }
 
     /* Check if the device is authorized to receive notifications. */
-    bool deviceAuthorized = false;
-    if (bluetooth->_updateDevicesFilterClbk != nullptr) {
+    bool deviceAuthorized = (false || !bluetooth->_filterDevices);
+    if (bluetooth->_filterDevices && bluetooth->_updateDevicesFilterClbk != nullptr) {
         bluetooth->_updateDevicesFilterClbk(&bluetooth->_devicesFilter);
         deviceAuthorized = (std::find(bluetooth->_devicesFilter.begin(),
                                       bluetooth->_devicesFilter.end(),
@@ -575,8 +575,8 @@ void AdCamiBluetooth5::_AsyncDiscoveryPropertiesChangedClbk(GDBusConnection *con
     }
 
     /* Check if the device is authorized to receive notifications. */
-    bool deviceAuthorized = false;
-    if (bluetooth->_updateDevicesFilterClbk != nullptr) {
+    bool deviceAuthorized = (false || !bluetooth->_filterDevices);
+    if (bluetooth->_filterDevices && bluetooth->_updateDevicesFilterClbk != nullptr) {
         bluetooth->_updateDevicesFilterClbk(&bluetooth->_devicesFilter);
         deviceAuthorized = (std::find(bluetooth->_devicesFilter.begin(),
                                       bluetooth->_devicesFilter.end(),
