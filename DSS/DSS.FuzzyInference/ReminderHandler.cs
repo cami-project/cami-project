@@ -15,6 +15,9 @@ namespace DSS.FuzzyInference
         private Dictionary<string, dynamic> userReminderMap;
         private Dictionary<string, int []> userCareGiversMap;
 
+        private Dictionary<string, dynamic> userActiveExerciseMap;
+
+
 
        // private const int WAIT_MS = 60 * 1000;
 
@@ -29,6 +32,7 @@ namespace DSS.FuzzyInference
 
 
             userReminderMap = new Dictionary<string, dynamic>();
+            userActiveExerciseMap = new Dictionary<string, dynamic>();
 
 
             LibratoSettings.Settings.Username = "proiect.cami@gmail.com";
@@ -41,6 +45,7 @@ namespace DSS.FuzzyInference
         }
         private void InformCaregivers(string enduserURI, string type, string severity, string msg, string desc)
         {
+            Console.WriteLine("[Reminder handler] Informing caregiver: " + enduserURI + " of: " + msg);
             var caregivers = storeAPI.GetCaregivers(enduserURI);
 
             foreach (string caregiverURIPath in caregivers)
@@ -50,6 +55,14 @@ namespace DSS.FuzzyInference
                 storeAPI.PushJournalEntry(caregiverURIPath, type, severity, msg, desc);
                 insertionAPI.InsertPushNotification(msg, caregiverID);
             }
+
+        }
+
+        private void InformUser(string enduserURI, string type, string severity, string msg, string desc)
+        {
+            Console.WriteLine("[Reminder handler] Informing enduser: " + enduserURI + " of: " + msg);
+            storeAPI.PushJournalEntry(enduserURI, type, severity, msg, desc);
+            insertionAPI.InsertPushNotification(msg, GetIdFromURI(enduserURI));
 
         }
         private int GetIdFromURI(string uri)
@@ -72,6 +85,71 @@ namespace DSS.FuzzyInference
                 var userURIPath = "/api/v1/user/" + key + "/";
 
                 var LANG = storeAPI.GetLang(userURIPath);
+
+
+                if (reminder.content.name == "exercise_started")
+                {
+
+
+                    Console.WriteLine("Exercise started");
+
+                    userActiveExerciseMap.Add(key, reminder);
+                    string exerciseType = reminder.content.value.exercise_type.ToString();
+
+                    //TODO: ALEX 
+                    //I wasn't sure if should keep "reminder" type or change it to "exercise",
+                    //I know there is something in the iOS app
+                    //depending on something from dss
+                    InformCaregivers(userURIPath, "reminder", "low", Loc.Get(LANG, Loc.MSG, Loc.EXERCISE_STARTED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, string.Format(Loc.EXERCISE_STARTED, exerciseType), Loc.CAREGVR));
+                    return;
+                }
+                else if (reminder.content.name == "exercise_ended")
+                {
+
+                    Console.WriteLine("Exercise ended");
+
+                    if (userActiveExerciseMap.ContainsKey(key) && reminder.content.value.session_uuid == userActiveExerciseMap[key].content.value.session_uuid)
+                    {
+
+
+                        Console.WriteLine("Exercise ended is in the active map");
+
+
+                        float score = float.Parse(reminder.content.value.score.ToString());
+                        string exerciseType = reminder.content.value.exercise_type.ToString();
+
+
+                        //TODO: ALEX
+                        //In the issue bullet point you are saying I need to push notification but there is nothing regarding 
+                        //journal entry, however the line bellow adds it into Journal Entry
+                        //pleas tell me if I need to remove it :) 
+
+                        InformCaregivers(userURIPath,
+                                         "reminder",
+                                         "low",
+                                         Loc.Get(LANG, Loc.MSG, Loc.EXERCISE_ENDED, Loc.CAREGVR),
+                                         Loc.Get(LANG, Loc.DES, string.Format(Loc.EXERCISE_ENDED, exerciseType, score), Loc.CAREGVR));
+
+
+                        var desc = Loc.EXERCISE_ENDED_HIGH;
+
+                        if (score <= 30)
+                            desc = Loc.EXERCISE_ENDED_LOW;
+                        else if (score > 30 && score <= 60)
+                            desc = Loc.EXERCISE_ENDED_MID;
+
+
+                        InformUser(userURIPath, "reminder", "low", Loc.Get(LANG, Loc.MSG, Loc.EXERCISE_ENDED_LOW, Loc.USR), Loc.Get(LANG, Loc.DES, desc, Loc.USR));
+                        userActiveExerciseMap.Remove(key);
+                    }
+                    return;
+                }
+
+
+
+
+
+
 
                 if(userReminderMap.ContainsKey(key)){
 
