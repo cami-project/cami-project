@@ -15,6 +15,7 @@ const initialState = Map({
 
 // Actions
 const NOTIFICATION_RESPONSE = 'HomepageState/NOTIFICATION_RESPONSE';
+const ONETIME_NOTIFICATION_RESPONSE = 'HomepageState/ONETIME_NOTIFICATION_RESPONSE';
 const TRIGGER_REQUEST = 'HomepageState/TRIGGER_REQUEST';
 const ACK_RESPONSE = 'HomepageState/ACK_RESPONSE';
 
@@ -25,6 +26,16 @@ export async function requestNotification() {
   // Do an async fetch fot the latest notification.
   return {
     type: NOTIFICATION_RESPONSE,
+    payload: await fetchNotification()
+  };
+}
+
+export async function requestOneTimeNotification() {
+  console.log('[HomepageState] - Requesting a one time [elder] data fetch.');
+  // grab the latest notification without interfering with the polling schedule
+  // - useful to ensure that when app resumes from background you get the latest nottification
+  return {
+    type: ONETIME_NOTIFICATION_RESPONSE,
     payload: await fetchNotification()
   };
 }
@@ -173,6 +184,8 @@ export default function HomepageStateReducer(state = initialState, action = {}) 
       } else {
         return state;
       }
+    case ONETIME_NOTIFICATION_RESPONSE:
+      return state.setIn(['notification'], fromJS(action.payload));
     case ACK_RESPONSE:
       return state.setIn(['notification', 'acknowledged'], true);
     default:
