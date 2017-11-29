@@ -5,6 +5,7 @@ import logging
 import datetime
 import requests
 import uuid
+import pytz
 
 from kombu import Producer, Exchange, Connection
 from celery import Celery
@@ -51,6 +52,13 @@ translation_dict = {
             "pl": "Osoba, którą się opiekujesz ma wsiąść lekarstwa o %s",
         }
     }
+}
+
+timezone_dict = {
+    "en": "Europe/London",
+    "ro": "Europe/Bucharest",
+    "pl": "Europe/Warsaw",
+    "dk": "Europe/Copenhagen"
 }
 
 def _get_id_from_uri_path(uriPath):
@@ -129,6 +137,8 @@ def send_reminder(activity, timestamp):
 
     user_lang = user_data["enduser_profile"]["language"]
     user_id = int(user_data["id"])
+    user_timezone_name = timezone_dict[user_lang]
+    user_timezone = pytz.timezone(user_timezone_name)
 
     enduser_message_format = translation_dict["enduser"][user_lang]
     caregiver_message_format = "The person under your care has an activity at %s"
@@ -158,7 +168,7 @@ def send_reminder(activity, timestamp):
         caregiver_message_format = "The person under your care has an activity at %s"
         # return
 
-    activity_start = datetime.datetime.fromtimestamp(activity['start']).strftime('%H:%M')
+    activity_start = datetime.datetime.fromtimestamp(activity['start'], tz = user_timezone).strftime('%H:%M')
     elder_message = enduser_message_format % (activity['title'], activity_start)
     caregiver_message = caregiver_message_format % activity_start
     caregiver_description = activity['title'] + '\n' + activity['description']
