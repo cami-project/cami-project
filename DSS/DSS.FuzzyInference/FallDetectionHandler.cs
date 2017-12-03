@@ -20,10 +20,12 @@ namespace DSS.FuzzyInference
             {
                 Console.WriteLine("FALL detected!");
 
-                var path = "/api/v1/user/" + fall.content.user.id + "/";
+                var path = "/api/v1/user/" + fall.content["user"]["id"] + "/";
+                Console.WriteLine(path);
+
                 var lang = storeAPI.GetLang(path);
 
-                Console.WriteLine(path);
+                //Console.WriteLine(path);
 
                 InformCaregivers(path, "fall", "high", 
                                  Loc.Get(lang, Loc.MSG, Loc.FALL_DETECTED, Loc.CAREGVR), 
