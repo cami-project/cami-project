@@ -148,7 +148,7 @@ namespace DSS.FuzzyInference
 
             stepCountAnalysisTimers = new Dictionary<string, Timer>();
         }
-        //TODO: Make this a util methods since it's inside of a two files
+
         private void InformCaregivers(string enduserURI, string type, string severity, string msg, string desc ) 
         {
             var caregivers = storeAPI.GetCaregivers(enduserURI);
@@ -163,8 +163,6 @@ namespace DSS.FuzzyInference
             }
 
         }
-
-
 
         private void InformUser(string enduserURI, string type, string severity, string msg, string desc)
         {
@@ -387,7 +385,9 @@ namespace DSS.FuzzyInference
             timer.AutoReset = false;
             timer.Elapsed += (sender, args) =>
             {
-                AnalyzeStepCount(userURI);        
+                AnalyzeStepCount(userURI);
+                stepCountAnalysisTimers.Remove( userURI + DateTime.UtcNow.ToShortDateString());
+
             };
         }
 

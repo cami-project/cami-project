@@ -47,21 +47,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MotionEventHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Wearable.cs" />
-    <Compile Include="FallHandler.cs" />
-    <Compile Include="TimerQueue.cs" />
-    <Compile Include="EventToLabel.cs" />
-    <Compile Include="FuzzyContainer.cs" />
-    <Compile Include="MeasurementHandler.cs" />
-    <Compile Include="EventsHandler.cs" />
     <Compile Include="MeasurementConverter.cs" />
     <Compile Include="SensorToLocationHandler.cs" />
-    <Compile Include="ReminderHandler.cs" />
-    <Compile Include="ReminderTestScript.cs" />
     <Compile Include="Loc.cs" />
-    <Compile Include="FallDetectionHandler.cs" />
+    <Compile Include="Depricated\TimerQueue.cs" />
+    <Compile Include="Depricated\Wearable.cs" />
+    <Compile Include="Depricated\EventsHandler.cs" />
+    <Compile Include="Depricated\EventToLabel.cs" />
+    <Compile Include="Depricated\FallHandler.cs" />
+    <Compile Include="Depricated\FuzzyContainer.cs" />
+    <Compile Include="Depricated\ReminderTestScript.cs" />
+    <Compile Include="Handlers\FallDetectionHandler.cs" />
+    <Compile Include="Handlers\MeasurementHandler.cs" />
+    <Compile Include="Handlers\ReminderHandler.cs" />
+    <Compile Include="Handlers\MotionEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -75,6 +75,10 @@
       <Project>{728CCD8D-9438-4500-8407-8D86D20B5AA7}</Project>
       <Name>DSS.RMQ</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Depricated\" />
+    <Folder Include="Handlers\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

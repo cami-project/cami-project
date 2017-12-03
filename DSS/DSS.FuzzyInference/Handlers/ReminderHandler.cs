@@ -89,8 +89,7 @@ namespace DSS.FuzzyInference
 
                 if (reminder.content.name == "exercise_started")
                 {
-
-
+                    
                     Console.WriteLine("Exercise started");
 
                     userActiveExerciseMap.Add(key, reminder);
@@ -106,10 +105,8 @@ namespace DSS.FuzzyInference
 
                     if (userActiveExerciseMap.ContainsKey(key) && reminder.content.value.session_uuid == userActiveExerciseMap[key].content.value.session_uuid)
                     {
-
-
+                        
                         Console.WriteLine("Exercise ended is in the active map");
-
 
                         float score = float.Parse(reminder.content.value.score.ToString());
                         string exerciseType = reminder.content.value.exercise_type.ToString();
@@ -141,6 +138,7 @@ namespace DSS.FuzzyInference
 
                     userReminderMap.Remove(key);
                 }
+
                 userReminderMap.Add(key, reminder);
 
                 //Reminder issued
@@ -163,21 +161,27 @@ namespace DSS.FuzzyInference
                         aTimer.AutoReset = false;
                         aTimer.Elapsed += (x, y) =>
                         {
-                            //This is in case user didn't respond
-                            if(userReminderMap[key].content.name == "reminder_sent"){
+                            
+                            if (userReminderMap.ContainsKey(key))
+                            {
+                                //This is in case user didn't respond
+                                if (userReminderMap[key].content.name == "reminder_sent")
+                                {
 
-                                MetricsPublisher.Current.Increment("cami.event.reminder.ignored", 1);
-                                Console.WriteLine("Reminder wasn't acknowledged after 6 min");
+                                    MetricsPublisher.Current.Increment("cami.event.reminder.ignored", 1);
+                                    Console.WriteLine("Reminder wasn't acknowledged after 6 min");
 
-                                InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_IGNORED, Loc.CAREGVR));
-                                userReminderMap.Remove(key);
+                                    InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_IGNORED, Loc.CAREGVR));
+                                    userReminderMap.Remove(key);
+                                }
                             }
                         };
                     }
                 }
 
                 //Reminder acknowledged 
-                if(reminder.content.name == "reminder_acknowledged") {
+                else if (reminder.content.name == "reminder_acknowledged")
+                {
 
 
                     var ack = reminder.content.value.ack.ToString() == "ok" ? true : false;
@@ -187,7 +191,8 @@ namespace DSS.FuzzyInference
                     Console.WriteLine(journalId);
                     storeAPI.PatchJournalEntry(journalId, ack);
 
-                    if(ack) {
+                    if (ack)
+                    {
                         MetricsPublisher.Current.Increment("cami.event.reminder.ack", 1);
 
                         Console.WriteLine("Reminder acknowledged");
@@ -201,8 +206,9 @@ namespace DSS.FuzzyInference
 
                         var expectedMessage = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.USR);
 
-                        if(journalEntry.message.ToString() == expectedMessage) {
-                            
+                        if (journalEntry.message.ToString() == expectedMessage)
+                        {
+
                             var aTimer = new System.Timers.Timer(WAIT_MS);
                             aTimer.AutoReset = false;
                             aTimer.Start();
@@ -211,7 +217,7 @@ namespace DSS.FuzzyInference
 
                                 Console.WriteLine("Blood pressure");
 
-                                if(!storeAPI.CheckForMeasuremntInLastNMinutes("blood_pressure", 6, int.Parse(key)))
+                                if (!storeAPI.CheckForMeasuremntInLastNMinutes("blood_pressure", 6, int.Parse(key)))
                                 {
                                     Console.WriteLine("Blood pressure wasn't measured");
                                     InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR));
@@ -222,22 +228,17 @@ namespace DSS.FuzzyInference
                         userReminderMap.Remove(key);
 
                     }
-                    else {
+                }
+                    else if (reminder.content.name == "reminder_acknowledged"){
 
                         MetricsPublisher.Current.Increment("cami.event.reminder.snoozed", 1);
                         Console.WriteLine("Reminder snoozed");
-
-                        var expectedMessage = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.USR);
-
-                        if(journalEntry.message.ToString() == expectedMessage) {
-                            // send the BP snoozed notification only if it is relating to a BP reminder journal entry
-                            InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_POSTPONED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_POSTPONED, Loc.CAREGVR));
-                        }
-
+                        // send the BP snoozed notification only if it is relating to a BP reminder journal entry
+                        InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_POSTPONED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_POSTPONED, Loc.CAREGVR));
                         userReminderMap.Remove(key);
                     }
                 }
             }
-        }
+
     }
 }
