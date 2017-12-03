@@ -342,16 +342,30 @@ namespace DSS.FuzzyInference
         */
         private void StartStepsTimer(string userURIPath)
         {
+
+            Console.WriteLine("Start timer called ");
+
+
             //For now, the timer has to be refreshed every day 
             //This will be fixed int he future
             var key = userURIPath + DateTime.UtcNow.ToShortDateString();
 
             if (!stepCountAnalysisTimers.ContainsKey(key))
             {
-                // set the moment to run the timer at 19:00 localized time
-                // TODO
-                var localHour = 19;
-                var localMin = 0;
+
+                Console.WriteLine("Start steps timer: ");
+                
+                Tuple<string, string> userLocales = storeAPI.GetUserLocale(userURIPath, GetIdFromURI(userURIPath));
+                var LANG = userLocales.Item1;
+                var tZone = userLocales.Item2;
+
+                var todayAt7 = DateTime.Today.AddHours(19);
+
+				TimeZoneInfo localTz = TimeZoneInfo.FindSystemTimeZoneById(tZone);
+                var at = TimeZoneInfo.ConvertTime(todayAt7, TimeZoneInfo.Utc, localTz);
+
+
+                Console.WriteLine("Start steps timer: " + at.ToShortTimeString());
 
 				// TODO: add the recurring Timer to the dictionary
                 var timer = new Timer();
@@ -360,8 +374,7 @@ namespace DSS.FuzzyInference
                 // TODO: create a scheduling timer, whose sole job is that of 
                 //  - calling the AnalyzeStepCount the first time
                 //  - launch the timer that is responsible for the daily re-calling of AnalyzeStepCount
-
-                StartTimer(ChangeTime(DateTime.UtcNow, localHour, localMin), timer, userURIPath);
+                StartTimer(at, timer, userURIPath);
             }
         }
 

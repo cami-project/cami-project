@@ -153,6 +153,8 @@ namespace DSS.FuzzyInference
                     Console.WriteLine("[reminder_handler] Sent journal entry message for reminder: " + journalEntry.message.ToString());
                     var expectedMessage = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.USR);
 
+
+                    //TODO: Check if should remove this if statement
                     // if it is a reminder_sent event for a BP measurement in the morning
                     if(journalEntry.message.ToString() == expectedMessage) {
                         //Check if reminder is acknowledged after 6 mins
@@ -182,8 +184,7 @@ namespace DSS.FuzzyInference
                 //Reminder acknowledged 
                 else if (reminder.content.name == "reminder_acknowledged")
                 {
-
-
+                    
                     var ack = reminder.content.value.ack.ToString() == "ok" ? true : false;
                     var journalId = reminder.content.value.journal.id.ToString();
                     var journalEntry = storeAPI.GetJournalEntryById(journalId);
