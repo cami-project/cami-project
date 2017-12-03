@@ -230,7 +230,7 @@ namespace DSS.FuzzyInference
 
                     }
                 }
-                    else if (reminder.content.name == "reminder_acknowledged"){
+                else if (reminder.content.name == "reminder_snoozed"){
 
                         MetricsPublisher.Current.Increment("cami.event.reminder.snoozed", 1);
                         Console.WriteLine("Reminder snoozed");
