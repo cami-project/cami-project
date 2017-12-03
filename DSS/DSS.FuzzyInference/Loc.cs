@@ -33,6 +33,10 @@ namespace DSS.FuzzyInference
         public static string EXERCISE_ENDED_HIGH = "EXERCISE_ENDED_HIGH";
 
 
+
+        public static string FALL_DETECTED = "FALL_DETECTED";
+
+
         private static Dictionary<string, string> text = new Dictionary<string, string>(){
 
             //STEPS
@@ -260,6 +264,14 @@ namespace DSS.FuzzyInference
             {EN + USR + DES + EXERCISE_ENDED_MID,  "Keep improving!"},
             {EN + USR + MSG + EXERCISE_ENDED_HIGH, "Physical Exercise Ended"},
             {EN + USR + DES + EXERCISE_ENDED_HIGH, "You performed well!"}
+
+
+
+            //FALL
+            {EN + CAREGVR + MSG + FALL_DETECTED, "Fall has been detected!"},
+            {EN + CAREGVR + DES + FALL_DETECTED, "Please take action now!"},
+
+
         };
 
 

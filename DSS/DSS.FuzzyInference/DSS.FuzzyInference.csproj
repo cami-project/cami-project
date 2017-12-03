@@ -61,6 +61,7 @@
     <Compile Include="ReminderHandler.cs" />
     <Compile Include="ReminderTestScript.cs" />
     <Compile Include="Loc.cs" />
+    <Compile Include="FallDetectionHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
