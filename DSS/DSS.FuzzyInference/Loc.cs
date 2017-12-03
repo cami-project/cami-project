@@ -263,7 +263,7 @@ namespace DSS.FuzzyInference
             {EN + USR + MSG + EXERCISE_ENDED_MID,  "Physical Exercise Ended"},
             {EN + USR + DES + EXERCISE_ENDED_MID,  "Keep improving!"},
             {EN + USR + MSG + EXERCISE_ENDED_HIGH, "Physical Exercise Ended"},
-            {EN + USR + DES + EXERCISE_ENDED_HIGH, "You performed well!"}
+            {EN + USR + DES + EXERCISE_ENDED_HIGH, "You performed well!"},
 
 
 

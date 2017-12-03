@@ -83,33 +83,6 @@ namespace DSS.Delegate
 		}
 
 
-		public bool Equals(object obj)
-	    {
-            if (obj == null)
-                return false;
-
-            if (obj.GetType() != typeof(Event))
-                return false;
-
-            Event eventObj = (Event)obj;
-
-            return eventObj.category == this.category ;
-	    }
-        
-		public static bool operator== (Event a, Event b)
-        {
-            if (a != null)
-                return a.Equals(b);
-            else if (b != null)
-                return b.Equals(a);
-            else
-                return false;
-        }
-		public static bool operator !=(Event a, Event b)
-        { 
-            return !(a == b);
-		}
-
         public override string ToString()
         {
 			 return string.Format("[Event: category={0}, content={1}, annotations={2}]", category, content, annotations);
