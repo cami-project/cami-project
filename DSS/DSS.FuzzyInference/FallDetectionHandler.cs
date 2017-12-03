@@ -12,6 +12,12 @@ namespace DSS.FuzzyInference
         private StoreAPI storeAPI;
 
 
+        public FallDetectionHandler()
+        {
+            insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
+            storeAPI = new StoreAPI("http://cami-store:8008");
+        }
+
         public void Handle(string json)
         {
             var fall = JsonConvert.DeserializeObject<dynamic>(json);
