@@ -35,12 +35,6 @@ namespace DSS.FuzzyInference
             userActiveExerciseMap = new Dictionary<string, dynamic>();
 
 
-            LibratoSettings.Settings.Username = "proiect.cami@gmail.com";
-            LibratoSettings.Settings.ApiKey = "14a8816700f5e42443e593720b24eecb8fa3fddc4786dce640ee551556d7e484";
-            
-
-
-            MetricsPublisher.Start();
 
         }
         private void InformCaregivers(string enduserURI, string type, string severity, string msg, string desc)
@@ -73,8 +67,7 @@ namespace DSS.FuzzyInference
 
         public void Handle(string json)
         {
-
-
+            
             Console.WriteLine("Reminder invoked...");
 
             var reminder = JsonConvert.DeserializeObject<dynamic>(json);

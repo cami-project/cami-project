@@ -27,7 +27,6 @@ namespace DSS.Main
             var reminderHandler = new ReminderHandler();
             var motionHandler = new MotionEventHandler();
             var fallEventHandler = new FallDetectionHandler();
-
             var measurementHandler = new MeasurementHandler();
 
             var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
@@ -35,15 +34,11 @@ namespace DSS.Main
             {
                 var rmqEvents = new RmqExchange(url, "events", "event.*", (json) => { 
 
-                    Console.WriteLine("Event from exchange");
-                    Console.WriteLine(json);
-
                     reminderHandler.Handle(json); 
                     motionHandler.Handle(json);
                     fallEventHandler.Handle(json); 
                 } );
-                var rmqMeasurements = new RmqExchange(url, "measurements", "measurement.*", (json) => { Console.WriteLine("Measurement from exchange");
-                    Console.WriteLine(json);measurementHandler.Handle(json);  });
+                var rmqMeasurements = new RmqExchange(url, "measurements", "measurement.*", (json) => { measurementHandler.Handle(json);  });
 			}
             catch (Exception ex)
             {

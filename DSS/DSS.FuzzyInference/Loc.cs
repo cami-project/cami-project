@@ -111,19 +111,6 @@ namespace DSS.FuzzyInference
             { DK + CAREGVR + MSG + REMINDER_IGNORED, "Påmindelsen om at tage blodtryksmålingen blev ignoreret." },
             { DK + CAREGVR + DES + REMINDER_IGNORED, "Vil du være så venlig at ringe og give en påmindelse om målingen?" },
 
-
-            //MEASUREMENT IGNORED
-            { EN + CAREGVR + MSG + MEASUREMENT_IGNORED, "The person under your care did not take the blood pressure measurement." },
-            { EN + CAREGVR + DES + MEASUREMENT_IGNORED, "Please take action and call to remind them of the measurement." },
-            { PL + CAREGVR + MSG + MEASUREMENT_IGNORED, "Osoba, którą się opiekujesz, nie zmierzyła ciśnienia." },
-            { PL + CAREGVR + DES + MEASUREMENT_IGNORED, "Skontaktuj się z nią i przypomnij o pomiarze" },
-            { RO + CAREGVR + MSG + MEASUREMENT_IGNORED, "Persoana in grija dvs. nu a efectuat masuratoarea de tensiune." },
-            { RO + CAREGVR + DES + MEASUREMENT_IGNORED, "Va rugam interveniti si sunati pentru a-i aduce aminte de acest lucru." },
-            { DK + CAREGVR + MSG + MEASUREMENT_IGNORED, "Blodtryksmålingen blev ikke taget" },
-            { DK + CAREGVR + DES + MEASUREMENT_IGNORED, "Vil du være så venlig at ringe og give en påmindelse om målingen?" },
-
-
-
             { EN + CAREGVR + MSG + MEASUREMENT_IGNORED_WEIGHT, "The person under your care did not take the weight measurement." },
             { EN + CAREGVR + DES + MEASUREMENT_IGNORED_WEIGHT, "Please take action and call to remind them of the measurement." },
 
