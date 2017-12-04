@@ -174,7 +174,7 @@ namespace DSS.FuzzyInference
 
         public void Handle(string json) 
         {
-            Console.WriteLine("Measurement handler invoked");
+            Console.WriteLine("Measurement handler invoked " + DateTime.UtcNow );
 
             var obj = JsonConvert.DeserializeObject<Measurement>(json, settings);
 			
@@ -321,10 +321,17 @@ namespace DSS.FuzzyInference
 
                 }
             }
+
+            
             else if (obj.measurement_type == "steps")
             {
+
+                Console.WriteLine("Steps invoked!");
+
                 obj.ok = true;
                 storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
+
+
 
                 // start the step count timer for this user if not already done so
                 StartStepsTimer(obj.user);
@@ -364,8 +371,9 @@ namespace DSS.FuzzyInference
 				TimeZoneInfo localTz = TimeZoneInfo.FindSystemTimeZoneById(tZone);
                 var at = TimeZoneInfo.ConvertTime(todayAt7, TimeZoneInfo.Utc, localTz);
 
-
                 Console.WriteLine("Start steps timer: " + at.ToShortTimeString());
+                Console.WriteLine("UTC:" + at.ToUniversalTime().ToShortTimeString());
+
 
 				// TODO: add the recurring Timer to the dictionary
                 var timer = new Timer();
@@ -415,6 +423,9 @@ namespace DSS.FuzzyInference
 
         private void AnalyzeStepCount(string userURIPath)
         {
+
+            Console.WriteLine("Analize step count invoked!");
+
             var LANG = storeAPI.GetLang(userURIPath);
 
             var now = DateTime.UtcNow;
