@@ -17,6 +17,7 @@ namespace DSS.FuzzyInference
         public static string REMINDER_POSTPONED = "REMINDER_POSTPONED";
         public static string REMINDER_IGNORED = "REMINDER_IGNORED";
         public static string MEASUREMENT_IGNORED = "MEASUREMENT_IGNORED";
+        public static string MEASUREMENT_IGNORED_WEIGHT = "MEASUREMENT_IGNORED";
 
         public static string WEIGHT_DEC = "WEIGHT_DEC";
         public static string WEIGHT_INC = "WEIGHT_INC";
@@ -120,6 +121,13 @@ namespace DSS.FuzzyInference
             { RO + CAREGVR + DES + MEASUREMENT_IGNORED, "Va rugam interveniti si sunati pentru a-i aduce aminte de acest lucru." },
             { DK + CAREGVR + MSG + MEASUREMENT_IGNORED, "Blodtryksmålingen blev ikke taget" },
             { DK + CAREGVR + DES + MEASUREMENT_IGNORED, "Vil du være så venlig at ringe og give en påmindelse om målingen?" },
+
+
+
+            { EN + CAREGVR + MSG + MEASUREMENT_IGNORED_WEIGHT, "The person under your care did not take the weight measurement." },
+            { EN + CAREGVR + DES + MEASUREMENT_IGNORED_WEIGHT, "Please take action and call to remind them of the measurement." },
+
+
 
             //WEIGHT ANALYSIS - DEC
             { EN + USR + MSG + WEIGHT_DEC, "There's a decrease of {0} kg in your weight." },

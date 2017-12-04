@@ -205,26 +205,59 @@ namespace DSS.FuzzyInference
                         Console.WriteLine("Type: " + journalEntry.type.ToString());
                         Console.WriteLine("[reminder_handler] Acknowledged journal entry message: " + journalEntry.message.ToString());
 
-                        var expectedMessage = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.USR);
+                        //var expectedMessage = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.USR);
 
-                        if (journalEntry.message.ToString() == expectedMessage)
-                        {
+                        var msg = new List<string>(journalEntry.message.ToString().Split(' '));
+                        var des = new List<string>(journalEntry.description.ToString().Split(' '));
+
+                        msg.AddRange(des);
+
+                        Console.WriteLine("Contains blood or presure " + ( msg.Contains("blood") || msg.Contains("pressure")));
+                        Console.WriteLine("Contains weight: " + msg.Contains("weight"));
+
+
+                        if(msg.Contains("blood") || msg.Contains("pressure")) {
+
+                            Console.WriteLine("Blood pressure measurement!");
+
 
                             var aTimer = new System.Timers.Timer(WAIT_MS);
                             aTimer.AutoReset = false;
                             aTimer.Start();
                             aTimer.Elapsed += (x, y) =>
                             {
-
-                                Console.WriteLine("Blood pressure");
+                                
+                                Console.WriteLine("Blood pressure check invoked");
 
                                 if (!storeAPI.CheckForMeasuremntInLastNMinutes("blood_pressure", 6, int.Parse(key)))
                                 {
                                     Console.WriteLine("Blood pressure wasn't measured");
-                                    InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR));
+
+                                    InformCaregivers(userURIPath, "heart", "high", 
+                                                     Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR), 
+                                                     Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR));
                                 }
                             };
+
                         }
+                        else if(msg.Contains("weight")){
+
+                            Console.WriteLine("Weight measurement!");
+
+                            if (!storeAPI.CheckForMeasuremntInLastNMinutes("weight", 6, int.Parse(key)))
+                            {
+                                Console.WriteLine("Blood pressure wasn't measured");
+
+                                //TODO: should it be high for the weight?
+                                InformCaregivers(userURIPath, "weight", "high", 
+                                                 Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED_WEIGHT, Loc.CAREGVR), 
+                                                 Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED_WEIGHT, Loc.CAREGVR));
+                            }
+
+
+                        }
+
+
 
                         userReminderMap.Remove(key);
 
@@ -234,6 +267,8 @@ namespace DSS.FuzzyInference
 
                         MetricsPublisher.Current.Increment("cami.event.reminder.snoozed", 1);
                         Console.WriteLine("Reminder snoozed");
+
+                        //TODO: should I do the same when snoozed??
                         // send the BP snoozed notification only if it is relating to a BP reminder journal entry
                         InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_POSTPONED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_POSTPONED, Loc.CAREGVR));
                         userReminderMap.Remove(key);

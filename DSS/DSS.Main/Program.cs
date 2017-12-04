@@ -10,6 +10,7 @@ using log4net;
 using log4net.Config;
 using System.Xml;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DSS.Main
 {
@@ -22,7 +23,9 @@ namespace DSS.Main
 
 		public static void Main(string[] args)
         {
-            
+
+
+
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...");
 

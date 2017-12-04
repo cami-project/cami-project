@@ -33,7 +33,7 @@ namespace DSS.FuzzyInference
 
                 //Console.WriteLine(path);
 
-                InformCaregivers(path, "fall", "high", 
+                InformCaregivers(path, "steps", "high", 
                                  Loc.Get(lang, Loc.MSG, Loc.FALL_DETECTED, Loc.CAREGVR), 
                                  Loc.Get(lang, Loc.DES, Loc.FALL_DETECTED, Loc.CAREGVR) 
                     
