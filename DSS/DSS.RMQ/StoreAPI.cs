@@ -224,8 +224,8 @@ namespace DSS.RMQ
 
             Console.WriteLine("Retrieving language and timezone for user: " + userURIPath);
 
-            //string queryPath = String.Format("/api/v1/enduserprofile/?limit=1&user={0}", userID);
-            var response = new HttpClient().GetAsync(url + userURIPath);
+            string queryPath = String.Format("/api/v1/enduserprofile/?limit=1&user={0}", userID);
+            var response = new HttpClient().GetAsync(url + queryPath);
 
             if (response.Result.IsSuccessStatusCode)
             {
