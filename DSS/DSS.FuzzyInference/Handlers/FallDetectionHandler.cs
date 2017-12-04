@@ -11,7 +11,6 @@ namespace DSS.FuzzyInference
         private RMQ.INS.InsertionAPI insertionAPI;
         private StoreAPI storeAPI;
 
-
         public FallDetectionHandler()
         {
             insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
@@ -20,7 +19,10 @@ namespace DSS.FuzzyInference
 
         public void Handle(string json)
         {
+            Console.WriteLine("Fall detection handler invoked...");
+
             var fall = JsonConvert.DeserializeObject<dynamic>(json);
+            Console.WriteLine(fall);
 
             if (fall.category.ToString() == "FALL_DETECTION")
             {
