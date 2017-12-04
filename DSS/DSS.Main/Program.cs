@@ -20,9 +20,7 @@ namespace DSS.Main
         
 		public static void Main(string[] args)
         {
-
-
-
+            
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...##");
 
