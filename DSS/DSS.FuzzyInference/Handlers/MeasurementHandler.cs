@@ -360,29 +360,41 @@ namespace DSS.FuzzyInference
             if (!stepCountAnalysisTimers.ContainsKey(key))
             {
 
-                Console.WriteLine("Start steps timer: ");
-                
-                Tuple<string, string> userLocales = storeAPI.GetUserLocale(userURIPath, GetIdFromURI(userURIPath));
-                var LANG = userLocales.Item1;
-                var tZone = userLocales.Item2;
+                try
+                {
+                    Console.WriteLine("Start steps key");
 
-                var todayAt7 = DateTime.Today.AddHours(19);
+                    Tuple<string, string> userLocales = storeAPI.GetUserLocale(userURIPath, GetIdFromURI(userURIPath));
+                    var LANG = userLocales.Item1;
+                    var tZone = userLocales.Item2;
 
-				TimeZoneInfo localTz = TimeZoneInfo.FindSystemTimeZoneById(tZone);
-                var at = TimeZoneInfo.ConvertTime(todayAt7, TimeZoneInfo.Utc, localTz);
-
-                Console.WriteLine("Start steps timer: " + at.ToShortTimeString());
-                Console.WriteLine("UTC:" + at.ToUniversalTime().ToShortTimeString());
+                    Console.WriteLine("Time zone: " + tZone);
 
 
-				// TODO: add the recurring Timer to the dictionary
-                var timer = new Timer();
-                stepCountAnalysisTimers.Add(key, timer);
+                    var todayAt7 = DateTime.Today.AddHours(19);
 
-                // TODO: create a scheduling timer, whose sole job is that of 
-                //  - calling the AnalyzeStepCount the first time
-                //  - launch the timer that is responsible for the daily re-calling of AnalyzeStepCount
-                StartTimer(at, timer, userURIPath);
+                    TimeZoneInfo localTz = TimeZoneInfo.FindSystemTimeZoneById(tZone);
+                    var at = TimeZoneInfo.ConvertTime(todayAt7, TimeZoneInfo.Utc, localTz);
+
+                    Console.WriteLine("Start steps timer: " + at.ToShortTimeString());
+                    Console.WriteLine("UTC:" + at.ToUniversalTime().ToShortTimeString());
+
+
+                    // TODO: add the recurring Timer to the dictionary
+                    var timer = new Timer();
+                    stepCountAnalysisTimers.Add(key, timer);
+
+                    // TODO: create a scheduling timer, whose sole job is that of 
+                    //  - calling the AnalyzeStepCount the first time
+                    //  - launch the timer that is responsible for the daily re-calling of AnalyzeStepCount
+                    StartTimer(at, timer, userURIPath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("U pm " + ex);
+                }
+
+
             }
         }
 
