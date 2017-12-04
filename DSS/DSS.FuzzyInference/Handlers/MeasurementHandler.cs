@@ -370,31 +370,23 @@ namespace DSS.FuzzyInference
 
                     Console.WriteLine("Time zone: " + tZone);
 
-
                     var todayAt7 = DateTime.Today.AddHours(19);
 
-                    TimeZoneInfo localTz = TimeZoneInfo.FindSystemTimeZoneById(tZone);
-                    var at = TimeZoneInfo.ConvertTime(todayAt7, TimeZoneInfo.Utc, localTz);
-
-                    Console.WriteLine("Start steps timer: " + at.ToShortTimeString());
-                    Console.WriteLine("UTC:" + at.ToUniversalTime().ToShortTimeString());
+                    //TODO: Replace this with a flexible implementation 
+                    if (tZone == "Europe/Bucharest")
+                        todayAt7.AddHours(-2);
 
 
-                    // TODO: add the recurring Timer to the dictionary
                     var timer = new Timer();
                     stepCountAnalysisTimers.Add(key, timer);
 
-                    // TODO: create a scheduling timer, whose sole job is that of 
-                    //  - calling the AnalyzeStepCount the first time
-                    //  - launch the timer that is responsible for the daily re-calling of AnalyzeStepCount
-                    StartTimer(at, timer, userURIPath);
+                    Console.WriteLine("Today at 7: " + todayAt7);
+                    StartTimer(todayAt7, timer, userURIPath);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("U pm " + ex);
                 }
-
-
             }
         }
 
