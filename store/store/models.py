@@ -223,7 +223,8 @@ class Activity(models.Model):
     ACTIVITY_TYPE = (
         ("personal", "personal"),
         ("exercise", "exercise"),
-        ("medication", "medication")
+        ("medication", "medication"),
+        ('health-measurment', 'health-measurement')
     )
 
     event_id = models.CharField(max_length=64)
@@ -269,7 +270,9 @@ class JournalEntry(models.Model):
         ('sleep', 'sleep'),
         ('exercise', 'exercise'),
         ('medication', 'medication'),
-        ('appointment', 'appointment')
+        ('appointment', 'appointment'),
+        ('health-measurment', 'health-measurement'),
+        ('fall', 'fall')
     )
 
     SEVERITIES = (
