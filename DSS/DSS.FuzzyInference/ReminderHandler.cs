@@ -89,14 +89,12 @@ namespace DSS.FuzzyInference
 
                 if (reminder.content.name == "exercise_started")
                 {
-
-
                     Console.WriteLine("Exercise started");
 
-                    userActiveExerciseMap.Add(key, reminder);
+                    userActiveExerciseMap[key] = reminder;
                     string exerciseType = reminder.content.value.exercise_type.ToString();
 
-                    InformCaregivers(userURIPath, "exercise", "none", Loc.Get(LANG, Loc.MSG, Loc.EXERCISE_STARTED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, string.Format(Loc.EXERCISE_STARTED, exerciseType), Loc.CAREGVR));
+                    InformCaregivers(userURIPath, "exercise", "none", Loc.Get(LANG, Loc.MSG, Loc.EXERCISE_STARTED, Loc.CAREGVR), string.Format(Loc.Get(LANG, Loc.DES, Loc.EXERCISE_STARTED, Loc.CAREGVR), exerciseType));
                     return;
                 }
                 else if (reminder.content.name == "exercise_ended")
@@ -118,7 +116,8 @@ namespace DSS.FuzzyInference
                                          "exercise",
                                          "none",
                                          Loc.Get(LANG, Loc.MSG, Loc.EXERCISE_ENDED, Loc.CAREGVR),
-                                         Loc.Get(LANG, Loc.DES, string.Format(Loc.EXERCISE_ENDED, exerciseType, score), Loc.CAREGVR));
+                                         string.Format(Loc.Get(LANG, Loc.DES, Loc.EXERCISE_ENDED, Loc.CAREGVR), exerciseType, score));
+
 
 
                         var desc = Loc.EXERCISE_ENDED_HIGH;
