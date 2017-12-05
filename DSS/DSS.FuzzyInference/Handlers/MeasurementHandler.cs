@@ -148,7 +148,7 @@ namespace DSS.FuzzyInference
 
             stepCountAnalysisTimers = new Dictionary<string, Timer>();
         }
-        //TODO: Make this a util methods since it's inside of a two files
+
         private void InformCaregivers(string enduserURI, string type, string severity, string msg, string desc ) 
         {
             var caregivers = storeAPI.GetCaregivers(enduserURI);
@@ -164,8 +164,6 @@ namespace DSS.FuzzyInference
 
         }
 
-
-
         private void InformUser(string enduserURI, string type, string severity, string msg, string desc)
         {
             Console.WriteLine("[MeasurmentHandler] Informing enduser: " + enduserURI + " of: " + msg);
@@ -176,7 +174,7 @@ namespace DSS.FuzzyInference
 
         public void Handle(string json) 
         {
-            Console.WriteLine("Measurement handler invoked");
+            Console.WriteLine("Measurement handler invoked " + DateTime.UtcNow );
 
             var obj = JsonConvert.DeserializeObject<Measurement>(json, settings);
 			
@@ -323,10 +321,17 @@ namespace DSS.FuzzyInference
 
                 }
             }
+
+            
             else if (obj.measurement_type == "steps")
             {
+
+                Console.WriteLine("Steps invoked!");
+
                 obj.ok = true;
                 storeAPI.PushMeasurement(JsonConvert.SerializeObject(obj));
+
+
 
                 // start the step count timer for this user if not already done so
                 StartStepsTimer(obj.user);
@@ -344,26 +349,44 @@ namespace DSS.FuzzyInference
         */
         private void StartStepsTimer(string userURIPath)
         {
+
+            Console.WriteLine("Start timer called ");
+
+
             //For now, the timer has to be refreshed every day 
             //This will be fixed int he future
             var key = userURIPath + DateTime.UtcNow.ToShortDateString();
 
             if (!stepCountAnalysisTimers.ContainsKey(key))
             {
-                // set the moment to run the timer at 19:00 localized time
-                // TODO
-                var localHour = 19;
-                var localMin = 0;
 
-				// TODO: add the recurring Timer to the dictionary
-                var timer = new Timer();
-                stepCountAnalysisTimers.Add(key, timer);
+                try
+                {
+                    Console.WriteLine("Start steps key");
 
-                // TODO: create a scheduling timer, whose sole job is that of 
-                //  - calling the AnalyzeStepCount the first time
-                //  - launch the timer that is responsible for the daily re-calling of AnalyzeStepCount
+                    Tuple<string, string> userLocales = storeAPI.GetUserLocale(userURIPath, GetIdFromURI(userURIPath));
+                    var LANG = userLocales.Item1;
+                    var tZone = userLocales.Item2;
 
-                StartTimer(ChangeTime(DateTime.UtcNow, localHour, localMin), timer, userURIPath);
+                    Console.WriteLine("Time zone: " + tZone);
+
+                    var todayAt7 = DateTime.Today.AddHours(19);
+
+                    //TODO: Replace this with a flexible implementation 
+                    if (tZone == "Europe/Bucharest")
+                        todayAt7.AddHours(-2);
+
+
+                    var timer = new Timer();
+                    stepCountAnalysisTimers.Add(key, timer);
+
+                    Console.WriteLine("Today at 7: " + todayAt7);
+                    StartTimer(todayAt7, timer, userURIPath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("U pm " + ex);
+                }
             }
         }
 
@@ -387,7 +410,9 @@ namespace DSS.FuzzyInference
             timer.AutoReset = false;
             timer.Elapsed += (sender, args) =>
             {
-                AnalyzeStepCount(userURI);        
+                AnalyzeStepCount(userURI);
+                stepCountAnalysisTimers.Remove( userURI + DateTime.UtcNow.ToShortDateString());
+
             };
         }
 
@@ -402,6 +427,9 @@ namespace DSS.FuzzyInference
 
         private void AnalyzeStepCount(string userURIPath)
         {
+
+            Console.WriteLine("Analize step count invoked!");
+
             var LANG = storeAPI.GetLang(userURIPath);
 
             var now = DateTime.UtcNow;

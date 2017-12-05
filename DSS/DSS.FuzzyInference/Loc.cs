@@ -16,7 +16,14 @@ namespace DSS.FuzzyInference
         public static string REMINDER_SENT = "REMINDER_SENT";
         public static string REMINDER_POSTPONED = "REMINDER_POSTPONED";
         public static string REMINDER_IGNORED = "REMINDER_IGNORED";
+
         public static string MEASUREMENT_IGNORED = "MEASUREMENT_IGNORED";
+        public static string MEASUREMENT_POSTPONED = "MEASUREMENT_POSTPONED";
+
+        public static string MEASUREMENT_IGNORED_WEIGHT = "MEASUREMENT_IGNORED_WEIGHT";
+        public static string MEASUREMENT_POSTPONED_WEIGHT = "MEASUREMENT_POSTPONED_WEIGHT";
+
+
 
         public static string WEIGHT_DEC = "WEIGHT_DEC";
         public static string WEIGHT_INC = "WEIGHT_INC";
@@ -31,6 +38,10 @@ namespace DSS.FuzzyInference
         public static string EXERCISE_ENDED_LOW = "EXERCISE_ENDED_LOW";
         public static string EXERCISE_ENDED_MID = "EXERCISE_ENDED_MID";
         public static string EXERCISE_ENDED_HIGH = "EXERCISE_ENDED_HIGH";
+
+
+
+        public static string FALL_DETECTED = "FALL_DETECTED";
 
 
         private static Dictionary<string, string> text = new Dictionary<string, string>(){
@@ -106,16 +117,18 @@ namespace DSS.FuzzyInference
             { DK + CAREGVR + MSG + REMINDER_IGNORED, "Påmindelsen om at tage blodtryksmålingen blev ignoreret." },
             { DK + CAREGVR + DES + REMINDER_IGNORED, "Vil du være så venlig at ringe og give en påmindelse om målingen?" },
 
-
             //MEASUREMENT IGNORED
             { EN + CAREGVR + MSG + MEASUREMENT_IGNORED, "The person under your care did not take the blood pressure measurement." },
             { EN + CAREGVR + DES + MEASUREMENT_IGNORED, "Please take action and call to remind them of the measurement." },
-            { PL + CAREGVR + MSG + MEASUREMENT_IGNORED, "Osoba, którą się opiekujesz, nie zmierzyła ciśnienia." },
-            { PL + CAREGVR + DES + MEASUREMENT_IGNORED, "Skontaktuj się z nią i przypomnij o pomiarze" },
-            { RO + CAREGVR + MSG + MEASUREMENT_IGNORED, "Persoana in grija dvs. nu a efectuat masuratoarea de tensiune." },
-            { RO + CAREGVR + DES + MEASUREMENT_IGNORED, "Va rugam interveniti si sunati pentru a-i aduce aminte de acest lucru." },
-            { DK + CAREGVR + MSG + MEASUREMENT_IGNORED, "Blodtryksmålingen blev ikke taget" },
-            { DK + CAREGVR + DES + MEASUREMENT_IGNORED, "Vil du være så venlig at ringe og give en påmindelse om målingen?" },
+            { EN + CAREGVR + MSG + MEASUREMENT_POSTPONED, "The person under your care postponed the blood pressure measurement." },
+            { EN + CAREGVR + DES + MEASUREMENT_POSTPONED, "Please take action and call to remind them of the measurement." },
+
+
+            { EN + CAREGVR + MSG + MEASUREMENT_IGNORED_WEIGHT, "The person under your care did not take the weight measurement." },
+            { EN + CAREGVR + DES + MEASUREMENT_IGNORED_WEIGHT, "Please take action and call to remind them of the measurement." },
+            { EN + CAREGVR + MSG + MEASUREMENT_POSTPONED_WEIGHT, "The person under your care postponed the weight measurement." },
+            { EN + CAREGVR + DES + MEASUREMENT_POSTPONED_WEIGHT, "Please take action and call to remind them of the measurement." },
+
 
             //WEIGHT ANALYSIS - DEC
             { EN + USR + MSG + WEIGHT_DEC, "There's a decrease of {0} kg in your weight." },
@@ -259,7 +272,15 @@ namespace DSS.FuzzyInference
             {EN + USR + MSG + EXERCISE_ENDED_MID,  "Physical Exercise Ended"},
             {EN + USR + DES + EXERCISE_ENDED_MID,  "Keep improving!"},
             {EN + USR + MSG + EXERCISE_ENDED_HIGH, "Physical Exercise Ended"},
-            {EN + USR + DES + EXERCISE_ENDED_HIGH, "You performed well!"}
+            {EN + USR + DES + EXERCISE_ENDED_HIGH, "You performed well!"},
+
+
+
+            //FALL
+            {EN + CAREGVR + MSG + FALL_DETECTED, "Fall has been detected!"},
+            {EN + CAREGVR + DES + FALL_DETECTED, "Please take action now!"},
+
+
         };
 
 
