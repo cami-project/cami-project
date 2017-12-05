@@ -180,12 +180,15 @@ namespace DSS.FuzzyInference
                                                  "The person under your care ignored the blood pressure measurements reminder.",
                                                  "Please take action and call to remind them of the measurement.");
 
+                                userReminderMap.Remove(key);
                             }
                             else if(msg.Contains("weight")){
 
-                            InformCaregivers(userURIPath, "weight", "high",
+                                InformCaregivers(userURIPath, "weight", "high",
                                                    "The person under your care ignored the weight measurements reminder.",
                                                    "Please take action and call to remind them of the measurement.");
+
+                                userReminderMap.Remove(key);
                             }
                         }
                     };
