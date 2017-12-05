@@ -240,7 +240,7 @@ namespace DSS.RMQ
             if (response.Result.IsSuccessStatusCode)
             {
                 dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
-                string lang = deserialized["enduser_profile"]["language"].ToUpper();
+                string lang = deserialized["enduser_profile"]["language"].ToString().ToUpper();
 
                 if (timezoneMap.ContainsKey(lang))
                 {
