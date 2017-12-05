@@ -137,41 +137,70 @@ namespace DSS.FuzzyInference
                 //Reminder issued
                 if (reminder.content.name == "reminder_sent")
                 {
-                    MetricsPublisher.Current.Increment("cami.event.reminder.sent", 1);
 
                     Console.WriteLine("[reminder_handler] reminder sent entered");
                     var journalId = reminder.content.value.journal.id_enduser.ToString();
                     var journalEntry = storeAPI.GetJournalEntryById(journalId);
 
                     Console.WriteLine("[reminder_handler] Sent journal entry message for reminder: " + journalEntry.message.ToString());
-                    var expectedMessage = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.USR);
+
+                    Console.WriteLine("Type: " + journalEntry.type.ToString());
+
+                    var msg = new List<string>(journalEntry.message.ToString().Split(' '));
+                    var des = new List<string>(journalEntry.description.ToString().Split(' '));
+
+                    msg.AddRange(des);
+
+                    Console.WriteLine("Contains blood or presure " + (msg.Contains("blood") || msg.Contains("pressure")));
+                    Console.WriteLine("Contains weight: " + msg.Contains("weight"));
 
 
-                    //TODO: Check if should remove this if statement
-                    // if it is a reminder_sent event for a BP measurement in the morning
-                    if(journalEntry.message.ToString() == expectedMessage) {
-                        //Check if reminder is acknowledged after 6 mins
+                    if (msg.Contains("blood") || msg.Contains("pressure"))
+                    {
+
+                        Console.WriteLine("ACK blood pressure measurement!");
+
                         var aTimer = new System.Timers.Timer(WAIT_MS);
-                        aTimer.Start();
                         aTimer.AutoReset = false;
+                        aTimer.Start();
                         aTimer.Elapsed += (x, y) =>
                         {
-                            
-                            if (userReminderMap.ContainsKey(key))
+
+                            Console.WriteLine("Blood pressure reminder ignored");
+
+                            if (!storeAPI.CheckForMeasuremntInLastNMinutes("blood_pressure", 6, int.Parse(key)))
                             {
-                                //This is in case user didn't respond
-                                if (userReminderMap[key].content.name == "reminder_sent")
-                                {
+                                Console.WriteLine("Blood pressure measured wasn't ack");
 
-                                    MetricsPublisher.Current.Increment("cami.event.reminder.ignored", 1);
-                                    Console.WriteLine("Reminder wasn't acknowledged after 6 min");
+                                InformCaregivers(userURIPath, "heart", "high",
+                                                 "The person under your care ignored the blood pressure measurements reminder.",
+                                                 "Please take action and call to remind them of the measurement.");
+                            }
+                        };
 
-                                    InformCaregivers(userURIPath, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_IGNORED, Loc.CAREGVR));
-                                    userReminderMap.Remove(key);
-                                }
+                    }
+                    else if (msg.Contains("weight"))
+                    {
+
+                        var aTimer = new System.Timers.Timer(WAIT_MS);
+                        aTimer.AutoReset = false;
+                        aTimer.Start();
+                        aTimer.Elapsed += (x, y) =>
+                        {
+
+                            Console.WriteLine("Reminder for weight ignored");
+
+                            if (!storeAPI.CheckForMeasuremntInLastNMinutes("weight", 6, int.Parse(key)))
+                            {
+                                Console.WriteLine("Weight wasn't measured");
+
+                                InformCaregivers(userURIPath, "weight", "high",
+                                                 "The person under your care ignored the weight measurements reminder.",
+                                                 "Please take action and call to remind them of the measurement.");
                             }
                         };
                     }
+
                 }
 
                 //Reminder acknowledged 
@@ -236,14 +265,23 @@ namespace DSS.FuzzyInference
 
                             Console.WriteLine("ACK Weight measurement!");
 
-                            if (!storeAPI.CheckForMeasuremntInLastNMinutes("weight", 6, int.Parse(key)))
-                            {
-                                Console.WriteLine("Weight wasn't measured");
 
-                                InformCaregivers(userURIPath, "weight", "high", 
-                                                 Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED_WEIGHT, Loc.CAREGVR), 
-                                                 Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED_WEIGHT, Loc.CAREGVR));
-                            }
+                            var aTimer = new System.Timers.Timer(WAIT_MS);
+                            aTimer.AutoReset = false;
+                            aTimer.Start();
+                            aTimer.Elapsed += (x, y) =>
+                            {
+
+                                if (!storeAPI.CheckForMeasuremntInLastNMinutes("weight", 6, int.Parse(key)))
+                                {
+                                    Console.WriteLine("Weight wasn't measured");
+
+                                    InformCaregivers(userURIPath, "weight", "high",
+                                                     Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED_WEIGHT, Loc.CAREGVR),
+                                                     Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED_WEIGHT, Loc.CAREGVR));
+                                }
+
+                            };
                         }
 
 
@@ -251,7 +289,6 @@ namespace DSS.FuzzyInference
 
                     }
                     else {
-                        MetricsPublisher.Current.Increment("cami.event.reminder.snoozed", 1);
                         Console.WriteLine("Reminder snoozed");
 
                         // send the BP snoozed notification only if it is relating to a BP reminder journal entry
