@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -356,7 +357,7 @@ namespace DSS.RMQ
         {
 
 
-            HttpContent content = new StringContent(JsonConvert.SerializeObject(new { acknowledged = ack }));
+            HttpContent content = new StringContent(JsonConvert.SerializeObject(new { acknowledged = ack }), Encoding.UTF8, "application/json");
             var response = new HttpClient().PatchAsync(new Uri(url + "/api/v1/journal_entries/" + id + "/"), content);
 
         }
@@ -391,7 +392,8 @@ namespace DSS.RMQ
                 Content = iContent
             };
 
-            request.Headers.Add("Content-Type", "application/json");
+            //request.Headers.Add("Content-Type", "application/json");
+            request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
             HttpResponseMessage response = new HttpResponseMessage();
             try
