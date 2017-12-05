@@ -48,13 +48,20 @@ namespace DSS.RMQ
 
         public void PushMeasurement(string json)
         {
-            HttpContent content = new StringContent(json);
-            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
-            var response = new HttpClient().PostAsync(url + "/api/v1/measurement/", content);
+            try
+            {
+                HttpContent content = new StringContent(json);
+                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
-            //Console.WriteLine("PUSH MEASUREMNT:" + response.Result);
-            Console.WriteLine("Measurement inserted");
+                var response = new HttpClient().PostAsync(url + "/api/v1/measurement/", content);
+
+                Console.WriteLine("PUSH MEASUREMNT response:" + response.Result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Something went wrong with the PushMeasurement " + ex);
+            }
 
         }
 
@@ -224,7 +231,7 @@ namespace DSS.RMQ
             };
 
 
-            //return new Tuple<string, string>("ro", timezoneMap["ro"]);
+            return new Tuple<string, string>("en", timezoneMap["ro"]);
 
             Console.WriteLine("Retrieving language and timezone for user: " + userURIPath);
 
