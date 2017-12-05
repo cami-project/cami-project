@@ -153,7 +153,7 @@ namespace DSS.FuzzyInference
                     if (msg.Contains("blood") || msg.Contains("pressure")) {
                         key = userURIPath + "_blood_pressure";
                     }
-                    else if msg.Contains("weight") {
+                    else if (msg.Contains("weight")) {
                         key = userURIPath + "_weight";
                     }
                     Console.WriteLine("[ReminderHandler] userReminder map key: " + key);
