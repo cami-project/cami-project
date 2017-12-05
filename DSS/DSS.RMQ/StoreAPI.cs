@@ -231,15 +231,11 @@ namespace DSS.RMQ
             };
 
 
-            return new Tuple<string, string>("en", timezoneMap["ro"]);
+            //return new Tuple<string, string>("en", timezoneMap["ro"]);
 
             Console.WriteLine("Retrieving language and timezone for user: " + userURIPath);
 
-            string queryPath = String.Format("/api/v1/enduserprofile/?limit=1&user={0}", userID);
-            var response = new HttpClient().GetAsync(url + queryPath);
-
-
-
+            var response = new HttpClient().GetAsync(url + userURIPath);
 
             if (response.Result.IsSuccessStatusCode)
             {
