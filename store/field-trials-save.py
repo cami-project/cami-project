@@ -21,7 +21,10 @@ from django.core import serializers
 user_dict = {
     "ro" : 7,
     "pl" : 6,
-    "dk" : 5
+    "dk" : 5,
+    "dk_caregiver": 9,
+    "pl_caregiver": 10,
+    "ro_caregier": 8
 }
 
 def dump_data(user_abbrev, start_ts, end_ts):
@@ -81,7 +84,7 @@ def send_email(user, filename_meas, filename_journal):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('--user', dest='user', action='store', type=str,
-                        choices = ['ro', 'pl', 'dk'], required = True,
+                        choices=['ro', 'pl', 'dk', 'dk_caregiver', 'ro_caregiver', 'pl_caregiver'], required = True,
                         help='the two letter abbreviation for the user')
     parser.add_argument('--start_ts', dest='start_ts', action='store', type=int,
                         help='UNIX timestamp for the start of the data dump period')
