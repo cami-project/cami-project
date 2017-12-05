@@ -72,7 +72,7 @@ namespace DSS.FuzzyInference
 
             var reminder = JsonConvert.DeserializeObject<dynamic>(json);
 
-            if(reminder.category.ToString().ToLower() == "user_notifications"){
+            if(reminder.category.ToString().ToLower() == "user_notifications") {
                 
                 var key = reminder.content.value.user.id.ToString();
                 var userURIPath = "/api/v1/user/" + key + "/";
@@ -250,9 +250,7 @@ namespace DSS.FuzzyInference
                         userReminderMap.Remove(key);
 
                     }
-                }
-                else if (reminder.content.name == "reminder_snoozed"){
-
+                    else {
                         MetricsPublisher.Current.Increment("cami.event.reminder.snoozed", 1);
                         Console.WriteLine("Reminder snoozed");
 
@@ -273,5 +271,6 @@ namespace DSS.FuzzyInference
                 }
             }
 
+        }
     }
 }
