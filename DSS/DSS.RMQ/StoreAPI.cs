@@ -349,6 +349,7 @@ namespace DSS.RMQ
         public void PatchJournalEntry(string id, bool ack)
         {
 
+
             HttpContent content = new StringContent(JsonConvert.SerializeObject(new { acknowledged = ack }));
             var response = new HttpClient().PatchAsync(new Uri(url + "/api/v1/journal_entries/" + id + "/"), content);
 
@@ -383,6 +384,8 @@ namespace DSS.RMQ
             {
                 Content = iContent
             };
+
+            request.Headers.Add("Content-Type", "application/json");
 
             HttpResponseMessage response = new HttpResponseMessage();
             try
