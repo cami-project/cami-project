@@ -223,8 +223,7 @@ namespace DSS.RMQ
             };
 
 
-            return new Tuple<string, string>("ro", timezoneMap["ro"]);
-
+            //return new Tuple<string, string>("ro", timezoneMap["ro"]);
 
             Console.WriteLine("Retrieving language and timezone for user: " + userURIPath);
 
