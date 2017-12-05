@@ -73,16 +73,18 @@ namespace DSS.FuzzyInference
             var reminder = JsonConvert.DeserializeObject<dynamic>(json);
 
             if(reminder.category.ToString().ToLower() == "user_notifications") {
-                
-                var key = reminder.content.value.user.id.ToString();
-                var userURIPath = "/api/v1/user/" + key + "/";
+
+                var userIdStr = reminder.content.value.user.id.ToString();
+                var userURIPath = "/api/v1/user/" + userIdStr + "/";
+                var key = userURIPath;
 
                 var LANG = storeAPI.GetLang(userURIPath);
 
-
                 if (reminder.content.name == "exercise_started")
                 {
-                    Console.WriteLine("Exercise started");
+                    key = userURIPath + "_exercise";
+                    Console.WriteLine("[ReminderHandler] Exercise started");
+                    Console.WriteLine("[ReminderHandler] userActiveExcercise map key: " + key);
 
                     userActiveExerciseMap[key] = reminder;
                     string exerciseType = reminder.content.value.exercise_type.ToString();
@@ -92,8 +94,9 @@ namespace DSS.FuzzyInference
                 }
                 else if (reminder.content.name == "exercise_ended")
                 {
-
-                    Console.WriteLine("Exercise ended");
+                    key = userURIPath + "_exercise";
+                    Console.WriteLine("[ReminderHandler] Exercise ended");
+                    Console.WriteLine("[ReminderHandler] userActiveExcercise map key: " + key);
 
                     if (userActiveExerciseMap.ContainsKey(key) && reminder.content.value.session_uuid == userActiveExerciseMap[key].content.value.session_uuid)
                     {
@@ -125,18 +128,10 @@ namespace DSS.FuzzyInference
                     return;
                 }
 
-                key = userURIPath + reminder.type;
+                //key = userURIPath + reminder.type;
 
                 if (reminder.content.name == "reminder_sent")
                 {
-
-                    if (userReminderMap.ContainsKey(key))
-                    {
-                        userReminderMap.Remove(key);
-                    }
-
-                    userReminderMap.Add(key, reminder);
-
 
                     Console.WriteLine("[reminder_handler] reminder sent entered");
                     var journalId = reminder.content.value.journal.id_enduser.ToString();
@@ -154,15 +149,29 @@ namespace DSS.FuzzyInference
                     Console.WriteLine("Contains blood or presure " + (msg.Contains("blood") || msg.Contains("pressure")));
                     Console.WriteLine("Contains weight: " + msg.Contains("weight"));
 
+                    // set the key
+                    if (msg.Contains("blood") || msg.Contains("pressure")) {
+                        key = userURIPath + "_blood_pressure";
+                    }
+                    else if msg.Contains("weight") {
+                        key = userURIPath + "_weight";
+                    }
+                    Console.WriteLine("[ReminderHandler] userReminder map key: " + key);
+
+
+                    if (userReminderMap.ContainsKey(key))
+                    {
+                        userReminderMap.Remove(key);
+                    }
+
+                    userReminderMap.Add(key, reminder);
+
                     var aTimer = new System.Timers.Timer(WAIT_MS);
                     aTimer.AutoReset = false;
                     aTimer.Start();
                     aTimer.Elapsed += (x, y) =>
                     {
-
-
                         if(userReminderMap.ContainsKey(key)) {
-
                             if (msg.Contains("blood") || msg.Contains("pressure"))
                             {
                                 Console.WriteLine("Blood pressure measured wasn't ack");
@@ -173,7 +182,6 @@ namespace DSS.FuzzyInference
 
                             }
                             else if(msg.Contains("weight")){
-                                
 
                             InformCaregivers(userURIPath, "weight", "high",
                                                    "The person under your care ignored the weight measurements reminder.",
@@ -220,6 +228,8 @@ namespace DSS.FuzzyInference
 
                             Console.WriteLine("ACK blood pressure measurement!");
 
+                            // set key
+                            key = userURIPath + "_blood_pressure";
 
                             var aTimer = new System.Timers.Timer(WAIT_MS);
                             aTimer.AutoReset = false;
@@ -229,7 +239,7 @@ namespace DSS.FuzzyInference
                                 
                                 Console.WriteLine("Blood pressure check invoked");
 
-                                if (!storeAPI.CheckForMeasuremntInLastNMinutes("blood_pressure", 6, int.Parse(key)))
+                                if (!storeAPI.CheckForMeasuremntInLastNMinutes("blood_pressure", 6, int.Parse(userIdStr)))
                                 {
                                     Console.WriteLine("Blood pressure wasn't measured");
 
@@ -244,6 +254,8 @@ namespace DSS.FuzzyInference
 
                             Console.WriteLine("ACK Weight measurement!");
 
+                            // set key
+                            key = userURIPath + "_weight";
 
                             var aTimer = new System.Timers.Timer(WAIT_MS);
                             aTimer.AutoReset = false;
@@ -251,7 +263,7 @@ namespace DSS.FuzzyInference
                             aTimer.Elapsed += (x, y) =>
                             {
 
-                                if (!storeAPI.CheckForMeasuremntInLastNMinutes("weight", 6, int.Parse(key)))
+                                if (!storeAPI.CheckForMeasuremntInLastNMinutes("weight", 6, int.Parse(userIdStr)))
                                 {
                                     Console.WriteLine("Weight wasn't measured");
 
@@ -263,7 +275,7 @@ namespace DSS.FuzzyInference
                             };
                         }
 
-
+                        Console.WriteLine("[ReminderHandler] userReminder map key: " + key);
                         userReminderMap.Remove(key);
 
                     }
@@ -273,15 +285,22 @@ namespace DSS.FuzzyInference
                         // send the BP snoozed notification only if it is relating to a BP reminder journal entry
 
                         if(msg.Contains("blood") || msg.Contains("pressure")) {
+                            // set key
+                            key = userURIPath + "_blood_pressure";
+
                             Console.WriteLine("Snoozed blood pressure measurement!");
                             InformCaregivers(userURIPath, "heart", "medium", Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_POSTPONED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_POSTPONED, Loc.CAREGVR));
                         }
                         else if(msg.Contains("weight")) {
+                            // set key
+                            key = userURIPath + "_weight";
+
                             Console.WriteLine("Snoozed weight measurement!");
                             InformCaregivers(userURIPath, "weight", "medium", Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_POSTPONED_WEIGHT, Loc.CAREGVR),
                                 Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_POSTPONED_WEIGHT, Loc.CAREGVR));
                         }
 
+                        Console.WriteLine("[ReminderHandler] userReminder map key: " + key);
                         userReminderMap.Remove(key);
                     }
                 }
