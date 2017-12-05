@@ -217,10 +217,10 @@ namespace DSS.RMQ
             Dictionary<string, string> timezoneMap = new Dictionary<string, string>()
             {
 
-                { "en", "Europe/London" },
-                { "ro", "Europe/Bucharest" },
-                { "pl", "Europe/Warsaw" },
-                { "dk", "Europe/Copenhagen" },
+                { "EN", "Europe/London" },
+                { "RO", "Europe/Bucharest" },
+                { "PL", "Europe/Warsaw" },
+                { "DK", "Europe/Copenhagen" },
                 
                 /*
                 { "en", "GMT Standard Time" },
@@ -240,7 +240,7 @@ namespace DSS.RMQ
             if (response.Result.IsSuccessStatusCode)
             {
                 dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
-                string lang = deserialized["enduser_profile"]["language"];
+                string lang = deserialized["enduser_profile"]["language"].ToUpper();
 
                 if (timezoneMap.ContainsKey(lang))
                 {
@@ -248,7 +248,7 @@ namespace DSS.RMQ
                 }
                 else
                 {
-                    return new Tuple<string, string>("en", timezoneMap["en"]);
+                    return new Tuple<string, string>("EN", timezoneMap["EN"]);
                 }
             }
             else

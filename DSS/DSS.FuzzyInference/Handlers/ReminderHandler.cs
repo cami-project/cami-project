@@ -125,18 +125,18 @@ namespace DSS.FuzzyInference
                     return;
                 }
 
+                key = userURIPath + reminder.type;
 
-
-                if(userReminderMap.ContainsKey(key)){
-
-                    userReminderMap.Remove(key);
-                }
-
-                userReminderMap.Add(key, reminder);
-
-                //Reminder issued
                 if (reminder.content.name == "reminder_sent")
                 {
+
+                    if (userReminderMap.ContainsKey(key))
+                    {
+                        userReminderMap.Remove(key);
+                    }
+
+                    userReminderMap.Add(key, reminder);
+
 
                     Console.WriteLine("[reminder_handler] reminder sent entered");
                     var journalId = reminder.content.value.journal.id_enduser.ToString();
@@ -154,56 +154,35 @@ namespace DSS.FuzzyInference
                     Console.WriteLine("Contains blood or presure " + (msg.Contains("blood") || msg.Contains("pressure")));
                     Console.WriteLine("Contains weight: " + msg.Contains("weight"));
 
-
-                    if (msg.Contains("blood") || msg.Contains("pressure"))
+                    var aTimer = new System.Timers.Timer(WAIT_MS);
+                    aTimer.AutoReset = false;
+                    aTimer.Start();
+                    aTimer.Elapsed += (x, y) =>
                     {
 
-                        Console.WriteLine("ACK blood pressure measurement!");
 
-                        var aTimer = new System.Timers.Timer(WAIT_MS);
-                        aTimer.AutoReset = false;
-                        aTimer.Start();
-                        aTimer.Elapsed += (x, y) =>
-                        {
+                        if(userReminderMap.ContainsKey(key)) {
 
-                            Console.WriteLine("Blood pressure reminder ignored");
-
-                            if (!storeAPI.CheckForMeasuremntInLastNMinutes("blood_pressure", 6, int.Parse(key)))
+                            if (msg.Contains("blood") || msg.Contains("pressure"))
                             {
                                 Console.WriteLine("Blood pressure measured wasn't ack");
 
                                 InformCaregivers(userURIPath, "heart", "high",
                                                  "The person under your care ignored the blood pressure measurements reminder.",
                                                  "Please take action and call to remind them of the measurement.");
+
                             }
-                        };
+                            else if(msg.Contains("weight")){
+                                
 
-                    }
-                    else if (msg.Contains("weight"))
-                    {
-
-                        var aTimer = new System.Timers.Timer(WAIT_MS);
-                        aTimer.AutoReset = false;
-                        aTimer.Start();
-                        aTimer.Elapsed += (x, y) =>
-                        {
-
-                            Console.WriteLine("Reminder for weight ignored");
-
-                            if (!storeAPI.CheckForMeasuremntInLastNMinutes("weight", 6, int.Parse(key)))
-                            {
-                                Console.WriteLine("Weight wasn't measured");
-
-                                InformCaregivers(userURIPath, "weight", "high",
-                                                 "The person under your care ignored the weight measurements reminder.",
-                                                 "Please take action and call to remind them of the measurement.");
+                            InformCaregivers(userURIPath, "weight", "high",
+                                                   "The person under your care ignored the weight measurements reminder.",
+                                                   "Please take action and call to remind them of the measurement.");
                             }
-                        };
-                    }
+                        }
+                    };
 
                 }
-
-                //Reminder acknowledged 
                 else if (reminder.content.name == "reminder_acknowledged")
                 {
                     
