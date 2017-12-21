@@ -1,0 +1,3 @@
+[submodule "cami-android-app"]
+	path = cami-android-app
+	url = https://github.com/alexandrugavril/CamiAndroidApp
