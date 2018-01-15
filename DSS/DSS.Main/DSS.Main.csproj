@@ -63,6 +63,10 @@
       <Project>{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}</Project>
       <Name>DSS.FuzzyInference</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DSS.Rules.Library\DSS.Rules.Library.csproj">
+      <Project>{A171CA66-41CB-427E-B1D0-A0EBBFA73ED1}</Project>
+      <Name>DSS.Rules.Library</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.config.json">

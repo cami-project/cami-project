@@ -289,7 +289,7 @@ namespace DSS.RMQ
 
         }
 
-        public bool CheckForMeasuremntInLastNMinutes(string type, int min, int userId) {
+        public bool CheckForMeasuremntInLastNMinutes(string type, int min, string userId) {
 
 
             Console.WriteLine("Check for mesurements in last 6 minutes");
@@ -300,7 +300,7 @@ namespace DSS.RMQ
 
 
             //1477413397
-            string queryPath = String.Format("/api/v1/measurement/?measurement_type={0}&user={1}&timestamp__gte={2}", type, userId, timeStamp);
+            string queryPath = String.Format("/api/v1/measurement/?measurement_type={0}&user={1}&timestamp__gte={2}", type, int.Parse(userId), timeStamp);
 
 
             var response = new HttpClient().GetAsync(url + queryPath);
