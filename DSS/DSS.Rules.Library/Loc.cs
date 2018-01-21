@@ -26,6 +26,11 @@ namespace DSS.Rules.Library
         public static string PULSE_MEDIUM = "PULSE_MEDIUM";
         public static string PULSE_HIGH = "PULSE_HIGH";
 
+        public static string EXERCISE_STARTED = "EXERCISE_STARTED";
+        public static string EXERCISE_ENDED = "EXERCISE_ENDED";
+        public static string EXERCISE_ENDED_LOW = "EXERCISE_ENDED_LOW";
+        public static string EXERCISE_ENDED_MID = "EXERCISE_ENDED_MID";
+        public static string EXERCISE_ENDED_HIGH = "EXERCISE_ENDED_HIGH";
 
         public static string FALL = "FALL";
 
@@ -241,6 +246,21 @@ namespace DSS.Rules.Library
             { DK + USR + DES + PULSE_HIGH, "Jeg har taget kontakt til din omsorgsperson" },
             { DK + CAREGVR + MSG + PULSE_HIGH, "Hej! Din puls er farligt høj:  {0}!" },
             { DK + CAREGVR + DES + PULSE_HIGH, "Søg hurtigst muligt hjælp!" },
+
+
+            //EXERCISE 
+            {EN + CAREGVR + MSG + EXERCISE_STARTED, "Physical Exercise Started"},
+            {EN + CAREGVR + DES + EXERCISE_STARTED, "The person under your care has started a physical exercise of type {0}"},
+
+            {EN + CAREGVR + MSG + EXERCISE_ENDED, "Physical Exercise Ended"},
+            {EN + CAREGVR + DES + EXERCISE_ENDED, "The person under your care has finished the {0} exercise with a compliance of {1}%."},
+
+            {EN + USR + MSG + EXERCISE_ENDED_LOW,  "Physical Exercise Ended"},
+            {EN + USR + DES + EXERCISE_ENDED_LOW,  "How about focusing more next time?"},
+            {EN + USR + MSG + EXERCISE_ENDED_MID,  "Physical Exercise Ended"},
+            {EN + USR + DES + EXERCISE_ENDED_MID,  "Keep improving!"},
+            {EN + USR + MSG + EXERCISE_ENDED_HIGH, "Physical Exercise Ended"},
+            {EN + USR + DES + EXERCISE_ENDED_HIGH, "You performed well!"},
 
 
             { EN + CAREGVR + MSG + FALL, "Fall detected!" },

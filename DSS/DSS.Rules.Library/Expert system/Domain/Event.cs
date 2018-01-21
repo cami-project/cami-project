@@ -105,12 +105,12 @@ namespace DSS.Rules.Library
 
         public bool isExerciseStarted(){
 
-            throw new NotImplementedException();
+            return content.name == "exercise_started";
         }
 
         public bool isExerciseEnded() {
 
-            throw new NotImplementedException();
+            return content.name == "exercise_ended";
         }
         public bool isMotionAlarm(){
 
@@ -147,6 +147,13 @@ namespace DSS.Rules.Library
                 
                 return string.Format("/api/v1/user/{0}/", content.val.user.id); 
             }
+            else if(isExerciseEnded() || isExerciseStarted()) {
+
+                return string.Format("/api/v1/user/{0}/", content.val.user.id); 
+
+            }
+
+
 
             throw new Exception("URI path for the user not speficied!");
         }

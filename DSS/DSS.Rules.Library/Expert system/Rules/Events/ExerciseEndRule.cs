@@ -14,7 +14,6 @@ namespace DSS.Rules.Library
                   .Match(() => service);
 
             Then().Do(ctx => service.InformCaregiver(exercise));
-            Then().Do(ctx => service.InformUser(exercise));
 
         }
     }

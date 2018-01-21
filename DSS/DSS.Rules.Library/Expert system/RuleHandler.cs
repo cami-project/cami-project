@@ -16,6 +16,8 @@ namespace DSS.Rules.Library
         private StepsService stepsService;
         private ReminderService reminderService;
         private MotionService motionService;
+        private ExerciseService exerciseService;
+        private FallService fallService;
 
         public RuleHandler()
         {
@@ -41,7 +43,8 @@ namespace DSS.Rules.Library
             stepsService = new StepsService(inform);
             reminderService = new ReminderService(inform);
             motionService = new MotionService(inform);
-
+            exerciseService = new ExerciseService(inform);
+            fallService = new FallService(inform);
 
         }
 
@@ -56,6 +59,8 @@ namespace DSS.Rules.Library
                 var session = factory.CreateSession();
                 session.Insert(reminderService);
                 session.Insert(motionService);
+                session.Insert(exerciseService);
+                session.Insert(fallService);
                 session.Insert(obj);
                 session.Fire();
             }    

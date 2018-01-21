@@ -12,6 +12,7 @@ namespace DSS.Rules.Library
 
         public void InformCaregiver(Event fall)
         {
+            Console.WriteLine("FALL INFORM");
 
             var gatewayURIPath = fall.annotations.source["gateway"].ToString();
             var userPath = inform.storeAPI.GetUserOfGateway(gatewayURIPath);

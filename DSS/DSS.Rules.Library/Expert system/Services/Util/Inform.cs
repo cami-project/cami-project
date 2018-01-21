@@ -40,6 +40,11 @@ namespace DSS.Rules.Library
             return Int32.Parse(uri.TrimEnd('/').Split('/').Last());
         }
 
+        public string URIfromID(int id, string path ) 
+        {
+            return string.Format("/api/v1/{0}/{1}/", path, id);
+        }
+
     
     }
 }
