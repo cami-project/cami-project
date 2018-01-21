@@ -30,7 +30,11 @@ namespace DSS.Main
             var ruleHandler = new RuleHandler();
             SheduleService.OnExec = ruleHandler.HandleSheduled;
 
+            var fallEv = new DSS.Rules.Library.Event(){ content = new Rules.Library.Content(){ name = "fall"}, annotations = new Rules.Library.Annotations(){ source = new {
+                        gateway = "/api/v1/gateway/1/"
+                    }}};
 
+            ruleHandler.HandleEvent(JsonConvert.SerializeObject(fallEv));
 
             var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
             try

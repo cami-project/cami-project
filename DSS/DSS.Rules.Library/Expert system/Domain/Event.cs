@@ -65,17 +65,6 @@ namespace DSS.Rules.Library
         public Content content { get; set; }
 		public Annotations annotations { get; set; }
 
-        public Event()
-        {
-
-        }
-
-        public Event(string category, Content content, Annotations annotations) 
-        {
-            this.category = category;
-            this.content = content;
-            this.annotations = annotations;
-        }
 
         public override string ToString(){
 			 
@@ -114,8 +103,6 @@ namespace DSS.Rules.Library
         }
         public bool isMotionAlarm(){
 
-            Console.WriteLine("pozvano");
-
             try
             {
 
@@ -125,7 +112,6 @@ namespace DSS.Rules.Library
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception lol");
                 return false;
             }
 

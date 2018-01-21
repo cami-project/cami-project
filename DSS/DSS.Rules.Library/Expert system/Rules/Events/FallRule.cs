@@ -10,7 +10,8 @@ namespace DSS.Rules.Library
 
         public override void Define()
         {
-            When().Exists<Event>(reminder => fall.isFall())
+            When().Exists<Event>(fall => fall.isFall())
+                  .Match(() => fall)
                   .Match(() => service);
 
             Then().Do(ctx => service.InformCaregiver(fall));

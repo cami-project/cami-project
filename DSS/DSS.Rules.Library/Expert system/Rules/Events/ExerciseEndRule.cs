@@ -10,7 +10,8 @@ namespace DSS.Rules.Library
 
         public override void Define()
         {
-            When().Exists<Event>(reminder => exercise.isExerciseEnded())
+            When().Exists<Event>(exercise => exercise.isExerciseEnded())
+                  .Match(() => exercise)
                   .Match(() => service);
 
             Then().Do(ctx => service.InformCaregiver(exercise));

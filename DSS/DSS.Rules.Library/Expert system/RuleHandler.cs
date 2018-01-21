@@ -58,7 +58,7 @@ namespace DSS.Rules.Library
             {
                 var session = factory.CreateSession();
                 session.Insert(reminderService);
-                session.Insert(motionService);
+                //session.Insert(motionService);
                 session.Insert(exerciseService);
                 session.Insert(fallService);
                 session.Insert(obj);
