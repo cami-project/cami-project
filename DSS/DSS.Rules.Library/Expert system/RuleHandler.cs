@@ -50,7 +50,7 @@ namespace DSS.Rules.Library
 
         public void HandleEvent(string json)
         {
-            var obj = JsonConvert.DeserializeObject<dynamic>(json);
+            var obj = JsonConvert.DeserializeObject<Event>(json);
 
             Console.WriteLine(obj.content.name);
 

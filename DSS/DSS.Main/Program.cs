@@ -31,6 +31,7 @@ namespace DSS.Main
             SheduleService.OnExec = ruleHandler.HandleSheduled;
 
 
+
             var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
             try
             {
