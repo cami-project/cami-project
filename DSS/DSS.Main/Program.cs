@@ -30,11 +30,6 @@ namespace DSS.Main
             var ruleHandler = new RuleHandler();
             SheduleService.OnExec = ruleHandler.HandleSheduled;
 
-            var fallEv = new DSS.Rules.Library.Event(){ content = new Rules.Library.Content(){ name = "fall"}, annotations = new Rules.Library.Annotations(){ source = new {
-                        gateway = "/api/v1/gateway/1/"
-                    }}};
-
-            ruleHandler.HandleEvent(JsonConvert.SerializeObject(fallEv));
 
             var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
             try
@@ -60,6 +55,8 @@ namespace DSS.Main
             //Make initial sheduling 
             var newDayEven = new SheduledEvent() { type = SheduleService.Type.NewDay };
             ruleHandler.HandleSheduled(newDayEven);
+            SheduleService.Add(new SheduledEvent() { type = SheduleService.Type.Steps, utcTime = new DateTime().AddHours(19) });
+
 
             // Invoke every day
             Timer timerToInvokeEveryDayTimer = new Timer();
@@ -72,9 +69,9 @@ namespace DSS.Main
                 everyDayTimer.AutoReset = true;
                 everyDayTimer.Elapsed += (z, c) =>
                 {
-
                     Console.WriteLine("A new day even raised: " + DateTime.UtcNow);
                     ruleHandler.HandleSheduled(new SheduledEvent() { type = SheduleService.Type.NewDay });
+                    SheduleService.Add(new SheduledEvent() { type = SheduleService.Type.Steps, utcTime = new DateTime().AddHours(19) });
                 };
                 everyDayTimer.Start();
             };

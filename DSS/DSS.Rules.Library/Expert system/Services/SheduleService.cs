@@ -102,6 +102,8 @@ namespace DSS.Rules.Library
                 if (e.Compare(now))
                 {
 
+                    Console.WriteLine("Match: " + e.type);
+
                     if(e.type== Type.None){
 						e.action();
                     }else {
