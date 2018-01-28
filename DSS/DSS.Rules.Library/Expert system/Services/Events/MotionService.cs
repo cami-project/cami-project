@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace DSS.Rules.Library
 {
-    public class MotionService
+    public class  MotionService
     {
         private readonly Inform inform;
 

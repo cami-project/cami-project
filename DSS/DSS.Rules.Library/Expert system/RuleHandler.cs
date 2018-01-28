@@ -18,6 +18,7 @@ namespace DSS.Rules.Library
         private MotionService motionService;
         private ExerciseService exerciseService;
         private FallService fallService;
+        private BloodPressureService bloodPressureService;
 
         public RuleHandler()
         {
@@ -45,6 +46,7 @@ namespace DSS.Rules.Library
             motionService = new MotionService(inform);
             exerciseService = new ExerciseService(inform);
             fallService = new FallService(inform);
+            bloodPressureService = new BloodPressureService(inform);
 
         }
 
@@ -78,6 +80,7 @@ namespace DSS.Rules.Library
 
                 session.Insert(weightService);
                 session.Insert(pulseService);
+                session.Insert(bloodPressureService);
 
                 session.Insert(obj);
 

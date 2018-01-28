@@ -22,6 +22,12 @@ namespace DSS.Rules.Library
         public string resource_uri { get; set; }
 
 
+        public bool isBloodPressure(){
+            
+            return measurement_type == "blood_pressure";
+        
+        }
+
         public bool isSteps(){
 
             return measurement_type == "steps";
@@ -76,6 +82,36 @@ namespace DSS.Rules.Library
             return dtDateTime;
         }
 
+        public float get(string key) 
+        {
+            if(key == "SBP")
+            {
+                try{
+                    return ((BloodPressureValueInfo)value_info).systolic;
+                }
+                catch{
+
+                    Console.WriteLine("There is a problem with parsing SBP from measurement");
+
+                    return -1;
+                }
+            }
+            else if(key == "DBP") 
+            {
+                try
+                {
+                    return ((BloodPressureValueInfo)value_info).diastolic;
+                }
+                catch
+                {
+                    Console.WriteLine("There is a problem with parsing DBP from measurement");
+                    return -1;
+                }
+            }
+
+            Console.WriteLine("Problem with the blood pressure");
+            return -1;
+        }
 
 
         public float getValue(){

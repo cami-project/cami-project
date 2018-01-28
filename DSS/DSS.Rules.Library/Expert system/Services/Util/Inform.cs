@@ -16,14 +16,17 @@ namespace DSS.Rules.Library
             insertionAPI = new RMQ.INS.InsertionAPI(insertionURL);
         }
 
-        public void Caregivers(string enduserURI, string type, string severity, string msg, string desc)
+        public void Caregivers(string enduserURI, string type, string severity, string msg, string desc, bool notify = true)
         {
             var caregivers = storeAPI.GetCaregivers(enduserURI);
 
             foreach (string caregiverURIPath in caregivers)
             {
                 storeAPI.PushJournalEntry(caregiverURIPath, type, severity, msg, desc);
-                insertionAPI.InsertPushNotification(msg, GetIdFromURI(caregiverURIPath));
+                if(notify)
+                {
+					insertionAPI.InsertPushNotification(msg, GetIdFromURI(caregiverURIPath));
+                }
             }
 
         }
