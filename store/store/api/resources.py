@@ -39,6 +39,11 @@ class UserResource(ModelResource):
         allowed_methods = ['get']
         collection_name = "users"
 
+        filtering = {
+            'username': ('exact',),
+            'email': ('exact',),
+        }
+
     def dehydrate(self, bundle):
         # clean out fields that have a null value from returned serialization
         for key in bundle.data.keys():
