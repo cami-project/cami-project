@@ -316,3 +316,6 @@ class PushNotificationDevice(models.Model):
     device_id = models.CharField(max_length=64, blank=True, null=True, db_index=True)
     registration_id = models.TextField()
     other_info = JSONField()
+
+    class Meta:
+        unique_together = (("user", "registration_id"))
