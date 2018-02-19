@@ -13,9 +13,8 @@
 #include <map>
 #include <memory>
 #include <thread>
-/* DBus helper library */
 #include "dbus/dbus_helper_5.h"
-/* Bluetooth Interface */
+#include "AdCamiReadMeasurementsStrategy.h"
 #include "AdCamiUtilities.h"
 #include "IAdCamiBluetooth.h"
 
@@ -27,21 +26,19 @@ namespace AdCamiHardware {
 
 class AdCamiBluetooth5 : public IAdCamiBluetooth {
 public:
-    using DiscoveryClbk = std::function<void(std::unique_ptr < AdCamiBluetoothDevice > )>;
-    using UpdateDevicesFilterClbk = std::function<void(vector < AdCamiBluetoothDevice > *)>;
-
-    /**
-     * Default constructor
-     */
     AdCamiBluetooth5();
 
-    /**
-     * Destructor
-     */
+    AdCamiBluetooth5(const string &bluetoothAdapter);
+
+    AdCamiBluetooth5(IAdCamiBluetoothDiscoveryStrategy *strategy);
+
+    AdCamiBluetooth5(const string &bluetoothAdapter, IAdCamiBluetoothDiscoveryStrategy *strategy);
+
     ~AdCamiBluetooth5();
 
     /**
-     * Initializes the resources needed to interact with Bluetooth modules (i.e DBus Connection, Bluetooth Dongle/Adapter).
+     * Initializes the resources needed to interact with Bluetooth modules (i.e DBus Connection,
+     * Bluetooth Dongle/Adapter).
      * @return 0 in case of success, negative value if an error occurred.
      */
     AdCamiBluetoothError Init();
@@ -53,10 +50,6 @@ public:
      */
     AdCamiBluetoothError DiscoverDevices(vector <AdCamiBluetoothDevice> *devices,
                                          const unsigned int timeout = 10);
-
-    inline void FilterDevices(bool filter) {
-        this->_filterDevices = filter;
-    }
 
     /**
      * This method allows to get all devices that are paired.
@@ -85,19 +78,33 @@ public:
      */
 //    AdCamiBluetoothError GetPairedDevice(const bool fullList, vector <string> *deviceList, string *device);
 
-    void SetDiscoveryCallback(DiscoveryClbk clbk) {
-        this->_discoveryCallback = clbk;
-    }
-
-    void SetUpdateDevicesFilterCallback(UpdateDevicesFilterClbk clbk) {
-        _updateDevicesFilterClbk = clbk;
-    }
+    /**
+     * Set a devices filter that is used when a discovery is running. The discovery first filters by UUID and
+     * then by the filter function passed as parameter. If a function is not passed, then only the first filter
+     * is applied. This function must be invoked before the discovery process starts, otherwise the filter will
+     * not be applied.
+     * @param uuids list of UUIDs that the discovery process must accept. If the list is empty, no filtering is applied
+     * @return BT_OK in case of success, other value in case of error.
+     */
+    AdCamiBluetoothError SetDiscoveryFilter(const vector <string> &allowedUuids);
 
     AdCamiBluetoothError StartDiscovery();
 
     AdCamiBluetoothError StopDiscovery();
 
 private:
+    class AcceptAllDiscoveryStrategy : public IAdCamiBluetoothDiscoveryStrategy {
+    public:
+        AcceptAllDiscoveryStrategy() {}
+
+        void DiscoveryEvent(std::unique_ptr<AdCamiBluetoothDevice> &&device, const GVariant *event) { return; }
+
+        bool FilterDevice(const AdCamiBluetoothDevice &device) { return true; }
+    };
+
+    /**
+     * Auxiliary class for the background discovery process.
+     */
     struct DiscoveryTask {
         GDBusConnection *BusConnection;
         guint PropertiesChangedCallbackId;
@@ -134,23 +141,20 @@ private:
     };
 
 //    static map<string, std::thread> _devicesThreads;
+    IAdCamiBluetoothDiscoveryStrategy *_discoveryStrategy;
+    /* Name of Bluetooth adapter (e.g. hci0, hci1, ...)*/
+    const char *_bluetoothAdapter;
     /* DBus object path for the Bluetooth adapter */
     char *_bluetoothAdapterPath;
     /* Structure with variables used by the background discovery thread. */
     DiscoveryTask *_discoveryTask;
-    /* Discovery callback invoked when a new device is discovered by the background discovery thread. */
-    DiscoveryClbk _discoveryCallback;
-    /* Flag to filter discovered devices. */
-    bool _filterDevices;
-    /* List with the devices that are trusted to receive notifications. */
-    vector <AdCamiBluetoothDevice> _devicesFilter;
-    /* Callback that is invoked to update the list of devices that are trusted. */
-    UpdateDevicesFilterClbk _updateDevicesFilterClbk;
     /* Flag that indicates if the discovered devices must be stored on a list. This list is used by
      * the Discovery() function. */
     bool _storeDiscoveredDevices;
-    /* List of discovered devices by the Discovery() fucntion. */
-    vector<AdCamiBluetoothDevice> *_discoveredDevices;
+    /* List of discovered devices by the Discovery() function. */
+    vector <AdCamiBluetoothDevice> *_discoveredDevices;
+    /* UUID filter that is applied when the discovery process starts. */
+    GVariant *_discoveryUuidsFilter;
 
     /**
      * Transform an object path on the format .../dev_xx_xx_xx_xx_xx_xx to a "normalized"
@@ -160,22 +164,13 @@ private:
      */
     static string _BluetoothAddressFromObjectPath(const char *objectPath);
 
-    static void _AsyncDiscoveryInterfaceAddedClbk(GDBusConnection *connection,
-                                                  const gchar *sender_name,
-                                                  const gchar *object_path,
-                                                  const gchar *interface_name,
-                                                  const gchar *signal_name,
-                                                  GVariant *parameters,
-                                                  gpointer user_data);
-
-    static void _AsyncDiscoveryPropertiesChangedClbk(GDBusConnection *connection,
-                                                     const gchar *sender_name,
-                                                     const gchar *object_path,
-                                                     const gchar *interface_name,
-                                                     const gchar *signal_name,
-                                                     GVariant *parameters,
-                                                     gpointer user_data);
-
+    static void _AsyncDiscoveryClbk(GDBusConnection *connection,
+                                    const gchar *sender_name,
+                                    const gchar *object_path,
+                                    const gchar *interface_name,
+                                    const gchar *signal_name,
+                                    GVariant *parameters,
+                                    gpointer user_data);
 
     static void _SyncDiscoveryInterfaceAddedClbk(GDBusConnection *connection,
                                                  const gchar *sender_name,
@@ -198,5 +193,5 @@ private:
 
 }
 
-#endif	/* AdCamiDaemon_AdCamiBluetooth5_h */
+#endif    /* AdCamiDaemon_AdCamiBluetooth5_h */
 

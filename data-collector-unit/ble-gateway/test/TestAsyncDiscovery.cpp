@@ -29,6 +29,8 @@ int main(int argc, char **argv) {
 
     if ((error = bluetooth->StartDiscovery()) != BT_OK) {
         PRINT_DEBUG("Problem starting discovery [error = " << error << "]")
+        delete bluetooth;
+
         exit(EXIT_FAILURE);
     } else {
         PRINT_DEBUG("Discovery started!")
@@ -39,10 +41,14 @@ int main(int argc, char **argv) {
 
     if (bluetooth->StopDiscovery() != BT_OK) {
         PRINT_DEBUG("Problem stopping discovery [error = " << error << "]")
+        delete bluetooth;
+
         exit(EXIT_FAILURE);
     } else {
         PRINT_DEBUG("Discovery stopped!")
     }
+
+    delete bluetooth;
 
     exit(EXIT_SUCCESS);
 }

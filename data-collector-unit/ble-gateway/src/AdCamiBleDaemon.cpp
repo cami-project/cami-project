@@ -6,33 +6,21 @@
 #include "AdCamiActionsServer.h"
 #include "AdCamiBluetooth5.h"
 #include "AdCamiCommon.h"
+#include "AdCamiReadMeasurementsStrategy.h"
+#include "AdCamiCommon.h"
 #include "AdCamiConfiguration.h"
-#include "AdCamiEventsStorage.h"
-#include "AdCamiHttpClient.h"
 #include "AdCamiHttpServer.h"
-#include "AdCamiJsonConverter.h"
-#include "AdCamiUrl.h"
-#include "AdCamiUtilities.h"
+#include "AdCamiLogging.h"
 
-using AdCamiCommunications::AdCamiHttpClient;
 using AdCamiCommunications::AdCamiHttpServer;
-using AdCamiCommunications::AdCamiJsonConverter;
 using AdCamiCommunications::AdCamiRequest;
-using AdCamiData::AdCamiEventsStorage;
 using AdCamiHardware::AdCamiBluetooth5;
-using EnumDeviceFilter = AdCamiData::AdCamiEventsStorage::EnumDeviceFilter;
-using EnumHttpClientState = AdCamiCommunications::AdCamiHttpClient::EnumHttpClientState;
-using EnumHttpMethod = AdCamiCommunications::AdCamiHttpCommon::EnumHttpMethod;
-using EnumHttpServerConfiguration = AdCamiCommunications::AdCamiHttpServer::EnumConfiguration;
 
 static const int kAdCamiHttpPort = 60773;
 static const int kAdCamiHttpSecurePort = 60774;
-static const int kAdCamiRemoteEndPointPort = 61773;
+//static const int kAdCamiRemoteEndPointPort = 61773;
 
 /* Global variable for HTTP server. */
-AdCamiHttpServer server(kAdCamiHttpPort);
-AdCamiHttpServer server_secure(kAdCamiHttpSecurePort, EnumHttpServerConfiguration::Secure);
-AdCamiBluetooth5 *bluetooth = nullptr;
 static bool run = true;
 
 /* Function to be executed when daemon receives an interrupt signal. */
@@ -45,93 +33,29 @@ static void _InterruptPipe(int sig) {}
 void _SavePid() {
     unlink(PID_FILE);
     FILE *fp = fopen(PID_FILE, "w");
-    if (fp == NULL) {
-        PRINT_ERROR("Error opening pid file for daemon");
+    if (fp == nullptr) {
+        Log<MessageType::Error>::ToMessages("Error opening pid file for daemon");
         exit(EXIT_FAILURE);
     }
 
     pid_t pid = getpid();
-    /* Write PID to file */
+    /* Write PID to file. */
     fprintf(fp, "%ld\n", (long) pid);
-    PRINT_LOG("Daemon created with PID " << (long) pid)
+    Log<MessageType::Info>::ToMessages("Daemon created with PID " + std::to_string(static_cast<long>(pid)));
     fclose(fp);
 }
 
 int main(int argc, char **argv) {
-    AdCamiEventsStorage storage(AdCamiCommon::kAdCamiEventsDatabase);
+    AdCamiHttpServer server(kAdCamiHttpPort);
+    AdCamiHttpServer serverSecure(kAdCamiHttpSecurePort, EnumHttpServerConfiguration::Secure);
+    AdCamiBluetooth5 *bluetooth = nullptr;
+    AdCamiConfiguration configuration(AdCamiCommon::kAdCamiConfigurationFile);
     AdCamiBluetoothError error;
+    /* Signal interrupts */
+    struct sigaction sigHupAction = {0}, sigTermAction = {0}, sigPipeAction = {0};
 
-    auto DiscoveryCallback = [](std::unique_ptr <AdCamiBluetoothDevice> arg) -> void {
-        AdCamiBluetoothDevice *device = arg.get();
-        AdCamiBluetoothError error;
-        AdCamiConfiguration configFile(AdCamiCommon::kAdCamiConfigurationFile);
-        vector < AdCamiEvent * > measurements;
-        string json;
-        unsigned int timeout = 30;//seconds
-
-        if (device->RefreshCacheProperties() == BT_OK && device->ConnectedFromCache() == false) {
-            if (device->Connect() != BT_OK) {
-                return;
-            }
-            PRINT_LOG("Connected to device " << device->Address() << ".");
-        } else if (device->ConnectedFromCache() == true) {
-            return;
-        }
-
-        if ((error = device->ReadMeasurementNotifications(&measurements, timeout)) != BT_OK) {
-            PRINT_LOG("Problem getting notifications from " << device->Address() << " [error = " << error << "]");
-        } else if (measurements.size() > 0) {
-            if ((error = device->Disconnect()) != BT_OK) {
-                PRINT_LOG("Problem disconnecting from device " << device->Address() << " [error = " << error << "]");
-            } else {
-                PRINT_LOG("Disconnected from device " << device->Address() << ".");
-            }
-
-            /* Print received measurements to log. */
-            PRINT_LOG("Received " << measurements.size() << " measurement(s) from device " << device->Address());
-            for (auto measurement : measurements) {
-                PRINT_LOG("\t" << *dynamic_cast<IAdCamiEventMeasurement<double>*>(measurement));
-            }
-
-            /* Save measurements to database. */
-            AdCamiJsonConverter converter;
-            AdCamiEventsStorage storage(AdCamiCommon::kAdCamiEventsDatabase);
-            storage.AddEvent(measurements);
-
-            /* Create JSON string for sending to remote endpoint. */
-            converter.ToJson(measurements, configFile.GetGatewayName(), &json);
-
-            /* Load configuration file to get the remote endpoint. */
-            configFile.Load();
-
-            /* Send measurements to remote server. */
-            AdCamiHttpClient client(kAdCamiRemoteEndPointPort);
-            string endpointAddress = configFile.GetRemoteEndpoint();
-            AdCamiHttpData sendData(AdCamiJsonConverter::MimeType, json.size(), json.c_str());
-            AdCamiHttpData response;
-            EnumHttpClientState error;
-
-            PRINT_DEBUG("Sending to server " << endpointAddress);
-            if ((error = client.Post(endpointAddress, &sendData, &response)) != EnumHttpClientState::OK) {
-                PRINT_LOG("Error sending HTTP request to " << endpointAddress << " (error " << error << ").");
-                return;
-            } else {
-                PRINT_LOG("Request sent to POST " << endpointAddress);
-                PRINT_LOG("\tHTTP code = " << response.Headers.GetValue(EnumHttpHeader::ResponseStatusCode));
-                PRINT_DEBUG("Sent to server " << endpointAddress
-                                              << " with status code "
-                                              << response.Headers.GetValue(EnumHttpHeader::ResponseStatusCode));
-            }
-        }
-
-        std::for_each(measurements.begin(), measurements.end(), [](AdCamiEvent *m) { delete m; });
-    };
-
-    auto UpdateBluetoothDevicesFilter = [&storage](vector <AdCamiBluetoothDevice> *devices) -> void {
-        storage.GetDevices(devices,
-                           static_cast<EnumDeviceFilter>(EnumDeviceFilter::Paired |
-                                                         EnumDeviceFilter::NotificationsEnabled));
-    };
+    /* Load configuration file. */
+    configuration.Load();
 
     /* Redirect output of std::cout to DEBUG_FILE file. */
     std::ofstream outDebugStream(DEBUG_FILE);
@@ -146,27 +70,28 @@ int main(int argc, char **argv) {
     /* Check if configuration directory on /etc is present. */
     struct stat info;
     if (stat(AdCamiCommon::kAdCamiConfigurationDir, &info) != 0) {
-        PRINT_LOG("Couldn't find directory " << AdCamiCommon::kAdCamiConfigurationDir << ".  Exiting...");
+        Log<MessageType::Info>::ToMessages("Couldn't find directory " +
+                                           string(AdCamiCommon::kAdCamiConfigurationDir) + ". Terminating.");
         exit(EXIT_FAILURE);
     }
 
-    /* Start Bluetooth discovery thread. */
-    bluetooth = new AdCamiBluetooth5();
+    /* Initialize Bluetooth object. */
+    bluetooth = new AdCamiBluetooth5(configuration.GetBluetoothAdapter(),
+                                     new AdCamiReadMeasurementsStrategy());
     if ((error = bluetooth->Init()) != AdCamiBluetoothError::BT_OK) {
         switch (error) {
             case BT_ERROR_ADAPTER_NOT_FOUND:
-                PRINT_LOG("Couldn't find any Bluetooth adapter. Exiting...");
+                Log<MessageType::Error>::ToMessages("Couldn't find any Bluetooth adapter. Terminating.");
                 break;
             default:
-                PRINT_LOG("Problem opening Bluetooth communication [error = " << error << "]. Exiting...");
+                Log<MessageType::Error>::ToMessages("Problem opening Bluetooth communication [error = " +
+                                                    std::to_string(error) + "]. Terminating.");
                 break;
         }
         exit(EXIT_FAILURE);
     }
-    bluetooth->SetDiscoveryCallback(DiscoveryCallback);
-    bluetooth->SetUpdateDevicesFilterCallback(UpdateBluetoothDevicesFilter);
 
-    /* Create and register HTTP requests. */
+    /* HTTP server(s) requests */
     vector <AdCamiRequest> requestActions = {
             /* Set list of BLE devices that are trusted. */
             AdCamiRequest("/device", EnumHttpMethod::POST, AdCamiActionsServer::AddDevices),
@@ -191,12 +116,8 @@ int main(int argc, char **argv) {
             /* Set name the endpoint to where events must be sent. */
             AdCamiRequest("/management/endpoint", EnumHttpMethod::PUT, AdCamiActionsServer::SetEndpoint)
     };
-    server.AddSyncRequestAction(requestActions);
-    server_secure.AddSyncRequestAction(requestActions);
 
     /* Initialize signal interrupts. */
-    struct sigaction sigHupAction = {0}, sigTermAction = {0}, sigPipeAction = {0};
-
     sigemptyset(&sigHupAction.sa_mask);
     sigHupAction.sa_handler = _InterruptHandlers;
     sigemptyset(&sigTermAction.sa_mask);
@@ -206,38 +127,50 @@ int main(int argc, char **argv) {
     sigPipeAction.sa_flags = SA_RESTART;
 
     if (0 != sigaction(SIGHUP, &sigHupAction, nullptr))
-        PRINT_LOG("Failed to install SIGHUP handler: " << strerror(errno));
+        Log<MessageType::Error>::ToMessages("Failed to install SIGHUP handler: " + string(strerror(errno)));
     if (0 != sigaction(SIGINT, &sigTermAction, nullptr))
-        PRINT_LOG("Failed to install SIGINT handler: " << strerror(errno));
+        Log<MessageType::Error>::ToMessages("Failed to install SIGINT handler: " + string(strerror(errno)));
     if (0 != sigaction(SIGTERM, &sigTermAction, nullptr))
-        PRINT_LOG("Failed to install SIGTERM handler: " << strerror(errno));
+        Log<MessageType::Error>::ToMessages("Failed to install SIGTERM handler: " + string(strerror(errno)));
     if (0 != sigaction(SIGPIPE, &sigPipeAction, nullptr))
-        PRINT_LOG("Failed to install SIGPIPE handler: " << strerror(errno));
+        Log<MessageType::Error>::ToMessages("Failed to install SIGPIPE handler: " + string(strerror(errno)));
 
-    /* Start Bluetooth background discovery thread. */
+    /* Set discovery filter and start background Bluetooth discovery thread. */
+    if ((error = bluetooth->SetDiscoveryFilter(AdCamiCommon::kAllowedBluetoothUuids)) != BT_OK) {
+        Log<MessageType::Error>::ToMessages(
+                "Problem setting discovery filter [error = " + std::to_string(error) + "].");
+    }
+
     if ((error = bluetooth->StartDiscovery()) != BT_OK) {
-        PRINT_LOG("Problem starting discovery [error = " << error << "]. Exiting...");
+        Log<MessageType::Error>::ToMessages("Problem starting discovery [error = " +
+                                            std::to_string(error) +
+                                            "]. Terminating.");
         exit(EXIT_FAILURE);
     } else {
-        PRINT_LOG("Bluetooth discovery started.");
+        Log<MessageType::Info>::ToMessages("Bluetooth discovery started.");
     }
 
     /* Start HTTP server. */
+    server.AddSyncRequestAction(requestActions);
     if (server.Start() != AdCamiHttpServer::Running) {
-        PRINT_LOG("Could not start HTTP server on port " << server.GetPort() << ". Exiting...");
+        Log<MessageType::Error>::ToMessages("Could not start HTTP server on port " +
+                                            std::to_string(server.GetPort()) + ". Terminating.");
         exit(EXIT_FAILURE);
     } else {
-        PRINT_LOG("HTTP server started on port " << server.GetPort() << ".");
+        Log<MessageType::Info>::ToMessages("HTTP server started on port " + std::to_string(server.GetPort()) + ".");
     }
 
     /* Start secure HTTP server. */
-    server_secure.SetCertificate(AdCamiCommon::kAdCamiCertificatePemFile,
-                                 AdCamiCommon::kAdCamiCertificateKeyFile);
-    if (server_secure.Start() != AdCamiHttpServer::Running) {
-        PRINT_LOG("Could not start secure HTTP server on port " << server_secure.GetPort() << ". Exiting...");
+    serverSecure.AddSyncRequestAction(requestActions);
+    serverSecure.SetCertificate(AdCamiCommon::kAdCamiCertificatePemFile,
+                                AdCamiCommon::kAdCamiCertificateKeyFile);
+    if (serverSecure.Start() != AdCamiHttpServer::Running) {
+        Log<MessageType::Error>::ToMessages("Could not start secure HTTP server on port " +
+                                            std::to_string(server.GetPort()) + ". Terminating.");
         exit(EXIT_FAILURE);
     } else {
-        PRINT_LOG("Secure HTTP server started on port " << server_secure.GetPort() << ".");
+        Log<MessageType::Info>::ToMessages("Secure HTTP server started on port " +
+                                           std::to_string(server.GetPort()) + ".");
     }
 
     _SavePid();
@@ -246,16 +179,16 @@ int main(int argc, char **argv) {
 
     /* Stop HTTP server. */
     server.Stop();
-    PRINT_LOG("HTTP server stopped.");
-    server_secure.Stop();
-    PRINT_LOG("Secure HTTP server stopped.");
+    Log<MessageType::Info>::ToMessages("HTTP server stopped.");
+    serverSecure.Stop();
+    Log<MessageType::Info>::ToMessages("Secure HTTP server stopped.");
 
     /* Stop Bluetooth discovery thread. */
     if ((error = bluetooth->StopDiscovery()) != BT_OK) {
-        PRINT_LOG("Problem stopping discovery [error = " << error << "]");
+        Log<MessageType::Error>::ToMessages("Problem stopping discovery [error = " + std::to_string(error) + "]");
         exit(EXIT_FAILURE);
     } else {
-        PRINT_LOG("Bluetooth discovery stopped.");
+        Log<MessageType::Info>::ToMessages("Bluetooth discovery stopped.");
     }
 
     exit(EXIT_SUCCESS);

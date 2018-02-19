@@ -75,11 +75,11 @@ AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::AddDevice(const vecto
     return _ExecuteQuery(query, nullptr, nullptr);
 }
 
-AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::AddEvent(const AdCamiEvent *event) {
+AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::AddEvent(const AdCamiEvent &event) {
     string query = "INSERT INTO Event(EventTypeId, DeviceId, TimeStamp) VALUES";
-    query.append("(" + std::to_string(event->Type()) +
-                 ",(SELECT Id FROM Device WHERE Address = '" + event->Address() +
-                 "'),'" + event->TimeStamp() +
+    query.append("(" + std::to_string(event.Type()) +
+                 ",(SELECT Id FROM Device WHERE Address = '" + event.Address() +
+                 "'),'" + event.TimeStamp() +
                  "')");
     if (_Open() != EnumStorageError::Open) {
         return this->_dbState;
@@ -91,10 +91,10 @@ AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::AddEvent(const AdCami
 
     unsigned int lastRowId = sqlite3_last_insert_rowid(this->_db);
 
-    switch (event->Type()) {
+    switch (event.Type()) {
         case EnumEventType::BloodPressure: {
             const AdCamiEventBloodPressureMeasurement *measurement =
-                    dynamic_cast<const AdCamiEventBloodPressureMeasurement *>(event);
+                    dynamic_cast<const AdCamiEventBloodPressureMeasurement *>(&event);
             query = "INSERT INTO EventBloodPressureMeasurement(EventId,SystolicValue,SystolicUnit,DiastolicValue,"
                     "DiastolicUnit,MeanArterialPressureValue,MeanArterialPressureUnit,PulseRateValue) VALUES";
             query.append("(" + std::to_string(lastRowId) +
@@ -112,7 +112,7 @@ AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::AddEvent(const AdCami
             break;
         }
         case EnumEventType::Weight: {
-            const AdCamiEventWeightMeasurement *measurement = dynamic_cast<const AdCamiEventWeightMeasurement *>(event);
+            const AdCamiEventWeightMeasurement *measurement = dynamic_cast<const AdCamiEventWeightMeasurement *>(&event);
             query = "INSERT INTO EventWeightMeasurement(EventId,Value,Unit) VALUES";
             query.append("(" + std::to_string(lastRowId) +
                          "," + std::to_string(measurement->Weight().Value()) +
@@ -129,6 +129,10 @@ AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::AddEvent(const AdCami
     }
 
     return EnumStorageError::Ok;
+}
+
+AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::AddEvent(const AdCamiEvent *event) {
+    return this->AddEvent(*event);
 }
 
 AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::AddEvent(const vector <AdCamiEvent> events) {
@@ -209,7 +213,7 @@ AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::DeleteDevice(const ve
 
 AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::GetDevice(const string &address,
                                                                      AdCamiBluetoothDevice *device) {
-    string query = "SELECT * FROM Device WHERE Address is '" + address + "'";
+    string query = "SELECT * FROM Device WHERE Address is '" + address + "' AND Deleted=0";
 
     if (_Open() != EnumStorageError::Open) {
         return this->_dbState;
@@ -217,9 +221,15 @@ AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::GetDevice(const strin
 
     if (!_RecordExists(query)) {
         return DeviceNotFound;
+    } else if (device == nullptr) {
+        return Ok;
     }
 
     return _ExecuteQuery(query, _ClbkGetDevice, device);
+}
+
+AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::GetDevice(AdCamiBluetoothDevice *device) {
+    return this->GetDevice(device->Address(), device);
 }
 
 AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::GetDevices(vector <AdCamiBluetoothDevice> *devices,
@@ -254,6 +264,26 @@ AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::GetDevices(vector <Ad
     }
 
     return _ExecuteQuery(query, _ClbkGetDevices, devices);
+}
+
+AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::GetLastEvent(const AdCamiBluetoothDevice &device,
+                                                                        AdCamiEvent *event) {
+    string query = "SELECT * FROM EventDeviceView WHERE Address = '";
+
+    query.append(device.Address());
+    query.append("' ORDER BY Id DESC LIMIT 1");
+
+    if (_Open() != EnumStorageError::Open) {
+        return this->_dbState;
+    }
+
+    if (!_RecordExists(query)) {
+        return EventNotFound;
+    } else if (event == nullptr) {
+        return Ok;
+    }
+
+    return _ExecuteQuery(query, _ClbkGetDeviceEvent, event);
 }
 
 AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::GetEvents(vector <AdCamiEvent> *events) {
@@ -301,6 +331,26 @@ AdCamiEventsStorage::EnumStorageError AdCamiEventsStorage::UpdateDevice(const Ad
     return _ExecuteQuery(query, nullptr, nullptr);
 }
 
+int AdCamiEventsStorage::_ClbkGetDevice(void *arg, int argc, char **argv, char **colname) {
+    AdCamiBluetoothDevice *device = reinterpret_cast<AdCamiBluetoothDevice *>(arg);
+
+    device->Address(string(argv[2]))
+            .Type(static_cast<EnumBluetoothDeviceType>(std::strtoul(argv[1], nullptr, 10)))
+            .Paired(string(argv[3]).compare("1") == 0)
+            .NotificationsEnabled(string(argv[4]).compare("1") == 0);
+
+    return 0;
+}
+
+int AdCamiEventsStorage::_ClbkGetDeviceEvent(void *arg, int argc, char **argv, char **colname) {
+    AdCamiEvent *event = reinterpret_cast<AdCamiEvent *>(arg);
+
+    event->Address(string(argv[2]));
+    event->TimeStamp(string(argv[1], strlen(argv[1])));
+
+    return 0;
+}
+
 int AdCamiEventsStorage::_ClbkGetDeviceEvents(void *arg, int argc, char **argv, char **colname) {
     vector <AdCamiEvent> *events = reinterpret_cast<vector <AdCamiEvent> *>(arg);
 
@@ -309,17 +359,6 @@ int AdCamiEventsStorage::_ClbkGetDeviceEvents(void *arg, int argc, char **argv, 
             string(argv[1]), //timestamp
             string(argv[2]) //address
     ));
-
-    return 0;
-}
-
-int AdCamiEventsStorage::_ClbkGetDevice(void *arg, int argc, char **argv, char **colname) {
-    AdCamiBluetoothDevice *device = reinterpret_cast<AdCamiBluetoothDevice *>(arg);
-
-    device->Address(string(argv[2]))
-            .Type(static_cast<EnumBluetoothDeviceType>(std::strtoul(argv[1], nullptr, 10)))
-            .Paired(string(argv[3]).compare("1") == 0)
-            .NotificationsEnabled(string(argv[4]).compare("1") == 0);
 
     return 0;
 }

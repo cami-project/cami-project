@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <curl/curl.h>
+#include "AdCamiHttpCommon.h"
 #include "AdCamiHttpData.h"
 #include "AdCamiUrl.h"
 

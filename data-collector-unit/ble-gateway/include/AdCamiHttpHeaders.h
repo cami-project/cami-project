@@ -2,8 +2,8 @@
 //  Created by Jorge Miguel Miranda on 29/01/14.
 //
 
-#ifndef _AdCamiHttpHeaders_h
-#define _AdCamiHttpHeaders_h
+#ifndef ADCAMID_ADCAMIHTTPHEADERS_H
+#define ADCAMID_ADCAMIHTTPHEADERS_H
 
 #include <map>
 #include <string>
@@ -68,7 +68,7 @@ public:
     /**
      *
      */
-    string GetHeaderValue(EnumHttpHeader field);
+    string GetHeaderAndValue(EnumHttpHeader field);
 
     /**
      * Adds a header string with the format "<header>: <field>" to the
@@ -109,4 +109,4 @@ private:
     
 }
 
-#endif
+#endif //ADCAMID_ADCAMIHTTPHEADERS_H

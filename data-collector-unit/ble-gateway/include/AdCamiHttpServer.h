@@ -227,4 +227,7 @@ private:
 };
 
 } //namespace
+
+using EnumHttpServerConfiguration = AdCamiCommunications::AdCamiHttpServer::EnumConfiguration;
+
 #endif

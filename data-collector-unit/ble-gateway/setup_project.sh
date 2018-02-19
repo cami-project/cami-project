@@ -7,7 +7,7 @@ EXECUTE_ALL=0
 CONTRIB_DIR=contrib
 DEPENDENCIES=(libcurl3 libcurl4-gnutls-dev libmicrohttpd10 libmicrohttpd-dev libglib2.0-0 gdbserver sqlite3 python3.5)
 BLUEZ_DEPENDENCIES=(
-    g++-5 cmake autoconf libtool elfutils libelf-dev libdw-dev libudev-dev libical-dev
+    g++-6 cmake autoconf libtool elfutils libelf-dev libdw-dev libudev-dev libical-dev
     libreadline-dev libsbc-dev libspeexdsp-dev libglib2.0-0 libglib2.0-dev dbus
     libdbus-1-3 libdbus-1-dev libdbus-glib-1-dev debhelper dh-autoreconf flex bison
     libcap-ng-dev dh-systemd check devscripts cups
@@ -26,25 +26,25 @@ function install_packages () {
     for dep in ${deps[@]}; do
         print_green "> Installing "$dep"..."
         if [ "$(dpkg-query -W -f='${db:Status-Status}' $dep >/dev/null 2>&1)" != 'installed' ]; then
-            apt-get -y install $dep >/dev/null 2>&1
+            if [[ $EUID -ne 0 ]]; then
+                sudo apt-get -y install $dep >/dev/null 2>&1
+            else
+                apt-get -y install $dep >/dev/null 2>&1
+            fi
         fi
         print_green -n "done!"
     done
 }
 
 function install_tools {
-    command -v unzip >/dev/null 2>&1 || { echo "Installing unzip..."; sudo apt-get install unzip >/dev/null 2>&1; }
+    command -v unzip >/dev/null 2>&1 || { echo "Installing unzip..."; apt-get install unzip >/dev/null 2>&1; }
 }
 
 function install_bluez {
     BLUEZ_VERSION=5.47
-    BLUEZ_ORIG_FILE_URL=http://http.debian.net/debian/pool/main/b/bluez/bluez_$BLUEZ_VERSION.orig.tar.gz
-    BLUEZ_ORIG_FILE=bluez_$BLUEZ_VERSION.orig.tar.gz
-    BLUEZ_DEBIAN_FILE_URL=http://http.debian.net/debian/pool/main/b/bluez/bluez_$BLUEZ_VERSION-1.debian.tar.xz
-    BLUEZ_DEBIAN_FILE=bluez_$BLUEZ_VERSION-1.debian.tar.xz
+    BLUEZ_FILE=bluez-"$BLUEZ_VERSION".tar.xz
+    BLUEZ_FILE_URL=http://www.kernel.org/pub/linux/bluetooth/bluez-"$BLUEZ_VERSION".tar.xz
     BLUEZ_DIR="$CONTRIB_DIR"/bluez-"$BLUEZ_VERSION"
-    BLUEZ_DEBIAN_PACKAGE_FILE=bluez_$BLUEZ_VERSION-1_i386.deb
-    BLUEZ_PACKAGES_DIR="$BLUEZ_DIR"/packages
     INITIAL_PATH=$(pwd)
 
     if [ "$(dpkg-query -W -f='${db:Status-Status}' bluez)" = 'installed' ]; then
@@ -58,24 +58,18 @@ function install_bluez {
     if [ ! -d "$BLUEZ_DIR" ]; then
         mkdir -p "$CONTRIB_DIR"
         mkdir -p "$BLUEZ_DIR"
+        wget -O "$CONTRIB_DIR"/"$BLUEZ_FILE" "$BLUEZ_FILE_URL"
+        tar -xvf "$CONTRIB_DIR"/"$BLUEZ_FILE" -C "$CONTRIB_DIR"
     fi
 
-    if [ ! -d "$BLUEZ_PACKAGES_DIR" ] && [ ! -f "$BLUEZ_DEBIAN_PACKAGE_FILE" ]; then
-        wget -O "$BLUEZ_DIR"/"$BLUEZ_ORIG_FILE" "$BLUEZ_ORIG_FILE_URL"
-        wget -O "$BLUEZ_DIR"/"$BLUEZ_DEBIAN_FILE" "$BLUEZ_DEBIAN_FILE_URL"
-        cd "$BLUEZ_DIR"
-        tar -zxvf "$BLUEZ_ORIG_FILE"
-        tar -xvf "$BLUEZ_DEBIAN_FILE"
-        mv debian bluez-"$BLUEZ_VERSION"/
-        cd bluez-"$BLUEZ_VERSION"/
-        debuild -us -uc
-        cd ..
-        mkdir -p "$BLUEZ_PACKAGES_DIR"
-        mv *.deb "$BLUEZ_PACKAGES_DIR"
+    cd "$BLUEZ_DIR"
+    sh configure --prefix=/usr
+    make
+    if [[ $EUID -ne 0 ]]; then
+        sudo make install
+    else
+        make install
     fi
-
-    dpkg -i "$BLUEZ_PACKAGES_DIR"/*.deb
-
     cd "$INITIAL_PATH"
 
     print_green -n "done!"
@@ -109,7 +103,11 @@ function install_libjson {
     patch -Np0 < "$LIBJSON_PATCH_FILE_NAME"
     cd ../"$LIBJSON_DIR"
     make >/dev/null 2>&1
-    sudo make install
+    if [[ $EUID -ne 0 ]]; then
+        sudo make install
+    else
+        make install
+    fi
     cd "$INITIAL_PATH"
 
     print_green -n "done!"
@@ -128,7 +126,12 @@ function install_googletest {
     cd "$GOOGLETEST_DIR"
 	cmake . >/dev/null 2>&1
     make >/dev/null 2>&1
-    sudo make install >/dev/null 2>&1
+    if [[ $EUID -ne 0 ]]; then
+        sudo make install >/dev/null 2>&1
+    else
+        make install >/dev/null 2>&1
+    fi
+
     cd "$INITIAL_PATH"
     print_green -n "done!"
 }
@@ -159,12 +162,14 @@ function create_configuration_files {
     if [ ! -f $ADCAMID_CONFIG_FILE ]; then
         cat >"$ADCAMID_CONFIG_FILE" <<EOL
 {
-        "remoteendpoint" : "",
-        "gatewayname" : "",
+        "bluetoothAdapter": "hci0",
+        "remoteEndpoints" : [],
+        "gatewayName" : "",
         "opentele" : {
                 "username" : "",
                 "password" : ""
-        }
+        },
+        "readMeasurementsTimeout": 30
 }
 EOL
     fi
@@ -184,7 +189,11 @@ EOL
     #sqlite3 $EVENTS_DB_FILE < ./scripts/sql/eventsdb_dummy_data.sql
 
     # Create folders for logs
-    sudo mkdir -p "$LOGS_FOLDER"
+    if [[ $EUID -ne 0 ]]; then
+        sudo mkdir -p "$LOGS_FOLDER"
+    else
+        mkdir -p "$LOGS_FOLDER"
+    fi
 
     print_green -n "done!"
 }

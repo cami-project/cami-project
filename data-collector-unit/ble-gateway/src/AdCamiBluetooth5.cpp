@@ -1,13 +1,9 @@
 #include "AdCamiBluetooth5.h"
+#include "AdCamiLogging.h"
 
 namespace AdCamiHardware {
 
 //map <string, std::thread> AdCamiBluetooth5::_devicesThreads;
-
-AdCamiBluetooth5::AdCamiBluetooth5() :
-        _bluetoothAdapterPath(nullptr),
-        _discoveryTask(new DiscoveryTask()), _discoveryCallback(nullptr),
-        _filterDevices(true), _storeDiscoveredDevices(false), _discoveredDevices(nullptr) {}
 
 AdCamiBluetooth5::~AdCamiBluetooth5() {
     /* Free the Adapter Path */
@@ -18,6 +14,43 @@ AdCamiBluetooth5::~AdCamiBluetooth5() {
     delete this->_discoveryTask;
     delete this->_discoveredDevices;
 }
+
+AdCamiBluetooth5::AdCamiBluetooth5() :
+        _discoveryStrategy(new AcceptAllDiscoveryStrategy()),
+        _bluetoothAdapter(kDefaultBluetoothAdapter.c_str()),
+        _bluetoothAdapterPath(nullptr),
+        _discoveryTask(new DiscoveryTask()),
+        _storeDiscoveredDevices(false),
+        _discoveredDevices(nullptr),
+        _discoveryUuidsFilter(nullptr) {}
+
+AdCamiBluetooth5::AdCamiBluetooth5(const string &bluetoothAdapter) :
+        _discoveryStrategy(new AcceptAllDiscoveryStrategy()),
+        _bluetoothAdapter(bluetoothAdapter.c_str()),
+        _bluetoothAdapterPath(nullptr),
+        _discoveryTask(new DiscoveryTask()),
+        _storeDiscoveredDevices(false),
+        _discoveredDevices(nullptr),
+        _discoveryUuidsFilter(nullptr) {}
+
+AdCamiBluetooth5::AdCamiBluetooth5(IAdCamiBluetoothDiscoveryStrategy *strategy) :
+        _discoveryStrategy(strategy),
+        _bluetoothAdapter(kDefaultBluetoothAdapter.c_str()),
+        _bluetoothAdapterPath(nullptr),
+        _discoveryTask(new DiscoveryTask()),
+        _storeDiscoveredDevices(false),
+        _discoveredDevices(nullptr),
+        _discoveryUuidsFilter(nullptr) {}
+
+AdCamiBluetooth5::AdCamiBluetooth5(const string &bluetoothAdapter,
+                                   IAdCamiBluetoothDiscoveryStrategy *strategy) :
+        _discoveryStrategy(strategy),
+        _bluetoothAdapter(bluetoothAdapter.c_str()),
+        _bluetoothAdapterPath(nullptr),
+        _discoveryTask(new DiscoveryTask()),
+        _storeDiscoveredDevices(false),
+        _discoveredDevices(nullptr),
+        _discoveryUuidsFilter(nullptr) {}
 
 AdCamiBluetoothError AdCamiBluetooth5::Init() {
     /* Check if we called Init before */
@@ -31,9 +64,11 @@ AdCamiBluetoothError AdCamiBluetooth5::Init() {
     }
 
     /* Verify if we have a Bluetooth Adapter */
-    if (DBusAdapterGetObjectPath(&this->_bluetoothAdapterPath) != DBUS_OK) {
+    if (DBusAdapterGetObjectPath(this->_bluetoothAdapter, &this->_bluetoothAdapterPath) != DBUS_OK) {
         return BT_ERROR_ADAPTER_NOT_FOUND;
     }
+
+    Log<MessageType::Info>::ToMessages("Using Bluetooth adapter " + string(this->_bluetoothAdapterPath));
 
     return BT_OK;
 }
@@ -82,7 +117,7 @@ AdCamiBluetoothError AdCamiBluetooth5::DiscoverDevices(vector <AdCamiBluetoothDe
 
         /* Get Default Adapter if needed */
         if (this->_bluetoothAdapterPath == nullptr) {
-            if (DBusAdapterGetObjectPath(&this->_bluetoothAdapterPath) != DBUS_OK) {
+            if (DBusAdapterGetObjectPath(this->_bluetoothAdapter, &this->_bluetoothAdapterPath) != DBUS_OK) {
                 PRINT_DEBUG("BT_ERROR_ADAPTER_NOT_FOUND")
                 return BT_ERROR_ADAPTER_NOT_FOUND;
             }
@@ -102,16 +137,16 @@ AdCamiBluetoothError AdCamiBluetooth5::DiscoverDevices(vector <AdCamiBluetoothDe
                                                                      _SyncDiscoveryInterfaceAddedClbk,
                                                                      &discoveredDevices,
                                                                      nullptr);
-        idPropertiesChangedSignal = g_dbus_connection_signal_subscribe(busConnection,/* connection */
-                                                                       nullptr,/* sender */
-                                                                       DBUS_PROPERTIES_INTERFACE,/* iface name */
-                                                                       DBUS_SIGNAL_PROPERTIESCHANGED,/* member */
-                                                                       nullptr,/* object_path */
-                                                                       BLUEZ5_DEVICE_INTERFACE,/* arg0 */
-                                                                       G_DBUS_SIGNAL_FLAGS_MATCH_ARG0_PATH,/* flags */
-                                                                       _SyncDiscoveryPropertiesChangedClbk,/* callback */
-                                                                       &discoveredDevices,/* callback user data */
-                                                                       nullptr); /* user data free function */
+        idPropertiesChangedSignal = g_dbus_connection_signal_subscribe(busConnection,// connection
+                                                                       nullptr,// sender
+                                                                       DBUS_PROPERTIES_INTERFACE,// iface name
+                                                                       DBUS_SIGNAL_PROPERTIESCHANGED,// member
+                                                                       nullptr,// object_path
+                                                                       BLUEZ5_DEVICE_INTERFACE,// arg0
+                                                                       G_DBUS_SIGNAL_FLAGS_MATCH_ARG0_PATH,// flags
+                                                                       _SyncDiscoveryPropertiesChangedClbk,// callback
+                                                                       &discoveredDevices,// callback user data
+                                                                       nullptr); // user data free function
 
         /* Start Discovery */
         if ((error = DBusAdapterStartDiscovery(this->_bluetoothAdapterPath)) != DBUS_OK) {
@@ -322,7 +357,7 @@ AdCamiBluetoothError AdCamiBluetooth5::PairDevice(const string &deviceAddress) {
     }
 
     /* Get the Bluetooth adapter path. */
-    if (DBusAdapterGetObjectPath(&adapterPath) != DBUS_OK) {
+    if (DBusAdapterGetObjectPath(this->_bluetoothAdapter, &adapterPath) != DBUS_OK) {
         return BT_ERROR_ADAPTER_NOT_FOUND;
     }
     /* Get device path based on the Bluetooth address. */
@@ -381,15 +416,38 @@ AdCamiBluetoothError AdCamiBluetooth5::PairDevice(const string &deviceAddress) {
     return BT_OK;
 }
 
+AdCamiBluetoothError AdCamiBluetooth5::SetDiscoveryFilter(const vector <string> &uuids) {
+    /* If there are no uuids to filter, return with success - no need to apply the filter. */
+    if (uuids.size() == 0) {
+        return BT_OK;
+    }
+
+    /* If the discovery process is already running, return since the filter will not be applied. */
+    if (this->_discoveryTask->IsRunning()) {
+        return BT_ERROR_DISCOVERY_RUNNING;
+    }
+
+    /* Create GVariant with the filter parameters. */
+    GVariantBuilder *builder = nullptr;
+    GVariant *arrayUuids = nullptr;
+
+    builder = g_variant_builder_new(G_VARIANT_TYPE("as"));
+    for (auto v : uuids) {
+        g_variant_builder_add(builder, "s", v.c_str());
+    }
+    arrayUuids = g_variant_builder_end(builder);
+    g_variant_builder_unref(builder);
+
+    builder = g_variant_builder_new(G_VARIANT_TYPE("a{sv}"));
+    g_variant_builder_add(builder, "{sv}", "UUIDs", arrayUuids);
+    this->_discoveryUuidsFilter = g_variant_builder_end(builder);
+
+    return BT_OK;
+}
+
 AdCamiBluetoothError AdCamiBluetooth5::StartDiscovery() {
-//    char *adapterPath = nullptr;
     GDBusConnection *busConnection = nullptr;
     EnumDBusResult error = DBUS_OK;
-    map <string, AdCamiBluetoothDevice> discoveredDevices;
-
-    auto clean = [&]() {
-//        delete[] adapterPath;
-    };
 
     if (this->_discoveryTask->IsRunning()) {
         return BT_ERROR_DISCOVERY_RUNNING;
@@ -398,28 +456,22 @@ AdCamiBluetoothError AdCamiBluetooth5::StartDiscovery() {
     /* Get Regular DBus Connection to deal with signals */
     if (DBusGetConnection(&busConnection) != DBUS_OK) {
         PRINT_DEBUG("BT_ERROR_DBUS_NO_CONNECTION")
-        clean();
         return BT_ERROR_DBUS_NO_CONNECTION;
     }
     this->_discoveryTask->BusConnection = busConnection;
 
     /* Get Default Adapter if needed */
     if (this->_bluetoothAdapterPath == nullptr) {
-        //if (DBusAdapterGetObjectPath(&adapterPath) != DBUS_OK) {
-        if (DBusAdapterGetObjectPath(&this->_bluetoothAdapterPath) != DBUS_OK) {
+        if (DBusAdapterGetObjectPath(this->_bluetoothAdapter, &this->_bluetoothAdapterPath) != DBUS_OK) {
             PRINT_DEBUG("BT_ERROR_ADAPTER_NOT_FOUND")
             return BT_ERROR_ADAPTER_NOT_FOUND;
         }
     }
-//    } else {
-//        adapterPath = strndup(this->_bluetoothAdapterPath, strlen(this->_bluetoothAdapterPath));
-//    }
 
     /* Subscribe to signals. It is necessary to subscribe to InterfacesAdded, which indicates a new device
      * and to PropertiesChanged that indicates the device is already known, but some property of it changed.
      * This indicates that the device is on. It also allows that between discoveries, the device is always
      * discovered. */
-//    idInterfacesAddedSignal = g_dbus_connection_signal_subscribe(busConnection,
     this->_discoveryTask->InterfacesAddedCallbackId =
             g_dbus_connection_signal_subscribe(busConnection,
                                                nullptr,
@@ -428,10 +480,9 @@ AdCamiBluetoothError AdCamiBluetooth5::StartDiscovery() {
                                                nullptr,
                                                nullptr,
                                                G_DBUS_SIGNAL_FLAGS_NONE,
-                                               _AsyncDiscoveryInterfaceAddedClbk,
+                                               _AsyncDiscoveryClbk,
                                                this,
                                                nullptr);
-//    idPropertiesChangedSignal = g_dbus_connection_signal_subscribe(busConnection,/* connection */
     this->_discoveryTask->PropertiesChangedCallbackId =
             g_dbus_connection_signal_subscribe(busConnection,/* connection */
                                                nullptr,/* sender */
@@ -440,15 +491,22 @@ AdCamiBluetoothError AdCamiBluetooth5::StartDiscovery() {
                                                nullptr,/* object_path */
                                                BLUEZ5_DEVICE_INTERFACE,/* arg0 */
                                                G_DBUS_SIGNAL_FLAGS_MATCH_ARG0_PATH,/* flags */
-                                               _AsyncDiscoveryPropertiesChangedClbk,/* callback */
+                                               _AsyncDiscoveryClbk,//_AsyncDiscoveryPropertiesChangedClbk,/* callback */
                                                this,/* callback user data */
                                                nullptr); /* user data free function */
 
+    /* Set discovery filter */
+    if (this->_discoveryUuidsFilter != nullptr) {
+        if ((error = DBusAdapterSetDiscoveryFilter(this->_bluetoothAdapterPath,
+                                                   *this->_discoveryUuidsFilter)) != DBUS_OK) {
+            PRINT_DEBUG("BT_ERROR_SET_DISCOVERY_FILTER [error = " << error << "]")
+            return BT_ERROR_SET_DISCOVERY_FILTER;
+        }
+    }
+
     /* Start Discovery */
-//    if ((error = DBusAdapterStartDiscovery(adapterPath)) != DBUS_OK) {
     if ((error = DBusAdapterStartDiscovery(this->_bluetoothAdapterPath)) != DBUS_OK) {
         PRINT_DEBUG("BT_ERROR_START_DISCOVERY [error = " << error << "]")
-        clean();
         return BT_ERROR_START_DISCOVERY;
     }
 
@@ -464,41 +522,41 @@ AdCamiBluetoothError AdCamiBluetooth5::StartDiscovery() {
 }
 
 AdCamiBluetoothError AdCamiBluetooth5::StopDiscovery() {
-//    char *adapterPath = nullptr;
     GDBusConnection *busConnection = nullptr;
     EnumDBusResult error = DBUS_OK;
-
-    auto clean = [&]() {
-//        delete[] adapterPath;
-    };
 
     /* Get Regular DBus Connection to deal with signals */
     if (DBusGetConnection(&busConnection) != DBUS_OK) {
         PRINT_DEBUG("BT_ERROR_DBUS_NO_CONNECTION")
-        clean();
         return BT_ERROR_DBUS_NO_CONNECTION;
     }
 
     /* Get Default Adapter if needed */
     if (this->_bluetoothAdapterPath == nullptr) {
-        //if (DBusAdapterGetObjectPath(&adapterPath) != DBUS_OK) {
-        if (DBusAdapterGetObjectPath(&this->_bluetoothAdapterPath) != DBUS_OK) {
+        if (DBusAdapterGetObjectPath(this->_bluetoothAdapter, &this->_bluetoothAdapterPath) != DBUS_OK) {
             PRINT_DEBUG("BT_ERROR_ADAPTER_NOT_FOUND")
             return BT_ERROR_ADAPTER_NOT_FOUND;
         }
     }
 
     /* Stop Discovery */
-//    if ((error = DBusAdapterStopDiscovery(adapterPath)) != DBUS_OK) {
     if ((error = DBusAdapterStopDiscovery(this->_bluetoothAdapterPath)) != DBUS_OK) {
-        PRINT_LOG("Error stopping discovery [error = " << error << "]")
-        clean();
+        Log<MessageType::Info>::ToMessages("Error stopping discovery [error = " + std::to_string(error) + "]");
         return BT_ERROR_STOP_DISCOVERY;
     }
     if (this->_discoveryTask->IsRunning()) {
         g_main_loop_quit(this->_discoveryTask->Loop);
     }
     this->_discoveryTask->Clean();
+
+    /* Clean discovery filter. */
+    GVariantBuilder *builder = g_variant_builder_new(G_VARIANT_TYPE("a{sv}"));
+    GVariant *filter = g_variant_builder_end(builder);
+
+    if ((error = DBusAdapterSetDiscoveryFilter(this->_bluetoothAdapterPath, *filter)) != DBUS_OK) {
+        PRINT_DEBUG("BT_ERROR_SET_DISCOVERY_FILTER [error = " << error << "]")
+        return BT_ERROR_SET_DISCOVERY_FILTER;
+    }
 
     return BT_OK;
 }
@@ -512,79 +570,46 @@ string AdCamiBluetooth5::_BluetoothAddressFromObjectPath(const char *objectPath)
     return address;
 }
 
-void AdCamiBluetooth5::_AsyncDiscoveryInterfaceAddedClbk(GDBusConnection *connection,
-                                                         const gchar *sender_name,
-                                                         const gchar *object_path,
-                                                         const gchar *interface_name,
-                                                         const gchar *signal_name,
-                                                         GVariant *parameters,
-                                                         gpointer user_data) {
+void AdCamiBluetooth5::_AsyncDiscoveryClbk(GDBusConnection *connection,
+                                           const gchar *sender_name,
+                                           const gchar *object_path,
+                                           const gchar *interface_name,
+                                           const gchar *signal_name,
+                                           GVariant *parameters,
+                                           gpointer user_data) {
     AdCamiBluetooth5 *bluetooth = static_cast<AdCamiBluetooth5 *>(user_data);
-    BluetoothDeviceProperties deviceInfo;
+    AdCamiBluetoothDevice device("");
 
-    /* If no information for the device could be found, then stop. Most probably the interrupt was generated by an
-     * interface other than org.bluez.Device1. */
-    if (DBusLookupDeviceProperties(parameters, &deviceInfo) != DBUS_OK) {
+    if (strncmp(signal_name, "PropertiesChanged", 17) == 0) {
+        string address = _BluetoothAddressFromObjectPath(object_path);
+        device = AdCamiBluetoothDevice(address);
+        device.NameFromCache();
+        device.UuidsFromCache();
+    } else if (strncmp(signal_name, "InterfacesAdded", 15) == 0) {
+        BluetoothDeviceProperties deviceInfo;
+        /* If no information for the device could be found, then stop. Most probably the interrupt was
+         * generated by an interface other than org.bluez.Device1. */
+        if (DBusLookupDeviceProperties(parameters, &deviceInfo) != DBUS_OK) {
+            return;
+        }
+
+        device = AdCamiBluetoothDevice(deviceInfo.Address, bluetooth->_bluetoothAdapter);
+        device.Name(deviceInfo.Name)
+                .Uuids(deviceInfo.UUIDs);
+    } else {
         return;
     }
 
-    std::unique_ptr <AdCamiBluetoothDevice> device(new AdCamiBluetoothDevice(deviceInfo.Address));
-    device.get()->Name(deviceInfo.Name).Uuids(deviceInfo.UUIDs);
-
-    /* If the Discovery() method was invoked, then store all found devices on list. */
-    if (bluetooth->_storeDiscoveredDevices && std::find(bluetooth->_discoveredDevices->begin(),
-                                                        bluetooth->_discoveredDevices->end(),
-                                                        *device.get()) == bluetooth->_discoveredDevices->end()) {
-        bluetooth->_discoveredDevices->push_back(*device.get());
+    /* If the StartDiscovery() method was invoked, then store all found devices on list. */
+    if (bluetooth->_storeDiscoveredDevices && find(bluetooth->_discoveredDevices->begin(),
+                                                   bluetooth->_discoveredDevices->end(),
+                                                   device) == bluetooth->_discoveredDevices->end()) {
+        bluetooth->_discoveredDevices->push_back(device);
     }
 
-    /* Check if the device is authorized to receive notifications. */
-    bool deviceAuthorized = (false || !bluetooth->_filterDevices);
-    if (bluetooth->_filterDevices && bluetooth->_updateDevicesFilterClbk != nullptr) {
-        bluetooth->_updateDevicesFilterClbk(&bluetooth->_devicesFilter);
-        deviceAuthorized = (std::find(bluetooth->_devicesFilter.begin(),
-                                      bluetooth->_devicesFilter.end(),
-                                      *device.get()) != bluetooth->_devicesFilter.end());
-    }
-
-    if (bluetooth->_discoveryCallback != nullptr && deviceAuthorized) {
-        bluetooth->_discoveryCallback(std::move(device));
-    }
-}
-
-void AdCamiBluetooth5::_AsyncDiscoveryPropertiesChangedClbk(GDBusConnection *connection,
-                                                            const gchar *sender_name,
-                                                            const gchar *object_path,
-                                                            const gchar *interface_name,
-                                                            const gchar *signal_name,
-                                                            GVariant *parameters,
-                                                            gpointer user_data) {
-//    PRINT_DEBUG("parameters = " << g_variant_print(parameters, TRUE));
-    AdCamiBluetooth5 *bluetooth = static_cast<AdCamiBluetooth5 *>(user_data);
-    string address = _BluetoothAddressFromObjectPath(object_path);
-
-    std::unique_ptr <AdCamiBluetoothDevice> device(new AdCamiBluetoothDevice(address));
-    device.get()->NameFromCache();
-    device.get()->UuidsFromCache();
-
-    /* If the Discovery() method was invoked, then store all found devices on list. */
-    if (bluetooth->_storeDiscoveredDevices && std::find(bluetooth->_discoveredDevices->begin(),
-                                                        bluetooth->_discoveredDevices->end(),
-                                                        *device.get()) == bluetooth->_discoveredDevices->end()) {
-        bluetooth->_discoveredDevices->push_back(*device.get());
-    }
-
-    /* Check if the device is authorized to receive notifications. */
-    bool deviceAuthorized = (false || !bluetooth->_filterDevices);
-    if (bluetooth->_filterDevices && bluetooth->_updateDevicesFilterClbk != nullptr) {
-        bluetooth->_updateDevicesFilterClbk(&bluetooth->_devicesFilter);
-        deviceAuthorized = (std::find(bluetooth->_devicesFilter.begin(),
-                                      bluetooth->_devicesFilter.end(),
-                                      *device.get()) != bluetooth->_devicesFilter.end());
-    }
-
-    if (bluetooth->_discoveryCallback != nullptr && deviceAuthorized) {
-        bluetooth->_discoveryCallback(std::move(device));
+    /* Run user filter and discovery action. */
+    if (bluetooth->_discoveryStrategy->FilterDevice(device)) {
+        bluetooth->_discoveryStrategy->DiscoveryEvent(std::make_unique<AdCamiBluetoothDevice>(device), parameters);
     }
 }
 
@@ -606,7 +631,6 @@ void AdCamiBluetooth5::_SyncDiscoveryInterfaceAddedClbk(GDBusConnection *connect
         AdCamiBluetoothDevice device(deviceInfo.Address);
         device.Name(deviceInfo.Name)
                 .Uuids(deviceInfo.UUIDs);
-//        devicesList->insert(std::pair<string, AdCamiBluetoothDevice>(string(deviceInfo.ObjectPath), device));
         devicesList->insert({string(deviceInfo.ObjectPath), std::move(device)});
     }
 }
@@ -620,10 +644,10 @@ void AdCamiBluetooth5::_SyncDiscoveryPropertiesChangedClbk(GDBusConnection *conn
                                                            gpointer user_data) {
     auto *devicesList = static_cast<map <string, AdCamiBluetoothDevice> *>(user_data);
     string address = _BluetoothAddressFromObjectPath(object_path);
-    gchar *retStr = nullptr;
+//    gchar *retStr = nullptr;
 
-    PRINT_DEBUG("parameters = " << (retStr = g_variant_print(parameters, TRUE)));
-    g_free(retStr);
+//    PRINT_DEBUG("parameters = " << (retStr = g_variant_print(parameters, TRUE)));
+//    g_free(retStr);
 
     /* Check if the device was already added. If it wasn't, then add it to the list
      * of discovered devices. That might occur because other event could add it. */
@@ -631,7 +655,6 @@ void AdCamiBluetooth5::_SyncDiscoveryPropertiesChangedClbk(GDBusConnection *conn
         AdCamiBluetoothDevice device(address);
         device.NameFromCache();
         device.UuidsFromCache();
-//        devicesList->insert(std::pair<string, AdCamiBluetoothDevice>(string(object_path), device));
         devicesList->insert({string(object_path), std::move(device)});
     }
 }

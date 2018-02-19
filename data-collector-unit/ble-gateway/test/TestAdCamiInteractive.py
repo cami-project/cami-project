@@ -4,7 +4,7 @@ import threading
 from support.HttpClient import HttpClient, HttpClientHandler
 from support.HttpServer import HttpServer
 
-SERVER_PORT = 61773
+SERVER_PORTS = [61773, 61774]
 ADCAMID_ADDRESS = "localhost:60773"
 
 
@@ -88,14 +88,20 @@ def set_gateway_name():
 
 
 def set_remote_endpoint():
-    endpoint = input("Remote endpoint: ")
-    return '{"endpoint":"' + endpoint + '"}'
+    endpoints = input("Remote endpoint(s) (separated by comma): ")
+    endpoints = [endp.strip() for endp in endpoints.split(',')]
+    return json.dumps({"endpoint": endpoints})
 
 
 # #########################################
 # Server requests
 # #########################################
 def request_events(post_data):
+    print("request_events post_data = " + post_data)
+    return
+
+
+def request_new_device(post_data):
     print("request_events post_data = " + post_data)
     return
 
@@ -115,11 +121,16 @@ def print_menu():
 
 
 # Start HTTP server on a separate thread
-http_server = HttpServer(SERVER_PORT)
-http_server.add_request_handler("/events", "POST", request_events)
-http_server.execute_after_request = print_menu
-http_server_thread = threading.Thread(target=http_server.run)
-http_server_thread.start()
+http_servers = {}
+for port in SERVER_PORTS:
+    http_server = HttpServer(port)
+    http_server.add_request_handler("/events", "POST", request_events)
+    http_server.add_request_handler("/device/new", "POST", request_new_device)
+    http_server.execute_after_request = print_menu
+    http_server_thread = threading.Thread(target=http_server.run)
+    http_server_thread.start()
+    http_servers[port] = http_server
+    print("Listening on port {}".format(port))
 
 # Use another address for the gateway, if specified as application argument
 gateway_address = (sys.argv[1] if len(sys.argv) > 1 else ADCAMID_ADDRESS)
@@ -128,8 +139,8 @@ http_client = HttpClient(gateway_address)
 # Initialize client requests.
 requests = {
     1: ("Discover and pair Bluetooth devices", HttpClientHandler("/discover", "PUT",
-                                                        pre_handler=discover_devices,
-                                                        post_handler=list_devices)),
+                                                                 pre_handler=discover_devices,
+                                                                 post_handler=list_devices)),
     2: ("Get events", HttpClientHandler("/events", "GET",
                                         post_handler=list_events)),
     3: ("Get paired devices", HttpClientHandler("/device/list", "GET",
@@ -162,11 +173,13 @@ while True:
         elif option > len(requests):
             print('\nInvalid option "{}"'.format(option))
         else:
-            http_server.shutdown()
+            for port, http_server in http_servers.items():
+                http_server.shutdown()
             exit()
     except ValueError:
         print("\nInvalid insertion.")
     except KeyboardInterrupt:
         print("Termination forced by the user!")
-        http_server.shutdown()
+        for port, http_server in http_servers.items():
+            http_server.shutdown()
         exit()

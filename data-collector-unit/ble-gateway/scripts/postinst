@@ -20,9 +20,9 @@ case "$1" in
 
   configure)
     # Create folders for logs
-    sudo mkdir -p /var/log/adcamid
-    sudo systemctl enable adcamid
-    sudo update-rc.d adcamid enable
+    mkdir -p /var/log/adcamid
+    systemctl enable adcamid
+    update-rc.d adcamid enable
   ;;
 
   abort-upgrade|abort-remove|abort-deconfigure)

@@ -7,9 +7,11 @@ static GDBusConnection *bus_connection = nullptr;
 static NotificationsTask *notificationsTask = nullptr;
 
 /* Signatures for private functions. */
-EnumDBusResult DBusLookupAdapterPath(GVariant *objects, char **adapterPath);
+//EnumDBusResult DBusLookupAdapterPath(GVariant *objects, char **adapterPath);
 
 EnumDBusResult DBusLookupDevicePath(GVariant *objects, const char *address, char **path);
+
+EnumDBusResult DBusLookupAdapterPath(GVariant *objects, const char *adapter, char **adapterPath);
 
 char *ay_to_string(const GVariant *variant, size_t *length, GError **error);
 
@@ -23,6 +25,13 @@ void _NotificationsPropertiesChanged(GDBusProxy *proxy,
                                      gpointer userData);
 
 gboolean _StopGMainLoop(gpointer data);
+
+//EnumDBusResult DBusConnectionClose() {
+//    g_dbus_connection_close(bus_connection, nullptr, nullptr, nullptr);
+//    g_object_unref(bus_connection);
+//
+//    return DBUS_OK;
+//}
 
 
 EnumDBusResult DBusConnectionEstablish(GBusType type) {
@@ -99,7 +108,7 @@ EnumDBusResult DBusAdapterGetObjectPath(char **adapterPath) {
     }
 
     /* Retrieve the HCI Bluetooth interface. The first one available is chosen. */
-    if (DBusLookupAdapterPath(objects, adapterPath) != DBUS_OK) {
+    if (DBusLookupAdapterPath(objects, nullptr, adapterPath) != DBUS_OK) {
         if (objects != nullptr) {
             g_variant_unref(objects);
         }
@@ -115,11 +124,48 @@ EnumDBusResult DBusAdapterGetObjectPath(char **adapterPath) {
     return (*adapterPath == nullptr) ? DBUS_ERROR_NO_ADAPTER : DBUS_OK;
 }
 
-EnumDBusResult DBusAdapterStartDiscovery(const char *adapterPath) {
+EnumDBusResult DBusAdapterGetObjectPath(const char *adapter, char **adapterPath) {
+    GVariant *objects = nullptr;
+
+    /* Check for Bus Connection */
+    if (bus_connection == nullptr) {
+        return DBUS_ERROR_CONNECTION;
+    }
+
+    /* Get managed objects. BlueZ 5 follows the DBus "standard" of having a ObjectManager
+     * with all objects, interfaces and properties [1]. The HCI adapter must be searched on
+     * these objects.
+     * [1] https://dbus.freedesktop.org/doc/dbus-specification.html#standard-interfaces-objectmanager */
+    if (DBusGetManagedObjects(&objects) != DBUS_OK) {
+        return DBUS_ERROR_NO_MANAGED_OBJECTS;
+    }
+
+    /* Retrieve the HCI Bluetooth interface. The first one available is chosen. */
+    if (DBusLookupAdapterPath(objects, adapter, adapterPath) != DBUS_OK) {
+        if (objects != nullptr) {
+            g_variant_unref(objects);
+        }
+
+        return DBUS_ERROR_NO_ADAPTER;
+    }
+
+    if (objects != nullptr) {
+        g_variant_unref(objects);
+    }
+
+    /* If we didn't find any adapter, just return that information */
+    return (*adapterPath == nullptr) ? DBUS_ERROR_NO_ADAPTER : DBUS_OK;
+}
+
+EnumDBusResult DBusAdapterSetDiscoveryFilter(const char *adapterPath, const GVariant &filter) {
     GDBusProxy *proxy_adapter = nullptr;
     GError *error = nullptr;
-    char *adapter = nullptr;
-    EnumDBusResult retDbus = DBUS_OK;
+//    char *adapter = nullptr;
+//    EnumDBusResult retDbus = DBUS_OK;
+
+    if (!g_variant_check_format_string(&const_cast<GVariant &>(filter), "a{sv}", true)) {
+        return DBUS_ERROR_INVALID_PARAMETERS;
+    }
 
     /* Check for DBus Connection */
     if (bus_connection == nullptr) {
@@ -128,23 +174,84 @@ EnumDBusResult DBusAdapterStartDiscovery(const char *adapterPath) {
 
     /* Check if we need to get the Default Adapter Path */
     if (adapterPath == nullptr) {
-        if ((retDbus = DBusAdapterGetObjectPath(&adapter)) != DBUS_OK) {
-            delete[] adapter;
-            return retDbus;
-        }
+//        if ((retDbus = DBusAdapterGetObjectPath(&adapter)) != DBUS_OK) {
+//            delete[] adapter;
+//            return retDbus;
+//        }
         return DBUS_ERROR_CONNECTION;
     }
-    /* If the adapter path was given as parameter, use it. */
-    else {
-        adapter = strdup(adapterPath);
-    }
+        /* If the adapter path was given as parameter, use it. */
+//    else {
+//        adapter = strdup(adapterPath);
+//    }
 
     /* Create Adapter Proxy */
     proxy_adapter = g_dbus_proxy_new_sync(bus_connection,
                                           G_DBUS_PROXY_FLAGS_NONE,
                                           nullptr,
                                           BLUEZ_SERVICE,
-                                          adapter,
+                                          adapterPath,
+                                          BLUEZ5_ADAPTER_INTERFACE,
+                                          nullptr,
+                                          &error);
+    if (proxy_adapter == nullptr) {
+        return DBUS_ERROR_PROXY_CREATION;
+    }
+
+    /* Invoke SetDiscoveryFilter Method */
+    GVariant *values = g_dbus_proxy_call_sync(proxy_adapter,
+                                              BLUEZ5_ADAPTER_METHOD_SETDISCOVERYFILTER,
+                                              g_variant_new("(*)", &const_cast<GVariant &>(filter)),
+                                              G_DBUS_CALL_FLAGS_NONE,
+                                              -1,
+                                              nullptr,
+                                              &error);
+    if (values == nullptr) {
+//        free(adapter);
+        g_object_unref(proxy_adapter);
+
+        return DBUS_ERROR_PROXY_METHOD_CALL;
+    }
+
+    /* When we arrive here, everything went well */
+//    free(adapter);
+    g_object_unref(proxy_adapter);
+    g_variant_unref(values);
+
+    return DBUS_OK;
+}
+
+
+EnumDBusResult DBusAdapterStartDiscovery(const char *adapterPath) {
+    GDBusProxy *proxy_adapter = nullptr;
+    GError *error = nullptr;
+//    char *adapter = nullptr;
+//    EnumDBusResult retDbus = DBUS_OK;
+
+    /* Check for DBus Connection */
+    if (bus_connection == nullptr) {
+        return DBUS_ERROR_CONNECTION;
+    }
+
+    /* Check if we need to get the Default Adapter Path */
+    if (adapterPath == nullptr) {
+//        if ((retDbus = DBusAdapterGetObjectPath(&adapter)) != DBUS_OK) {
+//            delete[] adapter;
+//            return retDbus;
+//        }
+        return DBUS_ERROR_CONNECTION;
+    }
+        /* If the adapter path was given as parameter, use it. */
+//    else {
+//        adapter = strdup(adapterPath);
+//    }
+
+    /* Create Adapter Proxy */
+    proxy_adapter = g_dbus_proxy_new_sync(bus_connection,
+                                          G_DBUS_PROXY_FLAGS_NONE,
+                                          nullptr,
+                                          BLUEZ_SERVICE,
+                                          adapterPath,
                                           BLUEZ5_ADAPTER_INTERFACE,
                                           nullptr,
                                           &error);
@@ -161,14 +268,14 @@ EnumDBusResult DBusAdapterStartDiscovery(const char *adapterPath) {
                                               nullptr,
                                               &error);
     if (values == nullptr) {
-        free(adapter);
+//        free(adapter);
         g_object_unref(proxy_adapter);
 
         return DBUS_ERROR_PROXY_METHOD_CALL;
     }
 
     /* When we arrive here, everything went well */
-    free(adapter);
+//    free(adapter);
     g_object_unref(proxy_adapter);
     g_variant_unref(values);
 
@@ -362,6 +469,7 @@ EnumDBusResult DBusDeviceConnect(const char *devicePath) {
                            &error);
 
     if (error != nullptr) {
+        PRINT_DEBUG("error = " << error->message);
         g_object_unref(proxyDevice);
         return DBUS_ERROR_CONNECTING_DEVICE;
     }
@@ -376,7 +484,7 @@ EnumDBusResult DBusDeviceConnectProfile(const char *devicePath, const char *uuid
     GDBusConnection *connection = nullptr;
     GDBusProxy *proxyDevice = nullptr;
     GError *error = nullptr;
-    char *devicePathFound = nullptr;
+//    char *devicePathFound = nullptr;
 
     /* Check for Bus Connection */
     DBusGetConnection(&connection);
@@ -401,7 +509,7 @@ EnumDBusResult DBusDeviceConnectProfile(const char *devicePath, const char *uuid
 
     /* Check for Proxy Creation errors */
     if (proxyDevice == nullptr) {
-        free(devicePathFound);
+//        delete[] devicePathFound;//free(devicePathFound);
         return DBUS_ERROR_PROXY_CREATION;
     }
 
@@ -415,13 +523,13 @@ EnumDBusResult DBusDeviceConnectProfile(const char *devicePath, const char *uuid
                            &error);
 
     if (error != nullptr) {
-        delete[] devicePathFound;
+//        delete[] devicePathFound;
         g_object_unref(proxyDevice);
         return DBUS_ERROR_CONNECTING_DEVICE;
     }
 
     /* Free Memory */
-    delete[] devicePathFound;
+//    delete[] devicePathFound;
     g_object_unref(proxyDevice);
 
     return DBUS_OK;
@@ -484,6 +592,7 @@ EnumDBusResult DBusDeviceDisconnect(const char *devicePath) {
 
 EnumDBusResult DBusDeviceGetObjectPath(const char *deviceAddress, const char *adapterPath, char **devicePath) {
     GVariant *objects = nullptr;
+
     if (DBusGetManagedObjects(&objects) != DBUS_OK) {
         return DBUS_ERROR_NO_MANAGED_OBJECTS;
     }
@@ -565,6 +674,8 @@ EnumDBusResult DBusDeviceAddressProperty(const char *devicePath, string *address
 
     if (value != nullptr) {
         *address = string(g_variant_get_string(value, nullptr));
+        g_variant_unref(value);
+
         return DBUS_OK;
     } else {
         return DBUS_ERROR_READING_PROPERTY;
@@ -582,6 +693,8 @@ EnumDBusResult DBusDeviceAppearanceProperty(const char *devicePath, uint16_t *ap
 
     if (value != nullptr) {
         *appearance = static_cast<uint16_t>(g_variant_get_uint16(value));
+        g_variant_unref(value);
+
         return DBUS_OK;
     } else {
         return DBUS_ERROR_READING_PROPERTY;
@@ -597,8 +710,10 @@ EnumDBusResult DBusDeviceConnectedProperty(const char *devicePath, bool *connect
         return res;
     }
 
-    if (value) {
+    if (value != nullptr) {
         *connected = g_variant_get_boolean(value);
+        g_variant_unref(value);
+
         return DBUS_OK;
     } else {
         return DBUS_ERROR_READING_PROPERTY;
@@ -616,6 +731,8 @@ EnumDBusResult DBusDeviceNameProperty(const char *devicePath, string *name) {
 
     if (value != nullptr) {
         *name = string(g_variant_get_string(value, nullptr));
+        g_variant_unref(value);
+
         return DBUS_OK;
     } else {
         return DBUS_ERROR_READING_PROPERTY;
@@ -633,6 +750,8 @@ EnumDBusResult DBusDevicePairedProperty(const char *devicePath, bool *paired) {
 
     if (value != nullptr) {
         *paired = g_variant_get_boolean(value);
+        g_variant_unref(value);
+
         return DBUS_OK;
     } else {
         return DBUS_ERROR_READING_PROPERTY;
@@ -650,6 +769,8 @@ EnumDBusResult DBusDeviceServicesResolvedProperty(const char *devicePath, bool *
 
     if (value != nullptr) {
         *servicesResolved = g_variant_get_boolean(value);
+        g_variant_unref(value);
+
         return DBUS_OK;
     } else {
         return DBUS_ERROR_READING_PROPERTY;
@@ -666,12 +787,15 @@ EnumDBusResult DBusDeviceUuidsProperty(const char *devicePath, vector <string> *
     if ((res = DBusDeviceGetProperty(devicePath, BLUEZ5_DEVICE_PROPERTY_UUIDS, &value)) != DBUS_OK) {
         return res;
     }
+
     if (value != nullptr) {
         g_variant_iter_init(&it, value);
         while ((g_variant_iter_next(&it, "s", &uuid))) {
             uuids->push_back(string(uuid));
             g_free(uuid);
         }
+        g_variant_unref(value);
+
         return DBUS_OK;
     } else {
         return DBUS_ERROR_READING_PROPERTY;
@@ -692,11 +816,11 @@ EnumDBusResult DBusDeviceReadNotifications(const char *devicePath,
         const char *kService = "/service";
         const char *kCharacteristic = "/char";
         const size_t kHandleLength = 4;
-        size_t length = strlen(devicePath) +
-                        strlen(kService) +
-                        strlen(kCharacteristic) +
-                        kHandleLength * 2;
-        deviceCharObjPath = new char[length + 1];
+        size_t length = (strlen(devicePath) +
+                         strlen(kService) +
+                         strlen(kCharacteristic) +
+                         kHandleLength * 2) + 1;
+        deviceCharObjPath = new char[length];
 
         strncpy(deviceCharObjPath, devicePath, strlen(devicePath) + 1);
         strncat(deviceCharObjPath, kService, strlen(kService) + 1);
@@ -754,6 +878,7 @@ EnumDBusResult DBusDeviceReadNotifications(const char *devicePath,
                            &error);
 
     if (error != nullptr) {
+        PRINT_DEBUG("error = " << error->message);
         g_object_unref(proxyGatt);
         delete[] deviceCharObjPath;
         return DBUS_ERROR_NOTIFICATION;
@@ -791,35 +916,37 @@ EnumDBusResult DBusDeviceReadNotifications(const char *devicePath,
 
 EnumDBusResult DBusDeviceStartNotify(const char *devicePath,
                                      const char *serviceHandle,
-                                     const char *characteristicHandle) {
-    GDBusProxy *proxyBus = nullptr, *proxyGatt = nullptr;
+                                     const char *characteristicHandle,
+                                     NotificationsCollection *notifications) {
+    GDBusProxy *proxyBus = nullptr;
     GError *error = nullptr;
     char *deviceCharObjPath = nullptr;
     auto _CreateCharacteristicObjectPath = [&]() -> void {
         const char *kService = "/service";
         const char *kCharacteristic = "/char";
         const size_t kHandleLength = 4;
-        size_t length = strlen(devicePath) +
-                        strlen(kService) +
-                        strlen(kCharacteristic) +
-                        kHandleLength * 2;
+        size_t length = (strlen(devicePath) +
+                         strlen(kService) +
+                         strlen(kCharacteristic) +
+                         kHandleLength * 2) + 1;
         deviceCharObjPath = new char[length];
 
-        strncpy(deviceCharObjPath, devicePath, strlen(devicePath));
+        strncpy(deviceCharObjPath, devicePath, strlen(devicePath) + 1);
         strncat(deviceCharObjPath, kService, strlen(kService));
         strncat(deviceCharObjPath, serviceHandle, kHandleLength);
         strncat(deviceCharObjPath, kCharacteristic, strlen(kCharacteristic));
         strncat(deviceCharObjPath, characteristicHandle, kHandleLength);
+        deviceCharObjPath[length] = '\0';
     };
-
-    /* Append service and characteristic. */
-    _CreateCharacteristicObjectPath();
 
     /* Check for Bus Connection */
     if (bus_connection == nullptr) {
-        delete[] deviceCharObjPath;
         return DBUS_ERROR_CONNECTION;
     }
+
+    /* Append service and characteristic. */
+    _CreateCharacteristicObjectPath();
+    PRINT_DEBUG("deviceCharObjPath = " << deviceCharObjPath);
 
     proxyBus = g_dbus_proxy_new_sync(bus_connection,
                                      G_DBUS_PROXY_FLAGS_NONE,
@@ -840,7 +967,6 @@ EnumDBusResult DBusDeviceStartNotify(const char *devicePath,
         notificationsTask = new NotificationsTask();
     }
 
-//    proxyGatt = g_dbus_proxy_new_sync(bus_connection,
     notificationsTask->NotificationsProxy = g_dbus_proxy_new_sync(bus_connection,
                                                                   G_DBUS_PROXY_FLAGS_DO_NOT_CONNECT_SIGNALS,
                                                                   nullptr,
@@ -854,7 +980,7 @@ EnumDBusResult DBusDeviceStartNotify(const char *devicePath,
     notificationsTask->CallbackId = g_signal_connect(notificationsTask->NotificationsProxy,
                                                      "g-properties-changed",
                                                      G_CALLBACK(_NotificationsPropertiesChanged),
-                                                     nullptr);
+                                                     notifications);
 
     /* Invoke StartNotify method */
     g_dbus_proxy_call_sync(notificationsTask->NotificationsProxy,
@@ -866,12 +992,11 @@ EnumDBusResult DBusDeviceStartNotify(const char *devicePath,
                            &error);
 
     if (error != nullptr) {
-        PRINT_DEBUG("DBUS_ERROR_NOTIFICATION = " << error->message)
         return DBUS_ERROR_NOTIFICATION;
     }
 
     notificationsTask->Loop = g_main_loop_new(nullptr, FALSE);
-    notificationsTask->Thread = std::thread([]() {
+    notificationsTask->Thread = std::thread([&]() {
         g_main_loop_run(notificationsTask->Loop);
     });
     notificationsTask->Thread.detach();
@@ -879,14 +1004,13 @@ EnumDBusResult DBusDeviceStartNotify(const char *devicePath,
     if (error != nullptr) {
         delete[] deviceCharObjPath;
         g_object_unref(proxyBus);
-        g_object_unref(proxyGatt);
+//        g_object_unref(proxyGatt);
         return DBUS_ERROR_NOTIFICATION;
     }
 
     /* Free Memory */
     delete[] deviceCharObjPath;
     g_object_unref(proxyBus);
-//    g_object_unref(proxyGatt);
 
     return DBUS_OK;
 }
@@ -894,59 +1018,9 @@ EnumDBusResult DBusDeviceStartNotify(const char *devicePath,
 EnumDBusResult DBusDeviceStopNotify(const char *devicePath,
                                     const char *serviceHandle,
                                     const char *characteristicHandle) {
-//    GDBusProxy *proxyBus = nullptr, *proxyGatt = nullptr;
     GError *error = nullptr;
-//    char *deviceCharObjPath = nullptr;
-//    auto _CreateCharacteristicObjectPath = [&]() -> void {
-//        const char *kService = "/service";
-//        const char *kCharacteristic = "/char";
-//        const size_t kHandleLength = 4;
-//        size_t length = strlen(devicePath) +
-//                        strlen(kService) +
-//                        strlen(kCharacteristic) +
-//                        kHandleLength * 2;
-//        deviceCharObjPath = new char[length];
-//
-//        strncpy(deviceCharObjPath, devicePath, strlen(devicePath));
-//        strncat(deviceCharObjPath, kService, strlen(kService));
-//        strncat(deviceCharObjPath, serviceHandle, kHandleLength);
-//        strncat(deviceCharObjPath, kCharacteristic, strlen(kCharacteristic));
-//        strncat(deviceCharObjPath, characteristicHandle, kHandleLength);
-//    };
-//
-//    /* Append service and characteristic. */
-//    _CreateCharacteristicObjectPath();
-
-    /* Check for Bus Connection */
-//    if (bus_connection == nullptr) {
-//        return DBUS_ERROR_CONNECTION;
-//    }
-
-//    proxyBus = g_dbus_proxy_new_sync(bus_connection,
-//                                     G_DBUS_PROXY_FLAGS_NONE,
-//                                     nullptr,
-//                                     BLUEZ_SERVICE,
-//                                     deviceCharObjPath,
-//                                     DBUS_PROPERTIES_INTERFACE,
-//                                     nullptr,
-//                                     &error);
-//
-//    /* Check for Proxy Creation errors */
-//    if (proxyBus == nullptr) {
-//        return DBUS_ERROR_PROXY_CREATION;
-//    }
-//
-//    proxyGatt = g_dbus_proxy_new_sync(bus_connection,
-//                                      G_DBUS_PROXY_FLAGS_DO_NOT_CONNECT_SIGNALS,
-//                                      nullptr,
-//                                      BLUEZ_SERVICE,
-//                                      deviceCharObjPath,
-//                                      BLUEZ5_GATTCHARACTERISTIC_INTERFACE,
-//                                      nullptr,
-//                                      &error);
 
     /* Invoke StopNotify method */
-//    g_dbus_proxy_call_sync(proxyGatt,
     g_dbus_proxy_call_sync(notificationsTask->NotificationsProxy,
                            BLUEZ5_GATTCHARACTERISTIC_METHOD_STOPNOTIFY,
                            nullptr,
@@ -956,8 +1030,6 @@ EnumDBusResult DBusDeviceStopNotify(const char *devicePath,
                            &error);
 
     if (error != nullptr) {
-//        g_object_unref(proxyBus);
-//        g_object_unref(proxyGatt);
         return DBUS_ERROR_NOTIFICATION;
     }
 
@@ -967,9 +1039,8 @@ EnumDBusResult DBusDeviceStopNotify(const char *devicePath,
                                 notificationsTask->CallbackId);
 
     /* Free Memory */
-//    g_object_unref(proxyBus);
-//    g_object_unref(proxyGatt);
     delete notificationsTask;
+    notificationsTask = nullptr;
 
     return DBUS_OK;
 }
@@ -1081,17 +1152,18 @@ EnumDBusResult DBusGattCharacteristicReadValue(const char *devicePath,
         const char *kService = "/service";
         const char *kCharacteristic = "/char";
         const size_t kHandleLength = 4;
-        size_t length = strlen(devicePath) +
-                        strlen(kService) +
-                        strlen(kCharacteristic) +
-                        kHandleLength * 2;
+        size_t length = (strlen(devicePath) +
+                         strlen(kService) +
+                         strlen(kCharacteristic) +
+                         kHandleLength * 2) + 1;
         deviceCharObjPath = new char[length];
 
-        strncpy(deviceCharObjPath, devicePath, strlen(devicePath));
+        strncpy(deviceCharObjPath, devicePath, strlen(devicePath) + 1);
         strncat(deviceCharObjPath, kService, strlen(kService));
         strncat(deviceCharObjPath, serviceHandle, kHandleLength);
         strncat(deviceCharObjPath, kCharacteristic, strlen(kCharacteristic));
         strncat(deviceCharObjPath, characteristicHandle, kHandleLength);
+        deviceCharObjPath[length] = '\0';
     };
 
     /* Check for Bus Connection */
@@ -1142,15 +1214,113 @@ EnumDBusResult DBusGattCharacteristicReadValue(const char *devicePath,
         return DBUS_ERROR_READING_VALUE;
     }
 
-//    GVariant *array = nullptr;
-//    g_variant_get(variant, "(@ay)", &array);
-//    *value = ay_to_byte(array, nullptr, nullptr);
-
     /* Read UUID for the value. */
     if (uuid != nullptr) {
         if (DBusGetInterfaceProperty(deviceCharObjPath,
                                      BLUEZ5_GATTCHARACTERISTIC_INTERFACE,
                                      BLUEZ5_GATTCHARACTERISTIC_PROPERTY_UUID,
+                                     &variant) != DBUS_OK) {
+            delete[] deviceCharObjPath;
+            g_object_unref(proxyDevice);
+            return DBUS_ERROR_READING_PROPERTY;
+        } else {
+            if (variant != nullptr) {
+                *uuid = string(g_variant_get_string(variant, nullptr));
+            }
+        }
+    }
+
+    delete[] deviceCharObjPath;
+    g_object_unref(proxyDevice);
+
+    return DBUS_OK;
+}
+
+EnumDBusResult DBusGattCharacteristicDescriptorReadValue(const char *devicePath,
+                                                         const char *serviceHandle,
+                                                         const char *characteristicHandle,
+                                                         const char *descriptorHandle,
+                                                         byte **value,
+                                                         string *uuid) {
+    GDBusConnection *connection = nullptr;
+    GDBusProxy *proxyDevice = nullptr;
+    GError *error = nullptr;
+    char *deviceCharObjPath = nullptr;
+    auto _CreateDescriptorObjectPath = [&]() -> void {
+        const char *kService = "/service";
+        const char *kCharacteristic = "/char";
+        const char *kDescriptor = "/desc";
+        const size_t kHandleLength = 4;
+        size_t length = (strlen(devicePath) +
+                         strlen(kService) +
+                         strlen(kCharacteristic) +
+                         strlen(kDescriptor) +
+                         kHandleLength * 2) + 1;
+        deviceCharObjPath = new char[length];
+
+        strncpy(deviceCharObjPath, devicePath, strlen(devicePath) + 1);
+        strncat(deviceCharObjPath, kService, strlen(kService));
+        strncat(deviceCharObjPath, serviceHandle, kHandleLength);
+        strncat(deviceCharObjPath, kCharacteristic, strlen(kCharacteristic));
+        strncat(deviceCharObjPath, characteristicHandle, kHandleLength);
+        strncat(deviceCharObjPath, kDescriptor, strlen(kDescriptor));
+        strncat(deviceCharObjPath, descriptorHandle, kHandleLength);
+        deviceCharObjPath[length] = '\0';
+    };
+
+    /* Check for Bus Connection */
+    EnumDBusResult r = DBusGetConnection(&connection);
+    if (connection == nullptr || g_dbus_connection_is_closed(connection) || r != DBUS_OK) {
+        return DBUS_ERROR_CONNECTION;
+    }
+
+    /* Check if Device Path is set */
+    if (devicePath == nullptr) {
+        return DBUS_ERROR_INVALID_PARAMETERS;
+    }
+
+    /* Append service and characteristic. */
+    _CreateDescriptorObjectPath();
+
+    /* Create Device Proxy */
+    proxyDevice = g_dbus_proxy_new_sync(connection,
+                                        G_DBUS_PROXY_FLAGS_NONE,
+                                        nullptr,
+                                        BLUEZ_SERVICE,
+                                        deviceCharObjPath,
+                                        BLUEZ5_GATTCHARACTERISTICDESCRIPTOR_INTERFACE,
+                                        nullptr,
+                                        &error);
+
+    if (proxyDevice == nullptr) {
+        delete[] deviceCharObjPath;
+        return DBUS_ERROR_PROXY_CREATION;
+    }
+
+    /* Call ReadValue Method */
+    GVariantBuilder *builder = g_variant_builder_new(G_VARIANT_TYPE("a{sv}"));
+    GVariant *dict = g_variant_builder_end(builder);
+    g_variant_builder_unref(builder);
+
+    GVariant *variant = g_dbus_proxy_call_sync(proxyDevice,
+                                               BLUEZ5_GATTCHARACTERISTICDESCRIPTOR_METHOD_READVALUE,
+                                               g_variant_new_tuple(&dict, 1),
+                                               G_DBUS_CALL_FLAGS_NONE,
+                                               -1,
+                                               nullptr,
+                                               &error);
+
+    if (variant == nullptr) {
+        delete[] deviceCharObjPath;
+        g_object_unref(proxyDevice);
+        return DBUS_ERROR_READING_VALUE;
+    }
+
+    /* Read UUID for the value. */
+    if (uuid != nullptr) {
+        if (DBusGetInterfaceProperty(deviceCharObjPath,
+                                     BLUEZ5_GATTCHARACTERISTICDESCRIPTOR_INTERFACE,
+                                     BLUEZ5_GATTCHARACTERISTICDESCRIPTOR_PROPERTY_UUID,
                                      &variant) != DBUS_OK) {
             delete[] deviceCharObjPath;
             g_object_unref(proxyDevice);
@@ -1213,6 +1383,10 @@ void _NotificationsPropertiesChanged(GDBusProxy *proxy,
     }
 
     notifications->emplace(notifications->end(), v, length, uuid);
+
+    if (array != nullptr) {
+        g_variant_unref(array);
+    }
 }
 
 gboolean _StopGMainLoop(gpointer data) {
@@ -1284,10 +1458,33 @@ void ReadAgentIntrospectionXmlData(char **introspectionData) {
     }
 }
 
-EnumDBusResult DBusLookupAdapterPath(GVariant *objects, char **adapterPath) {
+//EnumDBusResult DBusLookupAdapterPath(GVariant *objects, char **adapterPath) {
+//    GVariant *ifaces;
+//    GVariantIter i;
+//    const char *path;
+//
+////    PRINT_DEBUG("objects = " << g_variant_print(objects, TRUE));
+//    g_variant_iter_init(&i, g_variant_get_child_value(objects, 0));
+//
+//    while ((g_variant_iter_next(&i, "{&o*}", &path, &ifaces))) {
+////        PRINT_DEBUG("ifaces = " << g_variant_print(ifaces, TRUE))
+//        if (g_variant_lookup_value(ifaces, BLUEZ5_ADAPTER_INTERFACE, G_VARIANT_TYPE_DICTIONARY)) {
+//            size_t length = strlen(path);
+//            *adapterPath = static_cast<char *>(malloc(sizeof(char) * length + 1));//new char[length + 1];
+//            memcpy(*adapterPath, path, length);
+//            (*adapterPath)[length] = '\0';
+//        }
+//    }
+//
+//    g_variant_unref(ifaces);
+//
+//    return DBUS_OK;
+//}
+
+EnumDBusResult DBusLookupAdapterPath(GVariant *objects, const char *adapter, char **adapterPath) {
     GVariant *ifaces;
     GVariantIter i;
-    const char *path;
+    char *path;
 
 //    PRINT_DEBUG("objects = " << g_variant_print(objects, TRUE));
     g_variant_iter_init(&i, g_variant_get_child_value(objects, 0));
@@ -1295,10 +1492,17 @@ EnumDBusResult DBusLookupAdapterPath(GVariant *objects, char **adapterPath) {
     while ((g_variant_iter_next(&i, "{&o*}", &path, &ifaces))) {
 //        PRINT_DEBUG("ifaces = " << g_variant_print(ifaces, TRUE))
         if (g_variant_lookup_value(ifaces, BLUEZ5_ADAPTER_INTERFACE, G_VARIANT_TYPE_DICTIONARY)) {
-            size_t length = strlen(path);
-            *adapterPath = static_cast<char *>(malloc(sizeof(char) * length + 1));//new char[length + 1];
-            memcpy(*adapterPath, path, length);
-            (*adapterPath)[length] = '\0';
+            if (adapter == nullptr) {
+                size_t length = strlen(path);
+                *adapterPath = static_cast<char *>(malloc(sizeof(char) * length + 1));//new char[length + 1];
+                memcpy(*adapterPath, path, length);
+                (*adapterPath)[length] = '\0';
+            } else if (adapter != nullptr && strstr(path, adapter) != nullptr) {
+                size_t length = strlen(path);
+                *adapterPath = static_cast<char *>(malloc(sizeof(char) * length + 1));//new char[length + 1];
+                memcpy(*adapterPath, path, length);
+                (*adapterPath)[length] = '\0';
+            }
         }
     }
 
@@ -1310,7 +1514,7 @@ EnumDBusResult DBusLookupAdapterPath(GVariant *objects, char **adapterPath) {
 EnumDBusResult DBusLookupDevicePath(GVariant *objects, const char *address, char **path) {
     GVariant *ifaces = nullptr, *device = nullptr;
     GVariantIter i;
-    /*const*/ char *devicePath, *deviceAddress;
+    char *devicePath, *deviceAddress;
     bool deviceFound = false;
 
 //    PRINT_DEBUG("objects = " << g_variant_print(objects, TRUE));
@@ -1326,18 +1530,18 @@ EnumDBusResult DBusLookupDevicePath(GVariant *objects, const char *address, char
                 *path = static_cast<char *>(malloc(sizeof(char) * length + 1));//new char[length + 1];
                 memcpy(*path, devicePath, length);
                 (*path)[length] = '\0';
-//                if (device != nullptr)
-//                    g_variant_unref(device);
                 deviceFound = true;
             }
             g_free(deviceAddress);
         }
     }
 
-    if (ifaces != nullptr)
+    if (ifaces != nullptr) {
         g_variant_unref(ifaces);
-    if (device != nullptr)
+    }
+    if (device != nullptr) {
         g_variant_unref(device);
+    }
     g_free(devicePath);
 
 
@@ -1346,7 +1550,7 @@ EnumDBusResult DBusLookupDevicePath(GVariant *objects, const char *address, char
 
 EnumDBusResult DBusLookupDeviceProperties(GVariant *objects, BluetoothDeviceProperties *device) {
     GVariant *varDevice = nullptr, *varProperties = nullptr;
-    const char *path;
+    char *path;
 
 //    auto _GetStringFromVariant = [](const GVariant *variant, const char *name, string *str) -> const char * {
     auto _GetStringFromVariant = [](const GVariant *variant, const char *name, gchar **str) {
@@ -1355,8 +1559,9 @@ EnumDBusResult DBusLookupDeviceProperties(GVariant *objects, BluetoothDeviceProp
 //        return (varValue == nullptr) ? nullptr : g_variant_dup_string(varValue, &length);
         *str = (varValue == nullptr) ? nullptr : g_variant_dup_string(varValue, &length);
 
-        if (varValue != nullptr)
+        if (varValue != nullptr) {
             g_variant_unref(varValue);
+        }
     };
 
     auto _GetBoolFromVariant = [](const GVariant *variant, const char *name) -> bool {

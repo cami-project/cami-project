@@ -30,7 +30,9 @@ using BluetoothDeviceProperties = struct _bluetoothDeviceProperties {
 };
 
 using ValueNotification = struct _value_notification {
-    _value_notification(const byte *value, size_t &length, const string &uuid) :
+    _value_notification() : Value(), UUID("") {}
+
+    _value_notification(const byte *value, const size_t &length, const string &uuid) :
             Value(length, value), UUID(uuid) {}
 
     AdCamiUtilities::AdCamiBuffer <byte> Value;
@@ -56,6 +58,12 @@ public:
         return this->Loop != nullptr && g_main_loop_is_running(this->Loop);
     }
 };
+
+/**
+ * Closes the active connection with the Bus.
+ * @return 0 in case of success, > 0 otherwise. Error can be identified with EnumDBusResult codes.
+ */
+//EnumDBusResult DBusConnectionClose();
 
 /**
  * Establishes a connection to the specified Bus.
@@ -84,7 +92,14 @@ EnumDBusResult DBusGetManagedObjects(GVariant **objects);
  * @return 0 in case of success, > 0 otherwise. Error can be identified with EnumDBusResult codes.
  */
 /* TODO use an unique_ptr<> for the adapterPath, as the pointer is allocated inside the function. This eases the deallocation after using the function */
-EnumDBusResult DBusAdapterGetObjectPath(char **adapterPath);
+EnumDBusResult DBusAdapterGetObjectPath(const char* adapter, char **adapterPath);
+
+/**
+ * Set a filter for discovering Bluetooth devices.
+ * @param adapter_path Object Path of the Default Bluetooth Adapter. Can be NULL.
+ * @return 0 in case of success, > 0 otherwise. Error can be identified with EnumDBusResult codes.
+ */
+EnumDBusResult DBusAdapterSetDiscoveryFilter(const char *adapter_path, const GVariant &filter);
 
 /**
  * This function stops a Bluetooth discovery process.
@@ -186,7 +201,8 @@ EnumDBusResult DBusDeviceReadNotifications(const char *devicePath,
 
 EnumDBusResult DBusDeviceStartNotify(const char *devicePath,
                                      const char *serviceHandle,
-                                     const char *characteristicHandle);
+                                     const char *characteristicHandle,
+                                     NotificationsCollection *notifications);
 
 EnumDBusResult DBusDeviceStopNotify(const char *devicePath,
                                     const char *serviceHandle,
@@ -205,6 +221,23 @@ EnumDBusResult DBusGattCharacteristicReadValue(const char *devicePath,
                                                const char *characteristicId,
                                                byte **value,
                                                string *uuid);
+
+/**
+ *
+ * @param devicePath
+ * @param serviceHandle
+ * @param characteristicHandle
+ * @param descriptorHandle
+ * @param value
+ * @param uuid
+ * @return
+ */
+EnumDBusResult DBusGattCharacteristicDescriptorReadValue(const char *devicePath,
+                                                         const char *serviceHandle,
+                                                         const char *characteristicHandle,
+                                                         const char *descriptorHandle,
+                                                         byte **value,
+                                                         string *uuid);
 
 /**
  *

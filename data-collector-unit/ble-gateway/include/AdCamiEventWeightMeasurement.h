@@ -17,7 +17,6 @@ using EnumMeasurementType = AdCamiData::AdCamiMeasurement<double>::EnumMeasureme
 
 namespace AdCamiData {
 
-//TODO change float values to double
 class AdCamiEventWeightMeasurement : public AdCamiEvent, public IAdCamiEventMeasurement<double> {
 private:
     AdCamiMeasurement<double> _weight;
@@ -27,14 +26,18 @@ public:
             AdCamiEvent(EnumEventType::Weight, "", ""),
             _weight(EnumMeasurementType::Weight, 0.0, "") {}
 
+    AdCamiEventWeightMeasurement(const string &timeStamp, const string &address) :
+            AdCamiEvent(EnumEventType::Weight, timeStamp, address),
+            _weight(EnumMeasurementType::Weight, 0.0, "") {}
+
     AdCamiEventWeightMeasurement(const string &timeStamp, const string &address,
-                                 const float &weight, const string &unit) :
+                                 const double &weight, const string &unit) :
             AdCamiEvent(EnumEventType::Weight, timeStamp, address),
             _weight(EnumMeasurementType::Weight, weight, unit) {}
 
     inline const AdCamiMeasurement<double> &Weight() const { return this->_weight; }
 
-        inline const AdCamiEventWeightMeasurement &Weight(const double &value, const string &unit) {
+    inline const AdCamiEventWeightMeasurement &Weight(const double &value, const string &unit) {
         this->_weight.Value(value);
         this->_weight.Unit(unit);
         return *this;
@@ -47,13 +50,13 @@ public:
                 });
     };
 
-    inline const AdCamiMeasurement<double> &GetMeasurement(const EnumMeasurementType &type) const {
+    inline const AdCamiMeasurement<double> GetMeasurement(const EnumMeasurementType &type) const {
         switch (type) {
             case EnumMeasurementType::Weight: {
                 return this->_weight;
             }
             default: {
-                break;
+                return AdCamiMeasurement<double>(EnumMeasurementType::UnknownMeasurement);
             }
         }
     }

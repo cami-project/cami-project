@@ -58,6 +58,8 @@ public:
 
     AdCamiEventsStorage::EnumStorageError AddDevice(const vector <AdCamiBluetoothDevice> &devices);
 
+    AdCamiEventsStorage::EnumStorageError AddEvent(const AdCamiEvent &event);
+
     AdCamiEventsStorage::EnumStorageError AddEvent(const AdCamiEvent *event);
 
     //TODO pass as reference
@@ -70,11 +72,42 @@ public:
 
     AdCamiEventsStorage::EnumStorageError DeleteDevice(const vector <AdCamiBluetoothDevice> &devices);
 
+    /**
+     * Get a device from the database.
+     * @param address the address fo the device to retrieve
+     * @param device a pointer to a device object where the result will be stored. If this is a null pointer,
+     *  nothing is stored, even if the device exists.
+     * @return Ok if the device exists; DeviceNotFound if the device doesn't exist; other error otherwise
+     */
     AdCamiEventsStorage::EnumStorageError GetDevice(const string &address,
                                                     AdCamiBluetoothDevice *device);
 
+    /**
+     * Get a device from the database. If the device exists, the device given as argument is updated with the
+     * properties on the database.
+     * @param device a pointer to a device object where the result will be stored. If this is a null pointer,
+     *  nothing is stored, even if the device exists.
+     * @return Ok if the device exists; DeviceNotFound if the device doesn't exist; other error otherwise
+     */
+    AdCamiEventsStorage::EnumStorageError GetDevice(AdCamiBluetoothDevice *device);
+
+    /**
+     * Get a list of device from the database that respect the criteria defined on filter.
+     * @param devices a pointer to a list where the devices will be stored. If this is a null pointer,
+     * @param filter criteria to filter the devices to search. By default it searches all devices
+     * @return Ok if the query executes successfully; other error otherwise
+     */
     AdCamiEventsStorage::EnumStorageError GetDevices(vector <AdCamiBluetoothDevice> *devices,
                                                      const EnumDeviceFilter &filter = All);
+
+    /**
+     * Gets that last event from the database, for a specific device .
+     * @param device an object representing the device whose last event will be retrieved
+     * @param event a pointer where the last event will be stored. If this is a null pointer, nothing is stored,
+     *  even if the event exists.
+     * @return Ok if the event exists; EventNotFound if the device doesn't exist; other error otherwise
+     */
+    AdCamiEventsStorage::EnumStorageError GetLastEvent(const AdCamiBluetoothDevice &device, AdCamiEvent *event);
 
     AdCamiEventsStorage::EnumStorageError GetEvents(vector <AdCamiEvent> *events);
 
@@ -97,6 +130,8 @@ private:
     static int _ClbkGetDeviceEvents(void *arg, int argc, char **argv, char **colname);
 
     static int _ClbkGetDevice(void *arg, int argc, char **argv, char **colname);
+
+    static int _ClbkGetDeviceEvent(void *arg, int argc, char **argv, char **colname);
 
     static int _ClbkGetDevices(void *arg, int argc, char **argv, char **colname);
 

@@ -92,6 +92,6 @@ class HttpServer(HTTPServer):
             return
 
         def _log_message(self, message=None):
-            print("\n\nSERVER [{} - {}]\n{}\n".format(self.client_address[0],
-                                                      self.log_date_time_string(),
-                                                      message))
+            print("\n\nSERVER [{}:{} - {}]\n{}\n".format(self.client_address[0], self.client_address[1],
+                                                         self.log_date_time_string(),
+                                                         message))
