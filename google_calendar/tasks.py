@@ -75,28 +75,28 @@ def _get_user_data(userURIPath):
 
 @app.task(name='google_calendar.sync_activities')
 def sync_activities():
-    logger.debug("[google_calendar] Synchronizing all users activities with Google Calendar. Number of users: %d" % 1)
+    logger.debug("[google_calendar] Synchronizing all users activities with created Google Calendar instances. Number of calendars: %d" % 4)
 
-    # Hardcode user for demo
-    user = store_utils.user_get(settings.CAMI_DEMO_USER_ID)
-    app.send_task('google_calendar.sync_activities_for_user', [user])
+    # Hardcode calendar for demo
+    #user = store_utils.user_get_by_id(settings.CAMI_DEMO_USER_ID)
+    app.send_task('google_calendar.sync_activities_for_calendar', [settings.CAMI_DEMO_CAL])
 
     # Hardcode user for DK user
-    user = store_utils.user_get(settings.TRIAL_USER_DK_ID)
-    app.send_task('google_calendar.sync_activities_for_user', [user])
+    #user = store_utils.user_get_by_id(settings.TRIAL_USER_DK_ID)
+    app.send_task('google_calendar.sync_activities_for_calendar', [settings.CAMI_DK_CAL])
 
     # Hardcode user for PL user
-    user = store_utils.user_get(settings.TRIAL_USER_PL_ID)
-    app.send_task('google_calendar.sync_activities_for_user', [user])
+    #user = store_utils.user_get_by_id(settings.TRIAL_USER_PL_ID)
+    app.send_task('google_calendar.sync_activities_for_calendar', [settings.CAMI_PL_CAL])
 
     # Hardcode user for RO user
-    user = store_utils.user_get(settings.TRIAL_USER_RO_ID)
-    app.send_task('google_calendar.sync_activities_for_user', [user])
+    #user = store_utils.user_get_by_id(settings.TRIAL_USER_RO_ID)
+    app.send_task('google_calendar.sync_activities_for_calendar', [settings.CAMI_RO_CAL])
 
 
-@app.task(name='google_calendar.sync_activities_for_user')
-def sync_activities_for_user(user):
-    activities.sync_for_user(user)
+@app.task(name='google_calendar.sync_activities_for_calendar')
+def sync_activities_for_calendar(calendar_name):
+    activities.sync_for_calendar(calendar_name)
 
 @app.task(name='google_calendar.process_reminders')
 def process_reminders():

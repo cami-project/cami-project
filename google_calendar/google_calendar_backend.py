@@ -19,7 +19,7 @@ APPLICATION_NAME = 'CAMI Google Calendar API'
 #logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger("google_calendar")
 
-def get_credentials(user_id):
+def get_credentials(calendar_name):
     """Gets valid user credentials from storage.
 
     If nothing has been stored, or if the stored credentials are invalid,
@@ -28,8 +28,8 @@ def get_credentials(user_id):
     Returns:
         Credentials, the obtained credential.
     """
-    credentials_file = settings.CALENDAR_CREDENTIALS[user_id]["credentials_file"]
-    client_secret_file = settings.CALENDAR_CREDENTIALS[user_id]["client_secret_file"]
+    credentials_file = settings.CALENDAR_CREDENTIALS[calendar_name]["credentials_file"]
+    client_secret_file = settings.CALENDAR_CREDENTIALS[calendar_name]["client_secret_file"]
 
     project_dir = os.path.dirname(os.path.realpath(__file__))
     credential_dir = project_dir

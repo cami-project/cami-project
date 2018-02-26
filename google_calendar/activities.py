@@ -15,8 +15,16 @@ from google_calendar_backend import *
 logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger("google_calendar")
 
-def sync_for_user(user):
-    logger.debug("[google_calendar] Synchronizing activities for user '%s' ... " % user['username'])
+def sync_for_calendar(calendar_name):
+    logger.debug("[google_calendar] Synchronizing activities for calendar '%s' ... " % calendar_name)
+
+    user = store_utils.user_get_by_calendar(calendar_name)
+    if not user:
+        logger.error(
+            "[google_calendar.activities] FAILED to retrieve any user info for calendar" % calendar_name)
+        return
+
+    logger.debug("[google_calendar] Synchronizing activities from calendar '%s' for user '%s' ... " % (calendar_name, user['username']))
 
     # Hardcoded calendars for demo
     # calendars = {
@@ -24,12 +32,12 @@ def sync_for_user(user):
     #     "exercise": "8puar0sc4e7efns5r849rn0lus@group.calendar.google.com",
     #     "medication": "us8v5j6ttp885542q9o2aljrho@group.calendar.google.com"
     # }
-    calendars = settings.CALENDAR_IDs[int(user["id"])]
+    calendars = settings.CALENDAR_IDs[calendar_name]
 
     logger.debug("[google_calendar] Getting the Google Calendar service... ")
 
     # Get calendar service for the current user
-    calendar_credentials = get_credentials(int(user["id"]))
+    calendar_credentials = get_credentials(calendar_name)
     calendar_service = get_calendar_service(calendar_credentials)
 
     logger.debug("[google_calendar] Successfully got Google Calendar service!")
