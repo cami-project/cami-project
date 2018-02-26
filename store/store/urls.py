@@ -28,7 +28,7 @@ v1_api.register(CaregiverProfileResource())
 
 v1_api.register(DeviceResource())
 v1_api.register(DeviceUsageResource())
-v1_api.register(ExternalService())
+v1_api.register(ExternalServiceResource())
 v1_api.register(MeasurementResource())
 v1_api.register(ActivityResource())
 v1_api.register(JournalEntryResource())
