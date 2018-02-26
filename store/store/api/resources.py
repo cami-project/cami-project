@@ -152,9 +152,11 @@ class ExternalServiceResource(ModelResource):
     class Meta:
         queryset = ExternalService.objects.all()
         #allowed_methods = ['get', 'post']
+        ordering = ["updated_at"]
         filtering = {
             "user": ALL_WITH_RELATIONS,
             "name" : ALL,
+            "updated_at": ALL,
             "access_info": ALL
         }
 
