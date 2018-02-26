@@ -1,7 +1,5 @@
 import ast
-import json
 import time
-import datetime
 
 from tastypie import fields
 from tastypie.utils import trailing_slash
@@ -13,7 +11,6 @@ from tastypie.authorization import Authorization
 from tastypie.authentication import Authentication
 from tastypie.http import HttpBadRequest
 
-from django.core import serializers
 from django.conf.urls import url
 from django.core.urlresolvers import resolve, get_script_prefix, Resolver404
 from django.contrib.auth.models import User
@@ -146,6 +143,20 @@ class DeviceUsageResource(ModelResource):
         orm_filters.update(access_info_filters)
 
         return orm_filters
+
+
+class ExternalServiceResource(ModelResource):
+    ACCESS_INFO_FIELD_NAME = 'access_info'
+
+    user = fields.ToOneField(UserResource, 'user')
+    class Meta:
+        queryset = ExternalService.objects.all()
+        #allowed_methods = ['get', 'post']
+        filtering = {
+            "user": ALL_WITH_RELATIONS,
+            "name" : ALL,
+            "access_info": ALL
+        }
 
 
 class GatewayResource(ModelResource):

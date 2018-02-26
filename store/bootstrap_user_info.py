@@ -45,7 +45,7 @@ LINKWATCH_ACCESS_CONFIG = {
 
 
 def run_bootstrap():
-    from store.models import User, EndUserProfile, CaregiverProfile, Device, DeviceUsage, ExternalMonitoringService
+    from store.models import User, EndUserProfile, CaregiverProfile, Device, DeviceUsage, ExternalService
 
     """ ==== CREATE USER ACCOUNTS - CARETAKER + CAREGIVER ==== """
     cami_enduser, created = User.objects.get_or_create(username = "camidemo",
@@ -142,10 +142,10 @@ def run_bootstrap():
 
 
     """ ==== CREATE EXTERNAL MONITORING SERVICE INSTANCE - OpenTele and LinkWatch accouns ==== """
-    opentele, created = ExternalMonitoringService.objects.update_or_create(user = cami_enduser,
-                                         name = "OpenTele",
-                                         service_url = "http://opentele.aliviate.dk:4388/opentele-citizen-server/",
-                                         access_info = OPENTELE_ACCESS_CONFIG)
+    opentele, created = ExternalService.objects.update_or_create(user = cami_enduser,
+                                                                 name = "OpenTele",
+                                                                 service_url = "http://opentele.aliviate.dk:4388/opentele-citizen-server/",
+                                                                 access_info = OPENTELE_ACCESS_CONFIG)
     if created:
         logger.info("[store.bootstrap_user_info] %s CREATED." % str(opentele))
     else:
@@ -153,10 +153,10 @@ def run_bootstrap():
 
 
 
-    linkwatch, created = ExternalMonitoringService.objects.update_or_create(user=cami_enduser,
-                                         name="LinkWatch",
-                                         service_url="https://linkwatchrestservicetest.azurewebsites.net/",
-                                         access_info=LINKWATCH_ACCESS_CONFIG)
+    linkwatch, created = ExternalService.objects.update_or_create(user=cami_enduser,
+                                                                  name="LinkWatch",
+                                                                  service_url="https://linkwatchrestservicetest.azurewebsites.net/",
+                                                                  access_info=LINKWATCH_ACCESS_CONFIG)
     if created:
         logger.info("[store.bootstrap_user_info] %s CREATED." % str(linkwatch))
     else:

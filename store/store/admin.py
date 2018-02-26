@@ -7,7 +7,7 @@ admin.site.register(
 		EndUserProfile,
 		CaregiverProfile,
 		HealthProfessionalProfile,
-		ExternalMonitoringService,
+		ExternalService,
 		Device,
 		DeviceUsage,
 		Measurement,

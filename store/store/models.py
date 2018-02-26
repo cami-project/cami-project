@@ -136,19 +136,19 @@ class DeviceUsage(models.Model):
     __unicode__ = __str__
 
 
-class ExternalMonitoringService(models.Model):
-    user = models.ForeignKey(User, related_name="used_monitoring_services")
+class ExternalService(models.Model):
+    user = models.ForeignKey(User, related_name="used_services")
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     name = models.CharField(max_length=32)
-    service_url = models.URLField()
+    service_url = models.URLField(default="https://calendar.google.com")
 
     access_info = JSONField()
 
     def __str__(self):
-        return "ExternalMonitoringService " + self.name + " for user: " + self.user.email
+        return "ExternalService " + self.name + " for user: " + self.user.username
 
 
 class Gateway(models.Model):
