@@ -2,22 +2,32 @@
 
 namespace AdCamiHardware {
 
-const string AdCamiBluetoothDevice::_kBluetoothBaseUuid = "-0000-1000-8000-00805F9B34FB";
+AdCamiBluetoothDevice::AdCamiBluetoothDevice(const string &address) : _address(address),
+                                                                      _bluetoothAdapter(kDefaultBluetoothAdapter.c_str()),
+                                                                      _deviceType(UnknownDevice),
+                                                                      _notificationsEnabled(false),
+                                                                      _paired(false),
+                                                                      _deviceObjectPath(nullptr) {}
 
-AdCamiBluetoothDevice::AdCamiBluetoothDevice(const string &address) :
-        _address(address), _deviceType(UnknownDevice), _notificationsEnabled(false), _paired(false),
-        _deviceObjectPath(nullptr) {}
+AdCamiBluetoothDevice::AdCamiBluetoothDevice(const string &address,
+                                             const string &bluetoothAdapter) : _address(address),
+                                                                               _bluetoothAdapter(bluetoothAdapter.c_str()),
+                                                                               _deviceType(UnknownDevice),
+                                                                               _notificationsEnabled(false),
+                                                                               _paired(false),
+                                                                               _deviceObjectPath(nullptr) {}
 
 AdCamiBluetoothError AdCamiBluetoothDevice::Connect() {
     GDBusConnection *busConnection = nullptr;
     char *adapterPath, *devicePath;
+    EnumDBusResult error;
 
     if (DBusGetConnection(&busConnection) != DBUS_OK) {
         return BT_ERROR_DBUS_NO_CONNECTION;
     }
 
     /* Get the Bluetooth adapter path. */
-    if (DBusAdapterGetObjectPath(&adapterPath) != DBUS_OK) {
+    if (DBusAdapterGetObjectPath(this->_bluetoothAdapter, &adapterPath) != DBUS_OK) {
         return BT_ERROR_ADAPTER_NOT_FOUND;
     }
     /* Get device path based on the Bluetooth address. */
@@ -26,7 +36,7 @@ AdCamiBluetoothError AdCamiBluetoothDevice::Connect() {
     }
 
     /* Connect to the device */
-    if (DBusDeviceConnect(devicePath) != DBUS_OK) {
+    if ((error = DBusDeviceConnect(devicePath)) != DBUS_OK) {
         DBusDeviceDisconnect(devicePath);
         return BT_ERROR_TIMEOUT;
     }
@@ -43,7 +53,7 @@ AdCamiBluetoothError AdCamiBluetoothDevice::Disconnect() {
     }
 
     /* Get the Bluetooth adapter path. */
-    if (DBusAdapterGetObjectPath(&adapterPath) != DBUS_OK) {
+    if (DBusAdapterGetObjectPath(this->_bluetoothAdapter, &adapterPath) != DBUS_OK) {
         return BT_ERROR_ADAPTER_NOT_FOUND;
     }
     /* Get device path based on the Bluetooth address. */
@@ -84,7 +94,7 @@ std::unique_ptr <string> AdCamiBluetoothDevice::NameFromCache() const {
         DBusDeviceNameProperty(devicePath, name);
     }
 
-    g_free(devicePath);
+    free(devicePath);
 
     return std::unique_ptr<string>(std::move(name));
 }
@@ -187,7 +197,7 @@ AdCamiBluetoothError AdCamiBluetoothDevice::_GetDeviceObjectPath(char **devicePa
     }
 
     /* Get the Bluetooth adapter path. */
-    if (DBusAdapterGetObjectPath(&adapterPath) != DBUS_OK) {
+    if (DBusAdapterGetObjectPath(this->_bluetoothAdapter, &adapterPath) != DBUS_OK) {
         free(adapterPath);
         return BT_ERROR_ADAPTER_NOT_FOUND;
     }
@@ -215,6 +225,14 @@ std::ostream &operator<<(std::ostream &os, const AdCamiBluetoothDevice &device) 
 
 bool operator==(const AdCamiBluetoothDevice &lhs, const AdCamiBluetoothDevice &rhs) {
     return lhs._address == rhs._address;
+}
+
+bool operator==(const AdCamiBluetoothDevice &lhs, const string &rhs) {
+    return lhs._address == rhs;
+}
+
+bool operator==(const string &lhs, const AdCamiBluetoothDevice &rhs) {
+    return lhs == rhs._address;
 }
 
 } //namespace

@@ -34,12 +34,6 @@ namespace AdCamiHardware {
  * 
  */
 class AdCamiBluetoothDevice {
-private:
-    static constexpr int _kAddressNumberOctets = 6;
-    static constexpr int _kBluetoothAddressLength = 12;
-    static constexpr int _kBluetoothAddressStringLength = 17;
-    static const string _kBluetoothBaseUuid;
-
 public:
     /**
      * Constructor that receives as initial parameters the name of the device,
@@ -49,10 +43,16 @@ public:
      */
     AdCamiBluetoothDevice(const string &address);
 
+    AdCamiBluetoothDevice(const string &address, const string &bluetoothAdapter);
+
     /**
      * Default destructor.
      */
-    ~AdCamiBluetoothDevice() {}
+    ~AdCamiBluetoothDevice() {
+//        if (_deviceObjectPath != nullptr) {
+//            free(_deviceObjectPath);
+//        }
+    }
 
     /**
      * This method allows us to connect to a Bluetooth device indicated by the address.
@@ -78,8 +78,8 @@ public:
     AdCamiBluetoothError RefreshCacheProperties();
 
     /**
-     * Gets the MAC address of the device as a std::string.
-     * @return a std::string with the MAC address in the format "00:11:22:33:44:55"
+     * Gets the MAC address of the device as a string.
+     * @return a string with the MAC address in the format "00:11:22:33:44:55"
      */
     inline string Address() const { return this->_address; }
 
@@ -123,7 +123,8 @@ public:
     }
 
     /**
-     *
+     * Gets the list of UUIDs associated with this device.
+     * @return list with the UUIDs strings
      */
     inline vector <string> Uuids() const { return this->_servicesUuids; }
 
@@ -164,7 +165,7 @@ public:
         }
 
         /* Get the Bluetooth adapter path. */
-        if (DBusAdapterGetObjectPath(&adapterPath) != DBUS_OK) {
+        if (DBusAdapterGetObjectPath(this->_bluetoothAdapter, &adapterPath) != DBUS_OK) {
             return BT_ERROR_ADAPTER_NOT_FOUND;
         }
         /* Get device path based on the Bluetooth address. */
@@ -200,6 +201,66 @@ public:
         char *adapterPath = nullptr, *devicePath = nullptr;
         EnumGattCharacteristic deviceCharacteristic, measurementCharacteristic;
         NotificationsCollection notifications;
+        EnumDBusResult dbusError;
+
+        switch (this->_deviceType) {
+            case WeightScale: {
+                deviceCharacteristic = WeightMeasurement;
+                break;
+            }
+            case BloodPressure: {
+                deviceCharacteristic = BloodPressureMeasurement;
+                break;
+            }
+            case UnknownDevice:
+            default: {
+                PRINT_DEBUG("BT_ERROR_INVALID_DEVICETYPE")
+                return BT_ERROR_INVALID_DEVICETYPE;
+            }
+        }
+
+        /* If not paired, get regular DBus Connection. */
+        if (DBusGetConnection(&busConnection) != DBUS_OK) {
+            return BT_ERROR_DBUS_NO_CONNECTION;
+        }
+
+        /* Get the Bluetooth adapter path. */
+        if (DBusAdapterGetObjectPath(this->_bluetoothAdapter, &adapterPath) != DBUS_OK) {
+            return BT_ERROR_ADAPTER_NOT_FOUND;
+        }
+
+        /* Get device path based on the Bluetooth address. */
+        if (DBusDeviceGetObjectPath(this->_address.c_str(), adapterPath, &devicePath) != DBUS_OK) {
+            return BT_ERROR_DEVICE_NOT_FOUND;
+        }
+
+        GattHandle handle = GetGattHandle(deviceCharacteristic);
+        if ((dbusError = DBusDeviceReadNotifications(devicePath,
+                                                     handle.AttributeHandle<const char *>(),
+                                                     handle.CharacteristicHandle<const char *>(),
+                                                     &notifications, timeout)) == DBUS_OK) {
+            if (notifications.size() > 0) {
+                measurements->reserve(notifications.size());
+                for (auto n : notifications) {
+                    measurementCharacteristic = GetCharacteristicFromUuid(n.UUID);
+                    measurements->push_back(&AdCamiEventFactory::Parse(
+                            measurementCharacteristic, n.Value).release()
+                            ->Address(this->_address)
+                            .TimeStamp(AdCamiUtilities::GetDate(std::chrono::system_clock::now())));
+                }
+            }
+
+            return BT_OK;
+        } else {
+            PRINT_DEBUG("dbusError = " << dbusError)
+            return BT_ERROR_READING_NOTIFICATIONS;
+        }
+    }
+
+    AdCamiBluetoothError StartNotifications() {
+        GDBusConnection *busConnection = nullptr;
+        char *adapterPath = nullptr, *devicePath = nullptr;
+        EnumGattCharacteristic deviceCharacteristic;
 
         switch (this->_deviceType) {
             case WeightScale: {
@@ -222,38 +283,27 @@ public:
         }
 
         /* Get the Bluetooth adapter path. */
-        if (DBusAdapterGetObjectPath(&adapterPath) != DBUS_OK) {
+        if (DBusAdapterGetObjectPath(this->_bluetoothAdapter, &adapterPath) != DBUS_OK) {
             return BT_ERROR_ADAPTER_NOT_FOUND;
         }
-
         /* Get device path based on the Bluetooth address. */
         if (DBusDeviceGetObjectPath(this->_address.c_str(), adapterPath, &devicePath) != DBUS_OK) {
             return BT_ERROR_DEVICE_NOT_FOUND;
         }
 
         GattHandle handle = GetGattHandle(deviceCharacteristic);
-        if (DBusDeviceReadNotifications(devicePath,
-                                        handle.AttributeHandle<const char *>(),
-                                        handle.CharacteristicHandle<const char *>(),
-                                        &notifications, timeout) == DBUS_OK) {
-            if (notifications.size() > 0) {
-                measurements->reserve(notifications.size());
-                for (auto n : notifications) {
-                    measurementCharacteristic = GetCharacteristicFromUuid(n.UUID);
-                    measurements->push_back(&AdCamiEventFactory::Parse(
-                            measurementCharacteristic, n.Value).release()
-                            ->Address(this->_address)
-                            .TimeStamp(AdCamiUtilities::GetDate(std::chrono::system_clock::now())));
-                }
-            }
+        if (DBusDeviceStartNotify(devicePath,
+                                  handle.AttributeHandle<const char *>(),
+                                  handle.CharacteristicHandle<const char *>(),
+                                  &this->_backgroundNotifications) != DBUS_OK) {
+            return BT_ERROR_START_NOTIFICATIONS;
         }
 
         return BT_OK;
     }
 
-    //TODO remove template from method
-    template<typename TMeasurement = double>
-    AdCamiBluetoothError StartNotifications() const {
+    template<typename T = AdCamiEvent>
+    AdCamiBluetoothError StopNotifications(vector <T> *measurements) {
         GDBusConnection *busConnection = nullptr;
         char *adapterPath = nullptr, *devicePath = nullptr;
         EnumGattCharacteristic deviceCharacteristic, measurementCharacteristic;
@@ -280,54 +330,7 @@ public:
         }
 
         /* Get the Bluetooth adapter path. */
-        if (DBusAdapterGetObjectPath(&adapterPath) != DBUS_OK) {
-            return BT_ERROR_ADAPTER_NOT_FOUND;
-        }
-        /* Get device path based on the Bluetooth address. */
-        if (DBusDeviceGetObjectPath(this->_address.c_str(), adapterPath, &devicePath) != DBUS_OK) {
-            return BT_ERROR_DEVICE_NOT_FOUND;
-        }
-
-        GattHandle handle = GetGattHandle(deviceCharacteristic);
-        if (DBusDeviceStartNotify(devicePath,
-                                  handle.AttributeHandle<const char *>(),
-                                  handle.CharacteristicHandle<const char *>()) != DBUS_OK) {
-            return BT_ERROR_START_NOTIFICATIONS;
-        }
-
-        return BT_OK;
-    }
-
-    //TODO remove template from method
-    template<typename TMeasurement = double>
-    AdCamiBluetoothError StopNotifications() const {
-        GDBusConnection *busConnection = nullptr;
-        char *adapterPath = nullptr, *devicePath = nullptr;
-        EnumGattCharacteristic deviceCharacteristic;
-        NotificationsCollection notifications;
-
-        switch (this->_deviceType) {
-            case WeightScale: {
-                deviceCharacteristic = WeightMeasurement;
-                break;
-            }
-            case BloodPressure: {
-                deviceCharacteristic = BloodPressureMeasurement;
-                break;
-            }
-            case UnknownDevice:
-            default: {
-                return BT_ERROR_INVALID_DEVICETYPE;
-            }
-        }
-
-        /* If not paired, get regular DBus Connection. */
-        if (DBusGetConnection(&busConnection) != DBUS_OK) {
-            return BT_ERROR_DBUS_NO_CONNECTION;
-        }
-
-        /* Get the Bluetooth adapter path. */
-        if (DBusAdapterGetObjectPath(&adapterPath) != DBUS_OK) {
+        if (DBusAdapterGetObjectPath(this->_bluetoothAdapter, &adapterPath) != DBUS_OK) {
             return BT_ERROR_ADAPTER_NOT_FOUND;
         }
         /* Get device path based on the Bluetooth address. */
@@ -340,6 +343,18 @@ public:
                                  handle.AttributeHandle<const char *>(),
                                  handle.CharacteristicHandle<const char *>()) != DBUS_OK) {
             return BT_ERROR_STOP_NOTIFICATIONS;
+        }
+
+        /* Parse notifications. */
+        if (this->_backgroundNotifications.size() > 0) {
+            measurements->reserve(this->_backgroundNotifications.size());
+            for (auto n : this->_backgroundNotifications) {
+                measurementCharacteristic = GetCharacteristicFromUuid(n.UUID);
+                measurements->push_back(&AdCamiEventFactory::Parse(
+                        measurementCharacteristic, n.Value).release()
+                        ->Address(this->_address)
+                        .TimeStamp(AdCamiUtilities::GetDate(std::chrono::system_clock::now())));
+            }
         }
 
         return BT_OK;
@@ -406,6 +421,18 @@ public:
         return *this;
     }
 
+    operator string() const {
+        string str = "Name: " + this->Name() + ", " +
+                     "Address: " + this->Address() + ", " +
+                     "UUIDs: [";
+        for (string uuid : this->Uuids()) {
+            str += (uuid == this->Uuids().back() ? "" : ", ");
+        }
+        str += "]";
+
+        return str;
+    }
+
     /**
      * Gets a stream with the attributes of the object in the format "name; hdp; mac".
      * @return a stream with the attributes of the device
@@ -413,14 +440,40 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const AdCamiBluetoothDevice &device);
 
     /**
-     * Compares two devices to check if they are equal. They are equal if the MAC
-     * address is equal.
-     * @return true if the MACs are equal, false otherwise
+     * Compares two devices to check if they are equal. Two devices are equal if they have the same address.
+     * @return true if the devices' addresses are equal, false otherwise
      */
     friend bool operator==(const AdCamiBluetoothDevice &lhs, const AdCamiBluetoothDevice &rhs);
 
+    /**
+     * Compares two devices to check if they are equal. Two devices are equal if they have the same address.
+     * @return true if the devices' addresses are equal, false otherwise
+     */
+    friend bool operator==(const AdCamiBluetoothDevice &lhs, const string &rhs);
+
+    friend bool operator==(const string &lhs, const AdCamiBluetoothDevice &rhs);
+
+    /**
+     *
+     * @param device
+     * @return
+     */
+    AdCamiBluetoothDevice operator=(const AdCamiBluetoothDevice &device) {
+        this->_address = device._address;
+        this->_deviceType = device._deviceType;
+        this->_name = device._name;
+        this->_servicesUuids.assign(begin(device._servicesUuids), end(device._servicesUuids));
+        this->_connected = device._connected;
+        this->_notificationsEnabled = device._notificationsEnabled;
+        this->_paired = device._paired;
+        this->_servicesResolved = device._servicesResolved;
+
+        return *this;
+    }
+
 private:
     string _address;
+    const char *_bluetoothAdapter;
     EnumBluetoothDeviceType _deviceType;
     string _name;
     vector <string> _servicesUuids;
@@ -431,6 +484,9 @@ private:
 //    bool _trusted;
     /* DBus object path that represents this device */
     char *_deviceObjectPath;
+    /* List where the notifications that are collected after StartNotifications() is called. The list
+     * must cleared when StopNotifications is called. */
+    NotificationsCollection _backgroundNotifications;
 
     EnumBluetoothDeviceType _DiscoverDeviceType() const;
 

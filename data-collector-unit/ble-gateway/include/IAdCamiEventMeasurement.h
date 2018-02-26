@@ -16,11 +16,22 @@ namespace AdCamiData {
 template<typename T = double>
 class IAdCamiEventMeasurement {
 public:
-    virtual const map<string, AdCamiMeasurement<T>> Measurements() const = 0;
+    virtual const map <string, AdCamiMeasurement<T>> Measurements() const = 0;
 
-    virtual const AdCamiMeasurement<T> &GetMeasurement(const EnumMeasurementType &type) const = 0;
+    virtual const AdCamiMeasurement<T> GetMeasurement(const EnumMeasurementType &type) const = 0;
 
     virtual void SetMeasurement(const AdCamiMeasurement<T> &measurement) = 0;
+
+    operator std::string() const {
+        string str;
+
+        for (auto &measurement : this->Measurements()) {
+            str += std::get<0>(measurement) + ": " +
+                   string(std::get<1>(measurement)) + ", ";
+        }
+
+        return str;
+    }
 
     friend std::ostream &operator<<(std::ostream &os, const IAdCamiEventMeasurement<T> &event) {
         for (auto &measurement : event.Measurements()) {

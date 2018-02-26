@@ -14,6 +14,8 @@
 using std::array;
 using std::pair;
 
+const string kDefaultBluetoothAdapter = "hci0";
+
 /* Bluetooth Error Codes */
 enum AdCamiBluetoothError : int {
     BT_OK = 0,
@@ -39,9 +41,11 @@ enum AdCamiBluetoothError : int {
     BT_ERROR_INVALID_DEVICETYPE = -20,
     BT_ERROR_START_NOTIFICATIONS = -21,
     BT_ERROR_STOP_NOTIFICATIONS = -22,
-    BT_ERROR_DISCOVERY_RUNNING = -23,
-    BT_ERROR_START_DISCOVERY = -24,
-    BT_ERROR_STOP_DISCOVERY = -25
+    BT_ERROR_READING_NOTIFICATIONS = -23,
+    BT_ERROR_DISCOVERY_RUNNING = -24,
+    BT_ERROR_START_DISCOVERY = -25,
+    BT_ERROR_STOP_DISCOVERY = -26,
+    BT_ERROR_SET_DISCOVERY_FILTER = -27
 };
 
 enum EnumBluetoothDeviceType : uint32_t {
@@ -65,7 +69,7 @@ enum EnumGattCharacteristic : uint32_t {
     SystemId = 0x00002a23,
     BloodPressureMeasurement = 0x00002a35,
     WeightMeasurement = 0x00002a9d,
-    Invalid = 0x00000000
+    Invalid = 0x00000000,
 };
 
 class GattHandle {

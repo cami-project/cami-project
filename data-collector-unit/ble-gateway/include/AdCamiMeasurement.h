@@ -78,6 +78,10 @@ public:
         return *this;
     }
 
+    operator std::string() const {
+        return std::to_string(this->Value()) + " " + this->Unit();;
+    }
+
     /**
      * Gets a stream with the attributes of the object in the format "<value>, <unit>".
      * @return a stream with the attributes of the device

@@ -34,6 +34,13 @@ public:
             _meanArterialPressure(EnumMeasurementType::MeanArterialPressure, 0.0, ""),
             _pulseRate(EnumMeasurementType::PulseRate, 0.0, "bpm") {}
 
+    AdCamiEventBloodPressureMeasurement(const string &timeStamp, const string &address) :
+            AdCamiEvent(EnumEventType::BloodPressure, timeStamp, address),
+            _systolic(EnumMeasurementType::Systolic, 0.0, ""),
+            _diastolic(EnumMeasurementType::Diastolic, 0.0, ""),
+            _meanArterialPressure(EnumMeasurementType::MeanArterialPressure, 0.0, ""),
+            _pulseRate(EnumMeasurementType::PulseRate, 0.0, "bpm") {}
+
     AdCamiEventBloodPressureMeasurement(const string &timeStamp, const string &address,
                                         const double &systolicValue, const string &systolicUnit,
                                         const double &diastolicValue, const string &diastolicUnit,
@@ -91,7 +98,7 @@ public:
                 });
     };
 
-    inline const AdCamiMeasurement<double> &GetMeasurement(const EnumMeasurementType &type) const {
+    inline const AdCamiMeasurement<double> GetMeasurement(const EnumMeasurementType &type) const {
         switch (type) {
             case EnumMeasurementType::Diastolic: {
                 return this->_diastolic;
@@ -106,7 +113,7 @@ public:
                 return this->_systolic;
             }
             default: {
-                break;
+                return AdCamiMeasurement<double>(EnumMeasurementType::UnknownMeasurement);
             }
         }
     }

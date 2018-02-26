@@ -6,9 +6,8 @@ set(MINOR_VERSION "1")
 set(PATCH_VERSION "1")
 
 #set(CMAKE_VERBOSE_MAKEFILE on)
-#set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_COMPILER c++)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -Wall -O0 -g -DDEBUG -DNDEBUG -DSQLITE_ENABLE_JSON1 \
 -D__FILENAME__='\"$(subst ${CMAKE_SOURCE_DIR}/,,$(basename $(abspath $<)))\"'")
@@ -93,11 +92,14 @@ set(SOURCE_FILES
         ${INCLUDE_DIR}/AdCamiHttpHeaders.h
         ${INCLUDE_DIR}/AdCamiHttpServer.h
         ${INCLUDE_DIR}/AdCamiJsonConverter.h
+        ${INCLUDE_DIR}/AdCamiLogging.h
         ${INCLUDE_DIR}/AdCamiMeasurement.h
         ${INCLUDE_DIR}/AdCamiMonitor.h
+        ${INCLUDE_DIR}/AdCamiReadMeasurementsStrategy.h
         ${INCLUDE_DIR}/AdCamiUrl.h
         ${INCLUDE_DIR}/AdCamiUtilities.h
         ${INCLUDE_DIR}/IAdCamiBluetooth.h
+        ${INCLUDE_DIR}/IAdCamiBluetoothDiscoveryStrategy.h
         ${INCLUDE_DIR}/IAdCamiEventMeasurement.h
         ${INCLUDE_DIR}/IAdCamiHardwareFactory.h
         ${INCLUDE_DIR}/dbus/dbus_helper_5.h
@@ -110,6 +112,7 @@ set(SOURCE_FILES
         ${SOURCE_DIR}/AdCamiBluetoothDefinitions.cpp
         ${SOURCE_DIR}/AdCamiBluetoothDevice.cpp
         ${SOURCE_DIR}/AdCamiConfiguration.cpp
+        ${SOURCE_DIR}/AdCamiEvent.cpp
         ${SOURCE_DIR}/AdCamiEventsStorage.cpp
         ${SOURCE_DIR}/AdCamiHttpClient.cpp
         ${SOURCE_DIR}/AdCamiHttpCommon.cpp
@@ -118,6 +121,7 @@ set(SOURCE_FILES
         ${SOURCE_DIR}/AdCamiHttpServer.cpp
         ${SOURCE_DIR}/AdCamiJsonConverter.cpp
         ${SOURCE_DIR}/AdCamiMonitor.cpp
+        ${SOURCE_DIR}/AdCamiReadMeasurementsStrategy.cpp
         ${SOURCE_DIR}/AdCamiUrl.cpp
         ${SOURCE_DIR}/AdCamiUtilities.cpp
         ${SOURCE_DIR}/dbus/dbus_helper_5.cpp
@@ -135,20 +139,6 @@ target_link_libraries(adcamid
 # ###########################
 # Bluetooth tests
 # ###########################
-add_executable(test-adproximity
-        ${TEST_DIR}/TestAdCamiProximity.cpp
-        ${SOURCE_DIR}/AdCamiBluetooth5.cpp
-        ${SOURCE_DIR}/AdCamiBluetoothDefinitions.cpp
-        ${SOURCE_DIR}/AdCamiBluetoothDevice.cpp
-        ${SOURCE_DIR}/AdCamiUtilities.cpp
-        ${SOURCE_DIR}/dbus/dbus_helper_5.cpp)
-target_link_libraries(test-adproximity
-        ${DBUS_LIBRARIES}
-        ${DBUS_GLIB_LIBRARIES}
-        ${GLIB_LIBRARIES}
-        -lglib-2.0 -lgobject-2.0 -lgio-2.0
-        pthread)
-
 add_executable(test-discovery
         ${TEST_DIR}/TestDiscovery.cpp
         ${SOURCE_DIR}/AdCamiBluetooth5.cpp
@@ -259,8 +249,8 @@ target_link_libraries(test-asyncdiscovery
 
 add_executable(test-discoverreaddevice
         ${TEST_DIR}/TestDiscoverReadDevice.cpp
-        ${SOURCE_DIR}/AdCamiBluetooth5.cpp
         ${SOURCE_DIR}/AdCamiBluetoothDefinitions.cpp
+        ${SOURCE_DIR}/AdCamiBluetooth5.cpp
         ${SOURCE_DIR}/AdCamiBluetoothDevice.cpp
         ${SOURCE_DIR}/AdCamiJsonConverter.cpp
         ${SOURCE_DIR}/AdCamiUtilities.cpp
@@ -280,8 +270,15 @@ enable_testing()
 
 add_executable(test_adcamiconfiguration
         ${TEST_DIR}/unit/TestAdCamiConfiguration.cpp
-        ${SOURCE_DIR}/AdCamiConfiguration.cpp)
+        ${SOURCE_DIR}/AdCamiConfiguration.cpp
+        ${SOURCE_DIR}/AdCamiUrl.cpp)
 target_link_libraries(test_adcamiconfiguration GTest::GTest GTest::Main json)
+
+add_executable(test_adcamievent
+        ${TEST_DIR}/unit/TestAdCamiEvent.cpp
+        ${SOURCE_DIR}/AdCamiEvent.cpp
+        ${SOURCE_DIR}/AdCamiUtilities.cpp)
+target_link_libraries(test_adcamievent GTest::GTest GTest::Main)
 
 add_executable(test_adcamihttpclient
         ${TEST_DIR}/unit/TestAdCamiHttpClient.cpp

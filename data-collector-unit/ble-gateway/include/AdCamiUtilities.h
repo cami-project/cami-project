@@ -7,6 +7,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <cstring>
 #include <ctime>
 #include <iomanip>
 #include <iostream>
@@ -17,31 +18,9 @@
 #include <vector>
 #include "AdCamiCommon.h"
 
-using std::chrono::duration_cast;
-using std::chrono::milliseconds;
 using std::chrono::system_clock;
 using std::ostream;
 using std::string;
-
-/* Debug macro that prints a message to the screen. This macro is only defined
- * if the flag DEBUG is defined on compile time. */
-#if defined(DEBUG) || defined(VERBOSE)
-#define PRINT_DEBUG(message) \
-std::cout << "[" << __FILENAME__ << "::" << __FUNCTION__ << ":" << std::dec << __LINE__ << "] " << \
-message << std::endl;
-#else
-#define PRINT_DEBUG(message)
-#endif
-
-/* Macro that prints log messages to a log file defined on LOG_FILE.  */
-#define PRINT_LOG(message) \
-std::clog << "[" \
-          << AdCamiUtilities::GetDate(system_clock::now()) << "] " \
-          << message << std::endl;
-
-/* Macro that prints error messages to a log file defined on ERROR_FILE.  */
-#define PRINT_ERROR(message) \
-std::cerr << message << std::endl;
 
 /* Abstract unsigned char as type byte. */
 typedef std::uint8_t byte;
@@ -58,7 +37,7 @@ public:
 
     AdCamiBuffer(const size_t &size, const T &value) : std::vector<T>(size, value) {}
 
-    AdCamiBuffer(const size_t size, const T *list) : std::vector<T>(size, 0x00) {
+    AdCamiBuffer(const size_t &size, const T *list) : std::vector<T>(size, 0x00) {
         this->assign(list, list + size);
     }
 
@@ -99,13 +78,53 @@ public:
     }
 };
 
+enum EnumAdCamiTimeFormat {
+    DateTime,
+    Delta
+};
+
+template<EnumAdCamiTimeFormat Tf = DateTime>
+string GetDate(system_clock::time_point t) {
+    auto _GetMilliseconds = [&t]() -> const char* {
+        auto seconds = std::chrono::time_point_cast<std::chrono::seconds>(t);
+        auto fraction = t - seconds;
+        auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(fraction).count();
+
+        return std::to_string(milliseconds).c_str();
+    };
+
+    auto as_time_t = system_clock::to_time_t(t);
+    struct tm *tm;
+    char timeBuffer[32];
+
+    if ((tm = std::localtime(&as_time_t)) != nullptr) {
+        if (std::strftime(timeBuffer, sizeof(timeBuffer), AdCamiCommon::kDateTimeFormat, tm)) {
+            size_t timeBufferLength = std::strlen(timeBuffer);
+            const char *millisecondsStr = _GetMilliseconds();
+
+            timeBuffer[timeBufferLength] = '.';
+            memcpy(&timeBuffer[timeBufferLength + 1],
+                   millisecondsStr,
+                   strlen(millisecondsStr));
+            timeBuffer[timeBufferLength + strlen(millisecondsStr)] = '\0';
+
+            return std::string{timeBuffer};
+        }
+    }
+
+    return "";
+}
+
+template<>
+string GetDate<Delta>(system_clock::time_point t);
+
 /**
  *
  * @param t
  * @return
  * @note This code is borrowed from http://stackoverflow.com/questions/34963738/c11-get-current-date-and-time-as-string
  */
-std::string GetDate(std::chrono::system_clock::time_point t);
+//std::string GetDate(std::chrono::system_clock::time_point t);
 
 /**
  * Calculates a hash value for a string.
@@ -165,4 +184,23 @@ void CastFromByte(const byte *src, uint16_t *dst);
 
 } //namespace
 
+/* Debug macro that prints a message to the screen. This macro is only defined
+ * if the flag DEBUG is defined on compile time. */
+#if defined(DEBUG) || defined(VERBOSE)
+#define PRINT_DEBUG(message) \
+std::cout << "[" << __FILENAME__ << "::" << __FUNCTION__ << ":" << std::dec << __LINE__ << "] " << \
+message << std::endl;
+#else
+#define PRINT_DEBUG(message)
+#endif
+
+/* Macro that prints log messages to a log file defined on LOG_FILE.  */
+#define PRINT_LOG(message) \
+std::clog << "[" \
+          << AdCamiUtilities::GetDate<AdCamiUtilities::EnumAdCamiTimeFormat::DateTime>(system_clock::now()) << "] " \
+          << message << std::endl;
+
+/* Macro that prints error messages to a log file defined on ERROR_FILE.  */
+#define PRINT_ERROR(message) \
+std::cerr << message << std::endl;
 #endif

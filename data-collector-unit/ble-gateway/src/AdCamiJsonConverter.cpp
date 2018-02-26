@@ -43,7 +43,7 @@ string &AdCamiJsonConverter::ToJson(const AdCamiBluetoothDevice &device, string 
 string &AdCamiJsonConverter::ToJson(const vector <AdCamiBluetoothDevice> &devices, string *json) {
     string jsonTmp;
 
-    *json = "\"devices\":[";
+    *json = "{\"devices\":[";
     for (auto device : devices) {
         this->ToJson(device, &jsonTmp);
         *json += jsonTmp + ",";
@@ -51,7 +51,7 @@ string &AdCamiJsonConverter::ToJson(const vector <AdCamiBluetoothDevice> &device
     if (devices.size() > 0) {
         json->erase(json->end() - 1);
     }
-    *json += "]";
+    *json += "]}";
 
     return *json;
 }

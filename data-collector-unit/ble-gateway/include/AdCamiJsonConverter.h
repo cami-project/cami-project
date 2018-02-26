@@ -193,6 +193,18 @@ private:
     }
 
     template<typename T>
+    bool _ObjectType(JSONNode::const_iterator &it, AdCamiUrl *value) {
+        *value = it->as_string();
+        return it->type() == JSON_STRING;
+    }
+
+    template<typename T>
+    bool _ObjectType(JSONNode &node, AdCamiUrl *value) {
+        *value = node.as_string();
+        return node.type() == JSON_STRING;
+    }
+
+    template<typename T>
     bool _ObjectType(JSONNode::const_iterator &it, int *value) {
         *value = it->as_int();
         return it->type() == JSON_NUMBER;

@@ -1,11 +1,11 @@
-# AdCAMI
+#AdCAMI
 A Bluetooth Low Energy (BLE) gateway for [A&D medical devices](http://www.andonline.com/medical/). At the moment only,
 the white versions of the weight scale A&D UC-352BLE and the blood pressure monitor A&D UA-651BLE are supported.
 
 **DISCLAMER:** the gateway is tested to work properly with out of the box vanilla devices. Pairing with already
 used/paired devices will lead to unknown results.
 
-## Development
+##Development
 
 ### Requirements
 To build the project the following dependencies need to be installed (refer to the next section for automatic

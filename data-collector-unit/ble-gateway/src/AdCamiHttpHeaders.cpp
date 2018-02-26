@@ -10,23 +10,23 @@ namespace AdCamiCommunications {
 
 const unsigned int AdCamiHttpHeaders::_kAcceptEncoding = 15;
 const unsigned int AdCamiHttpHeaders::_kAuthorizationLength = 13;
+const unsigned int AdCamiHttpHeaders::_kContentLengthLength = 14;
+const unsigned int AdCamiHttpHeaders::_kContentTypeLength = 12;
 const unsigned int AdCamiHttpHeaders::_kHttpLength = 8;
 const unsigned int AdCamiHttpHeaders::_kResponseStatusCodeLength = 3;
-const unsigned int AdCamiHttpHeaders::_kContentTypeLength = 12;
-const unsigned int AdCamiHttpHeaders::_kContentLengthLength = 14;
 
 const map <EnumHttpHeader, AdCamiHttpHeaders::_HttpHeaderInfo> AdCamiHttpHeaders::_kHeaderInfo = {
-        {EnumHttpHeader::AcceptEncoding, _HttpHeaderInfo("Accept-Encoding", 15)},
-        {EnumHttpHeader::Authorization,  _HttpHeaderInfo("Authorization", 13)},
-        {EnumHttpHeader::ContentType,    _HttpHeaderInfo("Content-Type", 12)},
-        {EnumHttpHeader::ContentLength,  _HttpHeaderInfo("Content-Length", 14)}
+        {EnumHttpHeader::AcceptEncoding, _HttpHeaderInfo("Accept-Encoding", _kAcceptEncoding)},
+        {EnumHttpHeader::Authorization,  _HttpHeaderInfo("Authorization", _kAuthorizationLength)},
+        {EnumHttpHeader::ContentLength,  _HttpHeaderInfo("Content-Length", _kContentLengthLength)},
+        {EnumHttpHeader::ContentType,    _HttpHeaderInfo("Content-Type", _kContentTypeLength)}
 };
 
 AdCamiHttpHeaders::~AdCamiHttpHeaders() {
     this->_fields.clear();
 }
 
-string AdCamiHttpHeaders::GetHeaderValue(EnumHttpHeader field) {
+string AdCamiHttpHeaders::GetHeaderAndValue(EnumHttpHeader field) {
     string header;
     auto it = _kHeaderInfo.find(field);
 
@@ -34,7 +34,7 @@ string AdCamiHttpHeaders::GetHeaderValue(EnumHttpHeader field) {
         header = it->second.AsString;
     }
 
-    return this->GetValue(field);
+    return header + ": " + this->GetValue(field);
 }
 
 void AdCamiHttpHeaders::SetValue(const char *field) {

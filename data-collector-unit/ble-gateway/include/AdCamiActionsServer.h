@@ -372,7 +372,7 @@ EnumHttpStatusCode AdCamiActionsServer::DiscoverAndPair(const AdCamiUrl &url,
 
     /* Create JSON string with discovery results. */
     converter.ToJson(devices, &jsonDevices);
-    responseData->SetData("{" + jsonDevices + "}");
+    responseData->SetData(jsonDevices);
 
 
     return EnumHttpStatusCode::Code200;
@@ -671,22 +671,22 @@ EnumHttpStatusCode AdCamiActionsServer::SetEndpoint(const AdCamiUrl &url,
                                                     const AdCamiHttpData &requestData,
                                                     AdCamiHttpData *responseData,
                                                     void *data) {
-    string remoteEndpoint;
+    PRINT_DEBUG("PUT /management/endpoint request received")
+
+    vector <AdCamiUrl> remoteEndpoints;
     string errorJsonMessage;
 
-    if (AdCamiJsonConverter().GetObjectValue<string>(requestData.GetDataAsString(),
-                                                     "endpoint",
-                                                     &remoteEndpoint) == AdCamiJsonConverter::Ok) {
+    if (AdCamiJsonConverter().GetObjectValue<AdCamiUrl>(requestData.GetDataAsString(),
+                                                        "endpoint",
+                                                        &remoteEndpoints) == AdCamiJsonConverter::Ok) {
         AdCamiConfiguration configuration(AdCamiCommon::kAdCamiConfigurationFile);
-        configuration.SetRemoteEndpoint(remoteEndpoint);
+        configuration.SetRemoteEndpoints(remoteEndpoints);
         configuration.Save();
-        PRINT_LOG("\tEndpoint set to " << remoteEndpoint);
     } else {
         AdCamiJsonConverter().Error("Malformed JSON data: could not find 'endpoint'.",
                                     &errorJsonMessage);
         responseData->SetData(errorJsonMessage);
         responseData->SetMimeType(AdCamiJsonConverter::MimeType);
-        PRINT_LOG("\tFailed to set endpoint to " << remoteEndpoint);
 
         return EnumHttpStatusCode::Code400;
     }

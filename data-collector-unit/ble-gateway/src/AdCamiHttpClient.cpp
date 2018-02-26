@@ -77,11 +77,11 @@ AdCamiHttpClient::Post(const AdCamiUrl &url, const int port, AdCamiHttpData *sen
         curl_easy_setopt(this->_client, CURLOPT_POSTFIELDSIZE, sendData->GetSize());
         curl_easy_setopt(this->_client, CURLOPT_POSTFIELDS, sendData->GetData());
         if (sendData->Headers.Size() > 0) {
-            curl_slist *headerlist = nullptr;
+            curl_slist *headerList = nullptr;
             for (auto header : sendData->Headers) {
-                headerlist = curl_slist_append(headerlist, sendData->Headers.GetHeaderValue(header.first).c_str());
-                curl_easy_setopt(this->_client, CURLOPT_HTTPHEADER, headerlist);
+                headerList = curl_slist_append(headerList, sendData->Headers.GetHeaderAndValue(header.first).c_str());
             }
+            curl_easy_setopt(this->_client, CURLOPT_HTTPHEADER, headerList);
         }
         /* Perform request. */
         res = curl_easy_perform(this->_client);

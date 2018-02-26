@@ -34,13 +34,9 @@ function install_tools {
 
 function install_bluez {
     BLUEZ_VERSION=5.47
-    BLUEZ_ORIG_FILE_URL=http://http.debian.net/debian/pool/main/b/bluez/bluez_5.43.orig.tar.gz
-    BLUEZ_ORIG_FILE=bluez_5.43.orig.tar.gz
-    BLUEZ_DEBIAN_FILE_URL=http://http.debian.net/debian/pool/main/b/bluez/bluez_5.43-1.debian.tar.xz
-    BLUEZ_DEBIAN_FILE=bluez_5.43-1.debian.tar.xz
+    BLUEZ_FILE=bluez-"$BLUEZ_VERSION".tar.xz
+    BLUEZ_FILE_URL=http://www.kernel.org/pub/linux/bluetooth/bluez-"$BLUEZ_VERSION".tar.xz
     BLUEZ_DIR="$CONTRIB_DIR"/bluez-"$BLUEZ_VERSION"
-    BLUEZ_DEBIAN_PACKAGE_FILE=bluez_5.43-1_i386.deb
-    BLUEZ_PACKAGES_DIR="$BLUEZ_DIR"/packages
     INITIAL_PATH=$(pwd)
 
     if [ "$(dpkg-query -W -f='${db:Status-Status}' bluez)" = 'installed' ]; then
@@ -54,24 +50,18 @@ function install_bluez {
     if [ ! -d "$BLUEZ_DIR" ]; then
         mkdir -p "$CONTRIB_DIR"
         mkdir -p "$BLUEZ_DIR"
+        wget -O "$CONTRIB_DIR"/"$BLUEZ_FILE" "$BLUEZ_FILE_URL"
+        tar -xvf "$CONTRIB_DIR"/"$BLUEZ_FILE" -C "$CONTRIB_DIR"
     fi
 
-    if [ ! -d "$BLUEZ_PACKAGES_DIR" ] && [ ! -f "$BLUEZ_DEBIAN_PACKAGE_FILE" ]; then
-        wget -O "$BLUEZ_DIR"/"$BLUEZ_ORIG_FILE" "$BLUEZ_ORIG_FILE_URL"
-        wget -O "$BLUEZ_DIR"/"$BLUEZ_DEBIAN_FILE" "$BLUEZ_DEBIAN_FILE_URL"
-        cd "$BLUEZ_DIR"
-        tar -zxvf "$BLUEZ_ORIG_FILE"
-        tar -xvf "$BLUEZ_DEBIAN_FILE"
-        mv debian bluez-"$BLUEZ_VERSION"/
-        cd bluez-"$BLUEZ_VERSION"/
-        debuild -us -uc
-        cd ..
-        mkdir -p "$BLUEZ_PACKAGES_DIR"
-        mv *.deb "$BLUEZ_PACKAGES_DIR"
+    cd "$BLUEZ_DIR"
+    sh configure --prefix=/usr
+    make
+    if [[ $EUID -ne 0 ]]; then
+        sudo make install
+    else
+        make install
     fi
-
-    dpkg -i "$BLUEZ_PACKAGES_DIR"/*.deb
-
     cd "$INITIAL_PATH"
 
     print_green -n "done!"
@@ -133,12 +123,14 @@ function create_configuration_files {
     if [ ! -f $ADCAMID_CONFIG_FILE ]; then
         cat >"$ADCAMID_CONFIG_FILE" <<EOL
 {
-        "remoteendpoint" : "",
-        "gatewayname" : "",
+        "bluetoothAdapter": "hci0",
+        "remoteEndpoints" : [],
+        "gatewayName" : "",
         "opentele" : {
                 "username" : "",
                 "password" : ""
-        }
+        },
+        "readMeasurementsTimeout": 30
 }
 EOL
     fi

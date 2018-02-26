@@ -7,6 +7,7 @@
 
 #include <map>
 #include <string>
+#include "AdCamiUtilities.h"
 
 using std::map;
 using std::string;
@@ -27,8 +28,7 @@ protected:
     string _address;
 
 public:
-    //TODO add reference on string
-    AdCamiEvent(const EnumEventType &type, const string &timeStamp, const string address) :
+    AdCamiEvent(const EnumEventType &type, const string &timeStamp, const string &address) :
             _type(type), _timeStamp(timeStamp), _address(address) {}
 
     virtual ~AdCamiEvent() {}
@@ -43,7 +43,12 @@ public:
     inline const string &TimeStamp() const { return this->_timeStamp; }
 
     inline AdCamiEvent &TimeStamp(const string &timeStamp) {
-        this->_timeStamp = timeStamp;
+        try {
+        this->_timeStamp.assign(timeStamp);
+        } catch (const std::exception & ex) {
+            PRINT_DEBUG(ex.what())
+        }
+
         return *this;
     }
 
@@ -53,6 +58,14 @@ public:
         this->_type = type;
         return *this;
     }
+
+    /**
+     * Calcualtes the time different between the timestamps of the events.
+     * @param levent
+     * @param revent
+     * @return
+     * */
+    friend double operator-(const AdCamiEvent &lhs, const AdCamiEvent &rhs);
 };
 
 }//namespace

@@ -14,7 +14,7 @@ namespace AdCamiCommunications {
     
 /**
  */
-class AdCamiUrl : public std::string {
+class AdCamiUrl : public string {
 private:
     unsigned int _numberUrlTokens;
     
@@ -34,4 +34,4 @@ public:
 };
     
 } //namespace
-#endif /* defined(AdCamiDaemon_AdCamiUrl_h) */
+#endif

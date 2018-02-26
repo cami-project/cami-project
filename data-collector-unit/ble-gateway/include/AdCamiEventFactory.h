@@ -7,17 +7,16 @@
 
 #include <memory>
 #include "AdCamiBluetoothDefinitions.h"
-//#include "AdCamiEvent.h"
 #include "AdCamiEventBloodPressureMeasurement.h"
 #include "AdCamiEventWeightMeasurement.h"
 #include "AdCamiMeasurement.h"
 #include "AdCamiUtilities.h"
 
-//using AdCamiData::AdCamiEvent;
 using AdCamiData::AdCamiEventBloodPressureMeasurement;
 using AdCamiData::AdCamiEventWeightMeasurement;
 using AdCamiData::AdCamiMeasurement;
 using AdCamiUtilities::AdCamiBuffer;
+using EnumEventType = AdCamiData::AdCamiEvent::EnumEventType;
 
 namespace AdCamiData {
 
@@ -91,6 +90,20 @@ private:
     }
 
 public:
+    std::unique_ptr <AdCamiEvent> GetEvent(const EnumEventType &type, const string &deviceAddress) {
+        string timeStamp = AdCamiUtilities::GetDate(std::chrono::system_clock::now());
+
+        switch (type) {
+            case EnumEventType::BloodPressure:
+                return std::make_unique<AdCamiEventBloodPressureMeasurement>(timeStamp, deviceAddress);
+            case EnumEventType::Weight:
+                return std::make_unique<AdCamiEventWeightMeasurement>(timeStamp, deviceAddress);
+            case EnumEventType::Device:
+            default:
+                return std::make_unique<AdCamiEvent>(type, timeStamp, deviceAddress);
+        }
+    }
+
     static std::unique_ptr <AdCamiEvent> Parse(const EnumGattCharacteristic &characteristic,
                                                const AdCamiBuffer<byte> &buffer) {
         map <EnumMeasurementType, AdCamiMeasurement<double>> measurements;
