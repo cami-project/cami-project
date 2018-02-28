@@ -3,40 +3,20 @@
 from __future__ import unicode_literals
 
 from django.conf import settings
-from django.db import migrations, models
-import django.db.models.deletion
-import django_mysql.models
+from django.db import migrations
+
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('store', '0017_auto_20171205_1146'),
+        ('store', '0018_auto_20180226_1453'),
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='ExternalService',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('name', models.CharField(max_length=32)),
-                ('service_url', models.URLField(default=b'https://calendar.google.com')),
-                ('access_info', django_mysql.models.JSONField(default=dict)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='used_services', to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
-        migrations.RemoveField(
-            model_name='externalmonitoringservice',
-            name='user',
-        ),
         migrations.AlterUniqueTogether(
             name='pushnotificationdevice',
             unique_together=set([('user', 'registration_id')]),
-        ),
-        migrations.DeleteModel(
-            name='ExternalMonitoringService',
         ),
     ]
