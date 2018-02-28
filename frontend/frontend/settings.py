@@ -210,7 +210,11 @@ STORE_ENDPOINT_URI = "http://" + STORE_HOST + ":" + STORE_PORT
 # Push Notifications settings
 PUSH_NOTIFICATIONS_SETTINGS = {
     "APNS_CERTIFICATE": "/cami-project/frontend/frontend/push_notifications/certificates/ios/prod/apns-cert.pem",
-    "APNS_USE_SANDBOX": False
+    "APNS_USE_SANDBOX": False,
+
+    "PUSHBOTS_URI" : "http://api.pushbots.com",
+    "PUSHBOTS_APP_ID": "5a84222e1db2dc56731e6e63",
+    "PUSHBOTS_SECRET": "c89c6c7cf1056491c89aa01bafe5d4db",
 }
 
 
