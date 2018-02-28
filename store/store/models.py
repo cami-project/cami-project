@@ -314,7 +314,7 @@ class PushNotificationDevice(models.Model):
     type = models.CharField(max_length=4, choices=TYPES)
     active = models.BooleanField(default=True)
     device_id = models.CharField(max_length=64, blank=True, null=True, db_index=True)
-    registration_id = models.TextField()
+    registration_id = models.CharField(max_length=256)
     other_info = JSONField(null=True, blank = True)
 
     class Meta:

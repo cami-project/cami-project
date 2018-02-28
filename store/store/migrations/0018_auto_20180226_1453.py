@@ -16,11 +16,13 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.AlterField(
+            model_name='pushnotificationdevice',
+            name='registration_id',
+            field=models.CharField(max_length=256),
+        ),
         migrations.AlterUniqueTogether(
             name='pushnotificationdevice',
             unique_together=set([('user', 'registration_id')]),
-        ),
-        migrations.DeleteModel(
-            name='ExternalMonitoringService',
         ),
     ]
