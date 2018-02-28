@@ -315,7 +315,15 @@ class PushNotificationDevice(models.Model):
     active = models.BooleanField(default=True)
     device_id = models.CharField(max_length=64, blank=True, null=True, db_index=True)
     registration_id = models.TextField()
-    other_info = JSONField()
+    other_info = JSONField(null=True, blank = True)
 
     class Meta:
         unique_together = (("user", "registration_id"))
+
+    def __str__(self):
+        return "[PushNotification] User: %s, Type: %s" % (
+            self.user.username,
+            self.type
+        )
+
+    __unicode__ = __str__
