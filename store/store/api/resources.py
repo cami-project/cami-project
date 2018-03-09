@@ -87,6 +87,8 @@ class CaregiverProfileResource(ModelResource):
         }
 
 class DeviceResource(ModelResource):
+    gateway = fields.ToOneField("store.api.resources.GatewayResource", "gateway", null=True, blank=True)
+
     class Meta:
         queryset = Device.objects.all()
         allowed_methods = ['get', 'post', 'put']
@@ -100,7 +102,8 @@ class DeviceResource(ModelResource):
             'manufacturer': ('exact',),
             'serial_number': ('exact',),
             'device_identifier': ('exact',),
-            'device_type': ('exact',)
+            'device_type': ('exact',),
+            'gateway': ALL_WITH_RELATIONS,
         }
 
 
@@ -163,6 +166,7 @@ class ExternalServiceResource(ModelResource):
 
 class GatewayResource(ModelResource):
     user = fields.ForeignKey(UserResource, 'user')
+    devices = fields.ToManyField(DeviceResource, 'connected_devices')
 
     class Meta:
         queryset = Gateway.objects.all()
