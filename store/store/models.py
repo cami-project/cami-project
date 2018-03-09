@@ -61,7 +61,7 @@ class EndUserProfile(UserProfileBase):
     height = models.PositiveIntegerField(null=True, blank=True)
 
     def __str__(self):
-        return "[" + self.account_role + "]" + self.user.first_name + " " + self.user.last_name + "; " + "email: " + self.user.email
+        return "[" + self.account_role + "(" + self.language.upper() + ")" + "] " + self.user.first_name + " " + self.user.last_name + "; " + "email: " + self.user.email
 
     __unicode__ = __str__
 
@@ -89,11 +89,18 @@ class HealthProfessionalProfile(UserProfileBase):
 # ================ Devices ================
 class Device(models.Model):
     DEVICE_TYPES = (
-        ("weight", "Weight Measurement"),
+        ("weight", "Weight Scale"),
         ("blood_pressure", "Blood Pressure Monitor"),
         ("pulse", "Heart Rate Monitor"),
         ("oxymeter", "Oxymeter"),
-        ("pedometer", "Step Counter")
+        ("pedometer", "Step Counter"),
+        ("motion_sensor", "Motion Sensor"),
+        ("door_window_sensor", "Door/Window Sensor"),
+
+        # specialized motion sensors types
+        ("kitchen_motion_sensor", "Kitchen Motion Sensor"),
+        ("bedroom_motion_sensor", "Bedroom Motion Sensor"),
+        ("bathroom_motion_sensor", "Bathroom Motion Sensor"),
     )
 
     device_identifier = models.CharField(max_length=128, default=uuid.uuid4, unique=True)
@@ -110,14 +117,17 @@ class Device(models.Model):
 
     used_by = models.ManyToManyField(User, related_name="used_devices", through="DeviceUsage")
 
+    gateway = models.ForeignKey('Gateway', null=True, blank=True, related_name="connected_devices")
+
     def __str__(self):
-        _str = "Device of type " + self.device_type + " with id: " + self.device_identifier
+        _str = self.manufacturer + self.model + ", " + self.get_device_type_display() + " for " + self.serial_number
 
-        if self.manufacturer:
-            _str += " , " + self.manufacturer
+        # if self.manufacturer:
+        #     _str += " , " + self.manufacturer
+        #
+        # if self.model:
+        #     _str += " , " + self.model
 
-        if self.model:
-            _str += " , " + self.model
         return _str
 
 
@@ -156,11 +166,15 @@ class Gateway(models.Model):
     device_id = models.CharField(max_length=64)
 
     def __str__(self):
-        return "Gateway, ID: %d, User: %s, Device ID: %s" % (
+        _str = "Gateway, ID: %d, User: %s" % (
             self.id,
-            self.user.username,
-            self.device_id
+            self.user.username
         )
+
+        if self.user.enduser_profile:
+            _str += ", " + self.user.enduser_profile.language.upper()
+
+        return _str
 
     __unicode__ = __str__
 
