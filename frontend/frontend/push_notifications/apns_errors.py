@@ -25,5 +25,6 @@ def reason_for_exception_class(exception_class):
 		apns2_errors.Shutdown: "Shutdown",
 		apns2_errors.InternalServerError: "InternalServerError",
 		apns2_errors.ServiceUnavailable: "ServiceUnavailable",
-		apns2_errors.MissingTopic: "MissingTopic"
+		apns2_errors.MissingTopic: "MissingTopic",
+		apns2_errors.ConnectionFailed: "ConnectionFailed"
 	}[exception_class]
