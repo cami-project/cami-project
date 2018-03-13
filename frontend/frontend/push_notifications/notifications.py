@@ -31,6 +31,12 @@ def send_message(devices, message, **kwargs):
                     str(device),
                     repr(e)
                 )
+            except Exception as ex:
+                logger.debug(
+                    "[frontend] Failed sending notification to device (%s): %s",
+                    str(device),
+                    repr(ex)
+                )
         elif device['type'] == "GCM":
             try:
                 send_pushbots_notification(device, message)
