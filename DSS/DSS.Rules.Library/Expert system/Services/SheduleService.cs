@@ -43,6 +43,14 @@ namespace DSS.Rules.Library
             NewDay
         };
 
+        public enum TimeOfDay 
+        {
+            None,
+            Morning,
+            Afternoon,
+            Night
+        }
+
         private static List<SheduledEvent> sheduledEvents = new List<SheduledEvent>();
 
 

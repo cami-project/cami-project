@@ -79,6 +79,8 @@
     <Compile Include="Expert system\Rules\Events\ExerciseEndRule.cs" />
     <Compile Include="Expert system\Services\Measurements\BloodPressureService.cs" />
     <Compile Include="Expert system\Rules\Measurements\BloodPressureRules.cs" />
+    <Compile Include="Expert system\Services\Util\TimeService.cs" />
+    <Compile Include="Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

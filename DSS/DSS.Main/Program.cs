@@ -1,5 +1,5 @@
 ﻿using System;
-using DSS.Delegate;
+//using DSS.Delegate;
 using DSS.FuzzyInference;
 using DSS.RMQ;
 using Newtonsoft.Json;
@@ -29,6 +29,10 @@ namespace DSS.Main
 
             var ruleHandler = new RuleHandler();
             SheduleService.OnExec = ruleHandler.HandleSheduled;
+
+
+
+            return;
 
 
             var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
@@ -79,9 +83,6 @@ namespace DSS.Main
 
 
             Console.ReadKey();
-
-
-
 
 
    //         var reminderHandler = new ReminderHandler();

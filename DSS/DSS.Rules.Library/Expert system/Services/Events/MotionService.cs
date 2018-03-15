@@ -17,6 +17,9 @@ namespace DSS.Rules.Library
         public bool isMorning(Event motion)
         {
 
+            Console.WriteLine("jutro je");
+            return TimeService.isMorning(motion);
+
             Console.WriteLine("is morning BP");
 
 
@@ -57,6 +60,7 @@ namespace DSS.Rules.Library
 
             var gatewayURIPath = (string)motion.annotations.source["gateway"];
             SendBPMeasurementNotification(inform.storeAPI.GetUserOfGateway(gatewayURIPath));
+
         }
 
 
