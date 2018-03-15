@@ -69,7 +69,6 @@ namespace DSS.Rules.Library
 
         }
 
-
         private string getKey(Event reminder) {
 
             return reminder.getUserURI() + "-reminder";

@@ -20,47 +20,60 @@ namespace DSS.Rules.Library
             Console.WriteLine("jutro je");
             return TimeService.isMorning(motion);
 
-            Console.WriteLine("is morning BP");
+            //Console.WriteLine("is morning BP");
 
 
-            var gatewayURIPath = (string)motion.annotations.source["gateway"];
-            //var deviceURIPath = (string)motion.annotations.source["sensor"];
+            //var gatewayURIPath = (string)motion.annotations.source["gateway"];
+            ////var deviceURIPath = (string)motion.annotations.source["sensor"];
 
-            // make a call to the store API to get the user from the gateway
-            var userURIPath = inform.storeAPI.GetUserOfGateway(gatewayURIPath);
+            //// make a call to the store API to get the user from the gateway
+            //var userURIPath = inform.storeAPI.GetUserOfGateway(gatewayURIPath);
 
 
-            Console.WriteLine(userURIPath);
+            //Console.WriteLine(userURIPath);
 
-            int userID = inform.GetIdFromURI(userURIPath);
-            Tuple<string, string> userLocales = inform.storeAPI.GetUserLocale(userURIPath, userID);
+            //int userID = inform.GetIdFromURI(userURIPath);
+            //Tuple<string, string> userLocales = inform.storeAPI.GetUserLocale(userURIPath, userID);
 
-            long timestamp = motion.annotations.timestamp;
+            //long timestamp = motion.annotations.timestamp;
 
-            // get localized datetime
-            TimeZoneInfo localTz = TimeZoneInfo.FindSystemTimeZoneById(userLocales.Item2);
-            DateTime dtime = UnixTimeStampToDateTime(timestamp, localTz);
-            DateTime currentTime = UnixTimeStampToDateTime((long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds, localTz);
+            //// get localized datetime
+            //TimeZoneInfo localTz = TimeZoneInfo.FindSystemTimeZoneById(userLocales.Item2);
+            //DateTime dtime = UnixTimeStampToDateTime(timestamp, localTz);
+            //DateTime currentTime = UnixTimeStampToDateTime((long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds, localTz);
 
-            Tuple<DateTime, DateTime> morningLimits = getMorningLimits(localTz);
+            //Tuple<DateTime, DateTime> morningLimits = getMorningLimits(localTz);
 
-            // check if current dtime is within limits
-            if (dtime >= morningLimits.Item1 && currentTime >= morningLimits.Item1 && dtime <= morningLimits.Item2 && currentTime <= morningLimits.Item2)
-            {
-                return true;
-            }
-            return false;
+            //// check if current dtime is within limits
+            //if (dtime >= morningLimits.Item1 && currentTime >= morningLimits.Item1 && dtime <= morningLimits.Item2 && currentTime <= morningLimits.Item2)
+            //{
+            //    return true;
+            //}
+            //return false;
 
         }
 
         public void SendBloodPreasureMeasurementReminder(Event motion)
         {
+            Console.WriteLine("Send BP invoked");
 
-            Console.WriteLine("Sent BP");
 
             var gatewayURIPath = (string)motion.annotations.source["gateway"];
-            SendBPMeasurementNotification(inform.storeAPI.GetUserOfGateway(gatewayURIPath));
 
+            var key = "bp-" + gatewayURIPath + DateTime.UtcNow.Date;
+
+            if(!InMemoryDB.Exists(key)) {
+
+                Console.WriteLine("Sending BP notification");
+
+                SendBPMeasurementNotification(inform.storeAPI.GetUserOfGateway(gatewayURIPath));
+
+                InMemoryDB.Push(key, null);
+            }
+            else {
+
+                Console.WriteLine("BP notification already sent");
+            }
         }
 
 
