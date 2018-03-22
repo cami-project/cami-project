@@ -213,8 +213,9 @@ PUSH_NOTIFICATIONS_SETTINGS = {
     "APNS_USE_SANDBOX": False,
 
     "PUSHBOTS_URI" : "http://api.pushbots.com",
-    "PUSHBOTS_APP_ID": "5a84222e1db2dc56731e6e63",
-    "PUSHBOTS_SECRET": "c89c6c7cf1056491c89aa01bafe5d4db",
+    
+    "PUSHBOTS_APP_ID": "5ab360061db2dc58e27048a0",
+    "PUSHBOTS_SECRET": "8f472ed48f6fc18c0062dabd30f957d8",
 }
 
 
