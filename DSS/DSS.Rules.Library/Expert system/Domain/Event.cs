@@ -139,8 +139,6 @@ namespace DSS.Rules.Library
 
             }
 
-
-
             throw new Exception("URI path for the user not speficied!");
         }
 	}

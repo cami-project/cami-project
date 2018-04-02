@@ -63,7 +63,20 @@ namespace DSS.Rules.Library
                 session.Insert(motionService);
                 session.Insert(exerciseService);
                 session.Insert(fallService);
-                session.Insert(obj);
+
+                if (obj.category == "USER_ENVIRONMENT"){
+
+                    var objection = JsonConvert.DeserializeObject<MotionEvent>(json);
+
+                    session.Insert(objection);
+
+                    Console.WriteLine("U pitanju je: " + objection.isKitchen());
+                }
+                else {
+                    
+					session.Insert(obj);
+                }
+                
                 session.Fire();
             }    
         }

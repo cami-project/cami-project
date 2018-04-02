@@ -5,6 +5,21 @@ using Newtonsoft.Json;
 
 namespace DSS.Rules.Library
 {
+
+    public class State 
+    {
+        public long TimeStampEnter;
+        public long TimeStampMovement;
+        public string Name;
+
+        public State(MotionEvent motionEvent)
+        {
+            Name = motionEvent.getLocationName();
+            TimeStampEnter = motionEvent.annotations.timestamp;
+        }
+
+    }
+
     public class  MotionService
     {
         private readonly Inform inform;
@@ -20,38 +35,42 @@ namespace DSS.Rules.Library
             Console.WriteLine("jutro je");
             return TimeService.isMorning(motion);
 
-            //Console.WriteLine("is morning BP");
+        }
+
+        private Dictionary<string, State> currentState = new Dictionary<string, State>();
+
+        public void ChangeState(MotionEvent motion) {
 
 
-            //var gatewayURIPath = (string)motion.annotations.source["gateway"];
-            ////var deviceURIPath = (string)motion.annotations.source["sensor"];
+            if (currentState.ContainsKey(motion.getGateway())) 
+            {
+                
+                var state = currentState[motion.getGateway()];
 
-            //// make a call to the store API to get the user from the gateway
-            //var userURIPath = inform.storeAPI.GetUserOfGateway(gatewayURIPath);
+                if(state.Name == motion.getLocationName())
+                {
 
+                    state.TimeStampMovement = motion.annotations.timestamp;
 
-            //Console.WriteLine(userURIPath);
+                    Console.WriteLine("State unchanged: (movement within the same location)");
+                }
+                else 
+                {
+                    Console.WriteLine("State changed: " + state.Name + " to " + motion.getLocationName());
 
-            //int userID = inform.GetIdFromURI(userURIPath);
-            //Tuple<string, string> userLocales = inform.storeAPI.GetUserLocale(userURIPath, userID);
+                    currentState[motion.getGateway()] = new State(motion);
+                }
 
-            //long timestamp = motion.annotations.timestamp;
+            }
+            else // A fresh state for a new gateway, we assume a geteway is specific for an user
+            {
 
-            //// get localized datetime
-            //TimeZoneInfo localTz = TimeZoneInfo.FindSystemTimeZoneById(userLocales.Item2);
-            //DateTime dtime = UnixTimeStampToDateTime(timestamp, localTz);
-            //DateTime currentTime = UnixTimeStampToDateTime((long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds, localTz);
-
-            //Tuple<DateTime, DateTime> morningLimits = getMorningLimits(localTz);
-
-            //// check if current dtime is within limits
-            //if (dtime >= morningLimits.Item1 && currentTime >= morningLimits.Item1 && dtime <= morningLimits.Item2 && currentTime <= morningLimits.Item2)
-            //{
-            //    return true;
-            //}
-            //return false;
+                Console.WriteLine("State added:" + motion.getLocationName());
+                currentState.Add(motion.getGateway(), new State(motion));
+            }
 
         }
+
 
         public void SendBloodPreasureMeasurementReminder(Event motion)
         {

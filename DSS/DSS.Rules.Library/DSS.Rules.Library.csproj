@@ -81,6 +81,8 @@
     <Compile Include="Expert system\Rules\Measurements\BloodPressureRules.cs" />
     <Compile Include="Expert system\Services\Util\TimeService.cs" />
     <Compile Include="Tests.cs" />
+    <Compile Include="Expert system\Domain\MotionEvent.cs" />
+    <Compile Include="Expert system\Rules\Events\LocationRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
