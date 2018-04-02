@@ -68,9 +68,12 @@ namespace DSS.Rules.Library
 
                     var objection = JsonConvert.DeserializeObject<MotionEvent>(json);
 
+
+                    Console.WriteLine(objection.annotations.source.gateway + objection.annotations.source.sensor);
+
                     session.Insert(objection);
 
-                    Console.WriteLine("U pitanju je: " + objection.isKitchen());
+                    Console.WriteLine("U pitanju je: " + objection.getLocationName());
                 }
                 else {
                     

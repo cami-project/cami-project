@@ -42,12 +42,12 @@ namespace DSS.Rules.Library
 
         public bool isKitchen() {
             
-            return annotations.source.sensor == "/api/v1/gateway/1/";
+            return annotations.source.sensor == "/api/v1/device/1/";
         }
 
         public bool isBathroom() {
 
-            return annotations.source.sensor == "/api/v1/gateway/2/";
+            return annotations.source.sensor == "/api/v1/device/2/";
         }
 
         public string getGateway() {
