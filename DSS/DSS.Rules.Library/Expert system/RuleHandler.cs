@@ -43,7 +43,7 @@ namespace DSS.Rules.Library
             pulseService = new PulseService(inform);
             stepsService = new StepsService(inform);
             reminderService = new ReminderService(inform);
-            motionService = new MotionService(inform);
+            motionService = new MotionService(inform, HandleLocationTimeSpent);
             exerciseService = new ExerciseService(inform);
             fallService = new FallService(inform);
             bloodPressureService = new BloodPressureService(inform);
@@ -106,8 +106,6 @@ namespace DSS.Rules.Library
 
         public void HandleSheduled(SheduledEvent obj)
         {
-
-
             if (obj != null)
             {
                 var session = factory.CreateSession();
@@ -117,6 +115,13 @@ namespace DSS.Rules.Library
 
                 session.Fire();
             }
+
+        }
+
+
+        public void HandleLocationTimeSpent(LocationTimeSpent locationTimeSpent) 
+        {
+            Console.WriteLine("Location time spent handler: " + locationTimeSpent.ToString());
 
         }
 

@@ -83,6 +83,7 @@
     <Compile Include="Tests.cs" />
     <Compile Include="Expert system\Domain\MotionEvent.cs" />
     <Compile Include="Expert system\Rules\Events\LocationRule.cs" />
+    <Compile Include="Expert system\Rules\Complex\MorningWeightReminder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -92,6 +93,9 @@
       <Project>{728CCD8D-9438-4500-8407-8D86D20B5AA7}</Project>
       <Name>DSS.RMQ</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Expert system\Rules\Complex\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

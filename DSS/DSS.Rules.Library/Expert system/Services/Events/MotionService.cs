@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Timers;
 using DSS.RMQ;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace DSS.Rules.Library
 {
@@ -10,31 +12,76 @@ namespace DSS.Rules.Library
     {
         public long TimeStampEnter;
         public long TimeStampMovement;
+
         public string Name;
+
+        public DateTime TimeEnter;
+        public DateTime TimeMovement;
 
         public State(MotionEvent motionEvent)
         {
             Name = motionEvent.getLocationName();
             TimeStampEnter = motionEvent.annotations.timestamp;
+
+            TimeEnter = TimeService.UnixTimestampToDateTime(TimeStampEnter);
         }
 
     }
 
+    public class LocationTimeSpent
+    {
+        public string Name;
+        public int Min;
+
+        public LocationTimeSpent(string name, int min)
+        {
+            this.Name = name;
+            this.Min = min;
+        }
+
+        public override string ToString()
+		{
+            return Name + " - " + Min;
+		}
+	}
+
     public class  MotionService
     {
         private readonly Inform inform;
+        private Action<LocationTimeSpent> handleLocationTimeSpent;
 
-        public MotionService(Inform inform)
+        public MotionService(Inform inform, Action<LocationTimeSpent> locationTimeSpentHandler)
         {
             this.inform = inform;
+            this.handleLocationTimeSpent = locationTimeSpentHandler;
+
+            Timer timer = new Timer
+            {
+                Interval = 30 * 1000
+            };
+            timer.Elapsed += (x, y) => { checkCurrentStateTime(); };
+            timer.AutoReset = true;
+            timer.Start();
         }
 
         public bool isMorning(Event motion)
         {
-
             Console.WriteLine("jutro je");
             return TimeService.isMorning(motion);
+        }
 
+        private void checkCurrentStateTime() 
+        {
+            Console.WriteLine("Current state time");
+
+            var now = DateTime.Now;
+
+            foreach (var item in currentState.Values)
+            {
+                Console.WriteLine("In " + item.Name + " for " + (now - item.TimeEnter).Minutes+ " min");
+
+                this.handleLocationTimeSpent(new LocationTimeSpent(item.Name, (now - item.TimeEnter).Minutes));
+            }
         }
 
         private Dictionary<string, State> currentState = new Dictionary<string, State>();
@@ -51,6 +98,7 @@ namespace DSS.Rules.Library
                 {
 
                     state.TimeStampMovement = motion.annotations.timestamp;
+                    state.TimeMovement = TimeService.UnixTimestampToDateTime(state.TimeStampMovement);
 
                     Console.WriteLine("State unchanged: (movement within the same location)");
                 }
@@ -68,7 +116,6 @@ namespace DSS.Rules.Library
                 Console.WriteLine("State added:" + motion.getLocationName());
                 currentState.Add(motion.getGateway(), new State(motion));
             }
-
         }
 
 
