@@ -25,7 +25,6 @@ namespace DSS.Rules.Library
 
             TimeEnter = TimeService.UnixTimestampToDateTime(TimeStampEnter);
         }
-
     }
 
     public class LocationTimeSpent
@@ -45,15 +44,44 @@ namespace DSS.Rules.Library
 		}
 	}
 
+    public class LocationChange
+    {
+        public string Current;
+        public string Previous;
+
+        public string ID;
+
+
+        public LocationChange(string userID, string previous, string current)
+        {
+            this.ID = userID;
+            this.Current = current;
+            this.Previous = previous;
+        }
+
+        public bool FromTo(string from, string to)
+        {
+            return from == this.Previous && to == this.Current;
+        }
+
+
+		public override string ToString()
+		{
+            return "From " + this.Previous + " to " + this.Current;
+		}
+	}
+
     public class  MotionService
     {
         private readonly Inform inform;
         private Action<LocationTimeSpent> handleLocationTimeSpent;
+        private Action<LocationChange> handleLocationChange;
 
-        public MotionService(Inform inform, Action<LocationTimeSpent> locationTimeSpentHandler)
+        public MotionService(Inform inform, Action<LocationTimeSpent> locationTimeSpentHandler, Action<LocationChange> locationChange)
         {
             this.inform = inform;
             this.handleLocationTimeSpent = locationTimeSpentHandler;
+            this.handleLocationChange = locationChange;
 
             Timer timer = new Timer
             {
@@ -86,35 +114,37 @@ namespace DSS.Rules.Library
 
         private Dictionary<string, State> currentState = new Dictionary<string, State>();
 
-        public void ChangeState(MotionEvent motion) {
-
-
+        public void ChangeState(MotionEvent motion) 
+        {
+            
             if (currentState.ContainsKey(motion.getGateway())) 
             {
-                
                 var state = currentState[motion.getGateway()];
 
                 if(state.Name == motion.getLocationName())
                 {
-
                     state.TimeStampMovement = motion.annotations.timestamp;
                     state.TimeMovement = TimeService.UnixTimestampToDateTime(state.TimeStampMovement);
-
                     Console.WriteLine("State unchanged: (movement within the same location)");
                 }
                 else 
                 {
-                    Console.WriteLine("State changed: " + state.Name + " to " + motion.getLocationName());
 
-                    currentState[motion.getGateway()] = new State(motion);
+                    var id = motion.getGateway();
+                    handleLocationChange(new LocationChange(id,state.Name, motion.getLocationName()));
+                    Console.WriteLine("State changed: " + state.Name + " to " + motion.getLocationName());
+                    currentState[id] = new State(motion);
+                    InMemoryDB.AddHistory(id, currentState[motion.getGateway()]);
+
                 }
 
             }
-            else // A fresh state for a new gateway, we assume a geteway is specific for an user
+            else // A fresh state for a new gateway, we assume the geteway is specific for an user
             {
-
+                handleLocationChange(new LocationChange(motion.getGateway(),"NULL", motion.getLocationName()));
                 Console.WriteLine("State added:" + motion.getLocationName());
                 currentState.Add(motion.getGateway(), new State(motion));
+                InMemoryDB.AddHistory(motion.getGateway(), currentState[motion.getGateway()]);
             }
         }
 
@@ -122,7 +152,6 @@ namespace DSS.Rules.Library
         public void SendBloodPreasureMeasurementReminder(Event motion)
         {
             Console.WriteLine("Send BP invoked");
-
 
             var gatewayURIPath = (string)motion.annotations.source["gateway"];
 

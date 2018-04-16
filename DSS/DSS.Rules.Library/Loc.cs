@@ -13,6 +13,8 @@ namespace DSS.Rules.Library
         public static string STEPS_BETWEEN_1000_2000 = "STEPS_BETWEEN_1000_2000";
         public static string STEPS_BIGGER_6000 = "STEPS_BIGGER_6000";
 
+        public static string REMINDER_SENT_WEIGHT = "REMINDER_SENT_WEIGHT";
+
         public static string REMINDER_SENT = "REMINDER_SENT";
         public static string REMINDER_POSTPONED = "REMINDER_POSTPONED";
         public static string REMINDER_IGNORED = "REMINDER_IGNORED";
@@ -64,7 +66,13 @@ namespace DSS.Rules.Library
             { RO + DES + STEPS_BIGGER_6000, "Azi ai facut {0} pasi! Tine-o tot asa!" },
             { DK + MSG + STEPS_BIGGER_6000, "Hey! Good job, today you made {0} steps." }, //MISSING 
             { DK + DES + STEPS_BIGGER_6000, "Hej. Godt gået, i dag har du gået  {0} skridt." },
-             
+
+            //WEIGHT - REMINDER SENT
+            { EN + USR + MSG + REMINDER_SENT_WEIGHT, "Time for your morning weight measurement!" },
+            { EN + USR + DES + REMINDER_SENT_WEIGHT, "Please take your weight before breakfast." },
+            { EN + CAREGVR + MSG + REMINDER_SENT_WEIGHT, "Reminder for morning weight measurement sent!" },
+            { EN + CAREGVR + DES + REMINDER_SENT_WEIGHT, "Check on the person under your care to see that he took the recommended weight measurement." },
+
             //BLOOD PRESSURE - REMINDER SENT
             { EN + USR + MSG + REMINDER_SENT, "Time for your morning blood pressure measurement!" },
             { EN + USR + DES + REMINDER_SENT, "Please take your blood pressure before breakfast." },

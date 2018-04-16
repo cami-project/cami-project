@@ -100,7 +100,15 @@ namespace DSS.Rules.Library
                         inform.Caregivers(USR, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR));
                     }
             }
+        }
 
+        public void SendWeightReminder(string id)
+        {
+            var uri = string.Format("/api/v1/user/{0}/", id);
+			Console.WriteLine("Reminder sent from dss");
+
+            InMemoryDB.AddReminder(id, new InternalEvent("SENT", "WEIGHT"));
+            inform.User(uri, "reminder", "high", Loc.Msg(Loc.REMINDER_SENT_WEIGHT, Loc.EN, Loc.USR), Loc.Des(Loc.REMINDER_SENT_WEIGHT, Loc.EN, Loc.USR));
         }
 
 

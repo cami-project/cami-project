@@ -3,20 +3,21 @@ using NRules.Fluent.Dsl;
 
 namespace DSS.Rules.Library
 {
-    //public class MorningWeightReminder: Rule
-    //{
-    //    //TimeService service = null;
-    //    Event motion = null;
+    public class MorningWeightReminder: Rule
+    {
+        LocationChange location;
+        ReminderService service;
 
-    //    public override void Define()
-    //    {
+        public override void Define()
+        {
 
-    //        //When().Exists<Event>(motion => motion.isMotionAlarm())
-    //        //      .Match(() => motion)
-    //        //      .Exists<MotionService>(service => service.isMorning(motion))
-    //        //      .Match(() => service);
+            When().Exists<LocationChange>(location => location.FromTo("BATHROOM", "KITCHEN") && 
+                                          !InMemoryDB.WeightReminderSent(location.ID))
+                  .Match(() => location)
+                  .Exists<ReminderService>()
+                  .Match(() => service);
 
-    //        //Then().Do(ctx => service.SendBloodPreasureMeasurementReminder(motion));
-    //    }
-    //}
+            Then().Do(ctx => service.SendWeightReminder(location.ID));
+        }
+    }
 }

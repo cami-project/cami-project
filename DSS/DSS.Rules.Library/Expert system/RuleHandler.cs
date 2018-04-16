@@ -43,11 +43,10 @@ namespace DSS.Rules.Library
             pulseService = new PulseService(inform);
             stepsService = new StepsService(inform);
             reminderService = new ReminderService(inform);
-            motionService = new MotionService(inform, HandleLocationTimeSpent);
+            motionService = new MotionService(inform, HandleLocationTimeSpent, HandleLocationChange);
             exerciseService = new ExerciseService(inform);
             fallService = new FallService(inform);
             bloodPressureService = new BloodPressureService(inform);
-
         }
 
         public void HandleEvent(string json)
@@ -115,16 +114,24 @@ namespace DSS.Rules.Library
 
                 session.Fire();
             }
-
         }
 
 
         public void HandleLocationTimeSpent(LocationTimeSpent locationTimeSpent) 
         {
             Console.WriteLine("Location time spent handler: " + locationTimeSpent.ToString());
-
         }
 
+        public void HandleLocationChange(LocationChange locationChange)
+        {
+               Console.WriteLine("Location changed handler: " + locationChange.ToString());
 
+              var session = factory.CreateSession();
+
+              session.Insert(reminderService);
+              session.Insert(locationChange);
+
+              session.Fire();
+        }
     }
 }
