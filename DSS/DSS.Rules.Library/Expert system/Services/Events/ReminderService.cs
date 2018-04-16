@@ -104,8 +104,9 @@ namespace DSS.Rules.Library
 
         public void SendWeightReminder(string id)
         {
-            var uri = string.Format("/api/v1/user/{0}/", id);
-			Console.WriteLine("Reminder sent from dss");
+
+            var uri = inform.storeAPI.GetUserOfGateway(id);
+            Console.WriteLine("Reminder sent from dss: " + uri);
 
             InMemoryDB.AddReminder(id, new InternalEvent("SENT", "WEIGHT"));
             inform.User(uri, "reminder", "high", Loc.Msg(Loc.REMINDER_SENT_WEIGHT, Loc.EN, Loc.USR), Loc.Des(Loc.REMINDER_SENT_WEIGHT, Loc.EN, Loc.USR));

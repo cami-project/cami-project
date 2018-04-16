@@ -1,16 +1,17 @@
 ﻿<Properties StartupConfiguration="{9BE56BF2-4117-4250-8D4F-F958088CF8D1}|Default">
   <MonoDevelop.Ide.ItemProperties.DSS.Main PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/Services/Util/InMemoryDB.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/Domain/MotionEvent.cs">
     <Files>
       <File FileName="DSS.Rules.Library/Expert system/Rules/Events/LocationRule.cs" Line="20" Column="6" />
-      <File FileName="DSS.Main/Program.cs" Line="84" Column="40" />
-      <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="49" Column="69" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Events/MotionService.cs" Line="140" Column="17" />
-      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/MorningWeightReminder.cs" Line="17" Column="103" />
+      <File FileName="DSS.Main/Program.cs" Line="32" Column="13" />
+      <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="112" Column="29" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/MorningWeightReminder.cs" Line="18" Column="41" />
       <File FileName="DSS.Rules.Library/Expert system/Services/Events/ReminderService.cs" Line="109" Column="13" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Events/MotionService.cs" Line="140" Column="17" />
       <File FileName="DSS.Rules.Library/Expert system/Domain/Event.cs" Line="124" Column="30" />
       <File FileName="DSS.Rules.Library/Loc.cs" Line="280" Column="60" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Util/InMemoryDB.cs" Line="49" Column="31" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Util/InMemoryDB.cs" Line="24" Column="51" />
+      <File FileName="DSS.Rules.Library/Expert system/Domain/MotionEvent.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
