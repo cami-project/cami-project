@@ -13,7 +13,8 @@ namespace DSS.Rules.Library
                  When().Exists<Measurement>(measure => measure.isWeight())
                        .Match(() => measure)
                        .Match(() => service, service => service.IsBiggerThenPreviousBy(measure, 2));
-
+            
+                 Then().Do(ctx => measure.SetOK(InMemoryDB.WeightReminderSentBeforeMin(measure.user, 30)));
                  Then().Do(ctx => service.WeightIncrease(measure));
                  Then().Do(ctx => service.Save(measure));
             }

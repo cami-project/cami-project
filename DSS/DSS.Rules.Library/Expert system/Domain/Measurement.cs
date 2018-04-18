@@ -164,6 +164,11 @@ namespace DSS.Rules.Library
             return (float)Math.Floor(Math.Abs(getValue() - kg));
         }
 
+        public void SetOK(bool isOK){
+
+            this.ok = isOK;
+        }
+
 
     }
 

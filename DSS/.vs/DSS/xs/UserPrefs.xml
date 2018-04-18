@@ -1,17 +1,19 @@
 ﻿<Properties StartupConfiguration="{9BE56BF2-4117-4250-8D4F-F958088CF8D1}|Default">
   <MonoDevelop.Ide.ItemProperties.DSS.Main PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/Domain/MotionEvent.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/Domain/Measurement.cs">
     <Files>
       <File FileName="DSS.Rules.Library/Expert system/Rules/Events/LocationRule.cs" Line="20" Column="6" />
       <File FileName="DSS.Main/Program.cs" Line="32" Column="13" />
       <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="112" Column="29" />
       <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/MorningWeightReminder.cs" Line="18" Column="41" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Events/ReminderService.cs" Line="109" Column="13" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Events/MotionService.cs" Line="140" Column="17" />
-      <File FileName="DSS.Rules.Library/Expert system/Domain/Event.cs" Line="124" Column="30" />
-      <File FileName="DSS.Rules.Library/Loc.cs" Line="280" Column="60" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Util/InMemoryDB.cs" Line="24" Column="51" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Events/ReminderService.cs" Line="54" Column="18" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Events/MotionService.cs" Line="216" Column="22" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Util/InMemoryDB.cs" Line="63" Column="17" />
       <File FileName="DSS.Rules.Library/Expert system/Domain/MotionEvent.cs" Line="1" Column="1" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Events/ReminderAckRule.cs" Line="1" Column="1" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Measurements/WeightDropRule.cs" Line="1" Column="1" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Measurements/WeightIncreaseRule.cs" Line="9" Column="19" />
+      <File FileName="DSS.Rules.Library/Expert system/Domain/Measurement.cs" Line="167" Column="11" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />

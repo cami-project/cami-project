@@ -10,10 +10,19 @@ namespace DSS.Rules.Library
         public string Type;
         public string Name;
 
+        private DateTime dateTime;
+
         public InternalEvent(string type, string name)
         {
             this.Name = name;
             this.Type = type;
+
+            this.dateTime = DateTime.UtcNow;
+        }
+
+        public bool MinSince(int min)
+        {
+            return (DateTime.UtcNow - this.dateTime).TotalMinutes >= min;
         }
     }
 
@@ -45,6 +54,20 @@ namespace DSS.Rules.Library
             return false;
         }
 
+
+        public static bool WeightReminderSentBeforeMin(string id,int min)
+        {
+            if (reminders.ContainsKey(id))
+            {
+                var reminder = reminders[id].FirstOrDefault(x => x.Name == "SENT" && x.Type == "WEIGHT");
+
+
+                if (reminder == null) return false;
+
+                return reminder.MinSince(min);
+            }
+            return false;
+        }
 
         public static bool WeightReminderSent(string id)
         {

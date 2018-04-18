@@ -11,7 +11,7 @@ namespace DSS.Rules.Library
             this.inform = inform;
         }
 
-        public void Register(Event reminder){
+        public void Register(Event reminder){ 
             
             InMemoryDB.Push(getKey(reminder), reminder);
         }
