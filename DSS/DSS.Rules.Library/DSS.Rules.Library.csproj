@@ -84,6 +84,8 @@
     <Compile Include="Expert system\Domain\MotionEvent.cs" />
     <Compile Include="Expert system\Rules\Events\LocationRule.cs" />
     <Compile Include="Expert system\Rules\Complex\MorningWeightReminder.cs" />
+    <Compile Include="Expert system\Rules\Complex\MorningBloodPressureReminder.cs" />
+    <Compile Include="Expert system\Rules\Complex\NightBloodPressureReminder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

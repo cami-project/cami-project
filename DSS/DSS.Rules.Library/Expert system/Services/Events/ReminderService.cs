@@ -106,12 +106,30 @@ namespace DSS.Rules.Library
         {
 
             var uri = inform.storeAPI.GetUserOfGateway(id);
-            Console.WriteLine("Reminder sent from dss: " + uri);
+            Console.WriteLine("Reminder for weight sent from dss: " + uri);
 
             InMemoryDB.AddReminder(id, new InternalEvent("SENT", "WEIGHT"));
             inform.User(uri, "reminder", "high", Loc.Msg(Loc.REMINDER_SENT_WEIGHT, Loc.EN, Loc.USR), Loc.Des(Loc.REMINDER_SENT_WEIGHT, Loc.EN, Loc.USR));
         }
 
+        public void SendMorningBloodPressureReminder(string id)
+        {
+            var uri = inform.storeAPI.GetUserOfGateway(id);
+            Console.WriteLine("Reminder for morning blood pressure  sent from dss: " + uri);
+
+            InMemoryDB.AddReminder(id, new InternalEvent("SENT", "BP_MORNING"));
+            inform.User(uri, "reminder", "high", Loc.Msg(Loc.REMINDER_SENT_BP_MORNING, Loc.EN, Loc.USR), Loc.Des(Loc.REMINDER_SENT_BP_MORNING, Loc.EN, Loc.USR));
+        }
+
+
+        public void SendNightBloodPressureReminder(string id)
+        {
+            var uri = inform.storeAPI.GetUserOfGateway(id);
+            Console.WriteLine("Reminder for night blood pressure  sent from dss: " + uri);
+
+            InMemoryDB.AddReminder(id, new InternalEvent("SENT", "BP_NIGHt"));
+            inform.User(uri, "reminder", "high", Loc.Msg(Loc.REMINDER_SENT_BP_MORNING, Loc.EN, Loc.USR), Loc.Des(Loc.REMINDER_SENT_BP_MORNING, Loc.EN, Loc.USR));
+        }
 
 
     }

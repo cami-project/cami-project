@@ -74,6 +74,15 @@ namespace DSS.Rules.Library
             return ReminderExist(id, new InternalEvent("SENT", "WEIGHT"));
         }
 
+        public static bool MorningBPSeminderSent(string id)
+        {
+            return ReminderExist(id, new InternalEvent("SENT", "BP_MORNING"));
+        }
+        public static bool NightBPSeminderSent(string id)
+        {
+            return ReminderExist(id, new InternalEvent("SENT", "BP_NIGHT"));
+        }
+
         public static bool Exists(string key) {
             
             return collections.ContainsKey(key);

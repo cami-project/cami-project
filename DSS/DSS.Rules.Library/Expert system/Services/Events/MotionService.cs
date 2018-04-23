@@ -18,8 +18,12 @@ namespace DSS.Rules.Library
         public DateTime TimeEnter;
         public DateTime TimeMovement;
 
+        public string Owner;
+
         public State(MotionEvent motionEvent)
         {
+
+            Owner = motionEvent.getGateway();
             Name = motionEvent.getLocationName();
             TimeStampEnter = motionEvent.annotations.timestamp;
 
@@ -32,8 +36,11 @@ namespace DSS.Rules.Library
         public string Name;
         public int Min;
 
-        public LocationTimeSpent(string name, int min)
+        public string ID;
+
+        public LocationTimeSpent(string id,string name, int min)
         {
+            this.ID = id;
             this.Name = name;
             this.Min = min;
         }
@@ -42,6 +49,11 @@ namespace DSS.Rules.Library
 		{
             return Name + " - " + Min;
 		}
+
+        public bool Is(string name, int min)
+        {
+            return this.Name == name && this.Min == min;
+        }
 	}
 
     public class LocationChange
@@ -104,11 +116,12 @@ namespace DSS.Rules.Library
 
             var now = DateTime.Now;
 
+
             foreach (var item in currentState.Values)
             {
                 Console.WriteLine("In " + item.Name + " for " + (now - item.TimeEnter).Minutes+ " min");
 
-                this.handleLocationTimeSpent(new LocationTimeSpent(item.Name, (now - item.TimeEnter).Minutes));
+                this.handleLocationTimeSpent(new LocationTimeSpent(item.Owner ,item.Name, (now - item.TimeEnter).Minutes));
             }
         }
 

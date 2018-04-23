@@ -14,6 +14,9 @@ namespace DSS.Rules.Library
         public static string STEPS_BIGGER_6000 = "STEPS_BIGGER_6000";
 
         public static string REMINDER_SENT_WEIGHT = "REMINDER_SENT_WEIGHT";
+        public static string REMINDER_SENT_BP_MORNING = "REMINDER_SENT_BP_MORNING";
+        public static string REMINDER_SENT_BP_NIGHT = "REMINDER_SENT_BP_NIGHT";
+
 
         public static string REMINDER_SENT = "REMINDER_SENT";
         public static string REMINDER_POSTPONED = "REMINDER_POSTPONED";
@@ -72,6 +75,18 @@ namespace DSS.Rules.Library
             { EN + USR + DES + REMINDER_SENT_WEIGHT, "Please take your weight before breakfast." },
             { EN + CAREGVR + MSG + REMINDER_SENT_WEIGHT, "Reminder for morning weight measurement sent!" },
             { EN + CAREGVR + DES + REMINDER_SENT_WEIGHT, "Check on the person under your care to see that he took the recommended weight measurement." },
+
+            { EN + USR + MSG + REMINDER_SENT_BP_MORNING, "Time for your morning blood pressure measurement!" },
+            { EN + USR + DES + REMINDER_SENT_BP_MORNING, "Please take your blood pressure before breakfast." },
+            { EN + CAREGVR + MSG + REMINDER_SENT_BP_MORNING, "Reminder for morning blood pressure measurement sent!" },
+            { EN + CAREGVR + DES + REMINDER_SENT_BP_MORNING, "Check on the person under your care to see that he took the recommended blood pressure measurement." },
+
+
+            { EN + USR + MSG + REMINDER_SENT_BP_MORNING, "Time for your night blood pressure measurement!" },
+            { EN + USR + DES + REMINDER_SENT_BP_MORNING, "Please take your blood pressure before dinner." },
+            { EN + CAREGVR + MSG + REMINDER_SENT_BP_MORNING, "Reminder for night blood pressure measurement sent!" },
+            { EN + CAREGVR + DES + REMINDER_SENT_BP_MORNING, "Check on the person under your care to see that he took the recommended blood pressure measurement." },
+
 
             //BLOOD PRESSURE - REMINDER SENT
             { EN + USR + MSG + REMINDER_SENT, "Time for your morning blood pressure measurement!" },
