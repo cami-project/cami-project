@@ -29,7 +29,12 @@ namespace DSS.Rules.Library
 
             TimeEnter = TimeService.UnixTimestampToDateTime(TimeStampEnter);
         }
-    }
+
+		public override string ToString()
+		{
+            return this.Name + " " + this.Owner + ": " + TimeEnter.ToShortTimeString() + " - " + TimeMovement.ToShortTimeString();
+		}
+	}
 
     public class LocationTimeSpent
     {
@@ -121,7 +126,7 @@ namespace DSS.Rules.Library
             {
                 Console.WriteLine("In " + item.Name + " for " + (now - item.TimeEnter).Minutes+ " min");
 
-                this.handleLocationTimeSpent(new LocationTimeSpent(item.Owner ,item.Name, (now - item.TimeEnter).Minutes));
+                this.handleLocationTimeSpent(new LocationTimeSpent(item.Owner, item.Name, (int)(now - item.TimeEnter).TotalMinutes));
             }
         }
 
@@ -132,6 +137,9 @@ namespace DSS.Rules.Library
             
             if (currentState.ContainsKey(motion.getGateway())) 
             {
+                Console.WriteLine("CHANGE: ");
+                Console.WriteLine(currentState[motion.getGateway()]);
+
                 var state = currentState[motion.getGateway()];
 
                 if(state.Name == motion.getLocationName())
@@ -144,9 +152,11 @@ namespace DSS.Rules.Library
                 {
 
                     var id = motion.getGateway();
-                    handleLocationChange(new LocationChange(id,state.Name, motion.getLocationName()));
+                    handleLocationChange(new LocationChange(id, state.Name, motion.getLocationName()));
                     Console.WriteLine("State changed: " + state.Name + " to " + motion.getLocationName());
-                    currentState[id] = new State(motion);
+                    //currentState[id] = new State(motion);
+                    currentState.Remove(id);
+                    currentState.Add(id, new State(motion));
                     InMemoryDB.AddHistory(id, currentState[motion.getGateway()]);
 
                 }

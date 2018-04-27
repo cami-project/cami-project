@@ -22,10 +22,8 @@ namespace DSS.Main
 		public static void Main(string[] args)
         {
             
-
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...##");
-
 
             var ruleHandler = new RuleHandler();
             SheduleService.OnExec = ruleHandler.HandleSheduled;
@@ -41,7 +39,6 @@ namespace DSS.Main
             {
                 Console.WriteLine("Something went wrong with the rmq exchange: " + ex);
             }
-
 
             //Invoke every 30 sec to check if there is any sheduled event 
             Timer timer = new Timer

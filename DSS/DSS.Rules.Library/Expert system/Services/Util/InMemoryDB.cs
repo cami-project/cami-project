@@ -31,9 +31,8 @@ namespace DSS.Rules.Library
 
         private static Dictionary<string, object> collections = new Dictionary<string, object>();
         private static Dictionary<string, List<State>> history = new Dictionary<string, List<State>>();
-
-
         private static Dictionary<string, List<InternalEvent>> reminders = new Dictionary<string, List<InternalEvent>>();
+
 
         public static void AddReminder(string id, InternalEvent reminder) 
         {
@@ -106,7 +105,6 @@ namespace DSS.Rules.Library
 
         public static void AddHistory(string id, State state)
         {
-
             if(!history.ContainsKey(id))
             {
                 history.Add(id, new List<State>());    
@@ -116,10 +114,12 @@ namespace DSS.Rules.Library
             Console.WriteLine("State: " + state.Name + " added for " + id);
         }
 
-        //This should be invoked at midnight 
+
+        //This is invoked at midnight everynight 
         public static void CleanHistory() 
         {
             history = new Dictionary<string, List<State>>();
+            reminders = new Dictionary<string, List<InternalEvent>>();
             Console.WriteLine("History cleaned");
         }
 
