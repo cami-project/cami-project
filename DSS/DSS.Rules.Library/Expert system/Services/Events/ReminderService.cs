@@ -105,11 +105,32 @@ namespace DSS.Rules.Library
         public void SendWeightReminder(string id)
         {
 
-            var uri = inform.storeAPI.GetUserOfGateway(id);
-            Console.WriteLine("Reminder for weight sent from dss: " + uri);
+            Console.WriteLine("Gateway: " + id);
+            string uri = "";
+
+            try
+            {
+                uri = inform.storeAPI.GetUserOfGateway(id);
+                Console.WriteLine("Reminder for weight sent from dss: " + uri);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Filed while trying to get user for the gateway" + id);
+                Console.WriteLine(ex);
+            }
 
             InMemoryDB.AddReminder(id, new InternalEvent("SENT", "WEIGHT"));
-            inform.User(uri, "reminder", "high", Loc.Msg(Loc.REMINDER_SENT_WEIGHT, Loc.EN, Loc.USR), Loc.Des(Loc.REMINDER_SENT_WEIGHT, Loc.EN, Loc.USR));
+
+            try
+            {
+                inform.User(uri, "reminder", "high", Loc.Msg(Loc.REMINDER_SENT_WEIGHT, Loc.EN, Loc.USR), Loc.Des(Loc.REMINDER_SENT_WEIGHT, Loc.EN, Loc.USR));
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Filed while trying to inform user" + uri);
+                Console.WriteLine(ex);
+            }
         }
 
         public void SendMorningBloodPressureReminder(string id)

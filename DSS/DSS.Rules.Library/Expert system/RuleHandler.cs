@@ -138,7 +138,7 @@ namespace DSS.Rules.Library
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Handle location change NRULES: " + ex.Message);
+                Console.WriteLine("Handle location change NRULES: " + ex);
             }
 
 

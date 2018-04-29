@@ -73,7 +73,6 @@
     <Compile Include="Expert system\Domain\MeasurementConverter.cs" />
     <Compile Include="Expert system\Domain\EventConverter.cs" />
     <Compile Include="Expert system\Services\Events\MotionService.cs" />
-    <Compile Include="Expert system\Rules\Events\MotionRule.cs" />
     <Compile Include="Expert system\Rules\Events\ExerciseStartRule.cs" />
     <Compile Include="Expert system\Services\Events\ExerciseService.cs" />
     <Compile Include="Expert system\Rules\Events\ExerciseEndRule.cs" />

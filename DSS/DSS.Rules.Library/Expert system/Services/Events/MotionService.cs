@@ -150,24 +150,28 @@ namespace DSS.Rules.Library
                 }
                 else 
                 {
-
                     var id = motion.getGateway();
+                    Console.WriteLine("ID: " + id);
+
+                    currentState[id] = new State(motion);
+
+                    InMemoryDB.AddHistory(id, currentState[id]);
+                   
                     handleLocationChange(new LocationChange(id, state.Name, motion.getLocationName()));
                     Console.WriteLine("State changed: " + state.Name + " to " + motion.getLocationName());
-                    //currentState[id] = new State(motion);
-                    currentState.Remove(id);
-                    currentState.Add(id, new State(motion));
-                    InMemoryDB.AddHistory(id, currentState[motion.getGateway()]);
-
                 }
 
             }
             else // A fresh state for a new gateway, we assume the geteway is specific for an user
             {
-                handleLocationChange(new LocationChange(motion.getGateway(),"NULL", motion.getLocationName()));
+
+                var id = motion.getGateway();
+                Console.WriteLine("ID: " +  id);
+
+                handleLocationChange(new LocationChange(id,"NULL", motion.getLocationName()));
                 Console.WriteLine("State added:" + motion.getLocationName());
-                currentState.Add(motion.getGateway(), new State(motion));
-                InMemoryDB.AddHistory(motion.getGateway(), currentState[motion.getGateway()]);
+                currentState.Add(id, new State(motion));
+                InMemoryDB.AddHistory(id, currentState[id]);
             }
         }
 
