@@ -124,14 +124,24 @@ namespace DSS.Rules.Library
 
         public void HandleLocationChange(LocationChange locationChange)
         {
-               Console.WriteLine("Location changed handler: " + locationChange.ToString());
 
-              var session = factory.CreateSession();
+            Console.WriteLine("Location changed handler: " + locationChange.ToString());
 
-              session.Insert(reminderService);
-              session.Insert(locationChange);
+            try
+            {
+                var session = factory.CreateSession();
 
-              session.Fire();
+                session.Insert(reminderService);
+                session.Insert(locationChange);
+
+                session.Fire();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Handle location change NRULES: " + ex.Message);
+            }
+
+
         }
     }
 }

@@ -1,10 +1,16 @@
 ﻿<Properties StartupConfiguration="{9BE56BF2-4117-4250-8D4F-F958088CF8D1}|Default">
   <MonoDevelop.Ide.ItemProperties.DSS.Main PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/Rules/Complex/MorningWeightReminder.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/Rules/Complex/NightBloodPressureReminder.cs">
     <Files>
-      <File FileName="DSS.Rules.Library/Expert system/Services/Events/MotionService.cs" Line="145" Column="29" />
-      <File FileName="DSS.Rules.Library/Expert system/Domain/MotionEvent.cs" Line="58" Column="23" />
-      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/MorningWeightReminder.cs" Line="24" Column="1" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Events/MotionService.cs" Line="71" Column="9" />
+      <File FileName="DSS.Rules.Library/Expert system/Domain/MotionEvent.cs" Line="6" Column="18" />
+      <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="45" Column="28" />
+      <File FileName="DSS.Main/Program.cs" Line="78" Column="31" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Events/MotionRule.cs" Line="1" Column="1" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Events/LocationRule.cs" Line="10" Column="20" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/MorningBloodPressureReminder.cs" Line="1" Column="1" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/MorningWeightReminder.cs" Line="15" Column="68" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/NightBloodPressureReminder.cs" Line="5" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
