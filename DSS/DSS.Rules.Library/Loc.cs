@@ -82,10 +82,10 @@ namespace DSS.Rules.Library
             { EN + CAREGVR + DES + REMINDER_SENT_BP_MORNING, "Check on the person under your care to see that he took the recommended blood pressure measurement." },
 
 
-            { EN + USR + MSG + REMINDER_SENT_BP_MORNING, "Time for your night blood pressure measurement!" },
-            { EN + USR + DES + REMINDER_SENT_BP_MORNING, "Please take your blood pressure before dinner." },
-            { EN + CAREGVR + MSG + REMINDER_SENT_BP_MORNING, "Reminder for night blood pressure measurement sent!" },
-            { EN + CAREGVR + DES + REMINDER_SENT_BP_MORNING, "Check on the person under your care to see that he took the recommended blood pressure measurement." },
+            { EN + USR + MSG + REMINDER_SENT_BP_NIGHT, "Time for your night blood pressure measurement!" },
+            { EN + USR + DES + REMINDER_SENT_BP_NIGHT, "Please take your blood pressure before dinner." },
+            { EN + CAREGVR + MSG + REMINDER_SENT_BP_NIGHT, "Reminder for night blood pressure measurement sent!" },
+            { EN + CAREGVR + DES + REMINDER_SENT_BP_NIGHT, "Check on the person under your care to see that he took the recommended blood pressure measurement." },
 
 
             //BLOOD PRESSURE - REMINDER SENT
