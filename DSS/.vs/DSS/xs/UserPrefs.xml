@@ -1,13 +1,16 @@
 ﻿<Properties StartupConfiguration="{9BE56BF2-4117-4250-8D4F-F958088CF8D1}|Default">
   <MonoDevelop.Ide.ItemProperties.DSS.Main PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/Services/Events/ReminderService.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/RuleHandler.cs">
     <Files>
-      <File FileName="DSS.Rules.Library/Expert system/Services/Events/MotionService.cs" Line="159" Column="20" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Events/MotionService.cs" Line="55" Column="48" />
       <File FileName="DSS.Rules.Library/Expert system/Domain/MotionEvent.cs" Line="49" Column="13" />
-      <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="75" Column="33" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Events/ReminderService.cs" Line="112" Column="13" />
+      <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="51" Column="53" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Events/ReminderService.cs" Line="108" Column="49" />
       <File FileName="DSS.RMQ/StoreAPI.cs" Line="181" Column="57" />
-      <File FileName="DSS.Rules.Library/Loc.cs" Line="16" Column="50" />
+      <File FileName="DSS.Rules.Library/Loc.cs" Line="98" Column="53" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Util/TimeService.cs" Line="11" Column="13" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Events/SuspiciousBehaviour.cs" Line="6" Column="31" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/TooLongInBathroom.cs" Line="13" Column="101" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />

@@ -41,18 +41,18 @@ namespace DSS.Rules.Library
         public string Name;
         public int Min;
 
-        public string ID;
+        public string Owner;
 
-        public LocationTimeSpent(string id,string name, int min)
+        public LocationTimeSpent(string owner,string name, int min)
         {
-            this.ID = id;
+            this.Owner = owner;
             this.Name = name;
             this.Min = min;
         }
 
         public override string ToString()
 		{
-            return Name + " - " + Min;
+            return Owner + " in " + Name + " for " + Min;
 		}
 
         public bool Is(string name, int min)
@@ -115,22 +115,27 @@ namespace DSS.Rules.Library
             return TimeService.isMorning(motion);
         }
 
+        public bool isSleepingTime(Event motion)
+        {
+            Console.WriteLine("Is sleeping time invoked in the motion service");
+            return TimeService.isSleepingTime(motion);
+        }
+
+
+
+        private Dictionary<string, State> currentState = new Dictionary<string, State>();
+
         private void checkCurrentStateTime() 
         {
             Console.WriteLine("Current state time");
-
             var now = DateTime.Now;
-
 
             foreach (var item in currentState.Values)
             {
-                Console.WriteLine("In " + item.Name + " for " + (now - item.TimeEnter).Minutes+ " min");
-
+                Console.WriteLine(item.Owner + " in " + item.Name + " for " + (now - item.TimeEnter).Minutes+ " min");
                 this.handleLocationTimeSpent(new LocationTimeSpent(item.Owner, item.Name, (int)(now - item.TimeEnter).TotalMinutes));
             }
         }
-
-        private Dictionary<string, State> currentState = new Dictionary<string, State>();
 
         public void ChangeState(MotionEvent motion) 
         {

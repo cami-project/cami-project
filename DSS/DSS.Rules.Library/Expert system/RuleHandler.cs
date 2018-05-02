@@ -19,6 +19,7 @@ namespace DSS.Rules.Library
         private ExerciseService exerciseService;
         private FallService fallService;
         private BloodPressureService bloodPressureService;
+        private SuspiciousBehaviour suspiciousBehaviour;
 
         public RuleHandler()
         {
@@ -47,6 +48,7 @@ namespace DSS.Rules.Library
             exerciseService = new ExerciseService(inform);
             fallService = new FallService(inform);
             bloodPressureService = new BloodPressureService(inform);
+            suspiciousBehaviour = new SuspiciousBehaviour(inform);
         }
 
         public void HandleEvent(string json)
@@ -119,13 +121,28 @@ namespace DSS.Rules.Library
 
         public void HandleLocationTimeSpent(LocationTimeSpent locationTimeSpent) 
         {
-            Console.WriteLine("Location time spent handler: " + locationTimeSpent.ToString());
+            Console.WriteLine("[Handler - location time spent]: " + locationTimeSpent.ToString());
+
+            try
+            {
+                var session = factory.CreateSession();
+
+                session.Insert(suspiciousBehaviour);
+                session.Insert(locationTimeSpent);
+
+                session.Fire();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Handle location time spend NRULES exception: " + ex);
+            }
+
         }
 
         public void HandleLocationChange(LocationChange locationChange)
         {
 
-            Console.WriteLine("Location changed handler: " + locationChange.ToString());
+            Console.WriteLine("[Handler - location change]: " + locationChange.ToString());
 
             try
             {
@@ -138,7 +155,7 @@ namespace DSS.Rules.Library
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Handle location change NRULES: " + ex);
+                Console.WriteLine("Handle location change NRULES exception: " + ex);
             }
 
 

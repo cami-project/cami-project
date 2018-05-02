@@ -86,6 +86,8 @@
     <Compile Include="Expert system\Rules\Complex\MorningBloodPressureReminder.cs" />
     <Compile Include="Expert system\Rules\Complex\NightBloodPressureReminder.cs" />
     <Compile Include="Expert system\Rules\Internal\ShedulerCleanup.cs" />
+    <Compile Include="Expert system\Rules\Complex\TooLongInBathroom.cs" />
+    <Compile Include="Expert system\Services\Events\SuspiciousBehaviour.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

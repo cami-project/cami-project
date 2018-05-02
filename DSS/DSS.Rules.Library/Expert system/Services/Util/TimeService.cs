@@ -20,8 +20,6 @@ namespace DSS.Rules.Library
             //TODO: fix time zones
             //morningStart = TimeZoneInfo.ConvertTime(morningStart, TimeZoneInfo.Utc, tzInfo);
            // morningEnd = TimeZoneInfo.ConvertTime(morningEnd, TimeZoneInfo.Utc, tzInfo);
-
-
         }
 
 		internal static bool isNight()
@@ -43,5 +41,9 @@ namespace DSS.Rules.Library
             return (double)unixTimeStampInTicks / TimeSpan.TicksPerSecond;
         }
 
-    }
+        public static bool isSleepingTime(Event motion)
+		{
+            return true;
+        }
+	}
 }
