@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Linq;
+using DSS.RMQ;
 
 namespace DSS.Rules.Library
 {
     public class Inform
     {
 
-        public RMQ.StoreAPI storeAPI;
-        public RMQ.INS.InsertionAPI insertionAPI;
+        public IStoreAPI storeAPI;
+        public IInsertionAPI insertionAPI;
 
 
-        public Inform(string storeURL, string insertionURL)
+        public Inform(IStoreAPI storeAPI, IInsertionAPI insertionAPI)
         {
-            storeAPI = new RMQ.StoreAPI(storeURL);
-            insertionAPI = new RMQ.INS.InsertionAPI(insertionURL);
+            this.storeAPI = storeAPI;
+            this.insertionAPI = insertionAPI;
         }
 
         public void Caregivers(string enduserURI, string type, string severity, string msg, string desc, bool notify = true)

@@ -61,13 +61,40 @@ namespace DSS.Rules.Library
         }
 	}
 
+    public class Activity
+    {
+        public string Location;
+        public string Owner;
+
+        public DateTime Timestamp;
+
+
+        public Activity(string owner, string location, DateTime timeStamp)
+        {
+            this.Owner = owner;
+            this.Location = location;
+            this.Timestamp = timeStamp;
+        }
+
+        public override string ToString()
+		{
+            return "Activity spotted " + Location + " for " + Owner + " at " + Timestamp.ToShortTimeString();
+		}
+
+        public bool NotBedroom()
+        {
+            return this.Location != "BEDROOM";
+        }
+
+	}
+
+
     public class LocationChange
     {
         public string Current;
         public string Previous;
 
         public string ID;
-
 
         public LocationChange(string userID, string previous, string current)
         {
@@ -93,12 +120,14 @@ namespace DSS.Rules.Library
         private readonly Inform inform;
         private Action<LocationTimeSpent> handleLocationTimeSpent;
         private Action<LocationChange> handleLocationChange;
+        private Action<Activity> handleActivity;
 
-        public MotionService(Inform inform, Action<LocationTimeSpent> locationTimeSpentHandler, Action<LocationChange> locationChange)
+        public MotionService(Inform inform, Action<LocationTimeSpent> locationTimeSpentHandler, Action<LocationChange> locationChange, Action<Activity> activityHandler)
         {
             this.inform = inform;
             this.handleLocationTimeSpent = locationTimeSpentHandler;
             this.handleLocationChange = locationChange;
+			this.handleActivity = activityHandler;
 
             Timer timer = new Timer
             {
@@ -120,7 +149,6 @@ namespace DSS.Rules.Library
             Console.WriteLine("Is sleeping time invoked in the motion service");
             return TimeService.isSleepingTime(motion);
         }
-
 
 
         private Dictionary<string, State> currentState = new Dictionary<string, State>();
@@ -151,6 +179,9 @@ namespace DSS.Rules.Library
                 {
                     state.TimeStampMovement = motion.annotations.timestamp;
                     state.TimeMovement = TimeService.UnixTimestampToDateTime(state.TimeStampMovement);
+
+                    handleActivity(new Activity(state.Owner, state.Name, state.TimeMovement));
+
                     Console.WriteLine("State unchanged: (movement within the same location)");
                 }
                 else 
@@ -163,6 +194,8 @@ namespace DSS.Rules.Library
                     InMemoryDB.AddHistory(id, currentState[id]);
                    
                     handleLocationChange(new LocationChange(id, state.Name, motion.getLocationName()));
+                    handleActivity(new Activity(id, state.Name, currentState[id].TimeEnter));
+
                     Console.WriteLine("State changed: " + state.Name + " to " + motion.getLocationName());
                 }
 

@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMQ.Playground.Serializatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.Rules.Library", "DSS.Rules.Library\DSS.Rules.Library.csproj", "{A171CA66-41CB-427E-B1D0-A0EBBFA73ED1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.Tests", "DSS.Tests\DSS.Tests.csproj", "{17974768-25D6-4116-945C-2E43316B39A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,6 +104,14 @@ Global
 		{A171CA66-41CB-427E-B1D0-A0EBBFA73ED1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A171CA66-41CB-427E-B1D0-A0EBBFA73ED1}.Release|x86.ActiveCfg = Release|Any CPU
 		{A171CA66-41CB-427E-B1D0-A0EBBFA73ED1}.Release|x86.Build.0 = Release|Any CPU
+		{17974768-25D6-4116-945C-2E43316B39A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17974768-25D6-4116-945C-2E43316B39A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17974768-25D6-4116-945C-2E43316B39A8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{17974768-25D6-4116-945C-2E43316B39A8}.Debug|x86.Build.0 = Debug|Any CPU
+		{17974768-25D6-4116-945C-2E43316B39A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17974768-25D6-4116-945C-2E43316B39A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17974768-25D6-4116-945C-2E43316B39A8}.Release|x86.ActiveCfg = Release|Any CPU
+		{17974768-25D6-4116-945C-2E43316B39A8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

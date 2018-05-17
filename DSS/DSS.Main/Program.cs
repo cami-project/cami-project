@@ -29,16 +29,17 @@ namespace DSS.Main
             SheduleService.OnExec = ruleHandler.HandleSheduled;
 
 
+
             var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
-            try
-            {
-                var rmqEvents = new RmqExchange(url, "events", "event.*", (json) => { ruleHandler.HandleEvent(json); });
-                var rmqMeasurements = new RmqExchange(url, "measurements", "measurement.*", (json) => { ruleHandler.HandleMeasurement(json); });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Something went wrong with the rmq exchange: " + ex);
-            }
+            //try
+            //{
+            //    var rmqEvents = new RmqExchange(url, "events", "event.*", (json) => { ruleHandler.HandleEvent(json); });
+            //    var rmqMeasurements = new RmqExchange(url, "measurements", "measurement.*", (json) => { ruleHandler.HandleMeasurement(json); });
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine("Something went wrong with the rmq exchange: " + ex);
+            //}
 
             //Invoke every 30 sec to check if there is any sheduled event 
             Timer timer = new Timer

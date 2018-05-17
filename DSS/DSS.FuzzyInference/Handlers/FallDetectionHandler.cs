@@ -8,7 +8,7 @@ namespace DSS.FuzzyInference
 {
     public class FallDetectionHandler : IRouterHandler
     {
-        private RMQ.INS.InsertionAPI insertionAPI;
+        private IInsertionAPI insertionAPI;
         private StoreAPI storeAPI;
 
         public FallDetectionHandler()

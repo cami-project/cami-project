@@ -25,6 +25,23 @@ namespace DSS.Rules.Library
             //}));
 
 
+            //------------------------------------------------------------------//
+
+
+
+            //Journal entry time grouping 
+
+            //var journalEntryReponse = new JournalEntryResponse();
+
+            //journalEntryReponse.Objects = new List<JournalEntryItem>();
+
+            //journalEntryReponse.Objects.Add(new JournalEntryItem() { Timestamp = "1526169600" });
+            //journalEntryReponse.Objects.Add(new JournalEntryItem() { Timestamp = "1526169609" });
+            //journalEntryReponse.Objects.Add(new JournalEntryItem() { Timestamp = "1526550546" });
+
+
+            //journalEntryReponse.GroupByDay();
+
 
         }
     }

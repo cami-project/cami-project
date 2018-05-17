@@ -14,5 +14,11 @@ namespace DSS.Rules.Library
         {
             Console.WriteLine("Too long in the bathroom");
         }
+
+
+        public void NightWandering(Activity  activity) 
+        {
+            Console.WriteLine("Night wandering");
+        }
     }
 }

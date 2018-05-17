@@ -59,6 +59,11 @@
     <Compile Include="RmqWriter.cs" />
     <Compile Include="StoreAPI.cs" />
     <Compile Include="InsertionAPI.cs" />
+    <Compile Include="JournalEntryResponse.cs" />
+    <Compile Include="MockStoreAPI.cs" />
+    <Compile Include="IStoreAPI.cs" />
+    <Compile Include="PushNotification.cs" />
+    <Compile Include="IInsertionAPI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

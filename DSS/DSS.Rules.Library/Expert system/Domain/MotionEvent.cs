@@ -57,15 +57,10 @@ namespace DSS.Rules.Library
 
         public string getLocationName() 
         {
-
             if (isKitchen()) return "KITCHEN";
             if (isBathroom()) return "BATHROOM";
 
             return "UNKNOWN";
-              
         }
-
-
-
     }
 }

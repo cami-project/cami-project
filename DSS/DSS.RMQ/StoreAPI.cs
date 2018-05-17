@@ -8,6 +8,8 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
+
+
 namespace DSS.RMQ
 {
 
@@ -36,14 +38,18 @@ namespace DSS.RMQ
         public bool? acknowledged { get; set; }
     }
 
-    public class StoreAPI
+
+
+
+
+    public class StoreAPI : IStoreAPI
     {
 
-        public string url { get; set; }
+        public string baseURL { get; set; }
 
         public StoreAPI(string baseUrl)
         {
-            this.url = baseUrl;
+            this.baseURL = baseUrl;
         }
 
         public void PushMeasurement(string json)
@@ -54,7 +60,7 @@ namespace DSS.RMQ
                 HttpContent content = new StringContent(json);
                 content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
-                var response = new HttpClient().PostAsync(url + "/api/v1/measurement/", content);
+                var response = new HttpClient().PostAsync(baseURL + "/api/v1/measurement/", content);
 
                 Console.WriteLine("PUSH MEASUREMNT response:" + response.Result);
             }
@@ -65,12 +71,33 @@ namespace DSS.RMQ
 
         }
 
+        public JournalEntryResponse GetBathroomVisitsForLastDays(int numOfDays, int user) 
+        {
+            Console.WriteLine("Get bathroom visits for {0} days for the user {1}", numOfDays, user);
+            Console.WriteLine("REMEMBER TO CHANGE THE TYPE FROM WEIGHT TO MORE APROPRIATE");
+
+            var targetDay = DateTime.UtcNow.Date.AddDays(-1).AddDays(-numOfDays);
+            var timestamp = targetDay.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+
+            var url = string.Format("{0}/api/v1/journal_entries/?type=weight&user={1}&gte={2}", baseURL, user, timestamp);
+            Console.WriteLine("URL: " + url);
+
+            var response = new HttpClient().GetAsync(url);
+
+            if (response.Result.IsSuccessStatusCode)
+            {
+                return JournalEntryResponse.FromJson(response.Result.Content.ReadAsStringAsync().Result); //JsonConvert.DeserializeObject<JournalEntryResponse>(response.Result.Content.ReadAsStringAsync().Result);
+            }
+
+            throw new Exception(string.Format("Couldn't get user for user:  {0} and number of days {1} because:  {2}", user, numOfDays, response.Result.ReasonPhrase));
+        }
+
         public bool AreLastNHeartRateCritical(int n, int low, int high)
         {
 
             //var urlVS = url + "/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp&user=2&device=2";
             // we want to get all pulse related data for the end-user (user=2), not just the ones from device 2
-            var urlVS = url + "/api/v1/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp&user=2";
+            var urlVS = baseURL + "/api/v1/measurement/?limit=3&measurement_type=pulse&order_by=-timestamp&user=2";
 
             var response = new HttpClient().GetAsync(urlVS);
 
@@ -114,7 +141,7 @@ namespace DSS.RMQ
         {
             //var response = new HttpClient().GetAsync(url +"/measurement/?limit=1&measurement_type=weight&order_by=-timestamp&user=2");
             string queryPath = String.Format("/api/v1/measurement/?limit=1&measurement_type=weight&order_by=-timestamp&user={0}", userId);
-            var response = new HttpClient().GetAsync(url + queryPath);
+            var response = new HttpClient().GetAsync(baseURL + queryPath);
 
             if (response.Result.IsSuccessStatusCode)
             {
@@ -157,7 +184,7 @@ namespace DSS.RMQ
             //Console.WriteLine(content.ReadAsStringAsync().Result);
 
             content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-            var response = new HttpClient().PostAsync(url + "/api/v1/journal_entries/", content);
+            var response = new HttpClient().PostAsync(baseURL + "/api/v1/journal_entries/", content);
 
             if (response.Result.IsSuccessStatusCode)
             {
@@ -178,7 +205,7 @@ namespace DSS.RMQ
         {
             Console.WriteLine("[StoreAPI] Retrieving the end-user URI of the owner of this gatewayURI: " + gatewayURIPath);
 
-            var response = new HttpClient().GetAsync(url + gatewayURIPath);
+            var response = new HttpClient().GetAsync(baseURL + gatewayURIPath);
 
             if (response.Result.IsSuccessStatusCode)
             {
@@ -187,7 +214,7 @@ namespace DSS.RMQ
             }
             else
             {
-                Console.WriteLine("[StoreAPI] Could not retrieve the gateway referenced by the URI " + (url + gatewayURIPath) + ". Reason: " + response.Result);
+                Console.WriteLine("[StoreAPI] Could not retrieve the gateway referenced by the URI " + (baseURL + gatewayURIPath) + ". Reason: " + response.Result);
                 return null;
             }
         }
@@ -197,7 +224,7 @@ namespace DSS.RMQ
         {
             Console.WriteLine("Retrieving language for user: " + userURI);
 
-            var response = new HttpClient().GetAsync(url + userURI);
+            var response = new HttpClient().GetAsync(baseURL + userURI);
 
             if (response.Result.IsSuccessStatusCode)
             {
@@ -207,7 +234,7 @@ namespace DSS.RMQ
             }
             else
             {
-                Console.WriteLine("Could not retrieve locales for user referenced by the URI " + (url + userURI) + ". Reason: " + response.Result);
+                Console.WriteLine("Could not retrieve locales for user referenced by the URI " + (baseURL + userURI) + ". Reason: " + response.Result);
                 return null;
             }
         }
@@ -235,7 +262,7 @@ namespace DSS.RMQ
 
             Console.WriteLine("Retrieving language and timezone for user: " + userURIPath);
 
-            var response = new HttpClient().GetAsync(url + userURIPath);
+            var response = new HttpClient().GetAsync(baseURL + userURIPath);
 
             if (response.Result.IsSuccessStatusCode)
             {
@@ -253,14 +280,14 @@ namespace DSS.RMQ
             }
             else
             {
-                Console.WriteLine("Could not retrieve locales for user referenced by the URI " + (url + userURIPath) + ". Reason: " + response.Result);
+                Console.WriteLine("Could not retrieve locales for user referenced by the URI " + (baseURL + userURIPath) + ". Reason: " + response.Result);
                 return null;
             }
         }
 
         public dynamic GetUserData(string userURIPath)
         {
-            var response = new HttpClient().GetAsync(url + userURIPath);
+            var response = new HttpClient().GetAsync(baseURL + userURIPath);
             if (response.Result.IsSuccessStatusCode)
             {
                 dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
@@ -268,14 +295,14 @@ namespace DSS.RMQ
             }
             else
             {
-                Console.WriteLine("[StoreAPI] Could not retrieve the user referenced by the URI " + (url + userURIPath) + ". Reason: " + response.Result);
+                Console.WriteLine("[StoreAPI] Could not retrieve the user referenced by the URI " + (baseURL + userURIPath) + ". Reason: " + response.Result);
                 return null;
             }
         }
 
         public dynamic GetCaregivers(string userURIPath)
         {
-            var response = new HttpClient().GetAsync(url + userURIPath);
+            var response = new HttpClient().GetAsync(baseURL + userURIPath);
             if (response.Result.IsSuccessStatusCode)
             {
                 dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
@@ -283,7 +310,7 @@ namespace DSS.RMQ
             }
             else
             {
-                Console.WriteLine("[StoreAPI] Could not retrieve the user referenced by the URI " + (url + userURIPath) + ". Reason: " + response.Result);
+                Console.WriteLine("[StoreAPI] Could not retrieve the user referenced by the URI " + (baseURL + userURIPath) + ". Reason: " + response.Result);
                 return null;
             }
 
@@ -303,7 +330,7 @@ namespace DSS.RMQ
             string queryPath = String.Format("/api/v1/measurement/?measurement_type={0}&user={1}&timestamp__gte={2}", type, int.Parse(userId), timeStamp);
 
 
-            var response = new HttpClient().GetAsync(url + queryPath);
+            var response = new HttpClient().GetAsync(baseURL + queryPath);
             if (response.Result.IsSuccessStatusCode)
             {
                 dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
@@ -318,7 +345,7 @@ namespace DSS.RMQ
             }
             else
             {
-                Console.WriteLine("[StoreAPI] Could not retrieve the user referenced by the URI " + (url + queryPath) + ". Reason: " + response.Result);
+                Console.WriteLine("[StoreAPI] Could not retrieve the user referenced by the URI " + (baseURL + queryPath) + ". Reason: " + response.Result);
                 return false;
             }
         }
@@ -329,7 +356,7 @@ namespace DSS.RMQ
 
             string queryPath = String.Format("/api/v1/measurement/?measurement_type=steps&user={0}&timestamp__gte={1}&timestamp__lte={2}&order_by=-timestamp", userID, startTs, endTs);
 
-            var response = new HttpClient().GetAsync(url + queryPath);
+            var response = new HttpClient().GetAsync(baseURL + queryPath);
             if (response.Result.IsSuccessStatusCode)
             {
                 dynamic deserialized = JsonConvert.DeserializeObject<dynamic>(response.Result.Content.ReadAsStringAsync().Result);
@@ -362,7 +389,7 @@ namespace DSS.RMQ
 
 
             HttpContent content = new StringContent(JsonConvert.SerializeObject(new { acknowledged = ack }), Encoding.UTF8, "application/json");
-            var response = new HttpClient().PatchAsync(new Uri(url + "/api/v1/journal_entries/" + id + "/"), content);
+            var response = new HttpClient().PatchAsync(new Uri(baseURL + "/api/v1/journal_entries/" + id + "/"), content);
 
         }
 
@@ -370,7 +397,7 @@ namespace DSS.RMQ
         {
             Console.WriteLine("Get yournal entry by id" + id);
 
-            var response = new HttpClient().GetAsync(url + "/api/v1/journal_entries/" + id +"/");
+            var response = new HttpClient().GetAsync(baseURL + "/api/v1/journal_entries/" + id +"/");
 
             if (response.Result.IsSuccessStatusCode)
             {

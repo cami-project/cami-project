@@ -1,16 +1,16 @@
 ﻿<Properties StartupConfiguration="{9BE56BF2-4117-4250-8D4F-F958088CF8D1}|Default">
   <MonoDevelop.Ide.ItemProperties.DSS.Main PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/RuleHandler.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/Domain/BathroomVisitsTwoDays.cs">
     <Files>
-      <File FileName="DSS.Rules.Library/Expert system/Services/Events/MotionService.cs" Line="55" Column="48" />
-      <File FileName="DSS.Rules.Library/Expert system/Domain/MotionEvent.cs" Line="49" Column="13" />
-      <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="51" Column="53" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Events/ReminderService.cs" Line="108" Column="49" />
-      <File FileName="DSS.RMQ/StoreAPI.cs" Line="181" Column="57" />
-      <File FileName="DSS.Rules.Library/Loc.cs" Line="98" Column="53" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Util/TimeService.cs" Line="11" Column="13" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Events/SuspiciousBehaviour.cs" Line="6" Column="31" />
-      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/TooLongInBathroom.cs" Line="13" Column="101" />
+      <File FileName="DSS.Main/Program.cs" Line="43" Column="13" />
+      <File FileName="DSS.Tests/Test.cs" Line="21" Column="13" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Measurements/BathroomVisitService.cs" Line="46" Column="14" />
+      <File FileName="DSS.RMQ/MockStoreAPI.cs" Line="26" Column="40" />
+      <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="199" Column="48" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/BathroomVisitsPerDay.cs" Line="14" Column="104" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/MorningBloodPressureReminder.cs" Line="1" Column="1" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/MorningWeightReminder.cs" Line="1" Column="1" />
+      <File FileName="DSS.Rules.Library/Expert system/Domain/BathroomVisitsTwoDays.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
@@ -19,4 +19,7 @@
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MultiItemStartupConfigurations />
+  <DisabledProjects>
+    <String>DSS.FuzzyInference/DSS.FuzzyInference.csproj</String>
+  </DisabledProjects>
 </Properties>
