@@ -3,9 +3,9 @@ namespace DSS.Rules.Library
 {
     public class ExerciseService
     {
-        readonly Inform inform;
+        readonly IInform inform;
 
-        public ExerciseService(Inform inform)
+        public ExerciseService(IInform inform)
         {
             this.inform = inform;
         }

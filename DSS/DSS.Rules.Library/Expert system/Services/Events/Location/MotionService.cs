@@ -10,12 +10,12 @@ namespace DSS.Rules.Library
 
     public class  MotionService
     {
-        private readonly Inform inform;
+        private readonly IInform inform;
         private Action<LocationTimeSpent> handleLocationTimeSpent;
         private Action<LocationChange> handleLocationChange;
         private Action<Activity> handleActivity;
 
-        public MotionService(Inform inform, Action<LocationTimeSpent> locationTimeSpentHandler, Action<LocationChange> locationChange, Action<Activity> activityHandler)
+        public MotionService(IInform inform, Action<LocationTimeSpent> locationTimeSpentHandler, Action<LocationChange> locationChange, Action<Activity> activityHandler)
         {
             this.inform = inform;
             this.handleLocationTimeSpent = locationTimeSpentHandler;

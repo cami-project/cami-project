@@ -103,6 +103,7 @@
     <Compile Include="Expert system\Services\Events\Location\MotionService.cs" />
     <Compile Include="Expert system\Rules\Complex\NoMovementAfterFallDetected.cs" />
     <Compile Include="Expert system\Services\Util\IActivityLog.cs" />
+    <Compile Include="Expert system\Rules\Internal\FallHappened.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

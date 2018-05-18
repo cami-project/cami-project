@@ -6,6 +6,8 @@ namespace DSS.Rules.Library
     public class ActivityLog : IActivityLog
     {
         private Dictionary<string, List<Activity>> Logger = new Dictionary<string, List<Activity>>();
+        public Action<Activity> ActivityRuleHandler { get; set; }
+
 
         public void Log(Activity activity)
         {
@@ -17,6 +19,8 @@ namespace DSS.Rules.Library
             Logger[activity.Owner].Add(activity);
 
             Console.WriteLine("Activity added: " + activity);
+
+            ActivityRuleHandler(activity);
         }
 
         public bool EventOfTypeHappenedAfter(string owner ,ActivityType before, ActivityType after)

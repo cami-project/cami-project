@@ -66,6 +66,7 @@ namespace DSS.Rules.Library
 		public Annotations annotations { get; set; }
 
 
+
         public override string ToString(){
 			 
             return string.Format("[Event: category={0}, content={1}, annotations={2}]", category, content, annotations);
@@ -116,6 +117,10 @@ namespace DSS.Rules.Library
             }
 
         }
+
+        public string Lang { get; set; }
+        public string Owner { get; set; }
+
         public string getUserURI(){
 
 

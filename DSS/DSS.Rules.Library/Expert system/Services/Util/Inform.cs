@@ -9,12 +9,14 @@ namespace DSS.Rules.Library
 
         public IStoreAPI StoreAPI { get; set; }
         public IInsertionAPI InsertionAPI { get; set; }
+        public IActivityLog ActivityLog { get; set; }
 
    
-        public Inform(IStoreAPI storeAPI, IInsertionAPI insertionAPI)
+        public Inform(IStoreAPI storeAPI, IInsertionAPI insertionAPI, IActivityLog activityLog)
         {
             this.StoreAPI = storeAPI;
             this.InsertionAPI = insertionAPI;
+            this.ActivityLog = activityLog;
         }
 
         public void Caregivers(string enduserURI, string type, string severity, string msg, string desc, bool notify = true)
@@ -33,10 +35,8 @@ namespace DSS.Rules.Library
         }
         public void User(string enduserURI, string type, string severity, string msg, string desc)
         {
-
             StoreAPI.PushJournalEntry(enduserURI, type, severity, msg, desc);
             InsertionAPI.InsertPushNotification(msg, GetIdFromURI(enduserURI));
-
         }
 
         public int GetIdFromURI(string uri)

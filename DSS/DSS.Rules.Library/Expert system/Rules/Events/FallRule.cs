@@ -5,8 +5,7 @@ namespace DSS.Rules.Library
 {
     public class FallRule: Rule
     {
-
-
+        
         FallService service = null;
         Event fall = null;
 

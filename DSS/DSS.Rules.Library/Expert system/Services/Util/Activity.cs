@@ -51,6 +51,11 @@ namespace DSS.Rules.Library
         }
 
 
+        public bool IsType(ActivityType type) 
+        {
+            return this.Type == type;
+        }
+
 
 
     }

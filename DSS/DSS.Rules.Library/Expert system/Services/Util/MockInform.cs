@@ -7,11 +7,13 @@ namespace DSS.Rules.Library
     {
         public IStoreAPI StoreAPI { get ; set; }
         public IInsertionAPI InsertionAPI { get ; set ; }
+        public IActivityLog ActivityLog { get; set; }
 
-        public MockInform(IStoreAPI storeAPI, IInsertionAPI insertionAPI)
+        public MockInform(IStoreAPI storeAPI, IInsertionAPI insertionAPI, IActivityLog activityLog)
         {
             this.StoreAPI = storeAPI;
             this.InsertionAPI = insertionAPI;
+            this.ActivityLog = activityLog;
         }
 
         public void Caregivers(string enduserURI, string type, string severity, string msg, string desc, bool notify = true)

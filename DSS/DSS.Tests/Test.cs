@@ -12,9 +12,11 @@ namespace DSS.Tests
         [Test()]
         public void BathroomVisitsTwoDaysInRow()
         {
-            var ruleHandler = new RuleHandler(new ActivityLog());
 
-            var inform = new Inform(new MockStoreAPI(), null);
+            var inform = new MockInform(new MockStoreAPI(), null, null);
+
+            var ruleHandler = new RuleHandler(inform ,new ActivityLog());
+
             var service = new BathroomVisitService(inform, ruleHandler.BathroomVisitsDayHandler, ruleHandler.BathroomVisitsWeekHandler);
 
             service.Check(2);
@@ -71,7 +73,9 @@ namespace DSS.Tests
             var activityLog = new ActivityLog();
             var usr = "/api/v1/user/2/";
 
-            var ruleHandler = new RuleHandler(activityLog);
+            var inform = new MockInform(null, null, activityLog);
+
+            var ruleHandler = new RuleHandler(inform ,activityLog);
 
 
             activityLog.Log(new Activity(usr, ActivityType.Null, "Empty activity", "Test"));
@@ -79,6 +83,30 @@ namespace DSS.Tests
             activityLog.Log(new Activity(usr, ActivityType.Movement, "Description: A movement", "Test"));
 
             ruleHandler.HandleSheduled(new SheduledEvent(usr,SheduleService.Type.CheckMovementAfterFall, DateTime.Now));
+
+            //Assert.IsTrue(activityLog.EventOfTypeHappenedAfter(usr, ActivityType.Fall, ActivityType.Movement));
+        }
+
+        [Test()]
+        public void MovementAfterFall_RawFallEvent_RuleEngine_Test()
+        {
+
+            var activityLog = new ActivityLog();
+            var usr = "/api/v1/user/2/";
+
+            var inform = new MockInform(null, null, activityLog);
+            var ruleHandler = new RuleHandler(inform ,activityLog);
+
+
+            activityLog.ActivityRuleHandler = ruleHandler.ActivityHandler;
+
+            ruleHandler.HandleEvent(new Event() { content = new Content() { name = "fall" }, Owner = usr, Lang = "EN" });
+
+            //activityLog.Log(new Activity(usr, ActivityType.Null, "Empty activity", "Test"));
+            //activityLog.Log(new Activity(usr, ActivityType.Fall, "Description: A fall", "Test"));
+            //activityLog.Log(new Activity(usr, ActivityType.Movement, "Description: A movement", "Test"));
+
+           // ruleHandler.HandleSheduled(new SheduledEvent(usr, SheduleService.Type.CheckMovementAfterFall, DateTime.Now));
 
             //Assert.IsTrue(activityLog.EventOfTypeHappenedAfter(usr, ActivityType.Fall, ActivityType.Movement));
         }

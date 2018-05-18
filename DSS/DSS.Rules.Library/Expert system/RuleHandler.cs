@@ -23,13 +23,13 @@ namespace DSS.Rules.Library
         private SuspiciousBehaviour suspiciousBehaviour;
 
         private BathroomVisitService bathroomVisitService;
+      
+        private readonly IInform inform;
+        private readonly IActivityLog activityLog;
 
-
-        private IActivityLog activityLog;
-
-        public RuleHandler(IActivityLog activityLog)
+        public RuleHandler(IInform inform, IActivityLog activityLog)
         {
-
+            this.inform = inform;
             this.activityLog = activityLog;
 
             settings = new JsonSerializerSettings();
@@ -46,11 +46,8 @@ namespace DSS.Rules.Library
 
             Console.WriteLine("REMEBER TO REPLACE THE MOCK STORE API");
 
-            var storeAPI = new MockStoreAPI(); // StoreAPI(storeURL);
-            var insertionAPI = new InsertionAPI(insertionURL);
-        
 
-            var inform = new Inform(storeAPI, insertionAPI);
+        
 
             weightService = new WeightService(inform);
             pulseService = new PulseService(inform);
@@ -65,11 +62,25 @@ namespace DSS.Rules.Library
             bathroomVisitService = new BathroomVisitService(inform, BathroomVisitsDayHandler, BathroomVisitsWeekHandler);
         }
 
-        public void HandleEvent(string json)
+
+        public void HandleEvent(Event e)
+        {
+            Console.WriteLine("Event handler: " + e.content.name);
+
+            var session = factory.CreateSession();
+            session.Insert(reminderService);
+            session.Insert(motionService);
+            session.Insert(exerciseService);
+            session.Insert(fallService);
+
+            session.Insert(e);
+            session.Fire();
+        }
+
+        public void HandleEventJSON(string json)
         {
             var obj = JsonConvert.DeserializeObject<Event>(json);
 
-            Console.WriteLine("Event handler: " + obj.content.name);
 
             if (obj != null)
             {
@@ -187,6 +198,7 @@ namespace DSS.Rules.Library
                 var session = factory.CreateSession();
 
                 session.Insert(suspiciousBehaviour);
+                session.Insert(fallService);
                 session.Insert(activity);
 
                 session.Fire();
@@ -235,8 +247,6 @@ namespace DSS.Rules.Library
             {
                 Console.WriteLine("Handle activity NRULES exception: " + ex);
             }
-
-
         }
     
      }

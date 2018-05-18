@@ -6,9 +6,9 @@ namespace DSS.Rules.Library
     public class WeightService : IRuleService<Measurement>
     {
 
-        private Inform inform;
+        private IInform inform;
 
-        public WeightService(Inform inform)
+        public WeightService(IInform inform)
         {
             this.inform = inform;
         }

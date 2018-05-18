@@ -3,10 +3,10 @@ namespace DSS.Rules.Library
 {
     public class StepsService
     {
-        readonly Inform inform;
+        readonly IInform inform;
 
 
-        public StepsService(Inform inform)
+        public StepsService(IInform inform)
         {
             this.inform = inform;
 

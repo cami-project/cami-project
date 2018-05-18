@@ -7,11 +7,11 @@ namespace DSS.Rules.Library
 {
     public class BathroomVisitService
     {
-        private readonly Inform inform;
+        private readonly IInform inform;
         private readonly Action<BathroomVisitsTwoDays> bathroomServiceHandler;
         private readonly Action<BathroomVisitsWeek> bathoroomVisitsWeekHandler;
 
-        public BathroomVisitService(Inform inform, Action<BathroomVisitsTwoDays> bathroomVisitsDayHandler, Action<BathroomVisitsWeek> bathoroomVisitsWeekHandler)
+        public BathroomVisitService(IInform inform, Action<BathroomVisitsTwoDays> bathroomVisitsDayHandler, Action<BathroomVisitsWeek> bathoroomVisitsWeekHandler)
         {
             this.inform = inform;
             this.bathroomServiceHandler = bathroomVisitsDayHandler;

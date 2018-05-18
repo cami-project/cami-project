@@ -3,9 +3,9 @@ namespace DSS.Rules.Library
 {
     public class BloodPressureService
     {
-        readonly Inform inform;
+        readonly IInform inform;
 
-        public BloodPressureService(Inform inform)
+        public BloodPressureService(IInform inform)
         {
             this.inform = inform;
         }

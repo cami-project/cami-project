@@ -3,9 +3,9 @@ namespace DSS.Rules.Library
 {
     public class SuspiciousBehaviour
     {
-        private Inform inform;
+        private IInform inform;
 
-        public SuspiciousBehaviour(Inform inform)
+        public SuspiciousBehaviour(IInform inform)
         {
             this.inform = inform;
         }

@@ -25,7 +25,16 @@ namespace DSS.Main
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...##");
 
-            var ruleHandler = new RuleHandler(new ActivityLog());
+
+
+            //var insertionAPI = new InsertionAPI(insertionURL);
+
+            var activityLog = new ActivityLog();
+            var informMock = new MockInform(new MockStoreAPI(), null, activityLog);
+
+            var ruleHandler = new RuleHandler(informMock, activityLog);
+
+            activityLog.ActivityRuleHandler = ruleHandler.ActivityHandler;
             SheduleService.OnExec = ruleHandler.HandleSheduled;
 
 

@@ -5,9 +5,9 @@ namespace DSS.Rules.Library
 {
     public class PulseService : IRuleService<Measurement>
     {
-        private readonly Inform inform;
+        private readonly IInform inform;
 
-        public PulseService(Inform inform)
+        public PulseService(IInform inform)
         {
             this.inform = inform;
 
