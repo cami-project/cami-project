@@ -30,7 +30,7 @@ namespace DSS.Rules.Library
     {
 
         private static Dictionary<string, object> collections = new Dictionary<string, object>();
-        private static Dictionary<string, List<State>> history = new Dictionary<string, List<State>>();
+        private static Dictionary<string, List<LocationState>> history = new Dictionary<string, List<LocationState>>();
         private static Dictionary<string, List<InternalEvent>> reminders = new Dictionary<string, List<InternalEvent>>();
 
 
@@ -103,11 +103,11 @@ namespace DSS.Rules.Library
             collections.Remove(key);
         }
 
-        public static void AddHistory(string id, State state)
+        public static void AddHistory(string id, LocationState state)
         {
             if(!history.ContainsKey(id))
             {
-                history.Add(id, new List<State>());    
+                history.Add(id, new List<LocationState>());    
             }
 
             history[id].Add(state);
@@ -118,7 +118,7 @@ namespace DSS.Rules.Library
         //This is invoked at midnight everynight 
         public static void CleanHistory() 
         {
-            history = new Dictionary<string, List<State>>();
+            history = new Dictionary<string, List<LocationState>>();
             reminders = new Dictionary<string, List<InternalEvent>>();
             Console.WriteLine("History cleaned");
         }

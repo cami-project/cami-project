@@ -14,7 +14,7 @@ namespace DSS.Rules.Library
 
 
             var key = exerciseEvent.getUserURI()+ "_exercise";
-            var LANG = inform.storeAPI.GetLang(exerciseEvent.getUserURI());
+            var LANG = inform.StoreAPI.GetLang(exerciseEvent.getUserURI());
 
 
             if (exerciseEvent.content.name == "exercise_started")

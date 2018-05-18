@@ -8,22 +8,22 @@ namespace DSS.Rules.Library
     public class BathroomVisitService
     {
         private readonly Inform inform;
-        private readonly Action<BathroomVisitsTwoDays> bathroomServiceHandler; 
+        private readonly Action<BathroomVisitsTwoDays> bathroomServiceHandler;
+        private readonly Action<BathroomVisitsWeek> bathoroomVisitsWeekHandler;
 
-        public BathroomVisitService(Inform inform, Action<BathroomVisitsTwoDays> bathroomVisitsDayHandler)
+        public BathroomVisitService(Inform inform, Action<BathroomVisitsTwoDays> bathroomVisitsDayHandler, Action<BathroomVisitsWeek> bathoroomVisitsWeekHandler)
         {
             this.inform = inform;
             this.bathroomServiceHandler = bathroomVisitsDayHandler;
+            this.bathoroomVisitsWeekHandler = bathoroomVisitsWeekHandler;
         }
 
-        public void Get(int userID)
+        public void Check(int userID)
         {
-            Console.WriteLine("Get bathroom visists invoked");
+            Console.WriteLine("Check bathroom visists invoked");
 
-            var visits = inform.storeAPI.GetBathroomVisitsForLastDays(30, userID);
+            var visits = inform.StoreAPI.GetBathroomVisitsForLastDays(30, userID);
             var groups = visits.GroupByDay();
-
-            //generate a system event 
 
             var yesterdayDate = DateTime.UtcNow.Date.AddDays(-1);
             var yesterday = groups.Find(x => x.Key == yesterdayDate);
@@ -38,20 +38,47 @@ namespace DSS.Rules.Library
             if (yesterday.GetHashCode() != nullKeyValue.GetHashCode()){
                 yesterdayCount = yesterday.Value.Count;
             }
+
+            var daysOfWeek = new List<int>();
+
             if(dayBeforeYesterday.GetHashCode() != nullKeyValue.GetHashCode()){
                 dayBeforeYesterdayCount = dayBeforeYesterday.Value.Count;
             }
 
+            daysOfWeek.Add(dayBeforeYesterdayCount);
+
+            for (var i = 1; i < 6; i++)
+            {
+                var day = groups.Find(x => x.Key == yesterdayDate.AddDays(-i - 1));
+
+                if (day.GetHashCode() != nullKeyValue.GetHashCode())
+                {
+                    daysOfWeek.Add(day.Value.Count);
+                }
+                else 
+                {
+                    daysOfWeek.Add(-1);
+                }
+            }
+
             var twoDaysVisits = new BathroomVisitsTwoDays(yesterdayCount, dayBeforeYesterdayCount);
-           // Console.WriteLine(twoDaysVisits);
+            var weekDaysVisits = new BathroomVisitsWeek(yesterdayCount, daysOfWeek); 
+
+
+            // Console.WriteLine(twoDaysVisits);
 
             this.bathroomServiceHandler(twoDaysVisits);
+            this.bathoroomVisitsWeekHandler(weekDaysVisits);
         }
 
         public void InformCaregiverDayDifference(BathroomVisitsTwoDays visits) {
 
-            Console.WriteLine("Informing the caregiver: " + visits.ToString());
+            Console.WriteLine("Informing the caregiver: " + visits);
+        }
 
+        public void InformCaregiverWeekAvgAbnormal(BathroomVisitsWeek visits){
+
+            Console.WriteLine("Informing the caregiver: " + visits);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace DSS.Rules.Library
 
         public float GetLatestWeight(string enduserURI)
         {
-            return inform.storeAPI.GetLatestWeightMeasurement(inform.GetIdFromURI(enduserURI));
+            return inform.StoreAPI.GetLatestWeightMeasurement(inform.GetIdFromURI(enduserURI));
         }
 
         //private void InformUser(string trend, float differenceInKG, string enduserURI, string LANG)
@@ -58,19 +58,19 @@ namespace DSS.Rules.Library
 
         public void WeightIncrease(Measurement measure){
 
-            var differenceInKg = measure.differenceInKg(inform.storeAPI.GetLatestWeightMeasurement(inform.GetIdFromURI(measure.user)));
-            Inform("up", differenceInKg, measure.user, inform.storeAPI.GetLang(measure.user));
+            var differenceInKg = measure.differenceInKg(inform.StoreAPI.GetLatestWeightMeasurement(inform.GetIdFromURI(measure.user)));
+            Inform("up", differenceInKg, measure.user, inform.StoreAPI.GetLang(measure.user));
 
         }
         public void WeightDrop(Measurement measure){
 
-            var differenceInKg = measure.differenceInKg(inform.storeAPI.GetLatestWeightMeasurement(inform.GetIdFromURI(measure.user)));
-            Inform("down", differenceInKg, measure.user, inform.storeAPI.GetLang(measure.user));
+            var differenceInKg = measure.differenceInKg(inform.StoreAPI.GetLatestWeightMeasurement(inform.GetIdFromURI(measure.user)));
+            Inform("down", differenceInKg, measure.user, inform.StoreAPI.GetLang(measure.user));
         }
 
         public void Save(Measurement measure)
         {
-            inform.storeAPI.PushMeasurement(JsonConvert.SerializeObject( measure));
+            inform.StoreAPI.PushMeasurement(JsonConvert.SerializeObject( measure));
         }
 
         public void UpdateFact(Measurement val)

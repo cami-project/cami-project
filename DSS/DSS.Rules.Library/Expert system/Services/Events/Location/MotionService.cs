@@ -8,113 +8,6 @@ using System.Linq;
 namespace DSS.Rules.Library
 {
 
-    public class State 
-    {
-        public long TimeStampEnter;
-        public long TimeStampMovement;
-
-        public string Name;
-
-        public DateTime TimeEnter;
-        public DateTime TimeMovement;
-
-        public string Owner;
-
-        public State(MotionEvent motionEvent)
-        {
-
-            Owner = motionEvent.getGateway();
-            Name = motionEvent.getLocationName();
-            TimeStampEnter = motionEvent.annotations.timestamp;
-
-            TimeEnter = TimeService.UnixTimestampToDateTime(TimeStampEnter);
-        }
-
-		public override string ToString()
-		{
-            return this.Name + " " + this.Owner + ": " + TimeEnter.ToShortTimeString() + " - " + TimeMovement.ToShortTimeString();
-		}
-	}
-
-    public class LocationTimeSpent
-    {
-        public string Name;
-        public int Min;
-
-        public string Owner;
-
-        public LocationTimeSpent(string owner,string name, int min)
-        {
-            this.Owner = owner;
-            this.Name = name;
-            this.Min = min;
-        }
-
-        public override string ToString()
-		{
-            return Owner + " in " + Name + " for " + Min;
-		}
-
-        public bool Is(string name, int min)
-        {
-            return this.Name == name && this.Min == min;
-        }
-	}
-
-    public class Activity
-    {
-        public string Location;
-        public string Owner;
-
-        public DateTime Timestamp;
-
-
-        public Activity(string owner, string location, DateTime timeStamp)
-        {
-            this.Owner = owner;
-            this.Location = location;
-            this.Timestamp = timeStamp;
-        }
-
-        public override string ToString()
-		{
-            return "Activity spotted " + Location + " for " + Owner + " at " + Timestamp.ToShortTimeString();
-		}
-
-        public bool NotBedroom()
-        {
-            return this.Location != "BEDROOM";
-        }
-
-	}
-
-
-    public class LocationChange
-    {
-        public string Current;
-        public string Previous;
-
-        public string ID;
-
-        public LocationChange(string userID, string previous, string current)
-        {
-            this.ID = userID;
-            this.Current = current;
-            this.Previous = previous;
-        }
-
-        public bool FromTo(string from, string to)
-        {
-            return from == this.Previous && to == this.Current;
-        }
-
-
-		public override string ToString()
-		{
-            return "From " + this.Previous + " to " + this.Current;
-		}
-	}
-
     public class  MotionService
     {
         private readonly Inform inform;
@@ -151,7 +44,7 @@ namespace DSS.Rules.Library
         }
 
 
-        private Dictionary<string, State> currentState = new Dictionary<string, State>();
+        private Dictionary<string, LocationState> currentState = new Dictionary<string, LocationState>();
 
         private void checkCurrentStateTime() 
         {
@@ -189,7 +82,7 @@ namespace DSS.Rules.Library
                     var id = motion.getGateway();
                     Console.WriteLine("ID: " + id);
 
-                    currentState[id] = new State(motion);
+                    currentState[id] = new LocationState(motion);
 
                     InMemoryDB.AddHistory(id, currentState[id]);
                    
@@ -208,7 +101,7 @@ namespace DSS.Rules.Library
 
                 handleLocationChange(new LocationChange(id,"NULL", motion.getLocationName()));
                 Console.WriteLine("State added:" + motion.getLocationName());
-                currentState.Add(id, new State(motion));
+                currentState.Add(id, new LocationState(motion));
                 InMemoryDB.AddHistory(id, currentState[id]);
             }
         }
@@ -226,7 +119,7 @@ namespace DSS.Rules.Library
 
                 Console.WriteLine("Sending BP notification");
 
-                SendBPMeasurementNotification(inform.storeAPI.GetUserOfGateway(gatewayURIPath));
+                SendBPMeasurementNotification(inform.StoreAPI.GetUserOfGateway(gatewayURIPath));
 
                 InMemoryDB.Push(key, null);
             }
@@ -240,7 +133,7 @@ namespace DSS.Rules.Library
         private void SendBPMeasurementNotification(string userURIPath)
         {
 
-            var LANG = inform.storeAPI.GetLang(userURIPath);
+            var LANG = inform.StoreAPI.GetLang(userURIPath);
 
             string enduser_msg = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.USR);
             string enduser_desc = Loc.Get(LANG, Loc.DES, Loc.REMINDER_SENT, Loc.USR);
@@ -282,7 +175,7 @@ namespace DSS.Rules.Library
                 };
 
                 Console.WriteLine("[MotionEventHandler] Inserting new reminderEvent: " + reminderEvent);
-            inform.insertionAPI.InsertEvent(JsonConvert.SerializeObject(reminderEvent));
+            inform.InsertionAPI.InsertEvent(JsonConvert.SerializeObject(reminderEvent));
          
         }
 

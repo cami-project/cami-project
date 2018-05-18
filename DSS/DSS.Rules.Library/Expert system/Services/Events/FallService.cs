@@ -15,14 +15,21 @@ namespace DSS.Rules.Library
             Console.WriteLine("FALL INFORM");
 
             var gatewayURIPath = fall.annotations.source["gateway"].ToString();
-            var userPath = inform.storeAPI.GetUserOfGateway(gatewayURIPath);
-            var lang = inform.storeAPI.GetLang(userPath);
+            var userPath = inform.StoreAPI.GetUserOfGateway(gatewayURIPath);
+            var lang = inform.StoreAPI.GetLang(userPath);
 
 
             inform.Caregivers(userPath, "fall", "high",
                               Loc.Msg(Loc.FALL, lang, Loc.CAREGVR),
                               Loc.Des(Loc.FALL, lang, Loc.CAREGVR));
             
+        }
+
+        public void InformCaregiverOfMovementAfterFall()
+        {
+
+
+            Console.WriteLine("Informing caregiver of movement after a fall");
         }
     }
 }

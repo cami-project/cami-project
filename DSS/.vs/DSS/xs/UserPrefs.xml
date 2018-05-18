@@ -1,16 +1,18 @@
 ﻿<Properties StartupConfiguration="{9BE56BF2-4117-4250-8D4F-F958088CF8D1}|Default">
   <MonoDevelop.Ide.ItemProperties.DSS.Main PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/Domain/BathroomVisitsTwoDays.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Main/Program.cs">
     <Files>
-      <File FileName="DSS.Main/Program.cs" Line="43" Column="13" />
-      <File FileName="DSS.Tests/Test.cs" Line="21" Column="13" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Measurements/BathroomVisitService.cs" Line="46" Column="14" />
-      <File FileName="DSS.RMQ/MockStoreAPI.cs" Line="26" Column="40" />
-      <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="199" Column="48" />
-      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/BathroomVisitsPerDay.cs" Line="14" Column="104" />
-      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/MorningBloodPressureReminder.cs" Line="1" Column="1" />
-      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/MorningWeightReminder.cs" Line="1" Column="1" />
-      <File FileName="DSS.Rules.Library/Expert system/Domain/BathroomVisitsTwoDays.cs" Line="1" Column="1" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Events/Location/MotionService.cs" Line="134" Column="10" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/NoMovementAfterFallDetected.cs" Line="23" Column="6" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/BathroomVisitsPerDay.cs" Line="21" Column="6" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Util/Activity.cs" Line="47" Column="9" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Util/MockInform.cs" Line="14" Column="46" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Util/ActivityLog.cs" Line="3" Column="1" />
+      <File FileName="DSS.Tests/Test.cs" Line="63" Column="13" />
+      <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="32" Column="13" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/SheduleService.cs" Line="10" Column="26" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Events/FallService.cs" Line="31" Column="13" />
+      <File FileName="DSS.Main/Program.cs" Line="28" Column="53" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />

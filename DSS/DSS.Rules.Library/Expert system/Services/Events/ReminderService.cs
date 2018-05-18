@@ -3,10 +3,10 @@ namespace DSS.Rules.Library
 {
     public class ReminderService
     {
-        readonly Inform inform;
+        readonly IInform inform;
 
         //TODO: remeber that there can be multiple reminders for the same user but different name/category
-        public ReminderService(Inform inform)
+        public ReminderService(IInform inform)
         {
             this.inform = inform;
         }
@@ -19,7 +19,7 @@ namespace DSS.Rules.Library
         public void Snoozed(Event reminder)
         {
             var USR = reminder.getUserURI();
-            var LANG = inform.storeAPI.GetLang(USR);
+            var LANG = inform.StoreAPI.GetLang(USR);
 
             Console.WriteLine("Reminder snoozed");
             inform.Caregivers(USR, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.REMINDER_POSTPONED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.REMINDER_POSTPONED, Loc.CAREGVR));
@@ -43,7 +43,7 @@ namespace DSS.Rules.Library
                 if(e.content.name == "reminder_sent"){
 
 
-                    var LANG = inform.storeAPI.GetLang(reminder.getUserURI());
+                    var LANG = inform.StoreAPI.GetLang(reminder.getUserURI());
 
 
                     inform.Caregivers(reminder.getUserURI(), "reminder", "high", 
@@ -63,7 +63,7 @@ namespace DSS.Rules.Library
             var ack = reminder.content.val.ack.ToString() == "ok" ? true : false;
             var journalId = reminder.content.val.journal.id.ToString();
             Console.WriteLine(journalId);
-            inform.storeAPI.PatchJournalEntry(journalId, ack);
+            inform.StoreAPI.PatchJournalEntry(journalId, ack);
 
             InMemoryDB.Remove(getKey(reminder));
 
@@ -75,11 +75,11 @@ namespace DSS.Rules.Library
         }
         public void CheckAckInDB(Event reminder) {
             var journalId = reminder.content.val.journal.id.ToString();
-            var journalEntry = inform.storeAPI.GetJournalEntryById(journalId);
+            var journalEntry = inform.StoreAPI.GetJournalEntryById(journalId);
 
 
             var USR = reminder.getUserURI();
-            var LANG = inform.storeAPI.GetLang(USR);
+            var LANG = inform.StoreAPI.GetLang(USR);
 
             //Do this just in case it's possible to check if user did something for example 
             //there is a new value in weight measurements and ignore if it's not possible 
@@ -94,7 +94,7 @@ namespace DSS.Rules.Library
             {
                     Console.WriteLine("Blood pressure");
 
-                    if (!inform.storeAPI.CheckForMeasuremntInLastNMinutes("blood_pressure", 6, USR ))
+                    if (!inform.StoreAPI.CheckForMeasuremntInLastNMinutes("blood_pressure", 6, USR ))
                     {
                         Console.WriteLine("Blood pressure wasn't measured");
                         inform.Caregivers(USR, "appointment", "high", Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR));
@@ -110,7 +110,7 @@ namespace DSS.Rules.Library
 
             try
             {
-                uri = inform.storeAPI.GetUserOfGateway(id);
+                uri = inform.StoreAPI.GetUserOfGateway(id);
                 Console.WriteLine("Reminder for weight sent from dss: " + uri);
             }
             catch (Exception ex)
@@ -135,7 +135,7 @@ namespace DSS.Rules.Library
 
         public void SendMorningBloodPressureReminder(string id)
         {
-            var uri = inform.storeAPI.GetUserOfGateway(id);
+            var uri = inform.StoreAPI.GetUserOfGateway(id);
             Console.WriteLine("Reminder for morning blood pressure  sent from dss: " + uri);
 
             InMemoryDB.AddReminder(id, new InternalEvent("SENT", "BP_MORNING"));
@@ -145,7 +145,7 @@ namespace DSS.Rules.Library
 
         public void SendNightBloodPressureReminder(string id)
         {
-            var uri = inform.storeAPI.GetUserOfGateway(id);
+            var uri = inform.StoreAPI.GetUserOfGateway(id);
             Console.WriteLine("Reminder for night blood pressure  sent from dss: " + uri);
 
             InMemoryDB.AddReminder(id, new InternalEvent("SENT", "BP_NIGHt"));

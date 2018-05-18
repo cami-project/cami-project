@@ -25,7 +25,7 @@ namespace DSS.Main
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...##");
 
-            var ruleHandler = new RuleHandler();
+            var ruleHandler = new RuleHandler(new ActivityLog());
             SheduleService.OnExec = ruleHandler.HandleSheduled;
 
 
@@ -51,9 +51,9 @@ namespace DSS.Main
             timer.Start();
 
             //Make initial sheduling 
-            var newDayEven = new SheduledEvent() { type = SheduleService.Type.NewDay };
+            var newDayEven = new SheduledEvent(SheduleService.Type.NewDay);
             ruleHandler.HandleSheduled(newDayEven);
-            SheduleService.Add(new SheduledEvent() { type = SheduleService.Type.Steps, utcTime = new DateTime().AddHours(19) });
+            SheduleService.Add(new SheduledEvent("ANY" ,SheduleService.Type.Steps, new DateTime().AddHours(19)));
 
 
             // Invoke every day
@@ -68,8 +68,8 @@ namespace DSS.Main
                 everyDayTimer.Elapsed += (z, c) =>
                 {
                     Console.WriteLine("A new day even raised: " + DateTime.UtcNow);
-                    ruleHandler.HandleSheduled(new SheduledEvent() { type = SheduleService.Type.NewDay });
-                    SheduleService.Add(new SheduledEvent() { type = SheduleService.Type.Steps, utcTime = new DateTime().AddHours(19) });
+                    ruleHandler.HandleSheduled(new SheduledEvent(SheduleService.Type.NewDay));
+                    SheduleService.Add(new SheduledEvent("ANY", SheduleService.Type.Steps,  new DateTime().AddHours(19)));
                 };
                 everyDayTimer.Start();
             };

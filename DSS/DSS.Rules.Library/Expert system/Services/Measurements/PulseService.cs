@@ -18,7 +18,7 @@ namespace DSS.Rules.Library
             Console.WriteLine("Pushed to the db");
 
             measurement.ok = measurement.isPulseOK();
-            inform.storeAPI.PushMeasurement(JsonConvert.SerializeObject(measurement));
+            inform.StoreAPI.PushMeasurement(JsonConvert.SerializeObject(measurement));
         }
 
         public void InformOfLowPulse(Measurement measurement) {
@@ -27,7 +27,7 @@ namespace DSS.Rules.Library
             Console.WriteLine("Low pulse");
 
 
-            var LANG = inform.storeAPI.GetLang(measurement.user);
+            var LANG = inform.StoreAPI.GetLang(measurement.user);
 
 
             var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_LOW, Loc.USR), measurement.getValue());
@@ -43,7 +43,7 @@ namespace DSS.Rules.Library
             Console.WriteLine("Mid pulse");
             return;
 
-            var LANG = inform.storeAPI.GetLang(measurement.user);
+            var LANG = inform.StoreAPI.GetLang(measurement.user);
 
 
             var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_MID_LOW, Loc.USR), measurement.getValue());
@@ -55,7 +55,7 @@ namespace DSS.Rules.Library
 
         public void InformOfMidHighPulse(Measurement measurement){
 
-            var LANG = inform.storeAPI.GetLang(measurement.user);
+            var LANG = inform.StoreAPI.GetLang(measurement.user);
 
 
             var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_MEDIUM, Loc.USR), measurement.getValue());
@@ -68,7 +68,7 @@ namespace DSS.Rules.Library
 
         public void InformOfHighPulse(Measurement measurement){
 
-            var LANG = inform.storeAPI.GetLang(measurement.user);
+            var LANG = inform.StoreAPI.GetLang(measurement.user);
 
 
             var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.PULSE_HIGH, Loc.USR), measurement.getValue());

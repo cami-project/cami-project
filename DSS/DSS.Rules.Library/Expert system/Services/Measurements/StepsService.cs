@@ -14,7 +14,7 @@ namespace DSS.Rules.Library
         public void InformOfLowSteps(string userURIPath)
         {
             var stepsCount = GetStepsCount(userURIPath);
-            var LANG = inform.storeAPI.GetLang(userURIPath);
+            var LANG = inform.StoreAPI.GetLang(userURIPath);
 
             var endUserMsg = Loc.Msg(Loc.STEPS_LESS_1000, LANG) ;
             var caregiverMsg = Loc.Msg(Loc.STEPS_LESS_1000, LANG);
@@ -32,11 +32,11 @@ namespace DSS.Rules.Library
             var endTs = (long)now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds; ;
 
 
-            var val = inform.storeAPI.GetUserStepCount(userURIPath, startTs, endTs);
+            var val = inform.StoreAPI.GetUserStepCount(userURIPath, startTs, endTs);
 
             Console.WriteLine("VAL: " +  val);
 
-            return inform.storeAPI.GetUserStepCount(userURIPath, startTs, endTs);
+            return inform.StoreAPI.GetUserStepCount(userURIPath, startTs, endTs);
            
         }
 
@@ -67,7 +67,7 @@ namespace DSS.Rules.Library
         {
 
             var stepsCount = GetStepsCount(userURIPath);
-            var LANG = inform.storeAPI.GetLang(userURIPath);
+            var LANG = inform.StoreAPI.GetLang(userURIPath);
 
             var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.STEPS_BETWEEN_1000_2000, Loc.USR), stepsCount);
             var caregiverMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.STEPS_BETWEEN_1000_2000, Loc.CAREGVR), stepsCount);
@@ -80,7 +80,7 @@ namespace DSS.Rules.Library
         {
 
             var stepsCount = GetStepsCount(userURIPath);
-            var LANG = inform.storeAPI.GetLang(userURIPath);
+            var LANG = inform.StoreAPI.GetLang(userURIPath);
 
             var endUserMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.STEPS_BIGGER_6000, Loc.USR), stepsCount);
             var caregiverMsg = string.Format(Loc.Get(LANG, Loc.MSG, Loc.STEPS_BIGGER_6000, Loc.CAREGVR), stepsCount);

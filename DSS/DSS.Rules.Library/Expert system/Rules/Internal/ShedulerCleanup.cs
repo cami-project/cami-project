@@ -11,8 +11,7 @@ namespace DSS.Rules.Library
         {
             When().Match<SheduledEvent>(sheduledEvent => sheduledEvent.isNewDay())
                   .Match(() => sheduledEvent);
-
-                  Then().Do(_ => InMemoryDB.CleanHistory());
+                   Then().Do(_ => InMemoryDB.CleanHistory());
         }
     }
 }

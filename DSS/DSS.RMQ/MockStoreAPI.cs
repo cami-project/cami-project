@@ -12,6 +12,8 @@ namespace DSS.RMQ
 
             journalEntryReponse.Objects = new List<JournalEntryItem>();
 
+
+            //TODO: replace this with dynamic data
             journalEntryReponse.Objects.Add(new JournalEntryItem() { Timestamp = "1526428800" });
             journalEntryReponse.Objects.Add(new JournalEntryItem() { Timestamp = "1526428800" });
             journalEntryReponse.Objects.Add(new JournalEntryItem() { Timestamp = "1526342400" });

@@ -12,10 +12,10 @@ namespace DSS.Rules.Library
         {
             When().Match<SheduledEvent>(sheduledEvent => sheduledEvent.isStepAnalisys())
                   .Match(() => sheduledEvent)
-                  .Match<StepsService>(stepsService => stepsService.stepsCountBiggerThan(2000, sheduledEvent.user))
+                  .Match<StepsService>(stepsService => stepsService.stepsCountBiggerThan(2000, sheduledEvent.Owner))
                   .Match(() => stepsService);
 
-            Then().Do(_ => stepsService.InformHighSteps(sheduledEvent.user));
+            Then().Do(_ => stepsService.InformHighSteps(sheduledEvent.Owner));
         }
     }
 }

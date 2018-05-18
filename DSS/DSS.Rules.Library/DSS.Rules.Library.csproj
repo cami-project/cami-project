@@ -72,7 +72,6 @@
     <Compile Include="Loc.cs" />
     <Compile Include="Expert system\Domain\MeasurementConverter.cs" />
     <Compile Include="Expert system\Domain\EventConverter.cs" />
-    <Compile Include="Expert system\Services\Events\MotionService.cs" />
     <Compile Include="Expert system\Rules\Events\ExerciseStartRule.cs" />
     <Compile Include="Expert system\Services\Events\ExerciseService.cs" />
     <Compile Include="Expert system\Rules\Events\ExerciseEndRule.cs" />
@@ -91,6 +90,19 @@
     <Compile Include="Expert system\Rules\Complex\BathroomVisitsPerDay.cs" />
     <Compile Include="Expert system\Services\Measurements\BathroomVisitService.cs" />
     <Compile Include="Expert system\Domain\BathroomVisitsTwoDays.cs" />
+    <Compile Include="Expert system\Rules\Internal\CheckBathroomVisits.cs" />
+    <Compile Include="Expert system\Domain\BathroomVisitsWeek.cs" />
+    <Compile Include="Expert system\Rules\Complex\BathroomVisitsPerWeek.cs" />
+    <Compile Include="Expert system\Services\Util\IInform.cs" />
+    <Compile Include="Expert system\Services\Util\MockInform.cs" />
+    <Compile Include="Expert system\Services\Util\ActivityLog.cs" />
+    <Compile Include="Expert system\Services\Util\Activity.cs" />
+    <Compile Include="Expert system\Services\Events\Location\LocationChange.cs" />
+    <Compile Include="Expert system\Services\Events\Location\LocationState.cs" />
+    <Compile Include="Expert system\Services\Events\Location\LocationTimeSpent.cs" />
+    <Compile Include="Expert system\Services\Events\Location\MotionService.cs" />
+    <Compile Include="Expert system\Rules\Complex\NoMovementAfterFallDetected.cs" />
+    <Compile Include="Expert system\Services\Util\IActivityLog.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -104,6 +116,7 @@
   <ItemGroup>
     <Folder Include="Expert system\Rules\Complex\" />
     <Folder Include="Expert system\Rules\Internal\" />
+    <Folder Include="Expert system\Services\Events\Location\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

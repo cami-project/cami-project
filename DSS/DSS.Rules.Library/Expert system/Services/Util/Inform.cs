@@ -4,29 +4,29 @@ using DSS.RMQ;
 
 namespace DSS.Rules.Library
 {
-    public class Inform
+    public class Inform : IInform
     {
 
-        public IStoreAPI storeAPI;
-        public IInsertionAPI insertionAPI;
+        public IStoreAPI StoreAPI { get; set; }
+        public IInsertionAPI InsertionAPI { get; set; }
 
-
+   
         public Inform(IStoreAPI storeAPI, IInsertionAPI insertionAPI)
         {
-            this.storeAPI = storeAPI;
-            this.insertionAPI = insertionAPI;
+            this.StoreAPI = storeAPI;
+            this.InsertionAPI = insertionAPI;
         }
 
         public void Caregivers(string enduserURI, string type, string severity, string msg, string desc, bool notify = true)
         {
-            var caregivers = storeAPI.GetCaregivers(enduserURI);
+            var caregivers = StoreAPI.GetCaregivers(enduserURI);
 
             foreach (string caregiverURIPath in caregivers)
             {
-                storeAPI.PushJournalEntry(caregiverURIPath, type, severity, msg, desc);
+                StoreAPI.PushJournalEntry(caregiverURIPath, type, severity, msg, desc);
                 if(notify)
                 {
-					insertionAPI.InsertPushNotification(msg, GetIdFromURI(caregiverURIPath));
+					InsertionAPI.InsertPushNotification(msg, GetIdFromURI(caregiverURIPath));
                 }
             }
 
@@ -34,8 +34,8 @@ namespace DSS.Rules.Library
         public void User(string enduserURI, string type, string severity, string msg, string desc)
         {
 
-            storeAPI.PushJournalEntry(enduserURI, type, severity, msg, desc);
-            insertionAPI.InsertPushNotification(msg, GetIdFromURI(enduserURI));
+            StoreAPI.PushJournalEntry(enduserURI, type, severity, msg, desc);
+            InsertionAPI.InsertPushNotification(msg, GetIdFromURI(enduserURI));
 
         }
 

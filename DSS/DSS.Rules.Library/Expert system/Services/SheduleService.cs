@@ -6,31 +6,51 @@ namespace DSS.Rules.Library
 
     public class SheduledEvent
     {
+        public string Owner;
+        public SheduleService.Type Type;
+        public DateTime UtcTime;
+        public Action Action;
 
-        public string user;
-        public SheduleService.Type type;
-        public DateTime utcTime;
-        public Action action;
+        public SheduledEvent(string owner, SheduleService.Type type, DateTime utcTime)
+        {
+            this.Owner = owner;
+            this.Type = type;
+            this.UtcTime = utcTime;
+            this.Action = null;
+        }
+
+        public SheduledEvent(string owner, Action action, DateTime utcTime) 
+        {
+            this.Owner = owner;
+            this.Action = action;
+            this.UtcTime = utcTime;
+            this.Type = SheduleService.Type.Null;
+        }
+
+        public SheduledEvent (SheduleService.Type type) 
+        {
+            this.Type = type;
+        }
 
         public bool isStepAnalisys()
         {
-
-            return type == SheduleService.Type.Steps;
+            return Type == SheduleService.Type.Steps;
         }
-
 
         public bool Compare(DateTime time)
         {
-
-            return utcTime.Hour == time.Hour && utcTime.Minute == time.Minute;
+            return UtcTime.Hour == time.Hour && UtcTime.Minute == time.Minute;
         }
 
-
-        public bool isNewDay() {
-
-            return type == SheduleService.Type.NewDay;
+        public bool isNewDay() 
+        {
+            return Type == SheduleService.Type.NewDay;
         }
 
+        public override string ToString()
+        {
+            return string.Format("Sheduled event for : {0} of type: {1} at {2}", this.Owner, this.Type, this.UtcTime);
+        }
     }
 
 
@@ -38,9 +58,10 @@ namespace DSS.Rules.Library
     {
         public enum Type
         {
-            None,
+            Null,
             Steps,
-            NewDay
+            NewDay,
+            CheckMovementAfterFall
         };
 
         public enum TimeOfDay 
@@ -75,24 +96,20 @@ namespace DSS.Rules.Library
         }
 
  
-        public static void In(int min, Action action, string usr)
+        public static void In(int min, Action action, string owner)
         {
 
             Console.Write("IN Invoked");
 
-            var e = new SheduledEvent()
-            {
-                action = action,
-                utcTime = DateTime.UtcNow.AddMinutes(min),
-                user = usr
-            };
+            var e = new SheduledEvent(owner, action, DateTime.UtcNow.AddMinutes(min));
+          
 
             sheduledEvents.Add(e);
         }
 
         public static void Remove(Type type, string user){
 
-            sheduledEvents.RemoveAll(x=> x.type == type && x.user == user);
+            sheduledEvents.RemoveAll(x=> x.Type == type && x.Owner == user);
 
         }
 
@@ -110,10 +127,10 @@ namespace DSS.Rules.Library
                 if (e.Compare(now))
                 {
 
-                    Console.WriteLine("Match: " + e.type);
+                    Console.WriteLine("Match: " + e.Type);
 
-                    if(e.type== Type.None){
-						e.action();
+                    if(e.Type== Type.Null){
+						e.Action();
                     }else {
 
                         OnExec(e);

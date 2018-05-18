@@ -24,8 +24,14 @@ namespace DSS.Rules.Library
 
         private BathroomVisitService bathroomVisitService;
 
-        public RuleHandler()
+
+        private IActivityLog activityLog;
+
+        public RuleHandler(IActivityLog activityLog)
         {
+
+            this.activityLog = activityLog;
+
             settings = new JsonSerializerSettings();
             settings.Converters.Add(new MeasurementConverter());
 
@@ -38,8 +44,11 @@ namespace DSS.Rules.Library
             var storeURL = "http://cami-store:8008";
             //var storeURL = "http://141.85.241.224:8008";
 
+            Console.WriteLine("REMEBER TO REPLACE THE MOCK STORE API");
+
             var storeAPI = new MockStoreAPI(); // StoreAPI(storeURL);
             var insertionAPI = new InsertionAPI(insertionURL);
+        
 
             var inform = new Inform(storeAPI, insertionAPI);
 
@@ -53,7 +62,7 @@ namespace DSS.Rules.Library
             bloodPressureService = new BloodPressureService(inform);
             suspiciousBehaviour = new SuspiciousBehaviour(inform);
 
-            bathroomVisitService = new BathroomVisitService(inform, BathroomVisitsDayHandler);
+            bathroomVisitService = new BathroomVisitService(inform, BathroomVisitsDayHandler, BathroomVisitsWeekHandler);
         }
 
         public void HandleEvent(string json)
@@ -118,7 +127,9 @@ namespace DSS.Rules.Library
             {
                 var session = factory.CreateSession();
 
+                session.Insert(activityLog);
                 session.Insert(stepsService);
+                session.Insert(fallService);
                 session.Insert(obj);
 
                 session.Fire();
@@ -205,6 +216,27 @@ namespace DSS.Rules.Library
             {
                 Console.WriteLine("Handle activity NRULES exception: " + ex);
             }
+        }
+
+        public void BathroomVisitsWeekHandler(BathroomVisitsWeek visits)
+        {
+            Console.WriteLine("[Handler - Bathoroom visits per week]: " + visits.ToString());
+
+            try
+            {
+                var session = factory.CreateSession();
+
+                session.Insert(bathroomVisitService);
+                session.Insert(visits);
+
+                session.Fire();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Handle activity NRULES exception: " + ex);
+            }
+
+
         }
     
      }

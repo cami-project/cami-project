@@ -15,12 +15,12 @@ namespace DSS.Rules.Library
                   //nRule's way of saying propagate sheduled event to the Then section
 			      .Match(() => sheduledEvent)
                   //Aditionl check to the number of steps
-                  .Match<StepsService>(stepsService => stepsService.stepsCountLessThan(1000, sheduledEvent.user))
+                  .Match<StepsService>(stepsService => stepsService.stepsCountLessThan(1000, sheduledEvent.Owner))
                   //nRule's way of saying propagate the step service to the Then section
                   .Match(() => stepsService);
 
             //If all the rules from the When section are satisfied   
-            Then().Do(_ => stepsService.InformOfLowSteps(sheduledEvent.user));
+            Then().Do(_ => stepsService.InformOfLowSteps(sheduledEvent.Owner));
         }
     }
 }
