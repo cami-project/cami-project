@@ -1,21 +1,15 @@
 ﻿<Properties StartupConfiguration="{9BE56BF2-4117-4250-8D4F-F958088CF8D1}|Default">
   <MonoDevelop.Ide.ItemProperties.DSS.Main PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/Services/Util/IActivityLog.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/Services/Util/MockActivityLogger.cs">
     <Files>
-      <File FileName="DSS.Rules.Library/Expert system/Domain/Event.cs" Line="120" Column="9" />
-      <File FileName="DSS.Rules.Library/Expert system/Rules/Events/FallRule.cs" Line="22" Column="43" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Events/FallService.cs" Line="29" Column="24" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Util/Inform.cs" Line="8" Column="6" />
-      <File FileName="DSS.Main/Program.cs" Line="32" Column="43" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Util/IInform.cs" Line="10" Column="9" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Util/ActivityLog.cs" Line="6" Column="41" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Util/IActivityLog.cs" Line="6" Column="37" />
-      <File FileName="DSS.Tests/Test.cs" Line="90" Column="17" NotebookId="1" />
-      <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="62" Column="46" NotebookId="1" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Events/ExerciseService.cs" Line="8" Column="33" NotebookId="1" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Measurements/BloodPressureService.cs" Line="7" Column="9" NotebookId="1" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Events/SuspiciousBehaviour.cs" Line="21" Column="34" NotebookId="1" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Measurements/BathroomVisitService.cs" Line="10" Column="27" NotebookId="1" />
+      <File FileName="DSS.Rules.Library/Expert system/Domain/Event.cs" Line="33" Column="23" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Events/FallService.cs" Line="44" Column="46" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Util/IActivityLog.cs" Line="6" Column="80" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Events/FallRule.cs" Line="38" Column="68" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Util/MockActivityLogger.cs" Line="11" Column="9" />
+      <File FileName="DSS.Tests/Test.cs" Line="20" Column="34" NotebookId="1" />
+      <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="94" Column="45" NotebookId="1" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Util/ActivityLog.cs" Line="57" Column="78" NotebookId="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />

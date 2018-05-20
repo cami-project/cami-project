@@ -20,29 +20,41 @@ namespace DSS.Rules.Library
 
             Console.WriteLine("Activity added: " + activity);
 
-            ActivityRuleHandler(activity);
+
+            ActivityRuleHandler?.Invoke(activity);
         }
 
-        public bool EventOfTypeHappenedAfter(string owner ,ActivityType before, ActivityType after)
+        public bool EventOfTypeHappenedAfter(string owner, ActivityType before, ActivityType after)
         {
 
             if(!Logger.ContainsKey(owner))
             {
-                Console.WriteLine("The user of ID: {0} does not exist in the acitiviy logger (if you see this it is probably a BUG )");
+                Console.WriteLine("The user of ID: {0} does not exist in the acitiviy logger (if you see this it is probably a BUG )", owner);
                 return false;
             }
 
             var indexOfBefore = Logger[owner].FindLastIndex(x => x.Type == before);
 
-
-            for (;indexOfBefore < Logger[owner].Count ; indexOfBefore++)
+            while (indexOfBefore < Logger[owner].Count)
             {
                 if (after == Logger[owner][indexOfBefore].Type)
                     return true;
-            }
 
+                indexOfBefore++;
+            }
             return false;
         }
 
+        public bool EventOfTypeHappened(string owner, ActivityType before, int minBack )
+        {
+            if (!Logger.ContainsKey(owner)) throw new Exception("The user of ID: " + owner + "does not exist in the acitiviy logger(if you see this it is probably a BUG )");
+
+            var activity = Logger[owner].FindLast(x => x.Type == before);
+
+            if (activity == null)
+                return false;
+
+            return activity.Timestamp.AddMinutes(minBack) >= DateTime.UtcNow;
+        }
     }
 }

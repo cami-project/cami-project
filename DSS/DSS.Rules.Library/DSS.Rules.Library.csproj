@@ -104,6 +104,7 @@
     <Compile Include="Expert system\Rules\Complex\NoMovementAfterFallDetected.cs" />
     <Compile Include="Expert system\Services\Util\IActivityLog.cs" />
     <Compile Include="Expert system\Rules\Internal\FallHappened.cs" />
+    <Compile Include="Expert system\Services\Util\MockActivityLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

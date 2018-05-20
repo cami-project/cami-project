@@ -5,14 +5,13 @@ namespace DSS.Rules.Library
 
     public enum ActivityType 
     {
-        Null, Movement, Fall
-
+        Null, Movement, Fall, LowPulse
     }
 
     public class Activity
     {
-        public string Location;
-        public string Owner;
+        public readonly string Location;
+        public readonly string Owner;
         public readonly string Description;
         private readonly string PartOfTheSystem;
 

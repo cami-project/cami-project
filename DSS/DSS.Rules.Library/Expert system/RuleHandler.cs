@@ -39,9 +39,9 @@ namespace DSS.Rules.Library
             repository.Load(x => x.From(typeof(WeightDropRule).Assembly));
             factory = repository.Compile();
 
-            var insertionURL = "http://cami-insertion:8010/api/v1/insertion";
+            //var insertionURL = "http://cami-insertion:8010/api/v1/insertion";
             //var insertionURL = "http://141.85.241.224:8010/api/v1/insertion";
-            var storeURL = "http://cami-store:8008";
+            //var storeURL = "http://cami-store:8008";
             //var storeURL = "http://141.85.241.224:8008";
 
             Console.WriteLine("REMEBER TO REPLACE THE MOCK STORE API");
@@ -72,6 +72,8 @@ namespace DSS.Rules.Library
             session.Insert(motionService);
             session.Insert(exerciseService);
             session.Insert(fallService);
+            session.Insert(activityLog);
+            //session.Insert(new MockActivityLogger());
 
             session.Insert(e);
             session.Fire();
@@ -89,6 +91,7 @@ namespace DSS.Rules.Library
                 session.Insert(motionService);
                 session.Insert(exerciseService);
                 session.Insert(fallService);
+                session.Insert(activityLog);
 
                 if (obj.category == "USER_ENVIRONMENT")
                 {
