@@ -31,6 +31,21 @@ namespace DSS.Rules.Library
             timer.Start();
         }
 
+        public void SheduleHouseLeftCheck(LocationChange locationChange, int min)
+        {
+            Console.WriteLine("Shedule house left check");
+            SheduleService.Add(new SheduledEvent(locationChange.Owner, SheduleService.Type.CheckIfLeftHouse, DateTime.UtcNow.AddMinutes(min)));
+            inform.ActivityLog.Log(new Activity(locationChange.Owner, ActivityType.ShedulingLeftHouseCheck, "", "MotionService.SheduleHouseLeftCheck(LocationChange, min)"));
+        }
+
+        public void MightLeftHouse(SheduledEvent sheduledEvent)
+        {
+            Console.WriteLine("Might left the house");
+            inform.ActivityLog.Log(new Activity(sheduledEvent.Owner, ActivityType.MightLeftHouse, "", "MotionService.MightLeftHouse(SheduledEvent)"));
+            inform.ActivityLog.ChangeAssumedState(sheduledEvent.Owner, AssumedState.Outside);
+
+        }
+
         public void MightBeSleeping(SheduledEvent sheduledEvent)
         {
             Console.WriteLine("Might be sleeping invoked!");

@@ -1,17 +1,19 @@
 ﻿<Properties StartupConfiguration="{9BE56BF2-4117-4250-8D4F-F958088CF8D1}|Default">
   <MonoDevelop.Ide.ItemProperties.DSS.Main PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/Services/Events/SuspiciousBehaviour.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/Services/Util/ActivityLog.cs">
     <Files>
-      <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="154" Column="17" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Events/SuspiciousBehaviour.cs" Line="31" Column="106" />
-      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/NightWandering.cs" Line="39" Column="58" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Util/Activity.cs" Line="66" Column="9" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Util/IInform.cs" Line="9" Column="22" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Util/ActivityLog.cs" Line="83" Column="10" />
-      <File FileName="DSS.Tests/SleepTests.cs" Line="89" Column="10" NotebookId="1" />
+      <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="196" Column="45" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Events/Location/MotionService.cs" Line="50" Column="10" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/LeftHouse.cs" Line="33" Column="78" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/SheduleService.cs" Line="38" Column="9" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Util/IActivityLog.cs" Line="9" Column="14" />
       <File FileName="DSS.Tests/MotionServiceTests.cs" Line="44" Column="1" NotebookId="1" />
       <File FileName="DSS.Tests/Test.cs" Line="132" Column="1" NotebookId="1" />
-      <File FileName="DSS.Tests/ActivityLoggerTests.cs" Line="50" Column="26" NotebookId="1" />
+      <File FileName="DSS.Tests/ActivityLoggerTests.cs" Line="6" Column="20" NotebookId="1" />
+      <File FileName="DSS.Tests/SleepTests.cs" Line="70" Column="1" NotebookId="1" />
+      <File FileName="DSS.Tests/OutOfHouseTests.cs" Line="38" Column="68" NotebookId="1" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Util/Activity.cs" Line="12" Column="23" NotebookId="1" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Util/ActivityLog.cs" Line="82" Column="1" NotebookId="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />

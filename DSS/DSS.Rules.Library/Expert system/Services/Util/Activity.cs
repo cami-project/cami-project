@@ -7,7 +7,9 @@ namespace DSS.Rules.Library
     {
         Null, Movement, Fall, LowPulse, MightBeSleeping, ShedulingSleepingCheck,
         MightBeNightWandering,
-        NightWanderingConfirmed
+        NightWanderingConfirmed,
+        ShedulingLeftHouseCheck,
+        MightLeftHouse
     }
 
     public class Activity

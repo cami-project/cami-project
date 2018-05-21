@@ -35,6 +35,7 @@
     <Compile Include="MotionServiceTests.cs" />
     <Compile Include="ActivityLoggerTests.cs" />
     <Compile Include="SleepTests.cs" />
+    <Compile Include="OutOfHouseTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

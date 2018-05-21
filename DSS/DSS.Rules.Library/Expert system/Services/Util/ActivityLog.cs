@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DSS.Rules.Library
 {
@@ -7,7 +8,6 @@ namespace DSS.Rules.Library
     {
         private Dictionary<string, List<Activity>> Logger = new Dictionary<string, List<Activity>>();
         public Action<Activity> ActivityRuleHandler { get; set; }
-
 
 
         public void Log(Activity activity)
@@ -20,8 +20,6 @@ namespace DSS.Rules.Library
             Logger[activity.Owner].Add(activity);
 
             Console.WriteLine("Activity added: " + activity);
-
-
             ActivityRuleHandler?.Invoke(activity);
         }
 
@@ -61,10 +59,17 @@ namespace DSS.Rules.Library
         public bool DidNotHappenAfter(string owner, ActivityType after, ActivityType didNotHappen)
         {
 
+            Console.WriteLine(after.ToString() + " - " + didNotHappen.ToString());
+
             if (!Logger.ContainsKey(owner)) throw new Exception("The user of ID: " + owner + "does not exist in the acitiviy logger(if you see this it is probably a BUG )");
 
             var indexOfAfter = Logger[owner].FindLastIndex(x => x.Type == after);
 
+            if(indexOfAfter == -1) 
+            {
+                Console.WriteLine("Cannot find the specified acitivity type");
+                return false;
+            }
 
             while (indexOfAfter < Logger[owner].Count)
             {
@@ -79,7 +84,7 @@ namespace DSS.Rules.Library
 
         public ActivityType GetLastActivityType(string owner)
         {
-            return Logger[owner][Logger[owner].Count - 1].Type;
+            return Logger[owner].Last().Type;
         }
 
         //ASSUMED STATE

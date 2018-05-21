@@ -36,6 +36,11 @@ namespace DSS.Rules.Library
             return this.Current == "BEDROOM";
         }
 
+        public bool ToHallway()
+        {
+            return this.Current == "HALLWAY";
+        }
+
 
         public override string ToString()
         {

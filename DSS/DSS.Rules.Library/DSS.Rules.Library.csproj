@@ -112,6 +112,7 @@
     <Compile Include="Expert system\Services\Util\MockTimeService.cs" />
     <Compile Include="Expert system\Rules\Complex\Sleeping.cs" />
     <Compile Include="Expert system\Rules\Complex\NightWandering.cs" />
+    <Compile Include="Expert system\Rules\Complex\LeftHouse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -36,6 +36,11 @@ namespace DSS.Rules.Library
             this.Type = type;
         }
 
+        public bool Is(SheduleService.Type type)
+        {
+            return this.Type == type;
+        }
+
         public bool isStepAnalisys()
         {
             return Type == SheduleService.Type.Steps;
@@ -71,7 +76,8 @@ namespace DSS.Rules.Library
             NewDay,
             CheckMovementAfterFall,
             SleepCheck,
-            CheckForNightWandering
+            CheckForNightWandering,
+            CheckIfLeftHouse
         };
 
         public enum TimeOfDay 
