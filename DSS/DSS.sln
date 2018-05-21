@@ -10,8 +10,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.Delegate", "DSS.Delegat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.Main", "DSS.Main\DSS.Main.csproj", "{9BE56BF2-4117-4250-8D4F-F958088CF8D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.FuzzyInference", "DSS.FuzzyInference\DSS.FuzzyInference.csproj", "{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.FuzzyInference.Playground", "DSS.FuzzyInference.Playground\DSS.FuzzyInference.Playground.csproj", "{F7646D2F-E370-4545-A43D-E9E1389A4A94}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMQ.Playground.Client", "RMQ.Playground.Client\RMQ.Playground.Client.csproj", "{084E00A0-E590-4ED2-A401-F0D036798168}"
@@ -20,12 +18,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMQ.Playgorund.Receiver", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMQ.Playground.Serialization", "RMQ.Playground.Serialization\RMQ.Playground.Serialization.csproj", "{55208EF8-F2EF-43EF-81DB-939B0D8BE6C4}"
 	ProjectSection(ProjectDependencies) = postProject
-		{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A} = {6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}
+		{E6C6EC9F-F356-49E4-85B7-625DD78D7EDE} = {E6C6EC9F-F356-49E4-85B7-625DD78D7EDE}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.Rules.Library", "DSS.Rules.Library\DSS.Rules.Library.csproj", "{A171CA66-41CB-427E-B1D0-A0EBBFA73ED1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSS.Tests", "DSS.Tests\DSS.Tests.csproj", "{17974768-25D6-4116-945C-2E43316B39A8}"
+EndProject
+Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "DSS.FuzzyInference", "DSS.FuzzyInference\DSS.FuzzyInference.csproj", "{E6C6EC9F-F356-49E4-85B7-625DD78D7EDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,14 +63,6 @@ Global
 		{9BE56BF2-4117-4250-8D4F-F958088CF8D1}.Release|x86.ActiveCfg = Release|x86
 		{9BE56BF2-4117-4250-8D4F-F958088CF8D1}.Release|x86.Build.0 = Release|x86
 		{9BE56BF2-4117-4250-8D4F-F958088CF8D1}.Debug|Any CPU.Build.0 = Debug|x86
-		{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}.Debug|x86.Build.0 = Debug|Any CPU
-		{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}.Release|x86.ActiveCfg = Release|Any CPU
-		{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}.Release|x86.Build.0 = Release|Any CPU
-		{6CDEDF87-3ACC-4BEA-BC2F-95FB7D13A98A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7646D2F-E370-4545-A43D-E9E1389A4A94}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{F7646D2F-E370-4545-A43D-E9E1389A4A94}.Debug|x86.ActiveCfg = Debug|x86
 		{F7646D2F-E370-4545-A43D-E9E1389A4A94}.Debug|x86.Build.0 = Debug|x86
@@ -112,6 +104,14 @@ Global
 		{17974768-25D6-4116-945C-2E43316B39A8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{17974768-25D6-4116-945C-2E43316B39A8}.Release|x86.ActiveCfg = Release|Any CPU
 		{17974768-25D6-4116-945C-2E43316B39A8}.Release|x86.Build.0 = Release|Any CPU
+		{E6C6EC9F-F356-49E4-85B7-625DD78D7EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6C6EC9F-F356-49E4-85B7-625DD78D7EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6C6EC9F-F356-49E4-85B7-625DD78D7EDE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E6C6EC9F-F356-49E4-85B7-625DD78D7EDE}.Debug|x86.Build.0 = Debug|Any CPU
+		{E6C6EC9F-F356-49E4-85B7-625DD78D7EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6C6EC9F-F356-49E4-85B7-625DD78D7EDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6C6EC9F-F356-49E4-85B7-625DD78D7EDE}.Release|x86.ActiveCfg = Release|Any CPU
+		{E6C6EC9F-F356-49E4-85B7-625DD78D7EDE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

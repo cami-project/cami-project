@@ -12,12 +12,12 @@ namespace DSS.Rules.Library
         public override void Define()
         {
             When().Exists<LocationChange>(location => location.FromTo("BATHROOM", "KITCHEN") &&
-                                         !InMemoryDB.WeightReminderSent(location.ID))
+                                         !InMemoryDB.WeightReminderSent(location.Owner))
                  .Match(() => location)
                  .Exists<ReminderService>()
                  .Match(() => service);
 
-            Then().Do(ctx => service.SendMorningBloodPressureReminder(location.ID));
+            Then().Do(ctx => service.SendMorningBloodPressureReminder(location.Owner));
         }
     }
 }

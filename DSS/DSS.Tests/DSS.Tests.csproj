@@ -32,6 +32,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Test.cs" />
+    <Compile Include="MotionServiceTests.cs" />
+    <Compile Include="ActivityLoggerTests.cs" />
+    <Compile Include="SleepTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -22,6 +22,8 @@ namespace DSS.Rules.Library
         private BloodPressureService bloodPressureService;
         private SuspiciousBehaviour suspiciousBehaviour;
 
+        private ITimeService timeService;
+
         private BathroomVisitService bathroomVisitService;
       
         private readonly IInform inform;
@@ -47,8 +49,6 @@ namespace DSS.Rules.Library
             Console.WriteLine("REMEBER TO REPLACE THE MOCK STORE API");
 
 
-        
-
             weightService = new WeightService(inform);
             pulseService = new PulseService(inform);
             stepsService = new StepsService(inform);
@@ -60,6 +60,9 @@ namespace DSS.Rules.Library
             suspiciousBehaviour = new SuspiciousBehaviour(inform);
 
             bathroomVisitService = new BathroomVisitService(inform, BathroomVisitsDayHandler, BathroomVisitsWeekHandler);
+
+            timeService = new MockTimeService(true, true);
+
         }
 
 
@@ -144,6 +147,11 @@ namespace DSS.Rules.Library
                 session.Insert(activityLog);
                 session.Insert(stepsService);
                 session.Insert(fallService);
+                session.Insert(motionService);
+                session.Insert(suspiciousBehaviour);
+                session.Insert(timeService);
+
+
                 session.Insert(obj);
 
                 session.Fire();
@@ -182,6 +190,10 @@ namespace DSS.Rules.Library
 
                 session.Insert(reminderService);
                 session.Insert(locationChange);
+                session.Insert(motionService);
+                session.Insert(timeService);
+                session.Insert(suspiciousBehaviour);
+                session.Insert(activityLog);
 
                 session.Fire();
             }

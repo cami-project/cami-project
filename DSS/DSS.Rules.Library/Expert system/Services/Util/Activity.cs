@@ -5,7 +5,9 @@ namespace DSS.Rules.Library
 
     public enum ActivityType 
     {
-        Null, Movement, Fall, LowPulse
+        Null, Movement, Fall, LowPulse, MightBeSleeping, ShedulingSleepingCheck,
+        MightBeNightWandering,
+        NightWanderingConfirmed
     }
 
     public class Activity
@@ -55,6 +57,12 @@ namespace DSS.Rules.Library
             return this.Type == type;
         }
 
+
+        public bool IsMovement()
+        {
+            return Type == ActivityType.Movement;
+
+        }
 
 
     }

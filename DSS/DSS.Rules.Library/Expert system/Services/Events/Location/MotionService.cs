@@ -31,6 +31,12 @@ namespace DSS.Rules.Library
             timer.Start();
         }
 
+        public void MightBeSleeping(SheduledEvent sheduledEvent)
+        {
+            Console.WriteLine("Might be sleeping invoked!");
+            inform.ActivityLog.Log(new Activity(sheduledEvent.Owner, ActivityType.MightBeSleeping, "The user might be sleeping" , "MotionService.MightBeSleeping(sheduledEvent)"));
+        }
+
         public bool isMorning(Event motion)
         {
             Console.WriteLine("jutro je");
@@ -56,6 +62,46 @@ namespace DSS.Rules.Library
                 Console.WriteLine(item.Owner + " in " + item.Name + " for " + (now - item.TimeEnter).Minutes+ " min");
                 this.handleLocationTimeSpent(new LocationTimeSpent(item.Owner, item.Name, (int)(now - item.TimeEnter).TotalMinutes));
             }
+        }
+
+
+        public void ChangeState(Domain.MotionEvent e)
+        {
+            if(currentState.ContainsKey(e.Owner))
+            {
+                var current = currentState[e.Owner];
+
+                if(current.Name == e.Location)
+                {
+                    current.TimeMovement = e.Timestamp;
+                    handleLocationChange(new LocationChange(e, e.Location));
+
+                    //handleActivity(new Activity(state.Owner, state.Name, state.TimeMovement));
+                    Console.WriteLine("State unchanged: (movement within the same location)");
+                }
+                else 
+                {
+                    var previous = current.Name;
+                    current = new LocationState(e);
+
+                    //TODO:Check if need a this in memory db
+                    InMemoryDB.AddHistory(e.Owner, current);
+                   
+                    handleLocationChange(new LocationChange(e, previous));
+                    //handleActivity(new Activity(id, state.Name, currentState[id].TimeEnter));
+                    Console.WriteLine("State changed: " + previous + " to " + current.Name);
+                }
+            }
+            else // A fresh state for a new gateway, we assume the geteway is specific for an user
+            {
+                
+                handleLocationChange(new LocationChange(e, "NULL"));
+                Console.WriteLine("New user added: " + e.Owner + " - " + e.Location);
+
+                currentState.Add(e.Owner, new LocationState(e)); 
+                InMemoryDB.AddHistory(e.Owner, currentState[e.Owner]);
+            }
+
         }
 
         public void ChangeState(MotionEvent motion) 
@@ -106,6 +152,13 @@ namespace DSS.Rules.Library
             }
         }
 
+
+        public void SheeduleSleepingCheck(IEvent e, int min)
+        {
+            Console.WriteLine("Sheduling the sleeping check for " + e.Owner);
+            SheduleService.Add(new SheduledEvent(e.Owner, SheduleService.Type.SleepCheck, DateTime.UtcNow.AddMinutes(min)));
+            inform.ActivityLog.Log(new Activity(e.Owner, ActivityType.ShedulingSleepingCheck, "A sleep check sheduling activity", "MotionService.Shedule"));
+        }
 
         public void SendBloodPreasureMeasurementReminder(Event motion)
         {

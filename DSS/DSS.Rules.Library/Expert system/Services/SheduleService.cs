@@ -4,12 +4,16 @@ using System.Collections.Generic;
 namespace DSS.Rules.Library
 {
 
-    public class SheduledEvent
+    public class SheduledEvent : IEvent
     {
-        public string Owner;
         public SheduleService.Type Type;
         public DateTime UtcTime;
         public Action Action;
+
+        public string Owner { get; set; }
+        public string Lang { get; set; }
+        public string Timezone { get; set; }
+        public DateTime Timestamp { get; set; }
 
         public SheduledEvent(string owner, SheduleService.Type type, DateTime utcTime)
         {
@@ -36,6 +40,10 @@ namespace DSS.Rules.Library
         {
             return Type == SheduleService.Type.Steps;
         }
+        public bool isSleepingCheck()
+        {
+            return Type == SheduleService.Type.SleepCheck;
+        }
 
         public bool Compare(DateTime time)
         {
@@ -61,7 +69,9 @@ namespace DSS.Rules.Library
             Null,
             Steps,
             NewDay,
-            CheckMovementAfterFall
+            CheckMovementAfterFall,
+            SleepCheck,
+            CheckForNightWandering
         };
 
         public enum TimeOfDay 

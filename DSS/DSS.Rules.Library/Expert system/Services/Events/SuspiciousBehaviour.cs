@@ -15,10 +15,20 @@ namespace DSS.Rules.Library
             Console.WriteLine("Too long in the bathroom");
         }
 
-
-        public void NightWandering(Activity  activity) 
+        public void MightBeNightWandering(IEvent  activity) 
         {
-            Console.WriteLine("Night wandering");
+            Console.WriteLine("Might be night wandering");
+
+            inform.ActivityLog.ChangeAssumedState(activity.Owner, AssumedState.Awake);
+            inform.ActivityLog.Log(new Activity(activity.Owner, ActivityType.MightBeNightWandering, "A night wandering might be detected", "SuspiciousBehaviour.NightWandering(IEvent)"));
+
+            SheduleService.Add(new SheduledEvent(activity.Owner, SheduleService.Type.CheckForNightWandering, DateTime.UtcNow.AddHours(1)));
+        }
+
+        public void NightWanderingConfirmed(SheduledEvent sheduledEvent)
+        {
+            Console.WriteLine("Night wandering confirmed for the user: " + sheduledEvent.Owner);
+            inform.ActivityLog.Log(new Activity(sheduledEvent.Owner, ActivityType.NightWanderingConfirmed, "Night wandering confirmed", "SuspiciousBehaviour.NightWanderingConfirmed(SheduledEvent)"));
         }
     }
 }

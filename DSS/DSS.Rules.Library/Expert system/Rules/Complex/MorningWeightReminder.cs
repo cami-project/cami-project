@@ -12,12 +12,12 @@ namespace DSS.Rules.Library
         {
 
             When().Exists<LocationChange>(location => location.FromTo("BATHROOM", "KITCHEN") && 
-                                          !InMemoryDB.WeightReminderSent(location.ID))
+                                          !InMemoryDB.WeightReminderSent(location.Owner))
                   .Match(() => location)
                   .Exists<ReminderService>()
                   .Match(() => service);
 
-            Then().Do(ctx => service.SendWeightReminder(location.ID));
+            Then().Do(ctx => service.SendWeightReminder(location.Owner));
         }
     }
 }

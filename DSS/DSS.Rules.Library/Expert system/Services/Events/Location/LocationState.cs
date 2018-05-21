@@ -23,6 +23,12 @@ namespace DSS.Rules.Library
 
             TimeEnter = TimeService.UnixTimestampToDateTime(TimeStampEnter);
         }
+        public LocationState(Domain.MotionEvent e)
+        {
+            this.Owner = e.Owner;
+            this.Name = e.Location;
+            this.TimeMovement = e.Timestamp;
+        }
 
         public override string ToString()
         {

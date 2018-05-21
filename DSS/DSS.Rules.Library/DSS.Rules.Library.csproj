@@ -42,6 +42,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Mono.CSharp" />
+    <Reference Include="nunit.framework" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -105,6 +106,12 @@
     <Compile Include="Expert system\Services\Util\IActivityLog.cs" />
     <Compile Include="Expert system\Rules\Internal\FallHappened.cs" />
     <Compile Include="Expert system\Services\Util\MockActivityLogger.cs" />
+    <Compile Include="Expert system\Domain\IEvent.cs" />
+    <Compile Include="Expert system\Domain\RichDomain\MotionEvent.cs" />
+    <Compile Include="Expert system\Services\Util\ITimeService.cs" />
+    <Compile Include="Expert system\Services\Util\MockTimeService.cs" />
+    <Compile Include="Expert system\Rules\Complex\Sleeping.cs" />
+    <Compile Include="Expert system\Rules\Complex\NightWandering.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -119,6 +126,7 @@
     <Folder Include="Expert system\Rules\Complex\" />
     <Folder Include="Expert system\Rules\Internal\" />
     <Folder Include="Expert system\Services\Events\Location\" />
+    <Folder Include="Expert system\Domain\RichDomain\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

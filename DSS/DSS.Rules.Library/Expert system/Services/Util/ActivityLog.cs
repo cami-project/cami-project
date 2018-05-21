@@ -9,6 +9,7 @@ namespace DSS.Rules.Library
         public Action<Activity> ActivityRuleHandler { get; set; }
 
 
+
         public void Log(Activity activity)
         {
             if(!Logger.ContainsKey(activity.Owner))
@@ -53,8 +54,53 @@ namespace DSS.Rules.Library
 
             if (activity == null)
                 return false;
-
+            
             return activity.Timestamp.AddMinutes(minBack) >= DateTime.UtcNow;
+        }
+
+        public bool DidNotHappenAfter(string owner, ActivityType after, ActivityType didNotHappen)
+        {
+
+            if (!Logger.ContainsKey(owner)) throw new Exception("The user of ID: " + owner + "does not exist in the acitiviy logger(if you see this it is probably a BUG )");
+
+            var indexOfAfter = Logger[owner].FindLastIndex(x => x.Type == after);
+
+
+            while (indexOfAfter < Logger[owner].Count)
+            {
+                if (didNotHappen == Logger[owner][indexOfAfter].Type)
+                    return false;
+
+                indexOfAfter++;
+            }
+
+            return true;
+        }
+
+        public ActivityType GetLastActivityType(string owner)
+        {
+            return Logger[owner][Logger[owner].Count - 1].Type;
+        }
+
+        //ASSUMED STATE
+        private Dictionary<string, AssumedState> assumedState = new Dictionary<string, AssumedState>();
+
+        public void ChangeAssumedState(string owner, AssumedState state)
+        {
+            assumedState[owner] = state;
+        }
+
+        public AssumedState GetAssumedState(string owner)
+        {
+            if (assumedState.ContainsKey(owner))
+                return assumedState[owner];
+            
+            return AssumedState.Null;
+        }
+
+        public bool IsAssumedState(string owner, AssumedState state)
+        {
+            return assumedState[owner] == state;
         }
     }
 }

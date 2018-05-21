@@ -1,20 +1,24 @@
 ﻿<Properties StartupConfiguration="{9BE56BF2-4117-4250-8D4F-F958088CF8D1}|Default">
   <MonoDevelop.Ide.ItemProperties.DSS.Main PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/Services/Util/MockActivityLogger.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DSS.Rules.Library/Expert system/Services/Events/SuspiciousBehaviour.cs">
     <Files>
-      <File FileName="DSS.Rules.Library/Expert system/Domain/Event.cs" Line="33" Column="23" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Events/FallService.cs" Line="44" Column="46" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Util/IActivityLog.cs" Line="6" Column="80" />
-      <File FileName="DSS.Rules.Library/Expert system/Rules/Events/FallRule.cs" Line="38" Column="68" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Util/MockActivityLogger.cs" Line="11" Column="9" />
-      <File FileName="DSS.Tests/Test.cs" Line="20" Column="34" NotebookId="1" />
-      <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="94" Column="45" NotebookId="1" />
-      <File FileName="DSS.Rules.Library/Expert system/Services/Util/ActivityLog.cs" Line="57" Column="78" NotebookId="1" />
+      <File FileName="DSS.Rules.Library/Expert system/RuleHandler.cs" Line="154" Column="17" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Events/SuspiciousBehaviour.cs" Line="31" Column="106" />
+      <File FileName="DSS.Rules.Library/Expert system/Rules/Complex/NightWandering.cs" Line="39" Column="58" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Util/Activity.cs" Line="66" Column="9" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Util/IInform.cs" Line="9" Column="22" />
+      <File FileName="DSS.Rules.Library/Expert system/Services/Util/ActivityLog.cs" Line="83" Column="10" />
+      <File FileName="DSS.Tests/SleepTests.cs" Line="89" Column="10" NotebookId="1" />
+      <File FileName="DSS.Tests/MotionServiceTests.cs" Line="44" Column="1" NotebookId="1" />
+      <File FileName="DSS.Tests/Test.cs" Line="132" Column="1" NotebookId="1" />
+      <File FileName="DSS.Tests/ActivityLoggerTests.cs" Line="50" Column="26" NotebookId="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/Hamza/mdh/cami-project/DSS/DSS.Rules.Library/Expert system/Rules/Events/FallRule.cs" relfile="DSS.Rules.Library/Expert system/Rules/Events/FallRule.cs" line="27" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MultiItemStartupConfigurations />
