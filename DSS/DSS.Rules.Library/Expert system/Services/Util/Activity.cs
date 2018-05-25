@@ -9,7 +9,11 @@ namespace DSS.Rules.Library
         MightBeNightWandering,
         NightWanderingConfirmed,
         ShedulingLeftHouseCheck,
-        MightLeftHouse
+        MightLeftHouse,
+        WakeUp,
+        WeightMeasured,
+        MorningWeightReminderSent,
+        BloodPressureMeasured
     }
 
     public class Activity
@@ -22,6 +26,14 @@ namespace DSS.Rules.Library
         public DateTime Timestamp;
         readonly public ActivityType Type;
 
+
+        public Activity(IEvent e, ActivityType type)
+        {
+            this.Owner = e.Owner;
+            this.Type = type;
+            this.Timestamp = DateTime.UtcNow;
+
+        }
 
         //TODO: check how to get part of the system by refelection
         public Activity(string owner, ActivityType type, string description, string partOfTheSystem)

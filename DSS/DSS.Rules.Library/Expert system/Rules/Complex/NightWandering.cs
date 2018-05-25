@@ -17,7 +17,7 @@ namespace DSS.Rules.Library
                   .Match(() => activityLog)
                   .Match(() => suspiciousBehaviour)
                   .Exists<ITimeService>(timeService => timeService.HappenedAtNight(locationChange))
-                  .Exists<IActivityLog>(activityLog => activityLog.IsAssumedState(locationChange.Owner,AssumedState.Speeping));
+                  .Exists<IActivityLog>(activityLog => activityLog.IsAssumedState(locationChange.Owner,AssumedState.Sleeping));
 
             Then().Do(ctx => suspiciousBehaviour.MightBeNightWandering(locationChange));
         }
@@ -33,6 +33,7 @@ namespace DSS.Rules.Library
         {
             When().Match(() => sheduledEvent)
                   .Match(() => suspiciousBehaviour)  //This can cause a bug since it check the time it was created
+                  .Exists<SheduledEvent>(sheduledEvent => sheduledEvent.Is(SheduleService.Type.CheckForNightWandering))
                   .Exists<ITimeService>(timeService => timeService.HappenedAtNight(sheduledEvent))
                   .Exists<IActivityLog>(activityLog => activityLog.DidNotHappenAfter(sheduledEvent.Owner, ActivityType.MightBeNightWandering, ActivityType.MightBeSleeping));
 

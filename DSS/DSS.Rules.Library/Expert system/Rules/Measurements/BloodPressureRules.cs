@@ -6,20 +6,19 @@ namespace DSS.Rules.Library
     public class NormalBloodPressure : Rule
     {
         BloodPressureService service = null;
-        Measurement measurement = null;
+        Domain.BloodPressureEvent e = null;
+        bool in30MinAfterWakeup = false;
+        IActivityLog activityLog = null;
 
         public override void Define()
         {
-            //Check the domain object if it is of type BlOOD PRESSURE and if values are in normal range  
-            When().Exists<Measurement>(measure => measure.isBloodPressure() && 
-                                       measure.get("SBP") < 120 && 
-                                       measure.get("DBP") < 80)
-                  //nRule's way of saying propagate Measurement and service to the Then section
-                  .Match(() => measurement)
-                  .Match(() => service);
-
-            //If all the rules from the When section are satisfied 
-            Then().Do(ctx => service.BloodRessureOK(measurement));
+            When().Exists<Domain.BloodPressureEvent>(x => x.DiastolicInRange(50, 80) && x.SystolicInRange(100, 120))
+                  .Match(() => e)
+                  .Match(() => service)
+                  .Match(() => activityLog)
+                  .Let(() => in30MinAfterWakeup, ()=> activityLog.TimeSince(e, ActivityType.WakeUp) < 30);
+    
+            Then().Do(ctx => service.BloodPessureOK(e, in30MinAfterWakeup));
         }
     }
 
@@ -27,20 +26,20 @@ namespace DSS.Rules.Library
     public class PrehypertensionBloodPressure : Rule
     {
         BloodPressureService service = null;
-        Measurement measurement = null;
+        Domain.BloodPressureEvent e = null;
+        bool in30MinAfterWakeup = false;
+        IActivityLog activityLog = null;
+
 
         public override void Define()
         {
-            //Check the domain object if it is of type BlOOD PRESSURE and if values are in Prehypertension range  
-            When().Exists<Measurement> (measure => measure.isBloodPressure() && 
-                                       (measure.get("SBP") > 120 && measure.get("SBP") < 139) &&
-                                       (measure.get("DBP") > 80) && measure.get("DBP") < 89)
-                  //nRule's way of saying propagate Measurement and service to the Then section
-                  .Match(() => measurement)
-                  .Match(() => service);
-
-            //If all the rules from the When section are satisfied 
-            Then().Do(ctx => service.InformCaregiverPrehypertension(measurement));
+            When().Exists<Domain.BloodPressureEvent> ( x=> x.SystolicInRange(121, 139) && x.DiastolicInRange(81, 89))
+                  .Match(() => e)
+                  .Match(() => service)
+                  .Match(() => activityLog)
+                  .Let(() => in30MinAfterWakeup, () => activityLog.TimeSince(e, ActivityType.WakeUp) < 30);
+            
+            Then().Do(ctx => service.RiskOfPrehypertension(e, in30MinAfterWakeup));
         }
     }
 
@@ -48,21 +47,19 @@ namespace DSS.Rules.Library
     public class DangerBloodPressure : Rule
     {
         BloodPressureService service = null;
-        Measurement measurement = null;
+        Domain.BloodPressureEvent e = null;
+        bool in30MinAfterWakeup = false;
+        IActivityLog activityLog = null;
 
         public override void Define()
         {
-            //Check the domain object if it is of type BlOOD PRESSURE and if values are in Danger range  
-            When().Exists<Measurement>(measure => measure.isBloodPressure() && 
-                                       measure.get("SBP") > 140 && 
-                                       measure.get("DBP") > 90)
-
-                  //nRule's way of saying propagate Measurement and service to the Then section
-                  .Match(() => measurement)
-                  .Match(() => service);
+            When().Exists<Domain.BloodPressureEvent>(x => x.SystolicInRange(140, int.MaxValue) && x.DiastolicInRange(90, int.MaxValue)) 
+                  .Match(() => e)
+                  .Match(() => service)
+                  .Match(() => activityLog)
+                  .Let(() => in30MinAfterWakeup, () => activityLog.TimeSince(e, ActivityType.WakeUp) < 30);
             
-            //If all the rules from the When section are satisfied 
-            Then().Do(ctx => service.InformCaregiverDanger(measurement));
+            Then().Do(ctx => service.BloodPressureIsDangerous(e, in30MinAfterWakeup));
         }
     }
 

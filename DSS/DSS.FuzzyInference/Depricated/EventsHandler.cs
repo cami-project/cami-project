@@ -12,14 +12,14 @@ namespace DSS.FuzzyInference
 
 		private List<string> WhitelistManagebleQueueItems { get; set; }
         public string Name => "EVENT";
-        private RMQ.INS.InsertionAPI api; 
+        //private RMQ.INS.InsertionAPI api; 
 
         public EventsHandler()
         {
             Queue = new TimerQueue<Event>();
 			RequestManagableQueue = new List<Event>();
 
-            api = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion"); 
+          //  api = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion"); 
         }
 
         public void Handle(string json)

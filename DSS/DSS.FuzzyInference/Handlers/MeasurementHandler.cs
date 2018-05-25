@@ -130,7 +130,7 @@ namespace DSS.FuzzyInference
     public class MeasurementHandler : IRouterHandler
     {
         private StoreAPI storeAPI;
-        private RMQ.INS.InsertionAPI insertionAPI;
+        //private RMQ.INS.InsertionAPI insertionAPI;
         private JsonSerializerSettings settings;
 
         private Dictionary<string, Timer> stepCountAnalysisTimers;
@@ -140,7 +140,7 @@ namespace DSS.FuzzyInference
             storeAPI = new StoreAPI("http://cami-store:8008");
 			//storeAPI = new StoreAPI("http://141.85.241.224:8008");
 
-            insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
+          //  insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
 			//insertionAPI = new RMQ.INS.InsertionAPI("http://141.85.241.224:8010/api/v1/insertion");
 
             settings = new JsonSerializerSettings();

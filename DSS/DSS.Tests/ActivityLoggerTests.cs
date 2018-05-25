@@ -45,9 +45,9 @@ namespace DSS.Tests
         {
             var usr = "/api/v1/user/2/";
             var activityLog = new ActivityLog();
-            activityLog.ChangeAssumedState(usr, AssumedState.Speeping);
+            activityLog.ChangeAssumedState(usr, AssumedState.Sleeping);
 
-            Assert.IsTrue(activityLog.GetAssumedState(usr) == AssumedState.Speeping);
+            Assert.IsTrue(activityLog.GetAssumedState(usr) == AssumedState.Sleeping);
         }
     }
 }

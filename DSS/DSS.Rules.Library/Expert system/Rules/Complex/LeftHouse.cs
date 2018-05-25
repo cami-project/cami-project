@@ -31,10 +31,8 @@ namespace DSS.Rules.Library
                   .Match(() => motionService)  
                   .Exists<SheduledEvent>(sheduledEvent => sheduledEvent.Is(SheduleService.Type.CheckIfLeftHouse))
                   .Exists<IActivityLog>(activityLog => activityLog.DidNotHappenAfter(sheduledEvent.Owner, ActivityType.ShedulingLeftHouseCheck, ActivityType.Movement));
-
-
+            
             Then().Do(ctx => motionService.MightLeftHouse(sheduledEvent));
-      
         }
 
 

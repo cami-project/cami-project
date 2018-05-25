@@ -5,19 +5,19 @@ namespace DSS.Rules.Library
 {
     public class MorningWeightReminder: Rule
     {
-        LocationChange location;
-        ReminderService service;
+        SheduledEvent sheduledEvent = null;
+        IActivityLog activity = null;
+        ReminderService service = null;
 
         public override void Define()
         {
 
-            When().Exists<LocationChange>(location => location.FromTo("BATHROOM", "KITCHEN") && 
-                                          !InMemoryDB.WeightReminderSent(location.Owner))
-                  .Match(() => location)
-                  .Exists<ReminderService>()
-                  .Match(() => service);
+            When().Exists<SheduledEvent>(sheduledEvent => sheduledEvent.Is(SheduleService.Type.MorningWeightReminder))
+                  .Match(() => sheduledEvent)
+                  .Match(() => service)
+                  .Exists<IActivityLog>(activity => activity.DidNotHappenAfter(sheduledEvent.Owner, ActivityType.WakeUp, ActivityType.WeightMeasured));
 
-            Then().Do(ctx => service.SendWeightReminder(location.Owner));
+            Then().Do(ctx => service.SendWeightReminder(sheduledEvent));
         }
     }
 }

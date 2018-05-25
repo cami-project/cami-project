@@ -82,6 +82,11 @@ namespace DSS.Rules.Library
             return true;
         }
 
+        public int TimeSince(IEvent e, ActivityType type)
+        {
+            return (e.Timestamp - Logger[e.Owner].FindLast(x => x.Type == type).Timestamp).Minutes;
+        }
+
         public ActivityType GetLastActivityType(string owner)
         {
             return Logger[owner].Last().Type;

@@ -15,6 +15,13 @@ namespace DSS.Rules.Library
         public string Timezone { get; set; }
         public DateTime Timestamp { get; set; }
 
+        public SheduledEvent(IOwner e, SheduleService.Type type, DateTime utcTime )
+        {
+            this.Owner = e.Owner;
+            this.Type = type;
+            this.UtcTime = utcTime;
+        }
+
         public SheduledEvent(string owner, SheduleService.Type type, DateTime utcTime)
         {
             this.Owner = owner;
@@ -77,7 +84,9 @@ namespace DSS.Rules.Library
             CheckMovementAfterFall,
             SleepCheck,
             CheckForNightWandering,
-            CheckIfLeftHouse
+            CheckIfLeftHouse,
+            MorningWeightReminder,
+            MorningBloodPressureReminder
         };
 
         public enum TimeOfDay 

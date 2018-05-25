@@ -102,44 +102,45 @@ namespace DSS.Rules.Library
             }
         }
 
-        public void SendWeightReminder(string id)
+        public void SendWeightReminder(IEvent e)
         {
 
-            Console.WriteLine("Gateway: " + id);
-            string uri = "";
+            Console.WriteLine("Sending weight measurement reminder for " + e.Owner);
+            inform.ActivityLog.Log(new Activity(e, ActivityType.MorningWeightReminderSent));
 
-            try
-            {
-                uri = inform.StoreAPI.GetUserOfGateway(id);
-                Console.WriteLine("Reminder for weight sent from dss: " + uri);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Filed while trying to get user for the gateway" + id);
-                Console.WriteLine(ex);
-            }
+            //try
+            //{
+            //    uri = inform.StoreAPI.GetUserOfGateway(id);
+            //    Console.WriteLine("Reminder for weight sent from dss: " + uri);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine("Filed while trying to get user for the gateway" + id);
+            //    Console.WriteLine(ex);
+            //}
 
-            InMemoryDB.AddReminder(id, new InternalEvent("SENT", "WEIGHT"));
+            //InMemoryDB.AddReminder(id, new InternalEvent("SENT", "WEIGHT"));
 
-            try
-            {
-                inform.User(uri, "reminder", "high", Loc.Msg(Loc.REMINDER_SENT_WEIGHT, Loc.EN, Loc.USR), Loc.Des(Loc.REMINDER_SENT_WEIGHT, Loc.EN, Loc.USR));
+            //try
+            //{
+            //    inform.User(uri, "reminder", "high", Loc.Msg(Loc.REMINDER_SENT_WEIGHT, Loc.EN, Loc.USR), Loc.Des(Loc.REMINDER_SENT_WEIGHT, Loc.EN, Loc.USR));
 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Filed while trying to inform user" + uri);
-                Console.WriteLine(ex);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine("Filed while trying to inform user" + uri);
+            //    Console.WriteLine(ex);
+            //}
         }
 
-        public void SendMorningBloodPressureReminder(string id)
+        public void SendMorningBloodPressureReminder(IEvent e)
         {
-            var uri = inform.StoreAPI.GetUserOfGateway(id);
-            Console.WriteLine("Reminder for morning blood pressure  sent from dss: " + uri);
-
-            InMemoryDB.AddReminder(id, new InternalEvent("SENT", "BP_MORNING"));
-            inform.User(uri, "reminder", "high", Loc.Msg(Loc.REMINDER_SENT_BP_MORNING, Loc.EN, Loc.USR), Loc.Des(Loc.REMINDER_SENT_BP_MORNING, Loc.EN, Loc.USR));
+            Console.WriteLine("Sending a blood reminder for a user " + e.Owner);
+            //            var uri = inform.StoreAPI.GetUserOfGateway(id);
+            //            Console.WriteLine("Reminder for morning blood pressure  sent from dss: " + uri);
+            //
+            //            InMemoryDB.AddReminder(id, new InternalEvent("SENT", "BP_MORNING"));
+            //            inform.User(uri, "reminder", "high", Loc.Msg(Loc.REMINDER_SENT_BP_MORNING, Loc.EN, Loc.USR), Loc.Des(Loc.REMINDER_SENT_BP_MORNING, Loc.EN, Loc.USR));
         }
 
 

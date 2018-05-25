@@ -52,7 +52,7 @@ namespace DSS.Tests
             var activityLog = new ActivityLog();
             var usr = "/api/v1/user/2/";
 
-            activityLog.ChangeAssumedState(usr, AssumedState.Speeping);
+            activityLog.ChangeAssumedState(usr, AssumedState.Sleeping);
 
             var inform = new MockInform(new MockStoreAPI(), null, activityLog);
 

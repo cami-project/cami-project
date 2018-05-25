@@ -13,7 +13,7 @@ namespace DSS.FuzzyInference
 
         public FallDetectionHandler()
         {
-            insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
+            //insertionAPI = new RMQ.INS.InsertionAPI("http://cami-insertion:8010/api/v1/insertion");
             storeAPI = new StoreAPI("http://cami-store:8008");
         }
 

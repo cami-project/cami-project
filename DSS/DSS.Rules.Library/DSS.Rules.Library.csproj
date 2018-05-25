@@ -113,6 +113,14 @@
     <Compile Include="Expert system\Rules\Complex\Sleeping.cs" />
     <Compile Include="Expert system\Rules\Complex\NightWandering.cs" />
     <Compile Include="Expert system\Rules\Complex\LeftHouse.cs" />
+    <Compile Include="Expert system\Rules\Complex\WakingUp.cs" />
+    <Compile Include="Expert system\Domain\RichDomain\WeightEvent.cs" />
+    <Compile Include="Expert system\Domain\RichDomain\BloodPressureEvent.cs" />
+    <Compile Include="Expert system\IHandler.cs" />
+    <Compile Include="Expert system\MockRuleHandler.cs" />
+    <Compile Include="Expert system\Services\Util\IIntervalInvoke.cs" />
+    <Compile Include="Expert system\Services\Util\IScheduler.cs" />
+    <Compile Include="Expert system\Services\Util\Scheduler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using DSS.Rules.Library.Domain;
 using Newtonsoft.Json;
 
 namespace DSS.Rules.Library
@@ -18,6 +19,11 @@ namespace DSS.Rules.Library
             return inform.StoreAPI.GetLatestWeightMeasurement(inform.GetIdFromURI(enduserURI));
         }
 
+        public void Save(WeightEvent weight, bool thirtyMinAfterWakeup)
+        {
+            Console.WriteLine(weight.ToString() + " is 30 after " + thirtyMinAfterWakeup.ToString());
+        }
+
         //private void InformUser(string trend, float differenceInKG, string enduserURI, string LANG)
         //{
 
@@ -27,7 +33,7 @@ namespace DSS.Rules.Library
         //}
         //private void InformCaregiver(string trend, float differenceInKG, string enduserURI, string LANG)
         //{
-            
+
         //    var category = trend == "up" ? Loc.WEIGHT_INC : Loc.WEIGHT_DEC;
         //    var caregiverMsg = string.Format(Loc.Get(LANG, Loc.MSG, category, Loc.CAREGVR), differenceInKG);
         //    inform.Caregivers(enduserURI, "weight", "medium", caregiverMsg, Loc.Get(LANG, Loc.DES, category, Loc.CAREGVR));

@@ -6,7 +6,7 @@ using DSS.RMQ;
 
 namespace DSS.Rules.Library
 {
-    public class RuleHandler
+    public class RuleHandler : IHandler
     {
 
         private JsonSerializerSettings settings;
@@ -38,7 +38,7 @@ namespace DSS.Rules.Library
             settings.Converters.Add(new MeasurementConverter());
 
             var repository = new RuleRepository();
-            repository.Load(x => x.From(typeof(WeightDropRule).Assembly));
+            repository.Load(x => x.From(typeof(FallRule).Assembly));
             factory = repository.Compile();
 
             //var insertionURL = "http://cami-insertion:8010/api/v1/insertion";
@@ -53,7 +53,7 @@ namespace DSS.Rules.Library
             pulseService = new PulseService(inform);
             stepsService = new StepsService(inform);
             reminderService = new ReminderService(inform);
-            motionService = new MotionService(inform, HandleLocationTimeSpent, HandleLocationChange, ActivityHandler);
+            motionService = new MotionService(inform, this);
             exerciseService = new ExerciseService(inform);
             fallService = new FallService(inform);
             bloodPressureService = new BloodPressureService(inform);
@@ -62,6 +62,24 @@ namespace DSS.Rules.Library
             bathroomVisitService = new BathroomVisitService(inform, BathroomVisitsDayHandler, BathroomVisitsWeekHandler);
 
             timeService = new MockTimeService(true, true);
+
+        }
+
+
+        public void Handle(object e)
+        {
+            var session = factory.CreateSession();
+            session.Insert(reminderService);
+            session.Insert(motionService);
+            session.Insert(exerciseService);
+            session.Insert(fallService);
+            session.Insert(activityLog);
+            session.Insert(weightService);
+            session.Insert(bloodPressureService);
+            session.Insert(e);
+            //session.Insert(new MockActivityLogger());
+
+            session.Fire();
 
         }
 
@@ -150,6 +168,7 @@ namespace DSS.Rules.Library
                 session.Insert(motionService);
                 session.Insert(suspiciousBehaviour);
                 session.Insert(timeService);
+                session.Insert(reminderService);
 
 
                 session.Insert(obj);
