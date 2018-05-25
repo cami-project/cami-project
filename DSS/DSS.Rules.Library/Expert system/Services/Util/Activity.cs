@@ -27,7 +27,7 @@ namespace DSS.Rules.Library
         readonly public ActivityType Type;
 
 
-        public Activity(IEvent e, ActivityType type)
+        public Activity(IOwner e, ActivityType type)
         {
             this.Owner = e.Owner;
             this.Type = type;
@@ -35,10 +35,11 @@ namespace DSS.Rules.Library
 
         }
 
+
         //TODO: check how to get part of the system by refelection
-        public Activity(string owner, ActivityType type, string description, string partOfTheSystem)
+        public Activity(IOwner owner, ActivityType type, string description, string partOfTheSystem)
         {
-            this.Owner = owner;
+            this.Owner = owner.Owner;
             this.Type = type;
             this.Description = description;
             this.PartOfTheSystem = partOfTheSystem;
@@ -48,9 +49,9 @@ namespace DSS.Rules.Library
             this.Timestamp = DateTime.UtcNow;
         }
 
-        public Activity(string owner, string location, DateTime timeStamp)
+        public Activity(IOwner owner, string location, DateTime timeStamp)
         {
-            this.Owner = owner;
+            this.Owner = owner.Owner;
             this.Location = location;
             this.Timestamp = timeStamp;
         }

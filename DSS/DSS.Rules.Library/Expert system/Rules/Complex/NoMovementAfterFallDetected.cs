@@ -12,7 +12,7 @@ namespace DSS.Rules.Library
         {
             When().Exists<SheduledEvent>(e => e.Type == SheduleService.Type.CheckMovementAfterFall)
                   .Match(() => e)
-                  .Exists<IActivityLog>(activityLog => activityLog.EventOfTypeHappenedAfter(e.Owner, ActivityType.Fall, ActivityType.Movement))
+                  .Exists<IActivityLog>(activityLog => activityLog.EventOfTypeHappenedAfter(e, ActivityType.Fall, ActivityType.Movement))
                   .Match(() => activityLog)
                   .Exists<FallService>()
                   .Match(() => service);

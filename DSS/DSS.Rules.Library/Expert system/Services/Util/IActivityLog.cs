@@ -4,16 +4,16 @@
 
     public interface IActivityLog
     {
-        bool EventOfTypeHappenedAfter(string owner, ActivityType before, ActivityType after);
-        bool EventOfTypeHappened(string owner, ActivityType before, int minBack);
-        bool DidNotHappenAfter(string owner, ActivityType after, ActivityType didNotHappen);
+        bool EventOfTypeHappenedAfter(IOwner owner, ActivityType before, ActivityType after);
+        bool EventOfTypeHappened(IOwner owner, ActivityType before, int minBack);
+        bool DidNotHappenAfter(IOwner owner, ActivityType after, ActivityType didNotHappen);
         int TimeSince(IEvent e, ActivityType type);
 
         void Log(Activity activity);
 
-        void ChangeAssumedState(string owner, AssumedState state);
-        AssumedState GetAssumedState(string owner);
-        bool IsAssumedState(string owner, AssumedState state);
+        void ChangeAssumedState(IOwner owner, AssumedState state);
+        AssumedState GetAssumedState(IOwner owner);
+        bool IsAssumedState(IOwner owner, AssumedState state);
 
     }
 }

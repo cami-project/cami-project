@@ -30,7 +30,7 @@ namespace DSS.Rules.Library
                   .Match(() => sheduledEvent)
                   .Match(() => activityLog)
                   .Match(() => motionService)
-                  .Exists<IActivityLog>(activityLog => activityLog.DidNotHappenAfter(sheduledEvent.Owner, ActivityType.ShedulingSleepingCheck, ActivityType.Movement));
+                  .Exists<IActivityLog>(activityLog => activityLog.DidNotHappenAfter(sheduledEvent, ActivityType.ShedulingSleepingCheck, ActivityType.Movement));
 
             Then().Do(_ => motionService.MightBeSleeping(sheduledEvent));
         }

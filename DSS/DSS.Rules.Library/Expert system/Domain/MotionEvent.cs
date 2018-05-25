@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace DSS.Rules.Library
 {
-    public class MotionEvent
+    public class MotionEvent 
     {
         public class Value
         {

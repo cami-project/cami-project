@@ -7,7 +7,7 @@ namespace DSS.Rules.Library
     {
 
             MotionService service = null;
-            MotionEvent motion = null;
+            Domain.MotionEvent motion = null;
 
             public override void Define()
             {

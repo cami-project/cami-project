@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DSS.Rules.Library
 {
-    public class Scheduler : IScheduler, IIntervalInvoke
+    public class Scheduler : IScheduler
     {
         //TODO: OnExec might be a bad design
         public Action<SheduledEvent> OnExec { get; set; }
@@ -34,7 +34,6 @@ namespace DSS.Rules.Library
                     }
                     else
                     {
-
                         OnExec(e);
                     }
 

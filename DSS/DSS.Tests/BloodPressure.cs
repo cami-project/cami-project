@@ -8,14 +8,24 @@ namespace DSS.Tests
     [TestFixture]
     public class BloodPressure
     {
+
+        private IOwner usr;
+
+        [SetUp]
+        public void SetUp()
+        {
+            usr = new MockOwner("/api/v1/user/2/");
+
+        }
+
+
         [Test()]
         public void SendReminder()
         {
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.WakeUp, "Empty activity", "Test"));
-             activityLog.Log(new Activity(usr, ActivityType.Movement, "Movement detected", "Test"));
+            activityLog.Log(new Activity(usr, ActivityType.Movement, "Movement detected", "Test"));
 
             var inform = new MockInform(new MockStoreAPI(), null, activityLog);
             var ruleHandler = new RuleHandler(inform, activityLog);
@@ -27,10 +37,9 @@ namespace DSS.Tests
         public void DontSendReminder()
         {
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.WakeUp, "Empty activity", "Test"));
-             activityLog.Log(new Activity(usr, ActivityType.Movement, "Movement detected", "Test"));
+            activityLog.Log(new Activity(usr, ActivityType.Movement, "Movement detected", "Test"));
             activityLog.Log(new Activity(usr, ActivityType.BloodPressureMeasured, "Movement detected", "Test"));
 
             var inform = new MockInform(new MockStoreAPI(), null, activityLog);
@@ -43,7 +52,6 @@ namespace DSS.Tests
         public void NormalBloodPressure()
         {
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.WakeUp, "Empty activity", "Test"));
             activityLog.Log(new Activity(usr, ActivityType.Movement, "Movement detected", "Test"));
@@ -53,7 +61,7 @@ namespace DSS.Tests
             var ruleHandler = new RuleHandler(inform, activityLog);
 
             ruleHandler.Handle(new DSS.Rules.Library.Domain.BloodPressureEvent() { 
-                Owner = usr,
+                Owner = usr.Owner,
                 Diastolic = 79, 
                 Systolic = 110, 
                 Timestamp = DateTime.UtcNow 
@@ -64,7 +72,6 @@ namespace DSS.Tests
         public void NormalBloodPressure_Late()
         {
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.WakeUp, "Empty activity", "Test"));
             activityLog.Log(new Activity(usr, ActivityType.Movement, "Movement detected", "Test"));
@@ -75,7 +82,7 @@ namespace DSS.Tests
 
             ruleHandler.Handle(new DSS.Rules.Library.Domain.BloodPressureEvent()
             {
-                Owner = usr,
+                Owner = usr.Owner,
                 Diastolic = 79,
                 Systolic = 110,
                 Timestamp = DateTime.UtcNow.AddMinutes(50)

@@ -6,18 +6,18 @@ namespace DSS.Rules.Library
     public class FallRule : Rule
     {
         FallService service = null;
-        Event fall = null;
+        Domain.FallEvent fall = null;
         IActivityLog activity = null;
         bool hasArrytmia = false;
 
         public override void Define()
         {
 
-            When().Exists<Event>(fall => fall.isFall())
+            When().Exists<Domain.FallEvent>()
                   .Match(() => fall)
                   .Match(() => service)
                   .Match(() => activity)
-                  .Let(() => hasArrytmia, () => activity.EventOfTypeHappened(fall.Owner, ActivityType.LowPulse, 3));
+                  .Let(() => hasArrytmia, () => activity.EventOfTypeHappened(fall, ActivityType.LowPulse, 3));
             
             Then().Do(_ => service.InformCaregiverArrythmia(fall, hasArrytmia));
         }

@@ -15,7 +15,7 @@ namespace DSS.Rules.Library
             When().Exists<SheduledEvent>(sheduledEvent => sheduledEvent.Is(SheduleService.Type.MorningWeightReminder))
                   .Match(() => sheduledEvent)
                   .Match(() => service)
-                  .Exists<IActivityLog>(activity => activity.DidNotHappenAfter(sheduledEvent.Owner, ActivityType.WakeUp, ActivityType.WeightMeasured));
+                  .Exists<IActivityLog>(activity => activity.DidNotHappenAfter(sheduledEvent, ActivityType.WakeUp, ActivityType.WeightMeasured));
 
             Then().Do(ctx => service.SendWeightReminder(sheduledEvent));
         }

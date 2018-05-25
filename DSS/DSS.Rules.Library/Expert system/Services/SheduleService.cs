@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DSS.Rules.Library
 {
-
+    //TODO: remember to change all IOwner to add lang and timezone
     public class SheduledEvent : IEvent
     {
         public SheduleService.Type Type;
@@ -18,6 +18,8 @@ namespace DSS.Rules.Library
         public SheduledEvent(IOwner e, SheduleService.Type type, DateTime utcTime )
         {
             this.Owner = e.Owner;
+            this.Lang = e.Lang;
+            this.Timezone = e.Timezone;
             this.Type = type;
             this.UtcTime = utcTime;
         }

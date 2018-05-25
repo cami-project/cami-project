@@ -8,12 +8,22 @@ namespace DSS.Tests
     [TestFixture()]
     public class ActivityLoggerTests
     {
+
+        private IOwner usr;
+
+        [SetUp]
+        public void SetUp()
+        {
+            usr = new MockOwner("/api/v1/user/2/");
+
+        }
+
+
         [Test()]
         public void DidNotHappenAfter()
         {
 
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.Null, "Empty activity", "Test"));
             activityLog.Log(new Activity(usr, ActivityType.Fall, "Description: A fall", "Test"));
@@ -27,9 +37,8 @@ namespace DSS.Tests
         [Test()]
         public void DidNotHappenAfter_Happened()
         {
-
+            
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.Null, "Empty activity", "Test"));
             activityLog.Log(new Activity(usr, ActivityType.Fall, "Description: A fall", "Test"));
@@ -43,7 +52,6 @@ namespace DSS.Tests
         [TestCase()]
         public void ChangeAssumedState()
         {
-            var usr = "/api/v1/user/2/";
             var activityLog = new ActivityLog();
             activityLog.ChangeAssumedState(usr, AssumedState.Sleeping);
 

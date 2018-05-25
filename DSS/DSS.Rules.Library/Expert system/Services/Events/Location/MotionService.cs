@@ -12,11 +12,13 @@ namespace DSS.Rules.Library
     {
         private readonly IInform inform;
         private readonly IHandler handler;
+        private readonly IScheduler scheduler;
 
-        public MotionService(IInform inform, IHandler handler)
+        public MotionService(IInform inform, IHandler handler, IScheduler scheduler)
         {
             this.inform = inform;
             this.handler = handler;
+            this.scheduler = scheduler;
 
             var timer = new Timer
             {
@@ -39,32 +41,33 @@ namespace DSS.Rules.Library
         public void Wakeup(IEvent e)
         {
             Console.WriteLine("The user " + e.Owner + " wake up");
-            inform.ActivityLog.Log(new Activity(e, ActivityType.WakeUp));
-            inform.ActivityLog.ChangeAssumedState(e.Owner, AssumedState.Awake);
 
-            SheduleService.Add(new SheduledEvent(e, SheduleService.Type.MorningWeightReminder,DateTime.UtcNow.AddMinutes(10)));
-            SheduleService.Add(new SheduledEvent(e, SheduleService.Type.MorningBloodPressureReminder,DateTime.UtcNow.AddMinutes(10)));
+            this.inform.ActivityLog.Log(new Activity(e, ActivityType.WakeUp));
+            this.inform.ActivityLog.ChangeAssumedState(e, AssumedState.Awake);
+
+            this.scheduler.Add(new SheduledEvent(e, SheduleService.Type.MorningWeightReminder, DateTime.UtcNow.AddMinutes(10)));
+            this.scheduler.Add(new SheduledEvent(e, SheduleService.Type.MorningBloodPressureReminder,DateTime.UtcNow.AddMinutes(10)));
         }
 
         public void SheduleHouseLeftCheck(LocationChange locationChange, int min)
         {
             Console.WriteLine("Shedule house left check");
-            SheduleService.Add(new SheduledEvent(locationChange.Owner, SheduleService.Type.CheckIfLeftHouse, DateTime.UtcNow.AddMinutes(min)));
-            inform.ActivityLog.Log(new Activity(locationChange.Owner, ActivityType.ShedulingLeftHouseCheck, "", "MotionService.SheduleHouseLeftCheck(LocationChange, min)"));
+            SheduleService.Add(new SheduledEvent(locationChange, SheduleService.Type.CheckIfLeftHouse, DateTime.UtcNow.AddMinutes(min)));
+            inform.ActivityLog.Log(new Activity(locationChange, ActivityType.ShedulingLeftHouseCheck, "", "MotionService.SheduleHouseLeftCheck(LocationChange, min)"));
         }
 
         public void MightLeftHouse(SheduledEvent sheduledEvent)
         {
             Console.WriteLine("Might left the house");
-            inform.ActivityLog.Log(new Activity(sheduledEvent.Owner, ActivityType.MightLeftHouse, "", "MotionService.MightLeftHouse(SheduledEvent)"));
-            inform.ActivityLog.ChangeAssumedState(sheduledEvent.Owner, AssumedState.Outside);
+            inform.ActivityLog.Log(new Activity(sheduledEvent, ActivityType.MightLeftHouse, "", "MotionService.MightLeftHouse(SheduledEvent)"));
+            inform.ActivityLog.ChangeAssumedState(sheduledEvent, AssumedState.Outside);
 
         }
 
         public void MightBeSleeping(SheduledEvent sheduledEvent)
         {
             Console.WriteLine("Might be sleeping invoked!");
-            inform.ActivityLog.Log(new Activity(sheduledEvent.Owner, ActivityType.MightBeSleeping, "The user might be sleeping" , "MotionService.MightBeSleeping(sheduledEvent)"));
+            inform.ActivityLog.Log(new Activity(sheduledEvent, ActivityType.MightBeSleeping, "The user might be sleeping" , "MotionService.MightBeSleeping(sheduledEvent)"));
         }
 
 
@@ -128,66 +131,66 @@ namespace DSS.Rules.Library
 
         }
 
-        public void ChangeState(MotionEvent motion) 
-        {
+        //public void ChangeState(MotionEvent motion) 
+        //{
             
-            if (currentState.ContainsKey(motion.getGateway())) 
-            {
-                Console.WriteLine("CHANGE: ");
-                Console.WriteLine(currentState[motion.getGateway()]);
+        //    if (currentState.ContainsKey(motion.getGateway())) 
+        //    {
+        //        Console.WriteLine("CHANGE: ");
+        //        Console.WriteLine(currentState[motion.getGateway()]);
 
-                var state = currentState[motion.getGateway()];
+        //        var state = currentState[motion.getGateway()];
 
-                if(state.Name == motion.getLocationName())
-                {
-                    state.TimeStampMovement = motion.annotations.timestamp;
-                    state.TimeMovement = TimeService.UnixTimestampToDateTime(state.TimeStampMovement);
+        //        if(state.Name == motion.getLocationName())
+        //        {
+        //            state.TimeStampMovement = motion.annotations.timestamp;
+        //            state.TimeMovement = TimeService.UnixTimestampToDateTime(state.TimeStampMovement);
 
-                    //handleActivity(new Activity(state.Owner, state.Name, state.TimeMovement));
+        //            //handleActivity(new Activity(state.Owner, state.Name, state.TimeMovement));
 
-                    handler.Handle(new Activity(state.Owner, state.Name, state.TimeMovement));
+        //            handler.Handle(new Activity(state, state.Name, state.TimeMovement));
 
-                    Console.WriteLine("State unchanged: (movement within the same location)");
-                }
-                else 
-                {
-                    var id = motion.getGateway();
-                    Console.WriteLine("ID: " + id);
+        //            Console.WriteLine("State unchanged: (movement within the same location)");
+        //        }
+        //        else 
+        //        {
+        //            var id = motion.getGateway();
+        //            Console.WriteLine("ID: " + id);
 
-                    currentState[id] = new LocationState(motion);
+        //            currentState[id] = new LocationState(motion);
 
-                    InMemoryDB.AddHistory(id, currentState[id]);
+        //            InMemoryDB.AddHistory(id, currentState[id]);
 
-                    //handleLocationChange(new LocationChange(id, state.Name, motion.getLocationName()));
-                    //handleActivity(new Activity(id, state.Name, currentState[id].TimeEnter));
+        //            //handleLocationChange(new LocationChange(id, state.Name, motion.getLocationName()));
+        //            //handleActivity(new Activity(id, state.Name, currentState[id].TimeEnter));
 
-                    handler.Handle(new LocationChange(id, state.Name, motion.getLocationName()));
-                    handler.Handle(new Activity(id, state.Name, currentState[id].TimeEnter));
+        //            handler.Handle(new LocationChange(id, state.Name, motion.getLocationName()));
+        //            handler.Handle(new Activity(id, state.Name, currentState[id].TimeEnter));
 
-                    Console.WriteLine("State changed: " + state.Name + " to " + motion.getLocationName());
-                }
+        //            Console.WriteLine("State changed: " + state.Name + " to " + motion.getLocationName());
+        //        }
 
-            }
-            else // A fresh state for a new gateway, we assume the geteway is specific for an user
-            {
+        //    }
+        //    else // A fresh state for a new gateway, we assume the geteway is specific for an user
+        //    {
 
-                var id = motion.getGateway();
-                Console.WriteLine("ID: " +  id);
+        //        var id = motion.getGateway();
+        //        Console.WriteLine("ID: " +  id);
 
-                handler.Handle(new LocationChange(id, "NULL", motion.getLocationName()));
-                //handleLocationChange(new LocationChange(id,"NULL", motion.getLocationName()));
-                Console.WriteLine("State added:" + motion.getLocationName());
-                currentState.Add(id, new LocationState(motion));
-                InMemoryDB.AddHistory(id, currentState[id]);
-            }
-        }
+        //        handler.Handle(new LocationChange(id, "NULL", motion.getLocationName()));
+        //        //handleLocationChange(new LocationChange(id,"NULL", motion.getLocationName()));
+        //        Console.WriteLine("State added:" + motion.getLocationName());
+        //        currentState.Add(id, new LocationState(motion));
+        //        InMemoryDB.AddHistory(id, currentState[id]);
+        //    }
+        //}
 
 
         public void SheeduleSleepingCheck(IEvent e, int min)
         {
             Console.WriteLine("Sheduling the sleeping check for " + e.Owner);
-            SheduleService.Add(new SheduledEvent(e.Owner, SheduleService.Type.SleepCheck, DateTime.UtcNow.AddMinutes(min)));
-            inform.ActivityLog.Log(new Activity(e.Owner, ActivityType.ShedulingSleepingCheck, "A sleep check sheduling activity", "MotionService.Shedule"));
+            SheduleService.Add(new SheduledEvent(e, SheduleService.Type.SleepCheck, DateTime.UtcNow.AddMinutes(min)));
+            inform.ActivityLog.Log(new Activity(e, ActivityType.ShedulingSleepingCheck, "A sleep check sheduling activity", "MotionService.Shedule"));
         }
 
         public void SendBloodPreasureMeasurementReminder(Event motion)

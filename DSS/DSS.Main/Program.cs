@@ -25,8 +25,6 @@ namespace DSS.Main
             Console.WriteLine(DateTime.Now.TimeOfDay);
             Console.WriteLine("DSS invoked...##");
 
-
-
             //var insertionAPI = new InsertionAPI(insertionURL);
 
             var activityLog = new ActivityLog();
@@ -36,7 +34,6 @@ namespace DSS.Main
 
             activityLog.ActivityRuleHandler = ruleHandler.ActivityHandler;
             SheduleService.OnExec = ruleHandler.HandleSheduled;
-
 
 
             var url = "amqp://cami:cami@cami-rabbitmq:5672/cami";
@@ -55,7 +52,10 @@ namespace DSS.Main
             {
                 Interval = 30 * 1000
             };
-            timer.Elapsed += (x, y) => { SheduleService.Update(); };
+            timer.Elapsed += (x, y) => { 
+                SheduleService.Update();
+                ruleHandler.IntervalInvoke();
+            };
             timer.AutoReset = true;
             timer.Start();
 
@@ -82,8 +82,8 @@ namespace DSS.Main
                 };
                 everyDayTimer.Start();
             };
-            timerToInvokeEveryDayTimer.Start();
 
+            timerToInvokeEveryDayTimer.Start();
 
             Console.ReadKey();
 

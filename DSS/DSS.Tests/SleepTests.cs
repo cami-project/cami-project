@@ -7,11 +7,21 @@ namespace DSS.Tests
     [TestFixture()]
     public class SleepTests
     {
+
+        private IOwner usr;
+
+        [SetUp]
+        public void SetUp()
+        {
+            usr = new MockOwner("/api/v1/user/2/");
+
+        }
+
+
         [Test()]
         public void MightBeSleeping_Rule()
         {
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.Null, "Empty activity", "Test"));
             activityLog.Log(new Activity(usr, ActivityType.Movement, "Movement detected", "Test"));
@@ -31,7 +41,6 @@ namespace DSS.Tests
         public void MightBeSleeping_Interupted_Rule()
         {
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.Null, "Empty activity", "Test"));
             activityLog.Log(new Activity(usr, ActivityType.Movement, "Movement detected", "Test"));
@@ -50,14 +59,13 @@ namespace DSS.Tests
         public void WakingUpFromSleep_DuringNight_Rule()
         {
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.ChangeAssumedState(usr, AssumedState.Sleeping);
 
             var inform = new MockInform(new MockStoreAPI(), null, activityLog);
 
             var ruleHandler = new RuleHandler(inform, activityLog);
-            var motion = new LocationChange(new DSS.Rules.Library.Domain.MotionEvent() { Owner = usr}, "BEDROOM");
+            var motion = new LocationChange(new DSS.Rules.Library.Domain.MotionEvent() { Owner = usr.Owner}, "BEDROOM");
             ruleHandler.HandleLocationChange(motion);
 
             Assert.IsTrue(inform.ActivityLog.GetAssumedState(usr) == AssumedState.Awake);
@@ -68,7 +76,6 @@ namespace DSS.Tests
         public void NightWanderingConfirmedAfterAnHour()
         {
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.Movement, "Empty activity", "Test"));
             activityLog.Log(new Activity(usr, ActivityType.Movement, "Movement detected", "Test"));

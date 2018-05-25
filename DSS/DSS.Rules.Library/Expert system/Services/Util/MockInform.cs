@@ -35,5 +35,42 @@ namespace DSS.Rules.Library
         {
             throw new NotImplementedException();
         }
+
+        public void NotifyOwner(IOwner owner, NotificationType type, Severity severity, string key)
+        {
+            var t = type.ToString().ToLower();
+            var s = severity.ToString().ToLower();
+
+            Console.WriteLine("LANGIC :" + owner.Lang);
+
+            string msg = "Message not available: ";
+
+            try
+            {
+                msg = Loc.Msg(key, owner.Lang, Loc.USR);
+            }
+            catch (Exception ex)
+            {
+                msg += " : " + ex.Message;
+            }
+
+            string desc = "Description not available";
+            try
+            {
+                desc = Loc.Des(key, owner.Lang, Loc.USR);
+            }
+            catch (Exception ex)
+            {
+                desc += " : " + ex.Message;
+            }
+
+
+            Console.WriteLine("[Notifiy owner]: {0} - {1} - {2} - {3} - {4} - {5} ", owner, t, s, key, msg, desc);
+        }
+
+        public void NotifyCaregivers(IOwner owner, NotificationType type, Severity severity, string msg, string desc, bool pushNotification = true)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -8,35 +8,43 @@ namespace DSS.Tests
     [TestFixture()]
     public class MotionServiceTests
     {
+        private IOwner usr;
+
+        [SetUp]
+        public void SetUp()
+        {
+            usr = new MockOwner("/api/v1/user/2/");
+        }
+
+
         [Test()]
         public void ChangeState_addNewState()
         {
             
-            var motionService = new MotionService(null, new MockRuleHandler());
-            var usr = "/api/v1/user/2/";
+            var motionService = new MotionService(null, new MockRuleHandler(), null );
 
-            motionService.ChangeState(new Rules.Library.Domain.MotionEvent() { Owner = usr, Timestamp = DateTime.UtcNow, Location = "BEDROOM" });
+            motionService.ChangeState(new Rules.Library.Domain.MotionEvent() { Owner = usr.Owner, Timestamp = DateTime.UtcNow, Location = "BEDROOM" });
         
         }
 
         [Test()]
         public void ChangeState_addNewAndChange()
         {
-            var motionService = new MotionService(null, new MockRuleHandler());
-            var usr = "/api/v1/user/2/";
+            var motionService = new MotionService(null, new MockRuleHandler(), null);
+            //var usr = "/api/v1/user/2/";
 
-            motionService.ChangeState(new Rules.Library.Domain.MotionEvent() { Owner = usr, Timestamp = DateTime.UtcNow, Location = "KITCHEN" });
-            motionService.ChangeState(new Rules.Library.Domain.MotionEvent() { Owner = usr, Timestamp = DateTime.UtcNow, Location = "BEDROOM" });
+            motionService.ChangeState(new Rules.Library.Domain.MotionEvent() { Owner = usr.Owner, Timestamp = DateTime.UtcNow, Location = "KITCHEN" });
+            motionService.ChangeState(new Rules.Library.Domain.MotionEvent() { Owner = usr.Owner, Timestamp = DateTime.UtcNow, Location = "BEDROOM" });
         }
 
         [Test()]
         public void ChangeState_sameLocation()
         {
-            var motionService = new MotionService(null,new MockRuleHandler());
-            var usr = "/api/v1/user/2/";
+            var motionService = new MotionService(null,new MockRuleHandler(), null);
+            //var usr = "/api/v1/user/2/";
 
-            motionService.ChangeState(new Rules.Library.Domain.MotionEvent() { Owner = usr, Timestamp = DateTime.UtcNow, Location = "BEDROOM" });
-            motionService.ChangeState(new Rules.Library.Domain.MotionEvent() { Owner = usr, Timestamp = DateTime.UtcNow, Location = "BEDROOM" });
+            motionService.ChangeState(new Rules.Library.Domain.MotionEvent() { Owner = usr.Owner, Timestamp = DateTime.UtcNow, Location = "BEDROOM" });
+            motionService.ChangeState(new Rules.Library.Domain.MotionEvent() { Owner = usr.Owner, Timestamp = DateTime.UtcNow, Location = "BEDROOM" });
         }
 
         [Test()]
@@ -44,7 +52,7 @@ namespace DSS.Tests
         {
 
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
+            //var usr = "/api/v1/user/2/";
 
             var inform = new MockInform(null, null, activityLog);
 
@@ -58,7 +66,7 @@ namespace DSS.Tests
         public void Wakeup_RuleEngine()
         {
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
+            //var usr = "/api/v1/user/2/";
 
             activityLog.ChangeAssumedState(usr, AssumedState.Sleeping);
 
@@ -76,7 +84,7 @@ namespace DSS.Tests
         public void Wakeup_WeightReminder_RuleEngine()
         {
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
+            //var usr = "/api/v1/user/2/";
 
             activityLog.ChangeAssumedState(usr, AssumedState.Awake);
 
@@ -101,7 +109,7 @@ namespace DSS.Tests
         public void Wakeup_WeightReminder_WeightMeasured_RuleEngine()
         {
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
+            //var usr = "/api/v1/user/2/";
 
             activityLog.ChangeAssumedState(usr, AssumedState.Awake);
 

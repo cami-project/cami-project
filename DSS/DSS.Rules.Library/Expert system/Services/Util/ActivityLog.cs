@@ -23,20 +23,20 @@ namespace DSS.Rules.Library
             ActivityRuleHandler?.Invoke(activity);
         }
 
-        public bool EventOfTypeHappenedAfter(string owner, ActivityType before, ActivityType after)
+        public bool EventOfTypeHappenedAfter(IOwner owner, ActivityType before, ActivityType after)
         {
 
-            if(!Logger.ContainsKey(owner))
+            if(!Logger.ContainsKey(owner.Owner))
             {
                 Console.WriteLine("The user of ID: {0} does not exist in the acitiviy logger (if you see this it is probably a BUG )", owner);
                 return false;
             }
 
-            var indexOfBefore = Logger[owner].FindLastIndex(x => x.Type == before);
+            var indexOfBefore = Logger[owner.Owner].FindLastIndex(x => x.Type == before);
 
-            while (indexOfBefore < Logger[owner].Count)
+            while (indexOfBefore < Logger[owner.Owner].Count)
             {
-                if (after == Logger[owner][indexOfBefore].Type)
+                if (after == Logger[owner.Owner][indexOfBefore].Type)
                     return true;
 
                 indexOfBefore++;
@@ -44,11 +44,11 @@ namespace DSS.Rules.Library
             return false;
         }
 
-        public bool EventOfTypeHappened(string owner, ActivityType before, int minBack )
+        public bool EventOfTypeHappened(IOwner owner, ActivityType before, int minBack )
         {
-            if (!Logger.ContainsKey(owner)) throw new Exception("The user of ID: " + owner + "does not exist in the acitiviy logger(if you see this it is probably a BUG )");
+            if (!Logger.ContainsKey(owner.Owner)) throw new Exception("The user of ID: " + owner + "does not exist in the acitiviy logger(if you see this it is probably a BUG )");
 
-            var activity = Logger[owner].FindLast(x => x.Type == before);
+            var activity = Logger[owner.Owner].FindLast(x => x.Type == before);
 
             if (activity == null)
                 return false;
@@ -56,14 +56,14 @@ namespace DSS.Rules.Library
             return activity.Timestamp.AddMinutes(minBack) >= DateTime.UtcNow;
         }
 
-        public bool DidNotHappenAfter(string owner, ActivityType after, ActivityType didNotHappen)
+        public bool DidNotHappenAfter(IOwner owner, ActivityType after, ActivityType didNotHappen)
         {
 
             Console.WriteLine(after.ToString() + " - " + didNotHappen.ToString());
 
-            if (!Logger.ContainsKey(owner)) throw new Exception("The user of ID: " + owner + "does not exist in the acitiviy logger(if you see this it is probably a BUG )");
+            if (!Logger.ContainsKey(owner.Owner)) throw new Exception("The user of ID: " + owner + "does not exist in the acitiviy logger(if you see this it is probably a BUG )");
 
-            var indexOfAfter = Logger[owner].FindLastIndex(x => x.Type == after);
+            var indexOfAfter = Logger[owner.Owner].FindLastIndex(x => x.Type == after);
 
             if(indexOfAfter == -1) 
             {
@@ -71,9 +71,9 @@ namespace DSS.Rules.Library
                 return false;
             }
 
-            while (indexOfAfter < Logger[owner].Count)
+            while (indexOfAfter < Logger[owner.Owner].Count)
             {
-                if (didNotHappen == Logger[owner][indexOfAfter].Type)
+                if (didNotHappen == Logger[owner.Owner][indexOfAfter].Type)
                     return false;
 
                 indexOfAfter++;
@@ -87,30 +87,30 @@ namespace DSS.Rules.Library
             return (e.Timestamp - Logger[e.Owner].FindLast(x => x.Type == type).Timestamp).Minutes;
         }
 
-        public ActivityType GetLastActivityType(string owner)
+        public ActivityType GetLastActivityType(IOwner owner)
         {
-            return Logger[owner].Last().Type;
+            return Logger[owner.Owner].Last().Type;
         }
 
         //ASSUMED STATE
         private Dictionary<string, AssumedState> assumedState = new Dictionary<string, AssumedState>();
 
-        public void ChangeAssumedState(string owner, AssumedState state)
+        public void ChangeAssumedState(IOwner owner, AssumedState state)
         {
-            assumedState[owner] = state;
+            assumedState[owner.Owner] = state;
         }
 
-        public AssumedState GetAssumedState(string owner)
+        public AssumedState GetAssumedState(IOwner owner)
         {
-            if (assumedState.ContainsKey(owner))
-                return assumedState[owner];
+            if (assumedState.ContainsKey(owner.Owner))
+                return assumedState[owner.Owner];
             
             return AssumedState.Null;
         }
 
-        public bool IsAssumedState(string owner, AssumedState state)
+        public bool IsAssumedState(IOwner owner, AssumedState state)
         {
-            return assumedState[owner] == state;
+            return assumedState[owner.Owner] == state;
         }
     }
 }

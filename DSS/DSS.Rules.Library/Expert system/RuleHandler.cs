@@ -6,7 +6,7 @@ using DSS.RMQ;
 
 namespace DSS.Rules.Library
 {
-    public class RuleHandler : IHandler
+    public class RuleHandler : IHandler, IIntervalInvoke
     {
 
         private JsonSerializerSettings settings;
@@ -29,6 +29,8 @@ namespace DSS.Rules.Library
         private readonly IInform inform;
         private readonly IActivityLog activityLog;
 
+        private readonly IScheduler scheduler;
+
         public RuleHandler(IInform inform, IActivityLog activityLog)
         {
             this.inform = inform;
@@ -49,11 +51,13 @@ namespace DSS.Rules.Library
             Console.WriteLine("REMEBER TO REPLACE THE MOCK STORE API");
 
 
+            this.scheduler = new Scheduler();
+
             weightService = new WeightService(inform);
             pulseService = new PulseService(inform);
             stepsService = new StepsService(inform);
             reminderService = new ReminderService(inform);
-            motionService = new MotionService(inform, this);
+            motionService = new MotionService(inform, this, scheduler);
             exerciseService = new ExerciseService(inform);
             fallService = new FallService(inform);
             bloodPressureService = new BloodPressureService(inform);
@@ -282,6 +286,12 @@ namespace DSS.Rules.Library
                 Console.WriteLine("Handle activity NRULES exception: " + ex);
             }
         }
-    
-     }
+
+        public void IntervalInvoke()
+        {
+            //TODO: check if there is a better way to solve this
+            this.scheduler.IntervalInvoke();
+            this.motionService.IntervalInvoke();
+        }
+    }
 }

@@ -12,9 +12,9 @@ namespace DSS.Rules.Library
         public string Timezone { get; set; }
         public DateTime Timestamp { get; set; }
 
-        public LocationChange(string userID, string previous, string current)
+        public LocationChange(IOwner owner, string previous, string current)
         {
-            this.Owner = userID;
+            this.Owner = owner.Owner;
             this.Current = current;
             this.Previous = previous;
         }

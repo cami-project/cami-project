@@ -19,8 +19,8 @@ namespace DSS.Rules.Library
         {
             Console.WriteLine("Might be night wandering");
 
-            inform.ActivityLog.ChangeAssumedState(activity.Owner, AssumedState.Awake);
-            inform.ActivityLog.Log(new Activity(activity.Owner, ActivityType.MightBeNightWandering, "A night wandering might be detected", "SuspiciousBehaviour.NightWandering(IEvent)"));
+            inform.ActivityLog.ChangeAssumedState(activity, AssumedState.Awake);
+            inform.ActivityLog.Log(new Activity(activity, ActivityType.MightBeNightWandering, "A night wandering might be detected", "SuspiciousBehaviour.NightWandering(IEvent)"));
 
             SheduleService.Add(new SheduledEvent(activity.Owner, SheduleService.Type.CheckForNightWandering, DateTime.UtcNow.AddHours(1)));
         }
@@ -28,7 +28,7 @@ namespace DSS.Rules.Library
         public void NightWanderingConfirmed(SheduledEvent sheduledEvent)
         {
             Console.WriteLine("Night wandering confirmed for the user: " + sheduledEvent.Owner);
-            inform.ActivityLog.Log(new Activity(sheduledEvent.Owner, ActivityType.NightWanderingConfirmed, "Night wandering confirmed", "SuspiciousBehaviour.NightWanderingConfirmed(SheduledEvent)"));
+            inform.ActivityLog.Log(new Activity(sheduledEvent, ActivityType.NightWanderingConfirmed, "Night wandering confirmed", "SuspiciousBehaviour.NightWanderingConfirmed(SheduledEvent)"));
         }
     }
 }

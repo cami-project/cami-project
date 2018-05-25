@@ -49,6 +49,14 @@ namespace DSS.Rules.Library
             return string.Format("/api/v1/{0}/{1}/", path, id);
         }
 
-    
+        public void NotifyOwner(IOwner owner, NotificationType type, Severity severity, string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void NotifyCaregivers(IOwner owner, NotificationType type, Severity severity, string msg, string desc, bool pushNotification = true)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

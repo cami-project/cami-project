@@ -10,7 +10,7 @@ namespace DSS.Rules.Library
             this.inform = inform;
         }
 
-        public void InformCaregiver(Event fall)
+        public void InformCaregiver(Domain.FallEvent fall)
         {
             Console.WriteLine("[Service]: Inform caregiver");
 
@@ -25,11 +25,11 @@ namespace DSS.Rules.Library
                               Loc.Msg(Loc.FALL, fall.Lang, Loc.CAREGVR),
                               Loc.Des(Loc.FALL, fall.Lang, Loc.CAREGVR));
 
-            inform.ActivityLog.Log(new Activity(fall.Owner, ActivityType.Fall, "Fall happened", "FallService.InformCaregiver"));
+            inform.ActivityLog.Log(new Activity(fall, ActivityType.Fall, "Fall happened", "FallService.InformCaregiver"));
 
         }
 
-        public void InformCaregiverArrythmia(Event fall, bool hasArrythmia)
+        public void InformCaregiverArrythmia(Domain.FallEvent fall, bool hasArrythmia)
         {
             Console.WriteLine("[Fall Service]: Inform caregiver has arrythimia" + hasArrythmia.ToString());
 

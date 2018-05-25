@@ -102,11 +102,17 @@ namespace DSS.Rules.Library
             }
         }
 
-        public void SendWeightReminder(IEvent e)
+        public void SendWeightReminder(IOwner e)
         {
 
-            Console.WriteLine("Sending weight measurement reminder for " + e.Owner);
+            Console.WriteLine("Sending weight measurement reminder for " + e.Lang);
             inform.ActivityLog.Log(new Activity(e, ActivityType.MorningWeightReminderSent));
+            inform.NotifyOwner(e, NotificationType.Reminder, Severity.Low, Loc.REMINDER_SENT_WEIGHT);
+
+
+
+           // inform.User()
+
 
             //try
             //{

@@ -9,6 +9,17 @@ namespace DSS.Tests
     [TestFixture()]
     public class Test
     {
+
+        private IOwner usr;
+
+        [SetUp]
+        public void SetUp()
+        {
+            usr = new MockOwner("/api/v1/user/2/");
+
+        }
+
+
         [Test()]
         public void BathroomVisitsTwoDaysInRow()
         {
@@ -27,7 +38,6 @@ namespace DSS.Tests
         {
 
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.Null, "Empty activity", "Test"));
             activityLog.Log(new Activity(usr, ActivityType.Fall, "Description: A fall", "Test"));
@@ -38,9 +48,8 @@ namespace DSS.Tests
         [Test()]
         public void ActivityLog_EventOfTypeHappened()
         {
-
+            
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.Null, "Empty activity", "Test"));
             activityLog.Log(new Activity(usr, ActivityType.LowPulse, "Low pulse detected", "Test"));
@@ -51,9 +60,8 @@ namespace DSS.Tests
         [Test()]
         public void ActivityLog_EventOfTypeHappened_Timeout()
         {
-
+            
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.Null, "Empty activity", "Test"));
             var activity = new Activity(usr, ActivityType.LowPulse, "Low pulse detected", "Test");
@@ -72,7 +80,6 @@ namespace DSS.Tests
         {
 
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
 
             activityLog.Log(new Activity(usr, ActivityType.Null, "Empty activity", "Test"));
@@ -89,7 +96,6 @@ namespace DSS.Tests
         {
 
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.Null, "Empty activity", "Test"));
             activityLog.Log(new Activity(usr, ActivityType.Fall, "Description: A fall", "Test"));
@@ -104,7 +110,6 @@ namespace DSS.Tests
         {
 
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.Null, "Empty activity", "Test"));
             activityLog.Log(new Activity(usr, ActivityType.Fall, "Description: A fall", "Test"));
@@ -119,7 +124,6 @@ namespace DSS.Tests
         {
 
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             var inform = new MockInform(null, null, activityLog);
 
@@ -140,7 +144,6 @@ namespace DSS.Tests
         {
 
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.Null, "Empty activity", "Test"));
             activityLog.Log(new Activity(usr, ActivityType.LowPulse, "Low pulse detected", "Test"));
@@ -150,7 +153,7 @@ namespace DSS.Tests
 
             var ruleHandler = new RuleHandler(inform, activityLog);
 
-            ruleHandler.HandleEvent(new Event() { content = new Content() { name = "fall" }, Owner = usr, Lang = "EN" });
+            ruleHandler.HandleEvent(new Event() { content = new Content() { name = "fall" }, Owner = usr.Owner, Lang = "EN" });
 
 
             //Assert.IsTrue(activityLog.EventOfTypeHappened(usr, ActivityType.LowPulse));
@@ -161,7 +164,6 @@ namespace DSS.Tests
         {
 
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.Null, "Empty activity", "Test"));
             activityLog.Log(new Activity(usr, ActivityType.Movement, "Movement detected", "Test"));
@@ -172,7 +174,7 @@ namespace DSS.Tests
 
             var ruleHandler = new RuleHandler(inform, activityLog);
 
-            ruleHandler.HandleEvent(new Event() { content = new Content() { name = "fall" }, Owner = usr, Lang = "EN" });
+            ruleHandler.HandleEvent(new Event() { content = new Content() { name = "fall" }, Owner = usr.Owner, Lang = "EN" });
 
             //Assert.IsTrue(activityLog.EventOfTypeHappened(usr, ActivityType.LowPulse));
         }
@@ -184,7 +186,6 @@ namespace DSS.Tests
         {
 
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             var inform = new MockInform(null, null, activityLog);
             var ruleHandler = new RuleHandler(inform ,activityLog);
@@ -197,7 +198,7 @@ namespace DSS.Tests
 
             activityLog.ActivityRuleHandler = ruleHandler.ActivityHandler;
 
-            ruleHandler.HandleEvent(new Event() { content = new Content() { name = "fall" }, Owner = usr, Lang = "EN" });
+            ruleHandler.HandleEvent(new Event() { content = new Content() { name = "fall" }, Owner = usr.Owner, Lang = "EN" });
 
 
            // ruleHandler.HandleSheduled(new SheduledEvent(usr, SheduleService.Type.CheckMovementAfterFall, DateTime.Now));

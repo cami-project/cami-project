@@ -5,7 +5,7 @@ namespace DSS.Rules.Library
 {
     public class MorningBloodPressureReminder : Rule
     {
-        private SheduledEvent sheduledEvent;
+        SheduledEvent sheduledEvent;
         LocationChange location;
         ReminderService service;
 
@@ -14,7 +14,7 @@ namespace DSS.Rules.Library
             When().Exists<SheduledEvent>(sheduledEvent => sheduledEvent.Is(SheduleService.Type.MorningBloodPressureReminder))
                 .Match(() => sheduledEvent)
                 .Match(() => service)
-                .Exists<IActivityLog>(activity => activity.DidNotHappenAfter(sheduledEvent.Owner, ActivityType.WakeUp, ActivityType.BloodPressureMeasured));
+                .Exists<IActivityLog>(activity => activity.DidNotHappenAfter(sheduledEvent, ActivityType.WakeUp, ActivityType.BloodPressureMeasured));
 
             Then().Do(ctx => service.SendMorningBloodPressureReminder(sheduledEvent));
         }

@@ -9,18 +9,29 @@ namespace DSS.Tests
     [TestFixture()]
     public class OutOfHouseTests
     {
+
+        private IOwner usr;
+
+        [SetUp]
+        public void SetUp()
+        {
+            usr = new MockOwner("/api/v1/user/2/");
+
+        }
+
+
         [Test()]
         public void ShedulingOutOfHouseCheck()
         {
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
+
 
             activityLog.ChangeAssumedState(usr, AssumedState.Awake);
 
             var inform = new MockInform(new MockStoreAPI(), null, activityLog);
 
             var ruleHandler = new RuleHandler(inform, activityLog);
-            var motion = new LocationChange(new DSS.Rules.Library.Domain.MotionEvent() { Owner = usr, Location= "HALLWAY" }, "KITCHEN");
+            var motion = new LocationChange(new DSS.Rules.Library.Domain.MotionEvent() { Owner = usr.Owner, Location= "HALLWAY" }, "KITCHEN");
             ruleHandler.HandleLocationChange(motion);
 
            // Assert.IsTrue(inform.ActivityLog.GetAssumedState(usr) == AssumedState.Awake);
@@ -30,7 +41,6 @@ namespace DSS.Tests
         public void SheduledOutOfHouseCheck_Positive()
         {
             var activityLog = new ActivityLog();
-            var usr = "/api/v1/user/2/";
 
             activityLog.Log(new Activity(usr, ActivityType.Null, "Empty activity", "Test"));
             activityLog.Log(new Activity(usr, ActivityType.Movement, "Movement detected", "Test"));

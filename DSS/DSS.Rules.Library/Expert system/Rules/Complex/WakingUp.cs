@@ -15,7 +15,7 @@ namespace DSS.Rules.Library
             When().Match(() => locationChange)
                   .Match(() => motionService)
                   .Exists<ITimeService>(x => x.HappenedInMorning(locationChange))
-                  .Exists<IActivityLog>(x => x.IsAssumedState(locationChange.Owner, AssumedState.Sleeping));
+                  .Exists<IActivityLog>(x => x.IsAssumedState(locationChange, AssumedState.Sleeping));
             
             Then().Do(_ => motionService.Wakeup(locationChange));
         }

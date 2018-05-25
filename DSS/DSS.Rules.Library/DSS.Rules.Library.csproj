@@ -121,6 +121,9 @@
     <Compile Include="Expert system\Services\Util\IIntervalInvoke.cs" />
     <Compile Include="Expert system\Services\Util\IScheduler.cs" />
     <Compile Include="Expert system\Services\Util\Scheduler.cs" />
+    <Compile Include="Expert system\Domain\RichDomain\FallEvent.cs" />
+    <Compile Include="Expert system\Domain\IOwner.cs" />
+    <Compile Include="Expert system\Domain\MockOwner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
