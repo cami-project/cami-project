@@ -41,7 +41,7 @@ namespace DSS.Rules.Library
             var t = type.ToString().ToLower();
             var s = severity.ToString().ToLower();
 
-            Console.WriteLine("LANGIC :" + owner.Lang);
+            //Console.WriteLine("LANGIC :" + owner.Lang);
 
             string msg = "Message not available: ";
 

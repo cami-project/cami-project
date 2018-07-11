@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace DSS.Rules.Library.Domain
 {
     public class WeightEvent : IEvent
@@ -12,7 +14,7 @@ namespace DSS.Rules.Library.Domain
         public string Lang { get; set; }
         public string Timezone { get; set; }
         public DateTime Timestamp { get; set; }
-
+        public IList<string> Caregivers { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public bool IsDifferenceBiggerThan(float treshold)
         {

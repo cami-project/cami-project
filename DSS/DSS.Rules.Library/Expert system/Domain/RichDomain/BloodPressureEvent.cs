@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace DSS.Rules.Library.Domain
 {
     public class BloodPressureEvent : IEvent
@@ -10,6 +12,7 @@ namespace DSS.Rules.Library.Domain
 
         public int Diastolic { get; set; }
         public int Systolic { get; set; }
+        public IList<string> Caregivers { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public bool DiastolicInRange(int lower, int upper)
         {

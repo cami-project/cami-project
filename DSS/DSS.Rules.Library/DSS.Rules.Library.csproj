@@ -124,6 +124,12 @@
     <Compile Include="Expert system\Domain\RichDomain\FallEvent.cs" />
     <Compile Include="Expert system\Domain\IOwner.cs" />
     <Compile Include="Expert system\Domain\MockOwner.cs" />
+    <Compile Include="Expert system\JSON Objects\Meta\Annotations.cs" />
+    <Compile Include="Expert system\JSON Objects\Meta\Content.cs" />
+    <Compile Include="Expert system\JSON Objects\ReminderJson.cs" />
+    <Compile Include="Expert system\JSON Objects\Meta\Journal.cs" />
+    <Compile Include="Expert system\JSON Objects\Meta\User.cs" />
+    <Compile Include="Expert system\Domain\RichDomain\ReminderEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -139,6 +145,8 @@
     <Folder Include="Expert system\Rules\Internal\" />
     <Folder Include="Expert system\Services\Events\Location\" />
     <Folder Include="Expert system\Domain\RichDomain\" />
+    <Folder Include="Expert system\JSON Objects\" />
+    <Folder Include="Expert system\JSON Objects\Meta\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

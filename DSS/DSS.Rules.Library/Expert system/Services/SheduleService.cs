@@ -14,6 +14,7 @@ namespace DSS.Rules.Library
         public string Lang { get; set; }
         public string Timezone { get; set; }
         public DateTime Timestamp { get; set; }
+        public IList<string> Caregivers { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public SheduledEvent(IOwner e, SheduleService.Type type, DateTime utcTime )
         {
