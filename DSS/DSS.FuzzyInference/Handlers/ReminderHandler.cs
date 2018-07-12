@@ -148,6 +148,8 @@ namespace DSS.FuzzyInference
 
                     Console.WriteLine("Contains blood or presure " + (msg.Contains("blood") || msg.Contains("pressure")));
                     Console.WriteLine("Contains weight: " + msg.Contains("weight"));
+                    Console.WriteLine("Contains exercise: " + msg.Contains("exercise"));
+
 
                     // set the key
                     if (msg.Contains("blood") || msg.Contains("pressure")) {
@@ -155,6 +157,12 @@ namespace DSS.FuzzyInference
                     }
                     else if (msg.Contains("weight")) {
                         key = userURIPath + "_weight";
+                    }
+                    else if(msg.Contains("exercise")){
+                        key = userURIPath + "_exercise";
+                    }
+                    else if(msg.Contains("appointment")){
+                        key = userURIPath + "_appointment";
                     }
                     Console.WriteLine("[ReminderHandler] userReminder map key: " + key);
 
@@ -227,7 +235,10 @@ namespace DSS.FuzzyInference
 
                         //var expectedMessage = Loc.Get(LANG, Loc.MSG, Loc.REMINDER_SENT, Loc.USR);
 
-                        if(msg.Contains("blood") || msg.Contains("pressure")) {
+
+                        // Check for other languages as well 
+                        if (msg.Contains("blood") || msg.Contains("pressure"))
+                        {
 
                             Console.WriteLine("ACK blood pressure measurement!");
 
@@ -239,21 +250,24 @@ namespace DSS.FuzzyInference
                             aTimer.Start();
                             aTimer.Elapsed += (x, y) =>
                             {
-                                
+
                                 Console.WriteLine("Blood pressure check invoked");
 
                                 if (!storeAPI.CheckForMeasuremntInLastNMinutes("blood_pressure", 6, int.Parse(userIdStr)))
                                 {
                                     Console.WriteLine("Blood pressure wasn't measured");
 
-                                    InformCaregivers(userURIPath, "heart", "high", 
-                                                     Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR),
-                                                     Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR));
+                                    //InformCaregivers(userURIPath, "heart", "high", 
+                                    //Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR),
+                                    //Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED, Loc.CAREGVR));
+
+                                    InformCaregivers(userURIPath, "heart", "high", getLocalizedMessage("BP", LANG, "ACK"), getLocalizedMessage("BP", LANG, "ACK"));
                                 }
                             };
 
-                        }
-                        else if(msg.Contains("weight")){
+                        } //other langs 
+                        else if (msg.Contains("weight"))
+                        {
 
                             Console.WriteLine("ACK Weight measurement!");
 
@@ -270,12 +284,23 @@ namespace DSS.FuzzyInference
                                 {
                                     Console.WriteLine("Weight wasn't measured");
 
-                                    InformCaregivers(userURIPath, "weight", "high",
-                                                     Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED_WEIGHT, Loc.CAREGVR),
-                                                     Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED_WEIGHT, Loc.CAREGVR));
+                                    //InformCaregivers(userURIPath, "weight", "high",
+                                    //Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_IGNORED_WEIGHT, Loc.CAREGVR),
+                                    //Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_IGNORED_WEIGHT, Loc.CAREGVR));
+
+                                    InformCaregivers(userURIPath, "weight", "high", getLocalizedMessage("WE", LANG, "ACK"), getLocalizedMessage("WE", LANG, "ACK"));
+
                                 }
 
                             };
+                        }
+                        else if (msg.Contains("exercise"))
+                        {
+                            InformCaregivers(userURIPath, "exercise", "medium", getLocalizedMessage("EX", LANG, "ACK"), getLocalizedMessage("EX", LANG, "ACK"));
+                        }
+                        else if (msg.Contains("appointment")) 
+                        {
+                            InformCaregivers(userURIPath, "appointment", "high", getLocalizedMessage("AP", LANG, "ACK"), getLocalizedMessage("AP", LANG, "ACK"));
                         }
 
                         Console.WriteLine("[ReminderHandler] userReminder map key: " + key);
@@ -292,15 +317,35 @@ namespace DSS.FuzzyInference
                             key = userURIPath + "_blood_pressure";
 
                             Console.WriteLine("Snoozed blood pressure measurement!");
-                            InformCaregivers(userURIPath, "heart", "medium", Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_POSTPONED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_POSTPONED, Loc.CAREGVR));
+                           // InformCaregivers(userURIPath, "heart", "medium", Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_POSTPONED, Loc.CAREGVR), Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_POSTPONED, Loc.CAREGVR));
+                        
+                            InformCaregivers(userURIPath, "heart", "medium", getLocalizedMessage("BP", LANG, "SNO"), getLocalizedMessage("BP", LANG, "SNO"));
+                        
                         }
                         else if(msg.Contains("weight")) {
                             // set key
                             key = userURIPath + "_weight";
 
                             Console.WriteLine("Snoozed weight measurement!");
-                            InformCaregivers(userURIPath, "weight", "medium", Loc.Get(LANG, Loc.MSG, Loc.MEASUREMENT_POSTPONED_WEIGHT, Loc.CAREGVR),
-                                Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_POSTPONED_WEIGHT, Loc.CAREGVR));
+                            InformCaregivers(userURIPath, "weight", "medium", getLocalizedMessage("WE", LANG, "SNO"), getLocalizedMessage("WE", LANG, "SNO"));
+                            
+                            //Loc.Get(LANG, Loc.DES, Loc.MEASUREMENT_POSTPONED_WEIGHT, Loc.CAREGVR));
+                        }
+                        else if(msg.Contains("exercise")) {
+
+                            key = userURIPath + "_exercise";
+                       
+                            Console.WriteLine("Snoozed exercise!");
+                            InformCaregivers(userURIPath, "exercise", "medium", getLocalizedMessage("EX", LANG, "SNO"), getLocalizedMessage("EX", LANG, "SNO"));
+
+                        }
+                        else if(msg.Contains("appointment")) {
+
+                            key = userURIPath + "_appointment";
+
+                            Console.WriteLine("Snoozed appointment!");
+                            InformCaregivers(userURIPath, "appointment", "high", getLocalizedMessage("AP", LANG, "SNO"), getLocalizedMessage("AP", LANG, "SNO"));
+
                         }
 
                         Console.WriteLine("[ReminderHandler] userReminder map key: " + key);
@@ -310,5 +355,44 @@ namespace DSS.FuzzyInference
             }
 
         }
+
+        private string getLocalizedMessage(string category, string lang, string type) {
+
+
+            if(type != "ACK"){
+
+                if (lang == "EN") return string.Format("The person under your care postponed the reminder for {0}.", getLocalizedCategory(category, lang));
+                if (lang == "DK") return string.Format("Den person under din pleje har annulleret påmindelsen om at {0}", getLocalizedCategory(category, lang));
+                if (lang == "PO") return string.Format("Osoba, którą się opiekujesz, anulowano przypomnienie do {0}", getLocalizedCategory(category, lang));
+                if (lang == "RO") return string.Format("Persoana in grija dvs. a anulat notificarea pentru {0}", getLocalizedCategory(category, lang));
+
+            }
+            else {
+
+                if (lang == "EN") return string.Format("The person under your care acknowledged the reminder for {0}.", getLocalizedCategory(category, lang));
+                if (lang == "DK") return string.Format("Den person under din pleje har anerkendt påmindelsen om at {0}", getLocalizedCategory(category, lang));
+                if (lang == "PO") return string.Format("Osoba, którą się opiekujesz, anulowano przypomnienie do {0}", getLocalizedCategory(category, lang));
+                if (lang == "RO") return string.Format("Peroana in grija dvs. a confirmat notificarea pentru {0}", getLocalizedCategory(category, lang));
+
+            }
+
+            return "No string found for " + category + " / " + type + " / " + lang;
+        }
+
+    private string getLocalizedCategory(string category, string lang) {
+
+
+        if (lang == "EN")
+        {
+                if (category == "BP") return "blood pressure measurement";
+                if (category == "WE") return "weight measurement";
+                if (category == "EX") return "exercise";
+                if (category == "AP") return "appointment";
+        }
+
+            return "Missing the translation for category " + category + " in " + lang;
+
+    }
+
     }
 }
