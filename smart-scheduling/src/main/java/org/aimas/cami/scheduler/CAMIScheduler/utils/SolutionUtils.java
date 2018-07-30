@@ -81,6 +81,7 @@ public class SolutionUtils<Solution_> {
 						activity.setPeriodDomainRangeList(Utility.determineValueRange(activitySchedule, activity));
 						activity.setId(
 								activityList.isEmpty() ? 0L : activityList.get(activityList.size() - 1).getId() + 1);
+						activity.setUuid(Utility.generateRandomUuid());
 
 						scoreDirector.beforeEntityAdded(activity);
 						activityList.add(activity);
@@ -152,6 +153,7 @@ public class SolutionUtils<Solution_> {
 								relativeActivity.setImmovable(newActivity.isImmovable());
 								relativeActivity.setId(activityList.isEmpty() ? 0L
 										: activityList.get(activityList.size() - 1).getId() + 1);
+								relativeActivity.setUuid(Utility.generateRandomUuid());
 
 								scoreDirector.beforeEntityAdded(relativeActivity);
 								activityList.add(relativeActivity);

@@ -8,6 +8,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
 import org.aimas.cami.scheduler.CAMIScheduler.domain.Activity;
 import org.aimas.cami.scheduler.CAMIScheduler.domain.ActivityCategory;
@@ -65,13 +66,31 @@ public class CAMITaskSchedulerGenerator extends LoggingMain {
 	}
 
 	private void writeActivitySchedule() {
-		String filename = "cami-scenario";
-		File outputFile = new File(outputDir, filename + ".xml");
+		String unsolvedFilename = "cami-scenario";
+		String solvedFilename = "cami-scenario-solved";
+		File unsolvedOutputFile = new File(outputDir, unsolvedFilename + ".xml");
+		File solvedOutputFile = new File(new File(solutionDao.getDataDir(), "solved"), solvedFilename + ".xml");
 
-		ActivitySchedule activitySchedule = createActivitySchedule();
+		ActivitySchedule activitySchedule = null;
+
+		Scanner answer = new Scanner(System.in);
+		System.out.println("Do you want to generate an empty schedule? [YES / NO]");
+
+		if (answer.hasNextLine()) {
+			if (answer.nextLine().toLowerCase().equals("yes")) {
+				activitySchedule = createEmptyActivitySchedule();
+
+				// also write the solved solution, because it is empty
+				solutionDao.writeSolution(activitySchedule, solvedOutputFile);
+			} else
+				activitySchedule = createActivitySchedule();
+		}
+
+		answer.close();
 
 		// write the schedule to the file
-		solutionDao.writeSolution(activitySchedule, outputFile);
+		if (activitySchedule != null)
+			solutionDao.writeSolution(activitySchedule, unsolvedOutputFile);
 	}
 
 	/**
@@ -92,6 +111,25 @@ public class CAMITaskSchedulerGenerator extends LoggingMain {
 		predefinedScoreParametrization(activitySchedule);
 		setPeriodDomainRange(activitySchedule);
 		setUuid(activitySchedule);
+
+		return activitySchedule;
+	}
+	
+	/**
+	 * Create an empty schedule.
+	 * 
+	 * @return {@link ActivitySchedule}
+	 */
+	private ActivitySchedule createEmptyActivitySchedule() {
+		ActivitySchedule activitySchedule = new ActivitySchedule();
+		activitySchedule.setId(0L);
+
+		createActivityDomainList(activitySchedule);
+		createEmptyActivityList(activitySchedule);
+		createTimeList(activitySchedule);
+		createWeekDayList(activitySchedule);
+		createActivityPeriodList(activitySchedule);
+		predefinedScoreParametrization(activitySchedule);
 
 		return activitySchedule;
 	}
@@ -220,6 +258,24 @@ public class CAMITaskSchedulerGenerator extends LoggingMain {
 		activitySchedule.setActivityCategoryList(activityCategoryListAll);
 
 		activitySchedule.setActivityDomainList(activityDomainList);
+	}
+	
+	/**
+	 * Create empty lists for the solution.
+	 * 
+	 * @param activitySchedule
+	 *            {@link ActivitySchedule}
+	 */
+	private void createEmptyActivityList(ActivitySchedule activitySchedule) {
+		List<ExcludedTimePeriodsPenalty> excludedTimePeriodsPenaltyList = new ArrayList<>();
+		List<RelativeActivityPenalty> relativeActivityPenaltyList = new ArrayList<>();
+		List<ActivityType> activityTypeList = new ArrayList<>();
+		List<Activity> activityList = new ArrayList<>();
+		
+		activitySchedule.setActivityTypeList(activityTypeList);
+		activitySchedule.setActivityList(activityList);
+		activitySchedule.setExcludedTimePeriodsList(excludedTimePeriodsPenaltyList);
+		activitySchedule.setRelativeActivityPenaltyList(relativeActivityPenaltyList);
 	}
 
 	/**
