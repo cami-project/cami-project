@@ -1,0 +1,376 @@
+swagger: '2.0'
+info:
+  description: API description for CAMI Activity Scheduling Service.
+  version: 1.0.0
+  title: Swagger CAMI Activity Scheduling
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: localhost
+basePath: /api
+tags:
+  - name: activity
+    description: Everything about an activity
+    externalDocs:
+      description: Find out more
+      url: 'http://swagger.io'
+schemes:
+  - http
+paths:
+  /new_activity:
+    post:
+      tags:
+        - activity
+      summary: Add a new activity to the schedule
+      description: ''
+      operationId: putNewActivity
+      consumes:
+        - application/xml
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Activity object that needs to be added to the schedule
+          required: true
+          schema:
+            $ref: '#/definitions/NewActivity'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ChangedActivities'
+        '405':
+          description: Invalid input
+      security:
+        - cami_auth:
+            - 'write:schedule'
+            - 'read:schedule'
+  /activity_schedule:
+    get:
+      tags:
+        - activity
+      summary: Get activity schedule
+      description: Get activity schedule
+      operationId: getActivitySchedule
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActivityProperties'
+        '400':
+          description: Invalid status value
+      security:
+        - cami_auth:
+            - 'write:schedule'
+            - 'read:schedule'
+  /delete_activity:
+    delete:
+      tags:
+        - activity
+      summary: Delete an activity
+      description: Delete an activity from schedule
+      operationId: deleteActivity
+      consumes:
+        - application/xml
+      parameters:
+        - in: body
+          name: body
+          description: Activity object properties that needs to be deleted from the schedule
+          required: true
+          schema:
+            $ref: '#/definitions/DeletedActivity'
+      produces: 
+        - ""
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Invalid status value
+      security:
+        - cami_auth:
+            - 'write:schedule'
+            - 'read:schedule'
+securityDefinitions:
+  cami_auth:
+    type: oauth2
+    authorizationUrl: 'http://cami.swagger.io/oauth/dialog'
+    flow: implicit
+    scopes:
+      'write:schedule': add activity to the schedule
+      'read:schedule': read your schedule
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header
+definitions:
+  ActivityProperties:
+    type: object
+    properties:
+      id:
+        type: integer
+      activity:
+        type: string
+      activityPeriod:
+        type: string
+      activityDurationInMinutes:
+        type: integer
+    xml:
+      name: ActivityProperties
+  ChangedActivities:
+    type: object
+    properties:
+      numberOfChangedActivities:
+        type: integer
+      changedActivities:
+        type: array
+        items:
+          $ref: '#/definitions/ChangedActivity'
+    xml:
+      name: ChangedActivities
+  ChangedActivity:
+    type: object
+    properties:
+      id:
+        type: integer
+      activity:
+        type: string
+      oldActivityPeriod:
+        type: string
+      newActivityPeriod:
+        type: string
+      activityDurationInMinutes:
+        type: integer
+    xml:
+      name: ChangedActivity
+  ActivityCategory:
+    type: object
+    properties:
+      code:
+        type: string
+      domain:
+        $ref: '#/definitions/ActivityDomain'
+    xml:
+      name: ActivityCategory
+  ActivityDomain:
+    type: object
+    properties:
+      categories:
+        type: array
+        items:
+          $ref: '#/definitions/ActivityCategory'
+      code:
+        type: string
+      description:
+        type: string
+    xml:
+      name: ActivityDomain
+  Activity:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      activityType:
+        $ref: '#/definitions/ActivityType'
+    xml:
+      name: Activity
+  NormalActivity:
+    type: object
+    allOf:
+      - $ref: '#/definitions/Activity'
+    properties:
+      activityPeriod:
+        $ref: '#/definitions/ActivityPeriod'
+    description: Extends 'Activity'
+    xml:
+      name: NormalActivity
+  NormalRelativeActivity:
+    type: object
+    allOf:
+      - $ref: '#/definitions/Activity'
+    properties:
+      activityPeriod:
+        $ref: '#/definitions/ActivityPeriod'
+      offset:
+        type: integer
+      assigned:
+        type: boolean
+    description: Extends 'Activity'
+    xml:
+      name: NormalRelativeActivity
+  ActivityType:
+    type: object
+    properties:
+      code:
+        type: string
+      duration:
+        type: integer
+      difficulty:
+        $ref: '#/definitions/Difficulty'
+      calories:
+        type: integer
+      instancesPerDay:
+        type: integer
+      instancesPerWeek:
+        type: integer
+      imposedPeriod:
+        $ref: '#/definitions/ActivityPeriod'
+      permittedIntervals:
+        type: array
+        items:
+          $ref: '#/definitions/TimeInterval'
+      activityCategory:
+        $ref: '#/definitions/ActivityCategory'
+      description:
+        type: string
+    xml:
+      name: ActivityType
+  ActivityPeriod:
+    type: object
+    properties:
+      time:
+        $ref: '#/definitions/Time'
+      weekDay:
+        $ref: '#/definitions/WeekDay'
+    xml:
+      name: ActivityPeriod
+  Time:
+    type: object
+    properties:
+      hour:
+        type: integer
+      minutes:
+        type: integer
+    xml:
+      name: Time
+  WeekDay:
+    type: object
+    properties:
+      dayIndex:
+        type: integer
+        description: "Day of week"
+        enum:
+          - MONDAY
+          - TUESDAY
+          - WEDNESDAY
+          - THURSDAY
+          - FRIDAY
+          - SATURDAY
+          - SUNDAY
+    description: Uses WeekDays to get a value using dayIndex
+    xml:
+      name: WeekDay
+  WeekDays:
+    type: integer
+    enum:
+      - MONDAY
+      - TUESDAY
+      - WEDNESDAY
+      - THURSDAY
+      - FRIDAY
+      - SATURDAY
+      - SUNDAY
+    xml:
+      name: WeekDays
+  TimeInterval:
+    type: object
+    properties:
+      minStart:
+        $ref: '#/definitions/Time'
+      maxEnd:
+        $ref: '#/definitions/Time'
+    xml:
+      name: TimeInterval
+  PeriodInterval:
+    type: object
+    properties:
+      startPeriod:
+        $ref: '#/definitions/ActivityPeriod'
+      endPeriod:
+        $ref: '#/definitions/ActivityPeriod'
+    xml:
+      name: PeriodInterval
+  Difficulty:
+    type: integer
+    enum:
+      - EASY
+      - MEDIUM
+      - HARD
+    xml:
+      name: Difficulty
+  RelativeType:
+    type: integer
+    enum:
+      - BEFORE
+      - AFTER
+    xml:
+      name: RelativeType
+  NewActivity:
+    type: object
+    description: Can use NormalActivity or NormalRelativeActivity
+    properties:
+      activity:
+        $ref: '#/definitions/Activity'
+      excludedTimePeriodsPenalty:
+        $ref: '#/definitions/ExcludedTimePeriodsPenalty'
+      relativeActivityPenalty:
+        $ref: '#/definitions/RelativeActivityPenalty'
+    xml:
+      name: NewActivity
+  DeletedActivity:
+    type: object
+    description: Activity that has to be deleted
+    properties:
+      name:
+        type: string
+      uuid:
+        type: string
+    xml:
+      name: DeletedActivity
+  ExcludedTimePeriodsPenalty:
+    type: object
+    properties:
+      activityType:
+        $ref: '#/definitions/ActivityType'
+      excludedActivityPeriods:
+        type: array
+        items:
+          $ref: '#/definitions/PeriodInterval'
+    xml:
+      name: ExcludedTimePeriodsPenalty
+  RelativeActivityPenalty:
+    type: object
+    properties:
+      relativeType:
+        $ref: '#/definitions/RelativeType'
+      relativeActivityType:
+        type: string
+      normalActivityType:
+        type: string
+      category:
+        type: string
+    xml:
+      name: RelativeActivityPenalty
+  ApiResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      type:
+        type: string
+      message:
+        type: string
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'

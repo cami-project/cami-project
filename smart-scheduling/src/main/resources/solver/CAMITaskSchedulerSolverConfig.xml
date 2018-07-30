@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver>
+  <!--<randomType>MERSENNE_TWISTER</randomType>-->
+  <!--<environmentMode>FAST_ASSERT</environmentMode>-->
+
+  <!-- uncomment this if you want random seed, unless, the solution generated will be the same every time(useful for debugging) -->
+  <!--<environmentMode>NON_REPRODUCIBLE</environmentMode>-->
+  <solutionClass>org.aimas.cami.scheduler.CAMIScheduler.domain.ActivitySchedule</solutionClass>
+  <entityClass>org.aimas.cami.scheduler.CAMIScheduler.domain.NormalActivity</entityClass>
+  <entityClass>org.aimas.cami.scheduler.CAMIScheduler.domain.NormalRelativeActivity</entityClass>
+
+  <scoreDirectorFactory>
+    <scoreDrl>solver/CAMITaskSchedulerScoreRules.drl</scoreDrl>
+    <initializingScoreTrend>ONLY_DOWN/ONLY_DOWN</initializingScoreTrend>
+  </scoreDirectorFactory>
+
+  <termination>
+    <!--<secondsSpentLimit>120</secondsSpentLimit>-->
+    <bestScoreLimit>0hard/0soft</bestScoreLimit>
+  </termination>
+  <constructionHeuristic>
+    <constructionHeuristicType>STRONGEST_FIT_DECREASING</constructionHeuristicType>
+  </constructionHeuristic>
+  <localSearch>
+    <termination>
+      <unimprovedSecondsSpentLimit>10</unimprovedSecondsSpentLimit>
+    </termination>
+    <unionMoveSelector>
+	  <changeMoveSelector>
+	    <cacheType>PHASE</cacheType>
+	    <selectionOrder>RANDOM</selectionOrder>
+        <entitySelector>
+          <filterClass>org.aimas.cami.scheduler.CAMIScheduler.solver.move.MovableActivitySelectionFilter</filterClass>
+        </entitySelector>
+      </changeMoveSelector>
+      <swapMoveSelector/>
+    </unionMoveSelector>
+    <acceptor>
+      <simulatedAnnealingStartingTemperature>2hard/200soft</simulatedAnnealingStartingTemperature>
+      <lateAcceptanceSize>100</lateAcceptanceSize>
+    </acceptor>
+    <forager>
+      <acceptedCountLimit>1</acceptedCountLimit>
+      <pickEarlyType>FIRST_BEST_SCORE_IMPROVING</pickEarlyType>
+      <!--<pickEarlyType>FIRST_LAST_STEP_SCORE_IMPROVING</pickEarlyType>-->
+    </forager>
+  </localSearch>
+</solver>

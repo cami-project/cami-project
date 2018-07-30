@@ -1,0 +1,69 @@
+<NewActivity id="1">
+  <id>0</id>
+  <activity class="NormalActivity" id="2">
+    <activityType id="3">
+      <id>0</id>
+      <code>Yoga</code>
+      <duration>30</duration>
+      <calories>0</calories>
+      <instancesPerDay>0</instancesPerDay>
+      <instancesPerWeek>0</instancesPerWeek>
+      <permittedIntervals id="4">
+        <TimeInterval id="5">
+          <minStart id="6">
+            <hour>7</hour>
+            <minutes>0</minutes>
+          </minStart>
+          <maxEnd id="7">
+            <hour>10</hour>
+            <minutes>0</minutes>
+          </maxEnd>
+        </TimeInterval>
+        <TimeInterval id="8">
+          <minStart id="9">
+            <hour>14</hour>
+            <minutes>0</minutes>
+          </minStart>
+          <maxEnd id="10">
+            <hour>18</hour>
+            <minutes>0</minutes>
+          </maxEnd>
+        </TimeInterval>
+      </permittedIntervals>
+      <activityCategory id="11">
+        <code>Indoor physical exercises</code>
+        <domain id="12">
+          <code>Health Related Activities</code>
+        </domain>
+      </activityCategory>
+    </activityType>
+    <immovable>false</immovable>
+    <wantedToBePlanned>false</wantedToBePlanned>
+    <onDropdown>false</onDropdown>
+  </activity>
+  <excludedTimePeriodsPenalty id="13">
+    <activityType reference="3"/>
+    <excludedActivityPeriods id="14">
+      <PeriodInterval id="15">
+        <startPeriod id="16">
+          <time id="17">
+            <hour>0</hour>
+            <minutes>0</minutes>
+          </time>
+          <weekDay id="18">
+            <dayIndex>6</dayIndex>
+          </weekDay>
+          <periodIndex>0</periodIndex>
+        </startPeriod>
+        <endPeriod id="19">
+          <time id="20">
+            <hour>24</hour>
+            <minutes>0</minutes>
+          </time>
+          <weekDay reference="18"/>
+          <periodIndex>0</periodIndex>
+        </endPeriod>
+      </PeriodInterval>
+    </excludedActivityPeriods>
+  </excludedTimePeriodsPenalty>
+</NewActivity>

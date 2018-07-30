@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plannerBenchmark>
+  <benchmarkDirectory>data/activityschedule</benchmarkDirectory>
+  <parallelBenchmarkCount>AUTO</parallelBenchmarkCount>
+  <inheritedSolverBenchmark>
+    <problemBenchmarks>
+      <xStreamAnnotatedClass>org.aimas.cami.scheduler.CAMIScheduler.domain.ActivitySchedule</xStreamAnnotatedClass>
+      <inputSolutionFile>data/activityschedule/unsolved/cami-scenario.xml</inputSolutionFile>
+      <problemStatisticType>BEST_SCORE</problemStatisticType>
+      <problemStatisticType>SCORE_CALCULATION_SPEED</problemStatisticType>
+    </problemBenchmarks>
+    <solver>
+      <scanAnnotatedClasses/>
+      <scoreDirectorFactory>
+        <scoreDrl>solver/CAMITaskSchedulerScoreRules.drl</scoreDrl>
+      </scoreDirectorFactory>
+      <termination>
+        <minutesSpentLimit>5</minutesSpentLimit>
+      </termination>
+    </solver>
+  </inheritedSolverBenchmark>
+  <solverBenchmark>
+    <name>First Fit</name>
+    <solver>
+      <constructionHeuristic>
+        <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+      </constructionHeuristic>
+    </solver>
+  </solverBenchmark>
+
+  <solverBenchmark>
+    <name>Tabu Search</name>
+    <solver>
+      <constructionHeuristic>
+        <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+      </constructionHeuristic>
+      <localSearch>
+        <unionMoveSelector>
+          <changeMoveSelector>
+	        <cacheType>PHASE</cacheType>
+            <entitySelector>
+              <filterClass>org.aimas.cami.scheduler.CAMIScheduler.solver.move.MovableActivitySelectionFilter</filterClass>
+            </entitySelector>
+          </changeMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>1</entityTabuSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>200</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+  <solverBenchmark>
+    <name>Late Acceptance</name>
+    <solver>
+      <constructionHeuristic>
+        <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+      </constructionHeuristic>
+      <localSearch>
+        <unionMoveSelector>
+          <changeMoveSelector>
+	        <cacheType>PHASE</cacheType>
+            <entitySelector>
+              <filterClass>org.aimas.cami.scheduler.CAMIScheduler.solver.move.MovableActivitySelectionFilter</filterClass>
+            </entitySelector>
+          </changeMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <lateAcceptanceSize>1000</lateAcceptanceSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>4</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+  
+  <solverBenchmark>
+    <name>Simulated Annealing</name>
+    <solver>
+      <constructionHeuristic>
+        <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+      </constructionHeuristic>
+      <localSearch>
+        <unionMoveSelector>
+          <changeMoveSelector>
+	        <cacheType>PHASE</cacheType>
+            <entitySelector>
+              <filterClass>org.aimas.cami.scheduler.CAMIScheduler.solver.move.MovableActivitySelectionFilter</filterClass>
+            </entitySelector>
+          </changeMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <simulatedAnnealingStartingTemperature>0hard/100soft</simulatedAnnealingStartingTemperature>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+
+  <solverBenchmark>
+    <name>Simulated Annealing and Late Acceptance</name>
+    <solver>
+      <constructionHeuristic>
+        <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+      </constructionHeuristic>
+      <localSearch>
+        <unionMoveSelector>
+          <changeMoveSelector>
+	        <cacheType>PHASE</cacheType>
+            <entitySelector>
+              <filterClass>org.aimas.cami.scheduler.CAMIScheduler.solver.move.MovableActivitySelectionFilter</filterClass>
+            </entitySelector>
+          </changeMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <simulatedAnnealingStartingTemperature>2hard/100soft</simulatedAnnealingStartingTemperature>
+          <lateAcceptanceSize>300</lateAcceptanceSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+</plannerBenchmark>

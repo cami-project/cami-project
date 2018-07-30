@@ -1,0 +1,109 @@
+version: '2'
+services:
+  cami-mysql:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-mysql
+    ports:
+      # Make the MySQL server available on the host so VMs can access it
+      - "3307:3306"
+
+  cami-rabbitmq:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-rabbitmq
+    ports:
+      # Make the RabbitMQ server available on the host so VMs can access it
+      - "5673:5672"
+      - "15673:15672"
+
+  cami-store:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-store
+    links:
+      - cami-mysql
+    ports:
+      - "8008:8008"
+    volumes:
+      - .:/cami-project
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-entrypoint.sh
+
+  cami-store-migrate:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-store
+    links:
+      - cami-mysql
+    volumes:
+      - .:/cami-project
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-mysql:3306 -- docker-migration-entrypoint.sh
+
+  # Runs the Celery worker for consuming measurements and distribute them to the Linkwatch platform
+  cami-linkwatch-worker:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-linkwatch
+    links:
+      - cami-rabbitmq
+    volumes:
+      - .:/cami-project
+    entrypoint: docker-message-worker-entrypoint-dev.sh
+
+  # Runs the Celery worker for consuming messages received by the google-calendar
+  cami-google-calendar:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-google-calendar
+    links:
+      - cami-rabbitmq
+    volumes:
+      - .:/cami-project
+    entrypoint: docker-message-worker-entrypoint-dev.sh
+
+  # Runs the Celery task scheduler for google-calendar
+  cami-google-calendar-task-scheduler:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-google-calendar
+    links:
+      - cami-rabbitmq
+    volumes:
+      - .:/cami-project
+    entrypoint: docker-task-scheduler-entrypoint-dev.sh
+
+# Runs the CAMI Insertion Service implementing the endpoints for measurement and event insertion into the
+# CAMI Event Stream Manager (the RabbitMQ message broker)
+  cami-insertion:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-insertion
+    links:
+      # Needs the RabbitMQ broker
+      - cami-rabbitmq
+    volumes:
+      - .:/cami-project
+    ports:
+      - "8010:8010"
+    entrypoint: ./docker/lib/wait-for-it/wait-for-it.sh -s -t 30 cami-rabbitmq:5672 -- docker-entrypoint.sh
+
+  # Runs the smart scheduling service implementing the endpoints for updating the schedule with activities that come
+  # from google-calendar
+  cami-smart-scheduling:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-smart-scheduling
+    volumes:
+      - .:/cami-project
+    ports:
+      - "8080:8080"
+    entrypoint: docker-smart-scheduling-entrypoint.sh
+
+
+volumes:
+    .:
+      external: True
+
+    #DSS:
+    #  external: True
+
