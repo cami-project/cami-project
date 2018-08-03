@@ -6,6 +6,12 @@
 python /cami-project/store/manage.py migrate
 python /cami-project/store/manage.py loaddata initialize.json
 
+# Make all migrations from scratch
+#python /cami-project/store/manage.py sqlflush
+#python /cami-project/store/manage.py makemigrations
+#python /cami-project/store/manage.py migrate --fake
+#python /cami-project/store/manage.py migrate
+
 # Create Django superuser account if not exists
 #USER="cami"
 #PASS="CamiAdmin4321"
