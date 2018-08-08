@@ -49,7 +49,7 @@ translation_dict = {
             "en": "The person under your care has to take their medicine at %s",
             "ro": "Persoana in grija dvs. trebuie sa-si ia medicamentele la %s",
             "dk": "Personen du er plejer for har skal tage sin medicin klokken %s",
-            "pl": "Osoba, którą się opiekujesz ma wsiąść lekarstwa o %s",
+            "pl": "Osoba, którą się opiekujesz ma wsiąć lekarstwa o %s",
         }
     }
 }
