@@ -14,7 +14,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @XStreamAlias("ActivityDomain")
 public class ActivityDomain extends AbstractPersistable {
 
-	private List<ActivityCategory> categories;
 	private String code; // domain's name
 	private String description;
 
@@ -37,14 +36,6 @@ public class ActivityDomain extends AbstractPersistable {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public List<ActivityCategory> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(List<ActivityCategory> categories) {
-		this.categories = categories;
 	}
 
 	@Override

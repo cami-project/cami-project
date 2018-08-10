@@ -20,24 +20,25 @@ import org.aimas.cami.scheduler.CAMIScheduler.solver.solver.ProblemSolver;
 import org.optaplanner.core.impl.score.director.ScoreDirector;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 
 public class SolutionUtils<Solution_> {
 
-	public void addNewActivityFromXML(SolutionBusiness<Solution_> solutionBusiness, Object xmlActivity,
+	public void addNewActivityFromXML(SolutionBusiness<Solution_> solutionBusiness, Object jsonActivity,
 			ProblemSolver problemSolver) {
 
 		NewActivities newActivitiesDAO = null;
 
-		// get the NewActivities instance from the xml object
-		XStream xStream = new XStream();
+		// get the NewActivities instance from the xstream json object
+		XStream xStream = new XStream(new JettisonMappedXmlDriver());
 		xStream.alias("NewActivities", NewActivities.class);
-		xStream.setMode(XStream.ID_REFERENCES);
+		xStream.setMode(XStream.NO_REFERENCES);
 		xStream.autodetectAnnotations(true);
 
-		if (xmlActivity instanceof String) {
-			newActivitiesDAO = (NewActivities) xStream.fromXML((String) xmlActivity);
+		if (jsonActivity instanceof String) {
+			newActivitiesDAO = (NewActivities) xStream.fromXML((String) jsonActivity);
 		} else {
-			newActivitiesDAO = (NewActivities) xStream.fromXML((Reader) xmlActivity);
+			newActivitiesDAO = (NewActivities) xStream.fromXML((Reader) jsonActivity);
 		}
 
 		List<NewActivity> newActivitiesList = newActivitiesDAO.getNewActivities();
@@ -81,7 +82,7 @@ public class SolutionUtils<Solution_> {
 						activity.setPeriodDomainRangeList(Utility.determineValueRange(activitySchedule, activity));
 						activity.setId(
 								activityList.isEmpty() ? 0L : activityList.get(activityList.size() - 1).getId() + 1);
-						activity.setUuid(Utility.generateRandomUuid());
+						activity.setUuid(newActivity.getUuid());
 
 						scoreDirector.beforeEntityAdded(activity);
 						activityList.add(activity);
@@ -153,7 +154,7 @@ public class SolutionUtils<Solution_> {
 								relativeActivity.setImmovable(newActivity.isImmovable());
 								relativeActivity.setId(activityList.isEmpty() ? 0L
 										: activityList.get(activityList.size() - 1).getId() + 1);
-								relativeActivity.setUuid(Utility.generateRandomUuid());
+								relativeActivity.setUuid(newActivity.getUuid());
 
 								scoreDirector.beforeEntityAdded(relativeActivity);
 								activityList.add(relativeActivity);
@@ -249,28 +250,28 @@ public class SolutionUtils<Solution_> {
 		problemSolver.startSolveAction();
 	}
 
-	public void deleteActivityFromSchedule(SolutionBusiness<Solution_> solutionBusiness, Object xmlActivity) {
+	public void deleteActivityFromSchedule(SolutionBusiness<Solution_> solutionBusiness, Object jsonActivity) {
 
 		ActivitySchedule activitySchedule = (ActivitySchedule) solutionBusiness.getSolution();
 
-		// shallow clone the activityList
+		// shallow clone the activityList of the solution
 		List<Activity> activityList = new ArrayList<>(activitySchedule.getActivityList());
 		activitySchedule.setActivityList(activityList);
 
 		List<Activity> deletedActivities = new ArrayList<>();
 
-		// get the DeletedActivities instance from xml object
+		// get the DeletedActivities instance from json object
 		DeletedActivities deletedActivitiesDAO = null;
 
-		XStream xStream = new XStream();
+		XStream xStream = new XStream(new JettisonMappedXmlDriver());
 		xStream.alias("DeletedActivities", DeletedActivities.class);
-		xStream.setMode(XStream.ID_REFERENCES);
+		xStream.setMode(XStream.NO_REFERENCES);
 		xStream.autodetectAnnotations(true);
 
-		if (xmlActivity instanceof String) {
-			deletedActivitiesDAO = (DeletedActivities) xStream.fromXML((String) xmlActivity);
+		if (jsonActivity instanceof String) {
+			deletedActivitiesDAO = (DeletedActivities) xStream.fromXML((String) jsonActivity);
 		} else {
-			deletedActivitiesDAO = (DeletedActivities) xStream.fromXML((Reader) xmlActivity);
+			deletedActivitiesDAO = (DeletedActivities) xStream.fromXML((Reader) jsonActivity);
 		}
 
 		List<DeletedActivity> deletedActivitiesList = deletedActivitiesDAO.getDeletedActivities();
@@ -298,12 +299,53 @@ public class SolutionUtils<Solution_> {
 	public void deleteActivity(ScoreDirector<Solution_> scoreDirector, Activity activity, List<Activity> activityList) {
 
 		Activity activityEntity = scoreDirector.lookUpWorkingObject(activity);
+		ActivitySchedule activitySchedule = (ActivitySchedule) scoreDirector.getWorkingSolution();
 
 		// it has been already deleted
 		if (activityEntity == null) {
 			return;
 		}
 
+		// delete the problem facts that use the activity type of the deleted activity
+		ActivityType activityType = activityEntity.getActivityType();
+
+		// shallow clone the activityTypeList of the solution
+		List<ActivityType> activityTypeList = new ArrayList<>(activitySchedule.getActivityTypeList());
+		activitySchedule.setActivityTypeList(activityTypeList);
+
+		// shallow clone the excludedTimePeriodsPenaltyList of the solution
+		List<ExcludedTimePeriodsPenalty> excludedTimePeriodsPenaltyList = new ArrayList<>(
+				activitySchedule.getExcludedTimePeriodsList());
+		activitySchedule.setExcludedTimePeriodsList(excludedTimePeriodsPenaltyList);
+
+		ExcludedTimePeriodsPenalty ettpToDelete = null;
+		ActivityType activityTypeToDelete = null;
+
+		// get ExcludedTimePeriodsPenalty problem fact that uses this activity type
+		for (ExcludedTimePeriodsPenalty ettpFact : excludedTimePeriodsPenaltyList) {
+			if (ettpFact.getActivityType().getCode().equals(activityType.getCode())
+					&& ettpFact.getActivityType().getId().equals(activityType.getId())) {
+				ettpToDelete = scoreDirector.lookUpWorkingObject(ettpFact);
+				activityTypeToDelete = scoreDirector.lookUpWorkingObject(ettpFact.getActivityType());
+				break;
+			}
+		}
+
+		if (ettpToDelete != null) {
+			// delete ExcludedTimePeriodsPenalty fact from list
+			scoreDirector.beforeProblemFactRemoved(ettpToDelete);
+			excludedTimePeriodsPenaltyList.remove(ettpToDelete);
+			scoreDirector.afterProblemFactRemoved(ettpToDelete);
+		}
+
+		if (activityTypeToDelete != null) {
+			// delete ActivityType fact from list
+			scoreDirector.beforeProblemFactRemoved(activityTypeToDelete);
+			activityTypeList.remove(activityTypeToDelete);
+			scoreDirector.afterProblemFactRemoved(activityTypeToDelete);
+		}
+
+		// delete Activity entity from list
 		scoreDirector.beforeEntityRemoved(activityEntity);
 		activityList.remove(activityEntity);
 		scoreDirector.afterEntityRemoved(activityEntity);
@@ -313,8 +355,8 @@ public class SolutionUtils<Solution_> {
 	}
 
 	/**
-	 * Find all activities with their name equals to normalActivityType and
-	 * reset their period
+	 * Find all activities with their name equals to normalActivityType and reset
+	 * their period
 	 * 
 	 */
 	public void triggerListener(SolutionBusiness<Solution_> solutionBusiness, List<Activity> activityList,

@@ -128,9 +128,7 @@ public class ProblemSolver<Solution_> {
 			ScoreParametrization scoreParametrization = Utility.getScoreParametrization(
 					(ActivitySchedule) solutionBusiness.getSolution(),
 					new File(new File(solutionBusiness.getUnsolvedDataDir().getParentFile(), ""),
-							"Score parametrization" + ".xml"));
-
-			scoreParametrization.setId(0L);
+							"Score parametrization" + ".json"));
 
 			if (workingScoreParametrization != null) {
 				scoreDirector.beforeProblemFactRemoved(workingScoreParametrization);

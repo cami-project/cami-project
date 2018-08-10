@@ -19,12 +19,10 @@ package org.aimas.cami.scheduler.CAMIScheduler.utils;
 import java.io.File;
 
 import org.optaplanner.core.api.domain.solution.PlanningSolution;
-import org.optaplanner.persistence.xstream.impl.domain.solution.XStreamSolutionFileIO;
 
 /**
- * @param <Solution_>
- *            the solution type, the class with the {@link PlanningSolution}
- *            annotation
+ * @param <Solution_> the solution type, the class with the
+ *        {@link PlanningSolution} annotation
  */
 public abstract class XStreamSolutionDao<Solution_> extends AbstractSolutionDao<Solution_> {
 

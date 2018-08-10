@@ -29,6 +29,7 @@ public class Client extends AbstractVerticle {
 
 		// send requests to the server
 		postNewActivity(client);
+		// deleteActivity(client);
 		getActivitySchedule(client);
 
 		// send multiple requests to analyze the concurrency
@@ -43,7 +44,7 @@ public class Client extends AbstractVerticle {
 	private void postNewActivity(HttpClient client) {
 
 		String newActivityFilePath = "data" + File.separator + "activityschedule" + File.separator
-				+ "New Activities.xml";
+				+ "New Activities.json";
 		String newActivity = null;
 		try {
 			newActivity = new String(Files.readAllBytes(Paths.get(newActivityFilePath)));
@@ -80,5 +81,32 @@ public class Client extends AbstractVerticle {
 				}
 			});
 		}).end();
+	}
+
+	private void deleteActivity(HttpClient client) {
+		String deletedActivityFilePath = "data" + File.separator + "activityschedule" + File.separator
+				+ "Deleted Activities.json";
+
+		String deletedActivity = null;
+
+		try {
+			deletedActivity = new String(Files.readAllBytes(Paths.get(deletedActivityFilePath)));
+			// System.out.println(newActivity);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		client.delete(SERVER_PORT, SERVER_HOST, RoutePaths.API_ROUTE + RoutePaths.DELETE_ACTIVITY_ROUTE, response -> {
+
+			System.out.println("Received response with status code " + response.statusCode());
+
+			response.bodyHandler(new Handler<Buffer>() {
+
+				@Override
+				public void handle(Buffer event) {
+					System.out.println("Got the event: " + event);
+				}
+			});
+		}).end(deletedActivity);
 	}
 }

@@ -36,6 +36,7 @@ import org.aimas.cami.scheduler.CAMIScheduler.utils.SolutionDao;
 import org.aimas.cami.scheduler.CAMIScheduler.utils.Utility;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 
 /**
  * Class used to generate input for solver.
@@ -68,8 +69,8 @@ public class CAMITaskSchedulerGenerator extends LoggingMain {
 	private void writeActivitySchedule() {
 		String unsolvedFilename = "cami-scenario";
 		String solvedFilename = "cami-scenario-solved";
-		File unsolvedOutputFile = new File(outputDir, unsolvedFilename + ".xml");
-		File solvedOutputFile = new File(new File(solutionDao.getDataDir(), "solved"), solvedFilename + ".xml");
+		File unsolvedOutputFile = new File(outputDir, unsolvedFilename + ".json");
+		File solvedOutputFile = new File(new File(solutionDao.getDataDir(), "solved"), solvedFilename + ".json");
 
 		ActivitySchedule activitySchedule = null;
 
@@ -138,7 +139,7 @@ public class CAMITaskSchedulerGenerator extends LoggingMain {
 	 * Generate a new activity and serialize it into XML.
 	 */
 	private void generateNewActivityExampleInput() {
-		File outputFile = new File(new File(solutionDao.getDataDir(), ""), "New Activities" + ".xml");
+		File outputFile = new File(new File(solutionDao.getDataDir(), ""), "New Activities" + ".json");
 		
 		List<NewActivity> newActivitiesList = new ArrayList<>();
 
@@ -162,6 +163,7 @@ public class CAMITaskSchedulerGenerator extends LoggingMain {
 		activityType.setPermittedIntervals(permittedIntervalListBreakfast);
 
 		normalActivity.setActivityType(activityType);
+		normalActivity.setUuid(Utility.generateRandomUuid());
 
 		ExcludedTimePeriodsPenalty etpp = new ExcludedTimePeriodsPenalty();
 		etpp.setActivityType(activityType);
@@ -179,9 +181,9 @@ public class CAMITaskSchedulerGenerator extends LoggingMain {
 		na.setExcludedTimePeriodsPenalty(etpp);
 
 		// serialize the new activity
-		XStream xStream = new XStream();
+		XStream xStream = new XStream(new JettisonMappedXmlDriver());
 		xStream.alias("NewActivities", NewActivities.class);
-		xStream.setMode(XStream.ID_REFERENCES);
+		xStream.setMode(XStream.NO_REFERENCES);
 		xStream.autodetectAnnotations(true);
 
 		// add the generated activities to this list
@@ -198,22 +200,22 @@ public class CAMITaskSchedulerGenerator extends LoggingMain {
 	}
 
 	private void generateDeletedActivityExampleInput() {
-		File outputFile = new File(new File(solutionDao.getDataDir(), ""), "Deleted Activities" + ".xml");
+		File outputFile = new File(new File(solutionDao.getDataDir(), ""), "Deleted Activities" + ".json");
 		
 		List<DeletedActivity> deletedActivitiesList = new ArrayList<>();
 
 		DeletedActivity deletedActivity = new DeletedActivity();
 		deletedActivity.setId(0L);
-		deletedActivity.setName("Breakfast");
-		deletedActivity.setUuid("4510cd8ee1a042978377339448d4b8bf");
+		deletedActivity.setName("Yoga");
+		deletedActivity.setUuid("5035e83bbefb4ae48ce427b2613e153a");
 		
 		deletedActivitiesList.add(deletedActivity);
 		DeletedActivities deletedActivities = new DeletedActivities(deletedActivitiesList);
 
 		// serialize the object
-		XStream xStream = new XStream();
+		XStream xStream = new XStream(new JettisonMappedXmlDriver());
 		xStream.alias("DeletedActivities", DeletedActivities.class);
-		xStream.setMode(XStream.ID_REFERENCES);
+		xStream.setMode(XStream.NO_REFERENCES);
 		xStream.autodetectAnnotations(true);
 
 		try (Writer writer = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")) {
@@ -247,11 +249,7 @@ public class CAMITaskSchedulerGenerator extends LoggingMain {
 		activityCategoryListAll.addAll(activityCategoryList1);
 		activityCategoryListAll.addAll(activityCategoryList2);
 
-		activityDomain1.setCategories(activityCategoryList1);
-
 		activityDomainList.add(activityDomain1);
-
-		activityDomain2.setCategories(activityCategoryList2);
 
 		activityDomainList.add(activityDomain2);
 
@@ -816,7 +814,7 @@ public class CAMITaskSchedulerGenerator extends LoggingMain {
 	private void predefinedScoreParametrization(ActivitySchedule activitySchedule) {
 		ScoreParametrization scoreParametrization = new ScoreParametrization();
 
-		File outputFile = new File(new File(solutionDao.getDataDir(), ""), "Score parametrization" + ".xml");
+		File outputFile = new File(new File(solutionDao.getDataDir(), ""), "Score parametrization" + ".json");
 
 		scoreParametrization.setInstancesPerDayPenalty(2);
 		scoreParametrization.setInstancesPerWeekPenalty(1);
@@ -828,10 +826,12 @@ public class CAMITaskSchedulerGenerator extends LoggingMain {
 		scoreParametrization.setHardExerciseLateHour(20);
 
 		scoreParametrization.setId(0L);
+		
+		activitySchedule.setScoreParametrization(scoreParametrization);
 
-		XStream xStream = new XStream();
+		XStream xStream = new XStream(new JettisonMappedXmlDriver());
 		xStream.alias("ScoreParametrization", ScoreParametrization.class);
-		xStream.setMode(XStream.ID_REFERENCES);
+		xStream.setMode(XStream.NO_REFERENCES);
 		xStream.autodetectAnnotations(true);
 
 		try (Writer writer = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")) {
