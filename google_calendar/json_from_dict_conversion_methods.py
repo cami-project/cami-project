@@ -89,14 +89,17 @@ def create_activity_type_dict(id, code, duration, instances_per_day=0, instances
     return activity_type_dict
 
 
-def create_activity_dict(activity_type_dict, uuid, postpone=None, immovable=False, wanted_to_be_planned=False,
+def create_activity_dict(activity_type_dict, uuid, activity_sub_class_type="NormalActivity", offset=0, postpone=None,
+                         immovable=False, wanted_to_be_planned=False,
                          on_dropdown=False):
-    activity_sub_class_type = "NormalActivity"
     activity_dict = {"@class": activity_sub_class_type, "activityType": activity_type_dict, "immovable": immovable,
                      "wantedToBePlanned": wanted_to_be_planned, "onDropdown": on_dropdown, "uuid": uuid}
 
     if postpone:
         activity_dict["postpone"] = postpone
+    if activity_sub_class_type == "NormalRelativeActivity":
+        activity_dict["offset"] = offset
+        activity_dict["assigned"] = False
     return activity_dict
 
 
@@ -119,8 +122,21 @@ def create_new_activities_dict(new_activities_list):
     :param new_activities_list: list of new activities that are going to be added
     :return: dictionary with all the new activities
     """
-    new_activities_dict = {"NewActivities": {"newActivities": [{"NewActivity": new_activities_list}]}}
+    new_activities_dict = {"NewActivities": {"newActivities": [
+        {"NewActivity": new_activities_list if len(new_activities_list) > 1 else new_activities_list[0]}]}}
     return new_activities_dict
+
+
+def create_deleted_activity_dict(id, name, uuid):
+    deleted_activity_dict = {"id": id, "name": name, "uuid": uuid}
+    return deleted_activity_dict
+
+
+def create_deleted_activities_dict(deleted_activities_list):
+    deleted_activities_dict = {
+        "DeletedActivities": {"deletedActivities": [{"DeletedActivity": deleted_activities_list if len(
+            deleted_activities_list) > 1 else deleted_activities_list[0]}]}}
+    return deleted_activities_dict
 
 
 def get_datetime_from_timestamp(timestamp):
@@ -141,7 +157,7 @@ def main():
                                                                                         code="Indoor physical exercises",
                                                                                         domain=create_activity_domain_dict(
                                                                                             code="Health Related Activities"))),
-                                                          uuid="6b05c3ff6cd1449489daae351d73a079")),
+                                                          uuid="28204e9fcf45459baaa9aa348ded622a")),
          create_new_activity_dict(1, create_activity_dict(create_activity_type_dict(id=1, code="FootBall", duration=30,
                                                                                     activity_category=create_activity_category_dict(
                                                                                         code="Outdoor physical exercises",
@@ -149,8 +165,10 @@ def main():
                                                                                             code="Leisure Activities"))),
                                                           uuid="6b05c3ff6cd1449489daae351d73a079"))
          ])
-    print(generate_json_from_dict(d))
+    print generate_json_from_dict(d)
     print get_datetime_from_timestamp(1531832400000)
+    print generate_json_from_dict(create_deleted_activities_dict(
+        [create_deleted_activity_dict(0, "Yoga", "f323c5807f8748e1b057d1b56de70f0a")]))
 
 
 if __name__ == '__main__':
