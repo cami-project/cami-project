@@ -7,13 +7,13 @@ import dateutil.parser
 
 # Local imports
 import store_utils
+import scheduler_utils
 import settings
 from google_calendar_backend import *
 
-
-
 logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger("google_calendar")
+
 
 def sync_for_calendar(calendar_name):
     logger.debug("[google_calendar] Synchronizing activities for calendar '%s' ... " % calendar_name)
@@ -24,7 +24,8 @@ def sync_for_calendar(calendar_name):
             "[google_calendar.activities] FAILED to retrieve any user info for calendar" % calendar_name)
         return
 
-    logger.debug("[google_calendar] Synchronizing activities from calendar '%s' for user '%s' ... " % (calendar_name, user['username']))
+    logger.debug("[google_calendar] Synchronizing activities from calendar '%s' for user '%s' ... " % (
+        calendar_name, user['username']))
 
     # Hardcoded calendars for demo
     # calendars = {
@@ -84,6 +85,7 @@ def sync_for_calendar(calendar_name):
         process_events(user, calendar, events, date_from, date_to)
 
     logger.debug("[google_calendar] Finished synchronizing activities for user '%s'!" % user['username'])
+
 
 def process_events(user, calendar, events, date_from, date_to):
     # Compose the color object
@@ -159,6 +161,25 @@ def process_events(user, calendar, events, date_from, date_to):
         else:
             logger.debug("[google_calendar] Inserting new activity from event: %s" % str(event))
 
+        # Delete existing activity from Scheduler
+        scheduler_utils.activity_delete(**activity_data)
+
+        # Add the new / updated activity to Scheduler
+        scheduler_utils.activity_post(**activity_data)
+
+        # Get updated data for this activity from Scheduler
+        schedule = scheduler_utils.activity_schedule_get()
+        logger.debug("[smart_scheduler] Getting the schedule: %s" % str(schedule))
+
+        activity_data_dict = next((activity for activity in schedule if activity['uuid'] == activity_data['event_id']),
+                                  None)
+        activity_period = activity_data_dict['activityPeriod']
+
+        # Update activity timestamps before adding it to Store
+        activity_data['start'] = activity_period
+        activity_data['end'] = scheduler_utils.add_duration_to_timestamp(activity_period, activity_data_dict[
+            'activityDurationInMinutes'])
+
         if store_utils.activity_save(**activity_data):
             logger.debug("[google_calendar] Successfully updated/inserted activity!")
         else:
@@ -170,12 +191,14 @@ def process_events(user, calendar, events, date_from, date_to):
         db_events_hash.values()
     )
 
-    logger.debug("[google_calendar] Deleting activities that do not exist anymore in Google Calendar: %s" % str(activities_to_delete))
+    logger.debug("[google_calendar] Deleting activities that do not exist anymore in Google Calendar: %s" % str(
+        activities_to_delete))
     if activities_to_delete:
         if store_utils.activity_delete(id__in=activities_to_delete):
             logger.debug("[google_calendar] Successfully deleted activities!")
         else:
             logger.debug("[google_calendar] Failed deleting activities!")
+
 
 def compose_activity_data(event, calendar, calendar_colors, user):
     activity_data = {
@@ -215,6 +238,7 @@ def compose_activity_data(event, calendar, calendar_colors, user):
 
     return activity_data
 
+
 def event_equals_activity(event, activity):
     # Compare color
     if event['color'] != activity['color']:
@@ -227,10 +251,12 @@ def event_equals_activity(event, activity):
 
     return True
 
+
 def timestamp_from_event_date(date):
     return calendar.timegm(
         dateutil.parser.parse(date).utctimetuple()
     )
+
 
 def process_event_reminders(start_timestamp, raw_reminders):
     reminders = []
