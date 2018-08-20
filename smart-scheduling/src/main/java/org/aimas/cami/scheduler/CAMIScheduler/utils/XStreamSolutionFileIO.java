@@ -52,7 +52,9 @@ public class XStreamSolutionFileIO<Solution_> implements SolutionFileIO<Solution
 	public Solution_ read(File inputSolutionFile) {
 		// xStream.fromXml(InputStream) does not use UTF-8
 		try (Reader reader = new InputStreamReader(new FileInputStream(inputSolutionFile), "UTF-8")) {
-			return (Solution_) xStream.fromXML(reader);
+			Solution_ solution = (Solution_) xStream.fromXML(reader);
+			reader.close();
+			return solution;
 		} catch (XStreamException | IOException e) {
 			throw new IllegalArgumentException("Failed reading inputSolutionFile (" + inputSolutionFile + ").", e);
 		}
@@ -62,6 +64,7 @@ public class XStreamSolutionFileIO<Solution_> implements SolutionFileIO<Solution
 	public void write(Solution_ solution, File outputSolutionFile) {
 		try (Writer writer = new OutputStreamWriter(new FileOutputStream(outputSolutionFile), "UTF-8")) {
 			xStream.toXML(solution, writer);
+			writer.close();
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Failed writing outputSolutionFile (" + outputSolutionFile + ").", e);
 		}
