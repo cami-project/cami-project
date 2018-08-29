@@ -1,6 +1,9 @@
 # difficulty types
 EASY, MEDIUM, HARD = "EASY", "MEDIUM", "HARD"
 
+# relativity types
+BEFORE, AFTER = "BEFORE", "AFTER"
+
 
 def create_time_dict(time_name, hour, minutes):
     return time_name, {"hour": hour, "minutes": minutes}
@@ -11,25 +14,65 @@ def create_period_dict(hour, minutes, day_index):
             "weekDay": {"dayIndex": day_index}, "periodIndex": 0}
 
 
-def create_excluded_time_periods_penalty_dict():
+def create_period_intervals_dict(excluded_periods):
     # TODO
-    pass
+    excluded_periods_dict = {"PeriodInterval": []}
+
+    for period in excluded_periods:
+        # period is a tuple of 2 tuples of size 3
+        start_hour, start_minutes, start_day = period[0]
+        end_hour, end_minutes, end_day = period[1]
+        period_interval_dict = {"startPeriod": create_period_dict(start_hour, start_minutes, start_day),
+                                "endPeriod": create_period_dict(end_hour, end_minutes, end_day)}
+        excluded_periods_dict["PeriodInterval"].append(period_interval_dict)
+
+    if len(excluded_periods_dict["PeriodInterval"]) == 1:
+        excluded_periods_dict["PeriodInterval"] = excluded_periods_dict["PeriodInterval"][0]
+
+    return [excluded_periods_dict]
 
 
-def create_relative_activity_penalty_dict():
+def create_excluded_time_periods_penalty_dict(activity_type, excluded_periods):
     # TODO
-    pass
+    excluded_time_periods_dict = {"activityType": activity_type,
+                                  "excludedActivityPeriods": create_period_intervals_dict(excluded_periods)}
+    return excluded_time_periods_dict
+
+
+def create_relative_activity_penalty_dict(normal_activity_type="", relative_activity_type="", category="",
+                                          relative_type=""):
+    # TODO
+    relative_activity_penalty_dict = {}
+
+    if normal_activity_type:
+        relative_activity_penalty_dict["normalActivityType"] = normal_activity_type
+    if relative_activity_type:
+        relative_activity_penalty_dict["relativeActivityType"] = relative_activity_type
+    if category:
+        relative_activity_penalty_dict["category"] = category
+    if relative_type:
+        relative_activity_penalty_dict["relativeType"] = relative_type
+
+    return relative_activity_penalty_dict
 
 
 def create_permitted_intervals_list(activity_data):
     # TODO
+    time_interval_list = {"TimeInterval": []}
+
     # process activity data
-    hour = None
-    minutes = None
-    min_start = create_time_dict("minStart", hour, minutes)
-    max_end = create_time_dict("maxEnd", hour, minutes)
-    time_interval_dict = {"TimeInterval": []}
-    pass
+    for item in activity_data:
+        # item is a tuple of size 4
+        start_hour, start_minutes, end_hour, end_minutes = item
+        min_start, min_start_dict = create_time_dict("minStart", start_hour, start_minutes)
+        max_end, max_end_dict = create_time_dict("maxEnd", end_hour, end_minutes)
+        time_interval_dict = {min_start: min_start_dict, max_end: max_end_dict}
+        time_interval_list["TimeInterval"].append(time_interval_dict)
+
+    if len(time_interval_list["TimeInterval"]) == 1:
+        time_interval_list["TimeInterval"] = time_interval_list["TimeInterval"][0]
+
+    return time_interval_list
 
 
 def create_activity_domain_dict(code, description=""):
@@ -99,13 +142,14 @@ def create_activity_dict(activity_type_dict, uuid, activity_sub_class_type="Norm
     return activity_dict
 
 
-def create_new_activity_dict(activity=None, excluded_time_periods_penalty=None, relative_activity_penalty=None):
+def create_new_activity_dict(activity=None, excluded_activity_periods=None, relative_activity_penalty=None):
     new_activity_dict = {}
 
     if activity:
         new_activity_dict["activity"] = activity
-    if excluded_time_periods_penalty:
-        new_activity_dict["excludedTimePeriodsPenalty"] = excluded_time_periods_penalty
+    if activity and excluded_activity_periods:  # now, it is dependent on the activity existence
+        new_activity_dict["excludedTimePeriodsPenalty"] = create_excluded_time_periods_penalty_dict(
+            activity["activityType"], excluded_activity_periods)
     if relative_activity_penalty:
         new_activity_dict["relativeActivityPenalty"] = relative_activity_penalty
 
@@ -161,6 +205,10 @@ def main():
     print d
     print create_deleted_activities_dict(
         [create_deleted_activity_dict(name="Yoga", uuid="f323c5807f8748e1b057d1b56de70f0a")])
+    print create_permitted_intervals_list(activity_data=[(1, 2, 3, 4), (1, 2, 3, 4)])
+    print create_excluded_time_periods_penalty_dict(activity_type="Yoga",
+                                                    excluded_periods=[((1, 2, 3), (4, 5, 6)), ((1, 2, 3), (4, 5, 6))])
+    print create_relative_activity_penalty_dict(normal_activity_type="Yoga", category="Meal", relative_type=BEFORE)
 
 
 if __name__ == '__main__':
