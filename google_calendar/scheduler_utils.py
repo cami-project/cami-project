@@ -3,14 +3,14 @@ import requests
 from datetime import datetime
 
 # Local imports
-# import settings
+import settings
 from dictionary_generator import *
 
-# logging.config.dictConfig(settings.LOGGING)
+logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger("google_calendar.scheduler_utils")
 
 # must use CONTAINER_IP every time to connect to the Smart Scheduler Service
-SCHEDULER_HOST = "172.18.0.2"
+SCHEDULER_HOST = "172.18.0.10"
 SCHEDULER_PORT = "8080"
 SCHEDULER_ENDPOINT_URI = "http://" + SCHEDULER_HOST + ":" + SCHEDULER_PORT
 

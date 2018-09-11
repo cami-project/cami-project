@@ -181,8 +181,9 @@ def process_events(user, calendar, events, date_from, date_to):
         # Add the new / updated activity to Scheduler
         # And get the other updated activities
         current_updated_activities = scheduler_utils.activity_post([activity_data])
-        updated_activities['changedActivities'].extend(current_updated_activities['changedActivities'])
-        updated_activities['numberOfChangedActivities'] += current_updated_activities['numberOfChangedActivities']
+
+        # Only keep the most recent and add the new updated ones
+        update_list(updated_activities, current_updated_activities)
 
         # Get updated data for this activity from Scheduler
         schedule = scheduler_utils.activity_schedule_get()
@@ -309,6 +310,20 @@ def delete_updated_activity(updated_activities, event_id):
         updated_activities['changedActivities'].remove(activity)
 
 
+def update_list(updated_activities, current_updated_activities):
+    for current_updated_activity in current_updated_activities['changedActivities']:
+        activity_found = next((activity for activity in updated_activities['changedActivities'] if
+                               activity['uuid'] == current_updated_activity['uuid']), None)
+
+        if activity_found:
+            updated_activities['changedActivities'] = [
+                current_updated_activity if updated_activity['uuid'] == current_updated_activity[
+                    'uuid'] else updated_activity for updated_activity in updated_activities['changedActivities']]
+        else:
+            updated_activities['changedActivities'].append(current_updated_activity)
+            updated_activities['numberOfChangedActivities'] += 1
+
+
 def save_modified_activities(updated_activities, db_events):
     for updated_activity in updated_activities['changedActivities']:
 
@@ -321,7 +336,8 @@ def save_modified_activities(updated_activities, db_events):
             # Update activity timestamps before adding it to Store
             activity_data['start'] = updated_activity['newActivityPeriod']
             activity_data['end'] = scheduler_utils.add_duration_to_timestamp(updated_activity['newActivityPeriod'],
-                                                                             updated_activity['activityDurationInMinutes'])
+                                                                             updated_activity[
+                                                                                 'activityDurationInMinutes'])
 
             if store_utils.activity_save(**activity_data):
                 logger.debug("[google_calendar] Successfully updated activity!")

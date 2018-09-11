@@ -28,20 +28,11 @@ RUN mvn dependency:go-offline
 COPY . /cami-project
 WORKDIR /cami-project/smart-scheduling
 
-# Copy the dependencies
-# Can use instead `dependency:build-classpath` and use the classpath in entrypoint
-# RUN mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
-# RUN mvn dependency:copy-dependencies
-# RUN mvn dependency:unpack-dependencies
-RUN mvn dependency:copy-dependencies
-
 COPY docker/smart-scheduling/docker-smart-scheduling-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-smart-scheduling-entrypoint.sh
 
-RUN adduser --disabled-password --gecos '' smart_scheduling
-RUN chown -R smart_scheduling /cami-project
-
-USER smart_scheduling
+# Copy the dependencies, by default to target/dependency
+RUN mvn dependency:copy-dependencies
 
 ENTRYPOINT ["docker-smart-scheduling-entrypoint.sh"]
 EXPOSE 8080
