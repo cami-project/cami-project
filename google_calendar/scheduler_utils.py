@@ -4,7 +4,7 @@ from datetime import datetime
 
 # Local imports
 # import settings
-from json_from_dict_conversion_methods import *
+from dictionary_generator import *
 
 # logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger("google_calendar.scheduler_utils")
@@ -42,52 +42,57 @@ def add_duration_to_timestamp(timestamp_period, duration):
     return timestamp_period + duration * 60
 
 
-def create_activity_dict_for_activity_from_calendar(activity_data):
-    activity_datetime = get_datetime_from_timestamp(activity_data["start"])
+def create_activity_dict_for_activity_from_calendar(activities_to_add):
+    new_activities_list = []
+    for activity_data in activities_to_add:
+        activity_datetime = get_datetime_from_timestamp(activity_data["start"])
 
-    new_activities_dict = create_new_activities_dict(new_activities_list=
-    [create_new_activity_dict(activity=
-    create_activity_dict(
-        activity_type_dict=create_activity_type_dict(code=activity_data["title"],
-                                                     duration=get_duration_from_timestamps(
-                                                         activity_data["start"],
-                                                         activity_data["end"]),
-                                                     activity_category=create_activity_category_dict(
-                                                         code=activity_type_to_category_converter[
-                                                             activity_data["activity_type"]],
-                                                         domain=create_activity_domain_dict(
-                                                             code=activity_type_to_domain_converter[
-                                                                 activity_data["activity_type"]])),
-                                                     description=activity_data["description"],
-                                                     imposed_period=create_period_dict(
-                                                         hour=activity_datetime.hour,
-                                                         minutes=activity_datetime.minute,
-                                                         day_index=activity_datetime.weekday())),
-        uuid=activity_data["event_id"], immovable=False))
-    ])
+        new_activities_list.append(create_new_activity_dict(activity=
+        create_activity_dict(
+            activity_type_dict=create_activity_type_dict(code=activity_data["title"],
+                                                         duration=get_duration_from_timestamps(
+                                                             activity_data["start"],
+                                                             activity_data["end"]),
+                                                         activity_category=create_activity_category_dict(
+                                                             code=activity_type_to_category_converter[
+                                                                 activity_data["activity_type"]],
+                                                             domain=create_activity_domain_dict(
+                                                                 code=activity_type_to_domain_converter[
+                                                                     activity_data["activity_type"]])),
+                                                         description=activity_data["description"],
+                                                         imposed_period=create_period_dict(
+                                                             hour=activity_datetime.hour,
+                                                             minutes=activity_datetime.minute,
+                                                             day_index=activity_datetime.weekday())),
+            uuid=activity_data["event_id"], immovable=False)))
 
-    return new_activities_dict
+    return create_new_activities_dict(new_activities_list=new_activities_list)
 
 
-def create_deleted_activities(activity_data):
+def create_deleted_activities(activities_to_delete):
     deleted_activities_dict = create_deleted_activities_dict(
-        [create_deleted_activity_dict(name=activity_data["title"], uuid=activity_data["event_id"])])
+        [create_deleted_activity_dict(name=activity["title"], uuid=activity["event_id"]) for
+         activity in activities_to_delete]
+    )
     return deleted_activities_dict
 
 
-def activity_post(**kwargs):
+def activity_post(activities_to_add):
     method = 'POST'
     endpoint = SCHEDULER_ENDPOINT_URI + API_ROUTE + NEW_ACTIVITY_ROUTE
-    activity_data = dict(kwargs)
 
     # create the new_activities_dict using activity_data
-    new_activities_dict = create_activity_dict_for_activity_from_calendar(activity_data)
+    new_activities_dict = create_activity_dict_for_activity_from_calendar(activities_to_add)
 
     r = requests.request(method, endpoint, json=new_activities_dict)
 
     if r.ok:
-        logger.debug("[google_calendar.scheduler_utils] Added a new activity %s" % new_activities_dict)
-        return True
+        logger.debug("[google_calendar.scheduler_utils] Added a new activity %s." % new_activities_dict)
+        logger.debug(
+            "[google_calendar.scheduler_utils] The modified activities are %s." % r.json())
+
+        # return the modified activities
+        return r.json()
 
     logger.debug(
         "[google_calendar.scheduler_utils] " +
@@ -118,13 +123,12 @@ def activity_schedule_get():
     return False
 
 
-def activity_delete(**kwargs):
+def activity_delete(activities_to_delete):
     method = 'DELETE'
     endpoint = SCHEDULER_ENDPOINT_URI + API_ROUTE + DELETE_ACTIVITY_ROUTE
-    activity_data = dict(kwargs)
 
     # create the deleted_activities_dict using activity_data
-    deleted_activities_dict = create_deleted_activities(activity_data)
+    deleted_activities_dict = create_deleted_activities(activities_to_delete)
 
     r = requests.request(method, endpoint, json=deleted_activities_dict)
 
@@ -143,7 +147,7 @@ def activity_delete(**kwargs):
 # print activity_post()
 # print activity_delete()
 # print activity_schedule_get()
-# print get_datetime_from_timestamp(1534431600)
+# print get_datetime_from_timestamp(1536765000)
 # print get_datetime_from_timestamp(1534431600).weekday()
 # print get_datetime_from_timestamp(1534431600).hour
 # print get_datetime_from_timestamp(1534431600).minute
