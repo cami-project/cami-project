@@ -66,7 +66,7 @@ rule "periodConflict"
 		)
 	then
 
-		if (!($activity1.getImposedPeriod() != null && $activity2.getImposedPeriod() != null))
+		if (!($activity1.isImmovable() && $activity2.isImmovable()))
 			if (exclusiveBefore($activityPeriod1.getTime(), $activity2.getActivityEndPeriod().getTime()) && 
 				exclusiveAfter($activityPeriod2.getTime(), $activity1.getActivityEndPeriod().getTime()))
 	

@@ -93,8 +93,6 @@ public class SolutionUtils<Solution_> {
 							scoreDirector.beforeVariableChanged(activity, "activityPeriod");
 							activity.setActivityPeriod(activity.getActivityType().getImposedPeriod());
 							scoreDirector.afterVariableChanged(activity, "activityPeriod");
-
-							activity.setImmovable(true);
 						}
 					}
 
@@ -408,7 +406,7 @@ public class SolutionUtils<Solution_> {
 						&& activity1.getId() == activity2.getId()) {
 
 					if (Utility.compareActivityPeriods(activity1, activity2)) {
-						changedActivities.add(new ChangedActivity(activity1.getActivityTypeCode(),
+						changedActivities.add(new ChangedActivity(activity1.getUuid(), activity1.getActivityTypeCode(),
 								Utility.convertActivityPeriodToTimestamp(activity1.getActivityPeriod()),
 								Utility.convertActivityPeriodToTimestamp(activity2.getActivityPeriod()),
 								activity1.getActivityDuration()));

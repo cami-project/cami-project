@@ -14,16 +14,17 @@ public class ChangedActivity {
 	private static final AtomicInteger COUNTER = new AtomicInteger();
 
 	private final int id;
-
+	private String uuid;
 	private String activity;
 	private long oldActivityPeriod;
 	private long newActivityPeriod;
 	private int activityDurationInMinutes;
 
-	public ChangedActivity(String activity, long oldActivityPeriod, long newActivityPeriod,
+	public ChangedActivity(String uuid, String activity, long oldActivityPeriod, long newActivityPeriod,
 			int activityDurationInMinutes) {
 		super();
 		this.id = COUNTER.getAndIncrement();
+		this.uuid = uuid;
 		this.activity = activity;
 		this.oldActivityPeriod = oldActivityPeriod;
 		this.newActivityPeriod = newActivityPeriod;
@@ -32,6 +33,14 @@ public class ChangedActivity {
 
 	public ChangedActivity() {
 		this.id = COUNTER.getAndIncrement();
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public long getOldActivityPeriod() {
