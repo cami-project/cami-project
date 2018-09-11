@@ -14,6 +14,12 @@ from google_calendar_backend import *
 logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger("google_calendar")
 
+# Save the activities(from Store) for all the calendars
+all_db_events = []
+
+# Keep all the updated activities on all the calendars
+updated_activities = {'numberOfChangedActivities': 0, 'changedActivities': []}
+
 
 def sync_for_calendar(calendar_name):
     logger.debug("[google_calendar] Synchronizing activities for calendar '%s' ... " % calendar_name)
@@ -84,6 +90,12 @@ def sync_for_calendar(calendar_name):
         logger.debug("[google_calendar] Processing the collected events ...")
         process_events(user, calendar, events, date_from, date_to)
 
+    logger.debug("[google_calendar] Total of activities in Store %d" % len(all_db_events))
+    logger.debug("[google_calendar] All the activities in Store %s" % str(all_db_events))
+
+    # Save the other updated activities to Store
+    save_modified_activities(updated_activities, all_db_events)
+
     logger.debug("[google_calendar] Finished synchronizing activities for user '%s'!" % user['username'])
 
 
@@ -100,6 +112,8 @@ def process_events(user, calendar, events, date_from, date_to):
         user=user['id'],
         calendar_id=calendar['id']
     )
+
+    all_db_events.extend(db_events)
 
     if db_events != False:
         logger.debug("[google_calendar] Successfully got %d activities from Store!" % len(db_events))
@@ -162,14 +176,17 @@ def process_events(user, calendar, events, date_from, date_to):
             logger.debug("[google_calendar] Inserting new activity from event: %s" % str(event))
 
         # Delete existing activity from Scheduler
-        scheduler_utils.activity_delete(**activity_data)
+        scheduler_utils.activity_delete([activity_data])
 
         # Add the new / updated activity to Scheduler
-        scheduler_utils.activity_post(**activity_data)
+        # And get the other updated activities
+        current_updated_activities = scheduler_utils.activity_post([activity_data])
+        updated_activities['changedActivities'].extend(current_updated_activities['changedActivities'])
+        updated_activities['numberOfChangedActivities'] += current_updated_activities['numberOfChangedActivities']
 
         # Get updated data for this activity from Scheduler
         schedule = scheduler_utils.activity_schedule_get()
-        logger.debug("[smart_scheduler] Getting the schedule: %s" % str(schedule))
+        logger.debug("[google_calendar] Getting the schedule: %s" % str(schedule))
 
         activity_data_dict = next((activity for activity in schedule if activity['uuid'] == activity_data['event_id']),
                                   None)
@@ -190,6 +207,20 @@ def process_events(user, calendar, events, date_from, date_to):
         lambda x: x['id'],
         db_events_hash.values()
     )
+
+    # Delete the canceled DB events from Scheduler, too
+    activities_to_delete_from_scheduler = []
+    for event_id in db_events_hash:
+        db_event_retrieved = next((db_event for db_event in db_events if event_id == db_event['event_id']), None)
+        if db_event_retrieved:
+            activities_to_delete_from_scheduler.append({'title': db_event_retrieved['title'], 'event_id': event_id})
+            delete_updated_activity(updated_activities, event_id)
+
+    logger.debug(
+        "[google_calendar] Deleting activities that do not exist anymore in Google Calendar from Scheduler: %s" % str(
+            activities_to_delete_from_scheduler))
+    if activities_to_delete_from_scheduler:
+        scheduler_utils.activity_delete(activities_to_delete_from_scheduler)
 
     logger.debug("[google_calendar] Deleting activities that do not exist anymore in Google Calendar: %s" % str(
         activities_to_delete))
@@ -265,3 +296,34 @@ def process_event_reminders(start_timestamp, raw_reminders):
         reminders.append(str(start_timestamp - r['minutes'] * 60))
 
     return reminders
+
+
+def delete_updated_activity(updated_activities, event_id):
+    updated_activities['numberOfChangedActivities'] -= 1
+    activity = next(
+        (updated_activity for updated_activity in updated_activities['changedActivities'] if
+         updated_activity['uuid'] == event_id),
+        None)
+
+    if activity != None:
+        updated_activities['changedActivities'].remove(activity)
+
+
+def save_modified_activities(updated_activities, db_events):
+    for updated_activity in updated_activities['changedActivities']:
+
+        logger.debug("[google_calendar] Activity to be updated: %s" % updated_activity)
+        # Get activity data for this updated activity from db_events
+        activity_data = next((stored_activity for stored_activity in db_events if
+                              updated_activity['uuid'] == stored_activity['event_id']), None)
+
+        if activity_data != None:
+            # Update activity timestamps before adding it to Store
+            activity_data['start'] = updated_activity['newActivityPeriod']
+            activity_data['end'] = scheduler_utils.add_duration_to_timestamp(updated_activity['newActivityPeriod'],
+                                                                             updated_activity['activityDurationInMinutes'])
+
+            if store_utils.activity_save(**activity_data):
+                logger.debug("[google_calendar] Successfully updated activity!")
+            else:
+                logger.debug("[google_calendar] Failed updating activity!")
