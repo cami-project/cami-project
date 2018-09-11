@@ -30,6 +30,9 @@ WORKDIR /cami-project/smart-scheduling
 
 # Copy the dependencies
 # Can use instead `dependency:build-classpath` and use the classpath in entrypoint
+# RUN mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
+# RUN mvn dependency:copy-dependencies
+# RUN mvn dependency:unpack-dependencies
 RUN mvn dependency:copy-dependencies
 
 COPY docker/smart-scheduling/docker-smart-scheduling-entrypoint.sh /usr/local/bin/
