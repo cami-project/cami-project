@@ -184,6 +184,26 @@ services:
     #volumes:
     #  - DSS:/app
 
+  # Runs the smart scheduling service implementing the endpoints for updating the schedule with activities that come
+  # from google-calendar
+  cami-smart-scheduling:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-smart-scheduling
+    volumes:
+    - .:/cami-project
+    ports:
+    - "8080:8080"
+    networks:
+      default:
+        ipv4_address: 172.18.0.10
+    entrypoint: docker-smart-scheduling-entrypoint.sh
+
+networks:
+  default:
+    external:
+      name: cami-project_default
+
 volumes:
     .:
       external: True
