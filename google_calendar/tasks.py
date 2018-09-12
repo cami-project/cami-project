@@ -84,6 +84,8 @@ def sync_activities():
     # Hardcode user for DK user
     #user = store_utils.user_get_by_id(settings.TRIAL_USER_DK_ID)
     app.send_task('google_calendar.sync_activities_for_calendar', [settings.CAMI_DK_CAL])
+    app.send_task('google_calendar.sync_activities_for_calendar', [settings.CAMI_DK_CAL_2])
+    app.send_task('google_calendar.sync_activities_for_calendar', [settings.CAMI_DK_CAL_3])
 
     # Hardcode user for PL user
     #user = store_utils.user_get_by_id(settings.TRIAL_USER_PL_ID)

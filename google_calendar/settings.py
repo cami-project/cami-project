@@ -91,20 +91,30 @@ STORE_ENDPOINT_URI = "http://" + STORE_HOST + ":" + STORE_PORT
 
 CAMI_DEMO_USER_ID = 2
 TRIAL_USER_DK_ID = 5
+TRIAL_USER_DK_ID_2 = 14
+TRIAL_USER_DK_ID_3 = 15
+
 TRIAL_USER_PL_ID = 6
 TRIAL_USER_RO_ID = 7
 
 CAMI_DEMO_CAL = "DEMO_CAL"
 CAMI_RO_CAL = "RO_CAL"
-CAMI_DK_CAL = "DK_CAL"
 CAMI_PL_CAL = "PL_CAL"
+
+CAMI_DK_CAL = "DK_CAL"
+CAMI_DK_CAL_2 = "DK_CAL_2"
+CAMI_DK_CAL_3 = "DK_CAL_3"
 
 ## Default user IDs for the trial users from each country
 TRIAL_USER_IDs = {
     CAMI_DEMO_CAL : CAMI_DEMO_USER_ID,
-    CAMI_DK_CAL: TRIAL_USER_DK_ID,
+
     CAMI_PL_CAL: TRIAL_USER_PL_ID,
-    CAMI_RO_CAL: TRIAL_USER_RO_ID
+    CAMI_RO_CAL: TRIAL_USER_RO_ID,
+
+    CAMI_DK_CAL: TRIAL_USER_DK_ID,
+    CAMI_DK_CAL_2: TRIAL_USER_DK_ID_2,
+    CAMI_DK_CAL_3: TRIAL_USER_DK_ID_3,
 }
 
 
@@ -123,6 +133,19 @@ CALENDAR_IDs = {
         "exercise": "nh3uiqj91onn8nf8id9g2vl40g@group.calendar.google.com",
         "medication": "63peuih1pd85qf4hk5tj8jpktg@group.calendar.google.com"
     },
+
+    CAMI_DK_CAL_2 : {
+        "personal": "90tvq6h4dkm3kh9551qaa3hlh4@group.calendar.google.com",
+        "exercise": "bgh0oaqr7pum11tkbogp2qb0v4@group.calendar.google.com",
+        "medication": "llc27sh7f9d17qfjghe4mkhc9s@group.calendar.google.com"
+    },
+
+    CAMI_DK_CAL_3 : {
+        "personal": "lonnsug3fu0g4oml7lgja6e0g8@group.calendar.google.com",
+        "exercise": "1ku352eklm963hbrosp1seoev0@group.calendar.google.com",
+        "medication": "itfps3ch0u60olhm4qs3tmpvro@group.calendar.google.com"
+    },
+
     # trial user PL
     CAMI_PL_CAL : {
         "personal": "v8mkc24kpui19llr3gs9s515jk@group.calendar.google.com",
@@ -147,6 +170,14 @@ CALENDAR_CREDENTIALS = {
     CAMI_DK_CAL : {
         "client_secret_file": 'client_secret_dk.json',
         "credentials_file": "cami-calendar-quickstart-dk.json"
+    },
+    CAMI_DK_CAL_2 : {
+        "client_secret_file": 'client_secret_dk_2.json',
+        "credentials_file": "cami-calendar-quickstart-dk_2.json"
+    },
+    CAMI_DK_CAL_3 : {
+        "client_secret_file": 'client_secret_dk_3.json',
+        "credentials_file": "cami-calendar-quickstart-dk_3.json"
     },
     # trial user PL
     CAMI_PL_CAL : {
