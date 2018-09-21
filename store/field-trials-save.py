@@ -21,8 +21,14 @@ from django.core import serializers
 user_dict = {
     "ro" : 7,
     "pl" : 6,
-    "dk" : 5,
-    "dk_caregiver": 9,
+    "udk1" : 5,
+    "udk2" : 14,
+    "udk3" : 15,
+
+    "cdk1": 9,
+    "cdk2": 16,
+    "cdk3": 17,
+
     "pl_caregiver": 10,
     "ro_caregier": 8
 }
